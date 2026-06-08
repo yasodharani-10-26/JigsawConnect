@@ -1,0 +1,70 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Dashboard – StudyConnect</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body id="studentPage">
+
+  <nav class="navbar">
+    <a href="index.html" class="logo">📚 Study<span>Connect</span></a>
+    <button class="menu-toggle" aria-label="Open menu"><span></span><span></span><span></span></button>
+    <div class="nav-links">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="resources.html">Resources</a>
+      <a href="quiz.html">Quiz</a>
+      <a href="leaderboard.html">Leaderboard</a>
+      <a href="index.html" class="btn btn-outline btn-sm logout-btn">Logout</a>
+    </div>
+  </nav>
+
+  <header class="page-header">
+    <h1 id="studentWelcome">Student Dashboard</h1>
+    <p>Team up with 5 members — view team, resources &amp; quiz</p>
+  </header>
+
+  <nav class="dashboard-nav">
+    <ul>
+      <li><a href="dashboard.html">My Team</a></li>
+      <li><a href="resources.html">Resources</a></li>
+      <li><a href="quiz.html">Take Quiz</a></li>
+      <li><a href="leaderboard.html">Leaderboard</a></li>
+    </ul>
+  </nav>
+
+  <main class="main-content">
+    <section class="student-panel team-panel">
+      <h2 class="admin-section-title">My Team <span class="badge">5 members max</span></h2>
+      <div id="myTeamInfo" class="topic-card"></div>
+      <ul id="myTeamMembers" class="member-list"></ul>
+    </section>
+
+    <div class="dashboard-cards" style="padding:0;margin-top:2rem;">
+      <a href="resources.html" class="dash-card">
+        <div class="card-icon">📄</div>
+        <h3>Study Resources</h3>
+        <p>Download materials uploaded by admin.</p>
+        <span class="btn btn-primary btn-sm">View Resources</span>
+      </a>
+      <a href="quiz.html" class="dash-card">
+        <div class="card-icon">✅</div>
+        <h3>Take Quiz</h3>
+        <p>Attempt quiz — score saved for admin &amp; leaderboard.</p>
+        <span class="btn btn-primary btn-sm">Start Quiz</span>
+      </a>
+      <a href="leaderboard.html" class="dash-card">
+        <div class="card-icon">🏆</div>
+        <h3>Leaderboard</h3>
+        <p>See rankings with other students.</p>
+        <span class="btn btn-primary btn-sm">View Rankings</span>
+      </a>
+    </div>
+  </main>
+
+  <footer class="footer"><div class="footer-bottom"><p>&copy; 2026 StudyConnect College Project</p></div></footer>
+  <script src="js/app.js"></script>
+</body>
+</html>

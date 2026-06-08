@@ -1,0 +1,38 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resources – StudyConnect</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="index.html" class="logo">📚 Study<span>Connect</span></a>
+    <button class="menu-toggle" aria-label="Open menu"><span></span><span></span><span></span></button>
+    <div class="nav-links">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="resources.html">Resources</a>
+      <a href="quiz.html">Quiz</a>
+      <a href="index.html" class="btn btn-outline btn-sm logout-btn">Logout</a>
+    </div>
+  </nav>
+
+  <header class="page-header">
+    <h1>Study Resources</h1>
+    <p>Materials uploaded by admin</p>
+  </header>
+
+  <main class="main-content">
+    <div class="toolbar">
+      <input type="search" id="resourceSearch" class="search-bar" placeholder="Search by title, type or subject..." />
+    </div>
+    <div id="resourceList" class="card-list"></div>
+  </main>
+
+  <footer class="footer"><div class="footer-bottom"><p>&copy; 2026 StudyConnect College Project</p></div></footer>
+  <script src="js/app.js"></script>
+</body>
+</html>

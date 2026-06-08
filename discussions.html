@@ -1,0 +1,66 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Discussion Forum – StudyConnect</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="index.html" class="logo">📚 Study<span>Connect</span></a>
+    <button class="menu-toggle" aria-label="Open menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <div class="nav-links">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="study-groups.html">Study Groups</a>
+      <a href="resources.html">Resources</a>
+      <a href="discussions.html">Discussions</a>
+      <a href="quiz.html">Quizzes</a>
+      <div class="nav-buttons">
+        <a href="index.html" class="btn btn-outline btn-sm logout-btn">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="page-header">
+    <h1>Discussion Forum</h1>
+    <p>Post questions, view discussions, and help your peers learn</p>
+  </header>
+
+  <nav class="dashboard-nav">
+    <ul>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="study-groups.html">Study Groups</a></li>
+      <li><a href="resources.html">Resources</a></li>
+      <li><a href="discussions.html">Discussions</a></li>
+      <li><a href="quiz.html">Quizzes</a></li>
+    </ul>
+  </nav>
+
+  <main class="main-content">
+    <!-- Post a new question -->
+    <form id="newPostForm" class="new-post-form">
+      <h2 style="color: var(--primary); margin-bottom: 1rem; font-size: 1.25rem;">Post a Question</h2>
+      <div class="form-group">
+        <label for="newQuestion">Your Question</label>
+        <textarea id="newQuestion" placeholder="What would you like to ask the community?" required></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Post Question</button>
+    </form>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-bottom">
+      <p>&copy; 2026 StudyConnect. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

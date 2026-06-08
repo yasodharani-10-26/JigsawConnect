@@ -1,0 +1,102 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Study Groups – StudyConnect</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="index.html" class="logo">📚 Study<span>Connect</span></a>
+    <button class="menu-toggle" aria-label="Open menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <div class="nav-links">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="study-groups.html">Study Groups</a>
+      <a href="resources.html">Resources</a>
+      <a href="discussions.html">Discussions</a>
+      <a href="quiz.html">Quizzes</a>
+      <div class="nav-buttons">
+        <a href="index.html" class="btn btn-outline btn-sm logout-btn">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="page-header">
+    <h1>Study Groups</h1>
+    <p>Find a group that matches your subject and learning goals</p>
+  </header>
+
+  <nav class="dashboard-nav">
+    <ul>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="study-groups.html">Study Groups</a></li>
+      <li><a href="resources.html">Resources</a></li>
+      <li><a href="discussions.html">Discussions</a></li>
+      <li><a href="quiz.html">Quizzes</a></li>
+    </ul>
+  </nav>
+
+  <main class="main-content">
+    <div class="toolbar">
+      <button type="button" id="createGroupBtn" class="btn btn-primary">+ Create Group</button>
+    </div>
+
+    <div class="card-list">
+      <article class="item-card">
+        <div>
+          <h3>Computer Science Fundamentals</h3>
+          <p class="meta">24 members · Active daily · Programming &amp; algorithms</p>
+        </div>
+        <button type="button" class="btn btn-primary join-group-btn" data-group="Computer Science Fundamentals">Join Group</button>
+      </article>
+
+      <article class="item-card">
+        <div>
+          <h3>Mathematics Study Circle</h3>
+          <p class="meta">18 members · Calculus &amp; linear algebra</p>
+        </div>
+        <button type="button" class="btn btn-primary join-group-btn" data-group="Mathematics Study Circle">Join Group</button>
+      </article>
+
+      <article class="item-card">
+        <div>
+          <h3>Physics &amp; Chemistry Lab Prep</h3>
+          <p class="meta">15 members · Lab reports &amp; exam prep</p>
+        </div>
+        <button type="button" class="btn btn-primary join-group-btn" data-group="Physics & Chemistry Lab Prep">Join Group</button>
+      </article>
+
+      <article class="item-card">
+        <div>
+          <h3>English Literature Club</h3>
+          <p class="meta">12 members · Essays &amp; book discussions</p>
+        </div>
+        <button type="button" class="btn btn-primary join-group-btn" data-group="English Literature Club">Join Group</button>
+      </article>
+
+      <article class="item-card">
+        <div>
+          <h3>Final Exam Revision Squad</h3>
+          <p class="meta">32 members · All subjects · High activity</p>
+        </div>
+        <button type="button" class="btn btn-primary join-group-btn" data-group="Final Exam Revision Squad">Join Group</button>
+      </article>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-bottom">
+      <p>&copy; 2026 StudyConnect. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

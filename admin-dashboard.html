@@ -1,0 +1,112 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard – StudyConnect</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body id="adminPage">
+
+  <nav class="navbar">
+    <a href="index.html" class="logo">📚 Study<span>Connect</span></a>
+    <button class="menu-toggle" aria-label="Open menu"><span></span><span></span><span></span></button>
+    <div class="nav-links">
+      <a href="admin-dashboard.html">Dashboard</a>
+      <a href="leaderboard.html">Leaderboard</a>
+      <a href="index.html" class="btn btn-outline btn-sm logout-btn">Logout</a>
+    </div>
+  </nav>
+
+  <header class="page-header admin-header">
+    <h1 id="adminWelcome">Admin Dashboard</h1>
+    <p>Students · Teams (5 members) · Resources · Quiz Scores</p>
+  </header>
+
+  <main class="main-content admin-dashboard">
+    <div class="admin-stats">
+      <div class="stat-card"><span class="stat-icon">🎓</span><div><p class="stat-value" id="statStudents">0</p><p class="stat-label">Students</p></div></div>
+      <div class="stat-card"><span class="stat-icon">👥</span><div><p class="stat-value" id="statTeams">0</p><p class="stat-label">Teams</p></div></div>
+      <div class="stat-card"><span class="stat-icon">📄</span><div><p class="stat-value" id="statResources">0</p><p class="stat-label">Resources</p></div></div>
+      <div class="stat-card"><span class="stat-icon">🏆</span><div><p class="stat-value" id="statScores">0</p><p class="stat-label">Quiz Scores</p></div></div>
+    </div>
+
+    <section class="admin-panel" id="addStudents">
+      <h2 class="admin-section-title">Add Students</h2>
+      <form id="addStudentForm" class="admin-upload-form">
+        <div class="form-row">
+          <div class="form-group"><label for="studentName">Name</label><input type="text" id="studentName" required /></div>
+          <div class="form-group"><label for="studentRoll">Student ID</label><input type="text" id="studentRoll" required /></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label for="studentEmail">Email</label><input type="email" id="studentEmail" required /></div>
+          <div class="form-group"><label for="studentPassword">Password</label><input type="password" id="studentPassword" required /></div>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Student</button>
+      </form>
+      <div class="admin-table-wrap" style="margin-top:1.5rem;">
+        <table class="admin-table">
+          <thead><tr><th>Name</th><th>Student ID</th><th>Email</th><th>Team</th><th>Action</th></tr></thead>
+          <tbody id="studentsTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="admin-panel" id="createTeams">
+      <h2 class="admin-section-title">Create Teams <span class="badge">Max 5 members per team</span></h2>
+      <form id="createTeamForm" class="admin-upload-form">
+        <div class="form-row">
+          <div class="form-group"><label for="teamName">Team Name</label><input type="text" id="teamName" placeholder="e.g. Team Alpha" required /></div>
+          <div class="form-group">
+            <label for="teamMembers">Select Members (Ctrl + click, max 5)</label>
+            <select id="teamMembers" multiple size="5"></select>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Create Team</button>
+      </form>
+      <div id="teamsList" class="card-list" style="margin-top:1.5rem;"></div>
+    </section>
+
+    <section class="admin-panel" id="uploadResources">
+      <h2 class="admin-section-title">Upload Resources</h2>
+      <p class="admin-upload-note">Upload study materials for students (saved in localStorage, max 2 MB).</p>
+      <form id="adminResourceForm" class="admin-upload-form">
+        <div class="form-row">
+          <div class="form-group"><label for="resourceTitle">Title</label><input type="text" id="resourceTitle" required /></div>
+          <div class="form-group">
+            <label for="resourceType">Type</label>
+            <select id="resourceType" required>
+              <option value="PDF">PDF</option>
+              <option value="Notes">Notes</option>
+              <option value="Guide">Guide</option>
+              <option value="Document">Document</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label for="resourceSubject">Subject</label><input type="text" id="resourceSubject" required /></div>
+          <div class="form-group"><label for="resourceFile">File</label><input type="file" id="resourceFile" accept=".pdf,.doc,.docx,.txt,.ppt,.pptx" required /></div>
+        </div>
+        <button type="submit" class="btn btn-primary">Upload Resource</button>
+      </form>
+      <div id="adminResourcesList" class="card-list" style="margin-top:1.5rem;"></div>
+    </section>
+
+    <section class="admin-panel" id="studentScores">
+      <h2 class="admin-section-title">Student Quiz Scores</h2>
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr><th>Student</th><th>Score</th><th>Percentage</th><th>Date</th></tr>
+          </thead>
+          <tbody id="adminScoresBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer"><div class="footer-bottom"><p>&copy; 2026 StudyConnect College Project</p></div></footer>
+  <script src="js/app.js"></script>
+</body>
+</html>
