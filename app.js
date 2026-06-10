@@ -30,16 +30,17 @@ document.addEventListener("DOMContentLoaded", function () {
   setupLeaderboardPage();
 });
 document.addEventListener("DOMContentLoaded", async () => {
-
-  await saveStudents([
-    {
-      name: "Yashoda",
-      rollNo: "101"
-    }
-  ]);
-
-  console.log("Student Saved");
-
+  try {
+    await saveStudents([
+      {
+        name: "Yashoda",
+        rollNo: "101"
+      }
+    ]);
+    console.log("Saved successfully");
+  } catch (err) {
+    console.error(err);
+  }
 });
 /* ===================== FIREBASE HELPERS ===================== */
 
