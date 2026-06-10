@@ -31,15 +31,16 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 document.addEventListener("DOMContentLoaded", async () => {
   try {
-    await saveStudents([
+    await setData("students", [
       {
         name: "Yashoda",
         rollNo: "101"
       }
     ]);
-    console.log("Saved successfully");
+
+    console.log("Data Saved");
   } catch (err) {
-    console.error(err);
+    console.error("Error:", err);
   }
 });
 /* ===================== FIREBASE HELPERS ===================== */
