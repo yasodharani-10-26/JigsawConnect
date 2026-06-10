@@ -33,12 +33,14 @@ document.addEventListener("DOMContentLoaded", async () => {
   try {
     await setData("students", [
       {
+        studentId: "STU001",
         name: "Yashoda",
-        rollNo: "101"
+        email: "yashoda@gmail.com",
+        password: "pass123"
       }
     ]);
 
-    console.log("Data Saved");
+    console.log("Student Data Saved Successfully");
   } catch (err) {
     console.error("Error:", err);
   }
