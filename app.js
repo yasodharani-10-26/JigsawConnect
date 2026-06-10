@@ -166,21 +166,8 @@ function setupStudentLoginPage() {
     const msg = document.getElementById("loginMessage");
 
    
-function setupAdminDashboard() {
-  if (adminUsername === "admin" && adminPassword === "admin123") {
-  msg.style.display = "block";
-  msg.style.color = "green";
-  msg.textContent = "Admin Login Successful!";
+function setupAdminLoginPage() {}
 
-  setTimeout(() => {
-    window.location.href = "admin-dashboard.html";
-  }, 1000);
-} else {
-  msg.style.display = "block";
-  msg.style.color = "red";
-  msg.textContent = "Invalid Admin Credentials";
-}
-}
 function setupStudentLoginPage() {
   const form = document.getElementById("studentLoginForm");
 
@@ -221,6 +208,8 @@ function setupStudentLoginPage() {
     }
   });
 }
+
+function setupAdminDashboard() {}
 function setupResourcesPage() {}
 function setupQuizPage() {}
 function setupLeaderboardPage() {}
