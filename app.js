@@ -167,28 +167,59 @@ function setupStudentLoginPage() {
 
    
 function setupAdminDashboard() {
-  if (adminValid) {
-  localStorage.setItem("adminLoggedIn", "true");
-
-  window.location.href = "admin-dashboard.html";
-}
-}
-function setupStudentDashboard() {
-  if (student) {
-  localStorage.setItem("currentStudent", JSON.stringify(student));
-
+  if (adminUsername === "admin" && adminPassword === "admin123") {
   msg.style.display = "block";
   msg.style.color = "green";
-  msg.textContent = "Login Successful!";
+  msg.textContent = "Admin Login Successful!";
 
   setTimeout(() => {
-    window.location.href = "Student-dashboard.html";
+    window.location.href = "admin-dashboard.html";
   }, 1000);
 } else {
   msg.style.display = "block";
   msg.style.color = "red";
-  msg.textContent = "Invalid Username or Password";
+  msg.textContent = "Invalid Admin Credentials";
 }
+}
+function setupStudentLoginPage() {
+  const form = document.getElementById("studentLoginForm");
+
+  if (!form) return;
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value.trim();
+
+    const students = await getStudents();
+
+    const student = students.find(
+      (s) =>
+        (s.studentId === username ||
+          s.email === username ||
+          s.name === username) &&
+        s.password === password
+    );
+
+    const msg = document.getElementById("loginMessage");
+
+    if (student) {
+      localStorage.setItem("currentStudent", JSON.stringify(student));
+
+      msg.style.display = "block";
+      msg.style.color = "green";
+      msg.textContent = "Login Successful!";
+
+      setTimeout(() => {
+        window.location.href = "student-dashboard.html";
+      }, 1000);
+    } else {
+      msg.style.display = "block";
+      msg.style.color = "red";
+      msg.textContent = "Invalid Username or Password";
+    }
+  });
 }
 function setupResourcesPage() {}
 function setupQuizPage() {}
