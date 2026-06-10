@@ -1,12 +1,12 @@
-
+```js
 import { db, ref, set, get, remove } from "./firebase.js";
 import { child } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-database.js";
 
 /* ===================== CONFIG ===================== */
 
-var TEAM_SIZE = 5;
+const TEAM_SIZE = 5;
 
-var QUIZ_ANSWERS = {
+const QUIZ_ANSWERS = {
   q1: "a",
   q2: "c",
   q3: "b",
@@ -16,46 +16,34 @@ var QUIZ_ANSWERS = {
 
 /* ===================== INIT ===================== */
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
   setupMobileMenu();
   setupLogout();
   highlightActiveNav();
 
   setupAdminLoginPage();
   setupStudentLoginPage();
+
   setupAdminDashboard();
   setupStudentDashboard();
   setupResourcesPage();
   setupQuizPage();
   setupLeaderboardPage();
 });
-document.addEventListener("DOMContentLoaded", async () => {
-  try {
-    await setData("students", [
-      {
-        studentId: "STU001",
-        name: "Yashoda",
-        email: "yashoda@gmail.com",
-        password: "pass123"
-      }
-    ]);
 
-    console.log("Student Data Saved Successfully");
-  } catch (err) {
-    console.error("Error:", err);
-  }
-});
 /* ===================== FIREBASE HELPERS ===================== */
 
-// GET
 async function getData(path) {
   const snapshot = await get(child(ref(db), path));
   return snapshot.exists() ? snapshot.val() : [];
 }
 
-// SET
 function setData(path, data) {
   return set(ref(db, path), data);
+}
+
+function deleteData(path) {
+  return remove(ref(db, path));
 }
 
 /* ===================== STUDENTS ===================== */
@@ -118,12 +106,6 @@ function saveResources(resources) {
   return setData("resources", resources);
 }
 
-/* ===================== DELETE ===================== */
-
-function deleteData(path) {
-  return remove(ref(db, path));
-}
-
 /* ===================== MOBILE MENU ===================== */
 
 function setupMobileMenu() {
@@ -132,16 +114,55 @@ function setupMobileMenu() {
 
   if (!toggle || !navLinks) return;
 
-  toggle.addEventListener("click", function () {
+  toggle.addEventListener("click", () => {
     navLinks.classList.toggle("active");
   });
 }
 
-/* ===================== PLACEHOLDER FUNCTIONS ===================== */
+/* ===================== COMMON ===================== */
 
 function setupLogout() {}
+
 function highlightActiveNav() {}
-function setupAdminLoginPage() {}
+
+/* ===================== ADMIN LOGIN ===================== */
+
+function setupAdminLoginPage() {
+  const form = document.getElementById("adminLoginForm");
+
+  if (!form) return;
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const username =
+      document.getElementById("adminUsername")?.value.trim() || "";
+
+    const password =
+      document.getElementById("adminPassword")?.value.trim() || "";
+
+    const msg = document.getElementById("loginMessage");
+
+    if (!msg) return;
+
+    if (username === "admin" && password === "admin123") {
+      msg.style.display = "block";
+      msg.style.color = "green";
+      msg.textContent = "Admin Login Successful!";
+
+      setTimeout(() => {
+        window.location.href = "admin-dashboard.html";
+      }, 1000);
+    } else {
+      msg.style.display = "block";
+      msg.style.color = "red";
+      msg.textContent = "Invalid Admin Credentials";
+    }
+  });
+}
+
+/* ===================== STUDENT LOGIN ===================== */
+
 function setupStudentLoginPage() {
   const form = document.getElementById("studentLoginForm");
 
@@ -150,8 +171,11 @@ function setupStudentLoginPage() {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const username = document.getElementById("username").value.trim();
-    const password = document.getElementById("password").value.trim();
+    const username =
+      document.getElementById("username")?.value.trim() || "";
+
+    const password =
+      document.getElementById("password")?.value.trim() || "";
 
     const students = await getStudents();
 
@@ -165,34 +189,13 @@ function setupStudentLoginPage() {
 
     const msg = document.getElementById("loginMessage");
 
-   
-function setupAdminLoginPage() {}
-
-function setupStudentLoginPage() {
-  const form = document.getElementById("studentLoginForm");
-
-  if (!form) return;
-
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const username = document.getElementById("username").value.trim();
-    const password = document.getElementById("password").value.trim();
-
-    const students = await getStudents();
-
-    const student = students.find(
-      (s) =>
-        (s.studentId === username ||
-          s.email === username ||
-          s.name === username) &&
-        s.password === password
-    );
-
-    const msg = document.getElementById("loginMessage");
+    if (!msg) return;
 
     if (student) {
-      localStorage.setItem("currentStudent", JSON.stringify(student));
+      localStorage.setItem(
+        "currentStudent",
+        JSON.stringify(student)
+      );
 
       msg.style.display = "block";
       msg.style.color = "green";
@@ -209,7 +212,15 @@ function setupStudentLoginPage() {
   });
 }
 
+/* ===================== OTHER PAGES ===================== */
+
 function setupAdminDashboard() {}
+
+function setupStudentDashboard() {}
+
 function setupResourcesPage() {}
+
 function setupQuizPage() {}
+
 function setupLeaderboardPage() {}
+```
