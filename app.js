@@ -1,6 +1,6 @@
 
-import { db } from "./firebase.js";
-import { ref, set, get, child, remove } from "firebase/database";
+import { db, ref, set, get, remove } from "./firebase.js";
+import { child } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-database.js";
 
 /* ===================== CONFIG ===================== */
 
@@ -29,7 +29,18 @@ document.addEventListener("DOMContentLoaded", function () {
   setupQuizPage();
   setupLeaderboardPage();
 });
+document.addEventListener("DOMContentLoaded", async () => {
 
+  await saveStudents([
+    {
+      name: "Yashoda",
+      rollNo: "101"
+    }
+  ]);
+
+  console.log("Student Saved");
+
+});
 /* ===================== FIREBASE HELPERS ===================== */
 
 // GET
