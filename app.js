@@ -212,7 +212,7 @@ function setupStudentLoginPage() {
       msg.textContent = "Login Successful!";
 
       setTimeout(() => {
-        window.location.href = "student-dashboard.html";
+        window.location.href = "Student-dashboard.html";
       }, 1000);
     } else {
       msg.style.display = "block";
