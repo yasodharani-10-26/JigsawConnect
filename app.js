@@ -165,25 +165,31 @@ function setupStudentLoginPage() {
 
     const msg = document.getElementById("loginMessage");
 
-    if (student) {
-      localStorage.setItem("currentStudent", JSON.stringify(student));
+   
+function setupAdminDashboard() {
+  if (adminValid) {
+  localStorage.setItem("adminLoggedIn", "true");
 
-      msg.style.display = "block";
-      msg.style.color = "green";
-      msg.textContent = "Login Successful!";
-
-      setTimeout(() => {
-       window.location.href = "dashboard.html";
-      }, 1000);
-    } else {
-      msg.style.display = "block";
-      msg.style.color = "red";
-      msg.textContent = "Invalid Username or Password";
-    }
-  });
+  window.location.href = "admin-dashboard.html";
 }
-function setupAdminDashboard() {}
-function setupStudentDashboard() {}
+}
+function setupStudentDashboard() {
+  if (student) {
+  localStorage.setItem("currentStudent", JSON.stringify(student));
+
+  msg.style.display = "block";
+  msg.style.color = "green";
+  msg.textContent = "Login Successful!";
+
+  setTimeout(() => {
+    window.location.href = "Student-dashboard.html";
+  }, 1000);
+} else {
+  msg.style.display = "block";
+  msg.style.color = "red";
+  msg.textContent = "Invalid Username or Password";
+}
+}
 function setupResourcesPage() {}
 function setupQuizPage() {}
 function setupLeaderboardPage() {}
