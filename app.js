@@ -132,9 +132,12 @@ function setupAdminLoginPage() {
   form.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    const username = document.getElementById("adminUsername")?.value.trim();
-    const password = document.getElementById("adminPassword")?.value.trim();
+    // ✅ YOUR HTML IDs
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value.trim();
     const msg = document.getElementById("loginMessage");
+
+    console.log("DEBUG:", username, password);
 
     if (username === "admin" && password === "admin123") {
 
