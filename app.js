@@ -126,100 +126,44 @@ function highlightActiveNav() {}
 
 /* ===================== ADMIN LOGIN ===================== */
 
-function setupAdminLoginPage() {
-  const form = document.getElementById("adminLoginForm");
-
-  if (!form) return;
-
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
-
-    const username =
-      document.getElementById("adminUsername")?.value.trim() || "";
-
-    const password =
-      document.getElementById("adminPassword")?.value.trim() || "";
-
-    const msg = document.getElementById("loginMessage");
-
-    if (!msg) return;
-
-    if (username === "admin" && password === "admin123") {
-      msg.style.display = "block";
-      msg.style.color = "green";
-      msg.textContent = "Admin Login Successful!";
-
-      setTimeout(() => {
-        window.location.href = "admin-dashboard.html";
-      }, 1000);
-    } else {
-      msg.style.display = "block";
-      msg.style.color = "red";
-      msg.textContent = "Invalid Admin Credentials";
-    }
-  });
-}
-
 /* ===================== STUDENT LOGIN ===================== */
 
-function setupStudentLoginPage() {
-  const form = document.getElementById("studentLoginForm");
-
-  if (!form) return;
-
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const username =
-      document.getElementById("username")?.value.trim() || "";
-
-    const password =
-      document.getElementById("password")?.value.trim() || "";
-
-    const students = await getStudents();
-
-    const student = students.find(
-      (s) =>
-        (s.studentId === username ||
-          s.email === username ||
-          s.name === username) &&
-        s.password === password
-    );
-
-    const msg = document.getElementById("loginMessage");
-
-    if (!msg) return;
-
-    if (student) {
-      localStorage.setItem(
-        "currentStudent",
-        JSON.stringify(student)
-      );
-
-      msg.style.display = "block";
-      msg.style.color = "green";
-      msg.textContent = "Login Successful!";
-
-      setTimeout(() => {
-        window.location.href = "student-dashboard.html";
-      }, 1000);
-    } else {
-      msg.style.display = "block";
-      msg.style.color = "red";
-      msg.textContent = "Invalid Username or Password";
-    }
-  });
-}
 
 /* ===================== OTHER PAGES ===================== */
 
-function setupAdminDashboard() {}
+function setupAdminDashboard() {
+  if (username === "admin" && password === "admin123") {
 
-function setupStudentDashboard() {}
+  sessionStorage.setItem("role", "admin");
+  sessionStorage.setItem("username", username);
 
+  msg.style.display = "block";
+  msg.style.color = "green";
+  msg.textContent = "Admin Login Successful!";
+
+  setTimeout(() => {
+    window.location.href = "admin-dashboard.html";
+  }, 1000);
+}
+}
+
+function setupStudentDashboard() {
+  if (student) {
+
+  sessionStorage.setItem("role", "student");
+  sessionStorage.setItem("student", JSON.stringify(student));
+
+  msg.style.display = "block";
+  msg.style.color = "green";
+  msg.textContent = "Login Successful!";
+
+  setTimeout(() => {
+    window.location.href = "student-dashboard.html";
+  }, 1000);
+}
+}
 function setupResourcesPage() {}
 
 function setupQuizPage() {}
 
 function setupLeaderboardPage() {}
-```
