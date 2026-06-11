@@ -14,7 +14,6 @@ const QUIZ_ANSWERS = {
 };
 
 /* ===================== INIT ===================== */
-
 document.addEventListener("DOMContentLoaded", () => {
   setupMobileMenu();
   setupLogout();
@@ -22,12 +21,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   setupAdminLoginPage();
   setupStudentLoginPage();
-
-  setupAdminDashboard();
-  setupStudentDashboard();
-  setupResourcesPage();
-  setupQuizPage();
-  setupLeaderboardPage();
 });
 
 /* ===================== FIREBASE HELPERS ===================== */
@@ -131,36 +124,77 @@ function highlightActiveNav() {}
 
 /* ===================== OTHER PAGES ===================== */
 
-function setupAdminDashboard() {
-  if (username === "admin" && password === "admin123") {
+function setupAdminLoginPage() {
+  const form = document.getElementById("adminLoginForm");
 
-  sessionStorage.setItem("role", "admin");
-  sessionStorage.setItem("username", username);
+  if (!form) return;
 
-  msg.style.display = "block";
-  msg.style.color = "green";
-  msg.textContent = "Admin Login Successful!";
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
 
-  setTimeout(() => {
-    window.location.href = "admin-dashboard.html";
-  }, 1000);
+    const username = document.getElementById("adminUsername")?.value.trim();
+    const password = document.getElementById("adminPassword")?.value.trim();
+    const msg = document.getElementById("loginMessage");
+
+    if (username === "admin" && password === "admin123") {
+
+      sessionStorage.setItem("role", "admin");
+      sessionStorage.setItem("username", username);
+
+      msg.style.display = "block";
+      msg.style.color = "green";
+      msg.textContent = "Login Successful";
+
+      setTimeout(() => {
+        window.location.href = "admin-dashboard.html";
+      }, 1000);
+
+    } else {
+      msg.style.display = "block";
+      msg.style.color = "red";
+      msg.textContent = "Invalid Credentials";
+    }
+  });
 }
-}
+async function setupStudentLoginPage() {
+  const form = document.getElementById("studentLoginForm");
 
-function setupStudentDashboard() {
-  if (student) {
+  if (!form) return;
 
-  sessionStorage.setItem("role", "student");
-  sessionStorage.setItem("student", JSON.stringify(student));
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-  msg.style.display = "block";
-  msg.style.color = "green";
-  msg.textContent = "Login Successful!";
+    const username = document.getElementById("username")?.value.trim();
+    const password = document.getElementById("password")?.value.trim();
+    const msg = document.getElementById("loginMessage");
 
-  setTimeout(() => {
-    window.location.href = "student-dashboard.html";
-  }, 1000);
-}
+    const students = await getStudents();
+
+    const student = students.find(
+      (s) =>
+        (s.studentId === username || s.email === username || s.name === username) &&
+        s.password === password
+    );
+
+    if (student) {
+
+      sessionStorage.setItem("role", "student");
+      sessionStorage.setItem("student", JSON.stringify(student));
+
+      msg.style.display = "block";
+      msg.style.color = "green";
+      msg.textContent = "Login Successful";
+
+      setTimeout(() => {
+        window.location.href = "student-dashboard.html";
+      }, 1000);
+
+    } else {
+      msg.style.display = "block";
+      msg.style.color = "red";
+      msg.textContent = "Invalid Credentials";
+    }
+  });
 }
 function setupResourcesPage() {}
 
