@@ -866,3 +866,256 @@ section{
     }
 
 }
+/* =========================
+   GLOBAL RESET
+========================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
+}
+
+body {
+  background: #0f172a;
+  color: #e5e7eb;
+}
+
+/* =========================
+   SIDEBAR
+========================= */
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  width: 240px;
+  background: #111827;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-right: 1px solid rgba(255,255,255,0.08);
+}
+
+.brand {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 30px;
+}
+
+.brand span {
+  color: #38bdf8;
+}
+
+.side-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.side-menu a {
+  text-decoration: none;
+  color: #cbd5e1;
+  padding: 10px;
+  border-radius: 8px;
+  transition: 0.3s;
+}
+
+.side-menu a:hover,
+.side-menu a.active {
+  background: #1e293b;
+  color: #38bdf8;
+}
+
+/* Logout */
+.logout-btn {
+  display: block;
+  text-align: center;
+  padding: 10px;
+  background: #ef4444;
+  color: white;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.logout-btn:hover {
+  background: #dc2626;
+}
+
+/* =========================
+   MAIN AREA
+========================= */
+.main {
+  margin-left: 240px;
+  padding: 25px;
+}
+
+/* TOPBAR */
+.topbar {
+  margin-bottom: 25px;
+}
+
+.topbar h2 {
+  font-size: 28px;
+}
+
+.topbar p {
+  color: #94a3b8;
+  margin-top: 5px;
+}
+
+/* =========================
+   STATS GRID
+========================= */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.stat-card {
+  background: #1e293b;
+  padding: 20px;
+  border-radius: 12px;
+  transition: 0.3s;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+}
+
+.stat-card h3 {
+  font-size: 16px;
+  color: #94a3b8;
+}
+
+.stat-card .big {
+  font-size: 22px;
+  margin-top: 10px;
+  color: #38bdf8;
+  font-weight: bold;
+}
+
+/* =========================
+   PANEL (TEAM)
+========================= */
+.panel {
+  background: #1e293b;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 25px;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.badge {
+  background: #38bdf8;
+  color: #0f172a;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.muted {
+  color: #94a3b8;
+  margin: 10px 0;
+}
+
+/* Team box */
+.team-info-box {
+  margin-top: 10px;
+  padding: 10px;
+  background: #0f172a;
+  border-radius: 8px;
+}
+
+.team-list {
+  list-style: none;
+  margin-top: 10px;
+}
+
+.team-list li {
+  padding: 8px;
+  background: #0f172a;
+  margin-bottom: 8px;
+  border-radius: 6px;
+}
+
+/* =========================
+   ACTION CARDS
+========================= */
+.actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.action-card {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  background: #1e293b;
+  padding: 15px;
+  border-radius: 12px;
+  text-decoration: none;
+  color: white;
+  transition: 0.3s;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.action-card:hover {
+  transform: translateY(-5px);
+  background: #0f172a;
+}
+
+.icon {
+  font-size: 28px;
+}
+
+/* =========================
+   FOOTER
+========================= */
+.footer {
+  text-align: center;
+  padding: 15px;
+  color: #94a3b8;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .main {
+    margin-left: 0;
+  }
+
+  .side-menu {
+    flex-direction: row;
+    gap: 5px;
+    flex-wrap: wrap;
+  }
+
+  .logout-btn {
+    padding: 8px;
+    font-size: 12px;
+  }
+}
