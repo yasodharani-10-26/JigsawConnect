@@ -198,35 +198,61 @@ async function setupStudentLoginPage() {
     }
   });
 }
-document.addEventListener("DOMContentLoaded", () => {
+const API_KEY = "YOUR_GEMINI_API_KEY";
 
-  const btn = document.getElementById("sendBtn");
+document.getElementById("askAI")?.addEventListener("click", askAI);
 
-  if(btn){
-    btn.addEventListener("click", sendMessage);
+async function askAI() {
+
+  const input = document.getElementById("aiInput");
+  const question = input.value.trim();
+
+  if(!question) return;
+
+  const chat = document.getElementById("chatMessages");
+
+  chat.innerHTML += `<p><b>You:</b> ${question}</p>`;
+
+  try {
+
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`,
+      {
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+          contents:[
+            {
+              parts:[
+                {
+                  text:question
+                }
+              ]
+            }
+          ]
+        })
+      }
+    );
+
+    const data = await response.json();
+
+    const reply =
+      data.candidates?.[0]?.content?.parts?.[0]?.text ||
+      "No response";
+
+    chat.innerHTML += `<p><b>AI:</b> ${reply}</p>`;
+
+  } catch(error){
+
+    chat.innerHTML += `<p><b>AI:</b> Error occurred</p>`;
+
   }
-
-});
-
-function sendMessage() {
-
-  const input = document.getElementById("userInput");
-  const chatBody = document.getElementById("chat-body");
-
-  const msg = input.value.trim();
-
-  if(!msg) return;
-
-  chatBody.innerHTML += `
-    <div class="user-msg">${msg}</div>
-  `;
-
-  chatBody.innerHTML += `
-    <div class="bot-msg">Hello! You said: ${msg}</div>
-  `;
 
   input.value = "";
 }
+
 function setupResourcesPage() {}
 
 function setupQuizPage() {}
