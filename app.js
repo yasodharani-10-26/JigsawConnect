@@ -1,7 +1,7 @@
 import { child } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-database.js";
 
 import { db, ref, set, get, remove } from "./firebase.js";
-
+console.log("APP JS LOADED");
 const TEAM_SIZE = 5;
 
 const QUIZ_ANSWERS = {
