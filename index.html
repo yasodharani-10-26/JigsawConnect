@@ -1,263 +1,361 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>StudyConnect - College Team Management</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StudyConnect - College Team Management</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* =========================
+   ROOT
+========================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  background: #0f172a;
+  color: #e5e7eb;
+  line-height: 1.6;
+}
+
+/* =========================
+   NAVBAR
+========================= */
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: rgba(17,24,39,0.95);
+  backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  z-index: 1000;
+}
+
+.logo {
+  font-size: 20px;
+  font-weight: bold;
+  color: #3b82f6;
+  text-decoration: none;
+}
+
+.logo span {
+  color: #06b6d4;
+}
+
+.nav-links {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.nav-links a:hover {
+  color: #3b82f6;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+.btn {
+  padding: 10px 16px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.3s;
+  display: inline-block;
+}
+
+.btn-primary {
+  background: #3b82f6;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #1d4ed8;
+  transform: translateY(-2px);
+}
+
+.btn-outline {
+  border: 1px solid #3b82f6;
+  color: #3b82f6;
+}
+
+.btn-outline:hover {
+  background: #3b82f6;
+  color: white;
+}
+
+/* =========================
+   HERO
+========================= */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 120px 20px;
+  background: linear-gradient(135deg, #1d4ed8, #06b6d4, #0f172a);
+}
+
+.hero-content {
+  max-width: 800px;
+}
+
+.hero h1 {
+  font-size: 3rem;
+  margin-bottom: 15px;
+}
+
+.hero p {
+  font-size: 1.1rem;
+  color: #cbd5e1;
+  margin-bottom: 25px;
+}
+
+/* =========================
+   SECTIONS
+========================= */
+section {
+  padding: 80px 20px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.section-title {
+  text-align: center;
+  font-size: 2.2rem;
+  margin-bottom: 40px;
+  color: #3b82f6;
+}
+
+/* =========================
+   STATS
+========================= */
+.stats-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 15px;
+  margin-top: -50px;
+}
+
+.stat-card {
+  background: #1e293b;
+  padding: 20px;
+  text-align: center;
+  border-radius: 15px;
+  border: 1px solid rgba(255,255,255,0.08);
+  transition: 0.3s;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+}
+
+.stat-card h2 {
+  color: #3b82f6;
+}
+
+/* =========================
+   FEATURES GRID
+========================= */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.feature-card {
+  background: #1e293b;
+  padding: 25px;
+  border-radius: 15px;
+  border: 1px solid rgba(255,255,255,0.08);
+  transition: 0.3s;
+  text-align: center;
+}
+
+.feature-card:hover {
+  transform: translateY(-6px);
+}
+
+.feature-icon {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+/* =========================
+   TEAM SECTION
+========================= */
+.team-up-box {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  background: #1e293b;
+  padding: 30px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.team-up-visual {
+  background: linear-gradient(135deg,#3b82f6,#06b6d4);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 15px;
+  font-size: 1.5rem;
+}
+
+/* =========================
+   CTA
+========================= */
+.cta-section {
+  text-align: center;
+  background: linear-gradient(135deg,#1d4ed8,#06b6d4);
+  padding: 60px 20px;
+  border-radius: 20px;
+}
+
+/* =========================
+   FOOTER
+========================= */
+.footer {
+  background: #111827;
+  padding: 40px 20px;
+  margin-top: 50px;
+}
+
+.footer-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+  gap: 20px;
+}
+
+.footer-links {
+  list-style: none;
+}
+
+.footer-links a {
+  color: #94a3b8;
+  text-decoration: none;
+}
+
+.footer-bottom {
+  text-align: center;
+  margin-top: 20px;
+  color: #94a3b8;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media(max-width:768px) {
+  .hero h1 {
+    font-size: 2rem;
+  }
+
+  .team-up-box {
+    grid-template-columns: 1fr;
+  }
+
+  .navbar {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+</style>
 </head>
+
 <body>
 
-  <!-- Navbar -->
-  <nav class="navbar">
-    <a href="index.html" class="logo">📚 Study<span>Connect</span></a>
+<!-- NAV -->
+<nav class="navbar">
+  <a href="index.html" class="logo">📚 Study<span>Connect</span></a>
 
-    <button class="menu-toggle">
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="#features">Features</a>
+    <a href="leaderboard.html">Leaderboard</a>
 
-    <div class="nav-links">
-      <a href="index.html">Home</a>
-      <a href="#features">Features</a>
-      <a href="leaderboard.html">Leaderboard</a>
+    <a href="admin-login.html" class="btn btn-outline">Admin</a>
+    <a href="student-login.html" class="btn btn-primary">Student</a>
+  </div>
+</nav>
 
-      <div class="nav-buttons">
-        <a href="admin-login.html" class="btn btn-outline">Admin</a>
-        <a href="student-login.html" class="btn btn-primary">Student</a>
-      </div>
-    </div>
-  </nav>
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-content">
+    <h1>Empowering Student Collaboration</h1>
+    <p>Build teams, share resources, attend seminars, and grow together with StudyConnect.</p>
+    <a href="student-login.html" class="btn btn-primary">Get Started</a>
+  </div>
+</header>
 
-  <!-- Hero -->
-  <header class="hero">
-    <div class="hero-content">
-      <h1>Empowering Student Collaboration</h1>
+<!-- STATS -->
+<section class="stats-section">
+  <div class="stat-card"><h2>500+</h2><p>Students</p></div>
+  <div class="stat-card"><h2>100+</h2><p>Teams</p></div>
+  <div class="stat-card"><h2>80+</h2><p>Resources</p></div>
+  <div class="stat-card"><h2>50+</h2><p>Events</p></div>
+</section>
 
-      <p>
-        Build teams, share resources, participate in seminars,
-        quizzes and JAM sessions while tracking your academic growth.
-      </p>
+<!-- FEATURES -->
+<section id="features">
+  <h2 class="section-title">Platform Features</h2>
 
-      <a href="student-login.html" class="btn btn-primary">
-        Get Started
-      </a>
-    </div>
-  </header>
+  <div class="features-grid">
+    <div class="feature-card">👨‍💼 Admin Dashboard</div>
+    <div class="feature-card">👥 Student Teams</div>
+    <div class="feature-card">📚 Resources</div>
+    <div class="feature-card">📝 Quizzes</div>
+    <div class="feature-card">🎤 Seminars</div>
+    <div class="feature-card">🏆 Leaderboard</div>
+  </div>
+</section>
 
-  <!-- Statistics -->
-  <section class="stats-section">
-    <div class="stat-card">
-      <h2>500+</h2>
-      <p>Students</p>
-    </div>
+<!-- CTA -->
+<section class="cta-section">
+  <h2>Ready to Join StudyConnect?</h2>
+  <p>Collaborate and grow with your classmates</p>
+  <a href="student-login.html" class="btn btn-primary">Join Now</a>
+</section>
 
-    <div class="stat-card">
-      <h2>100+</h2>
-      <p>Teams</p>
-    </div>
-
-    <div class="stat-card">
-      <h2>80+</h2>
-      <p>Resources</p>
-    </div>
-
-    <div class="stat-card">
-      <h2>50+</h2>
-      <p>Events</p>
-    </div>
-  </section>
-
-  <!-- Features -->
-  <section id="features">
-    <h2 class="section-title">Platform Features</h2>
-
-    <div class="features-grid">
-
-      <div class="feature-card">
-        <div class="feature-icon">👨‍💼</div>
-        <h3>Admin Dashboard</h3>
-        <p>Manage students, teams, resources and events.</p>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-icon">👥</div>
-        <h3>Student Teams</h3>
-        <p>Create and manage teams with up to 5 members.</p>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-icon">📚</div>
-        <h3>Study Resources</h3>
-        <p>Access notes, PDFs and learning materials.</p>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-icon">📝</div>
-        <h3>Online Quizzes</h3>
-        <p>Test your knowledge and improve performance.</p>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-icon">🎤</div>
-        <h3>Seminars</h3>
-        <p>Participate in technical seminars and workshops.</p>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-icon">🎯</div>
-        <h3>JAM Sessions</h3>
-        <p>Improve communication and presentation skills.</p>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-icon">🏆</div>
-        <h3>Leaderboard</h3>
-        <p>Track top performers across activities.</p>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-icon">📊</div>
-        <h3>Performance Tracking</h3>
-        <p>Monitor student progress and achievements.</p>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- Events -->
-  <section>
-    <h2 class="section-title">Upcoming Events</h2>
-
-    <div class="features-grid">
-
-      <div class="feature-card">
-        <div class="feature-icon">🚀</div>
-        <h3>AI Seminar 2026</h3>
-        <p>Latest trends in Artificial Intelligence.</p>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-icon">🎯</div>
-        <h3>Innovation JAM</h3>
-        <p>Present your ideas confidently in one minute.</p>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-icon">💻</div>
-        <h3>Project Expo</h3>
-        <p>Showcase innovative student projects.</p>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- Team Section -->
-  <section class="team-up-section">
-    <div class="team-up-box">
-
-      <div class="team-up-text">
-        <h2>Team Up - 5 Members Per Team</h2>
-
-        <p>
-          Collaborate with classmates, share resources
-          and participate in academic activities together.
-        </p>
-
-        <ul class="team-up-list">
-          <li>👫 Maximum 5 Students Per Team</li>
-          <li>📚 Shared Resources</li>
-          <li>🏆 Quiz Leaderboards</li>
-          <li>🎤 Seminar Participation</li>
-        </ul>
-
-        <a href="student-login.html" class="btn btn-primary">
-          Student Login
-        </a>
-      </div>
-
-      <div class="team-up-visual">
-        <span>🤝</span>
-        <p>5 Students<br>One Team</p>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- Testimonials -->
-  <section class="testimonials">
-    <h2 class="section-title">Student Feedback</h2>
-
-    <div class="features-grid">
-
-      <div class="feature-card">
-        <h3>Priya</h3>
-        <p>
-          StudyConnect made collaboration and learning
-          easier for our team.
-        </p>
-      </div>
-
-      <div class="feature-card">
-        <h3>Rahul</h3>
-        <p>
-          Quizzes and leaderboards helped me stay motivated.
-        </p>
-      </div>
-
-      <div class="feature-card">
-        <h3>Anjali</h3>
-        <p>
-          Resource sharing and seminars improved my skills.
-        </p>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- CTA -->
-  <section class="cta-section">
-    <h2>Ready To Join StudyConnect?</h2>
-
-    <p>
-      Collaborate, Learn and Grow with your classmates.
-    </p>
-
-    <a href="student-login.html" class="btn btn-primary">
-      Join Now
-    </a>
-  </section>
-
-  <!-- Footer -->
-  <footer class="footer">
-
-    <div class="footer-content">
-
-      <div>
-        <h4>StudyConnect</h4>
-        <p>College Team Management Platform</p>
-      </div>
-
-      <div>
-        <h4>Quick Links</h4>
-
-        <ul class="footer-links">
-          <li><a href="admin-login.html">Admin Login</a></li>
-          <li><a href="student-login.html">Student Login</a></li>
-          <li><a href="leaderboard.html">Leaderboard</a></li>
-        </ul>
-      </div>
-
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-content">
+    <div>
+      <h3>StudyConnect</h3>
+      <p>College Collaboration Platform</p>
     </div>
 
-    <div class="footer-bottom">
-      <p>© 2026 StudyConnect. All Rights Reserved.</p>
+    <div>
+      <h4>Links</h4>
+      <ul class="footer-links">
+        <li><a href="admin-login.html">Admin Login</a></li>
+        <li><a href="student-login.html">Student Login</a></li>
+      </ul>
     </div>
+  </div>
 
-  </footer>
-
-  <script type="module" src="app.js"></script>
+  <div class="footer-bottom">
+    © 2026 StudyConnect
+  </div>
+</footer>
 
 </body>
 </html>
