@@ -198,20 +198,37 @@ async function setupStudentLoginPage() {
     }
   });
 }
-function setupResourcesPage() {}
+document.addEventListener("DOMContentLoaded", () => {
 
-function setupQuizPage() {}
+  const btn = document.getElementById("sendBtn");
+
+  if(btn){
+    btn.addEventListener("click", sendMessage);
+  }
+
+});
+
 function sendMessage() {
-  let input = document.getElementById("userInput");
-  let msg = input.value.trim();
 
-  if(msg === "") return;
+  const input = document.getElementById("userInput");
+  const chatBody = document.getElementById("chat-body");
 
-  let chatBody = document.getElementById("chat-body");
+  const msg = input.value.trim();
 
-  chatBody.innerHTML += `<div class="user-msg">${msg}</div>`;
-  chatBody.innerHTML += `<div class="bot-msg">Hello! I received: ${msg}</div>`;
+  if(!msg) return;
+
+  chatBody.innerHTML += `
+    <div class="user-msg">${msg}</div>
+  `;
+
+  chatBody.innerHTML += `
+    <div class="bot-msg">Hello! You said: ${msg}</div>
+  `;
 
   input.value = "";
 }
+function setupResourcesPage() {}
+
+function setupQuizPage() {}
+
 function setupLeaderboardPage() {}
