@@ -3,90 +3,109 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Student Hub – StudyConnect</title>
+  <title>Student Dashboard – StudyConnect</title>
   <link rel="stylesheet" href="style.css"/>
 </head>
 
 <body id="studentPage">
 
-  <!-- TOP NAV -->
-  <header class="topbar">
-    <div class="logo">📚 Study<span>Connect</span></div>
+  <!-- SIDEBAR NAV -->
+  <aside class="sidebar">
+    <div class="brand">
+      📚 Study<span>Connect</span>
+    </div>
 
-    <nav class="nav-links">
-      <a href="dashboard.html">Home</a>
-      <a href="resources.html">Resources</a>
-      <a href="quiz.html">Quiz</a>
-      <a href="leaderboard.html">Leaderboard</a>
+    <nav class="side-menu">
+      <a class="active" href="student-dashboard.html">🏠 Dashboard</a>
+      <a href="resources.html">📄 Resources</a>
+      <a href="quiz.html">🧠 Quiz</a>
+      <a href="leaderboard.html">🏆 Leaderboard</a>
     </nav>
 
-    <a href="index.html" class="logout-btn">Logout</a>
-  </header>
-
-  <!-- HERO SECTION -->
-  <section class="hero-dashboard">
-    <div class="hero-text">
-      <h1>Welcome, Student 👋</h1>
-      <p>Manage your team, study materials, quizzes and performance in one place.</p>
-
-      <div class="hero-stats">
-        <div class="stat-box">
-          <h3>5</h3>
-          <p>Team Limit</p>
-        </div>
-        <div class="stat-box">
-          <h3>24/7</h3>
-          <p>Access</p>
-        </div>
-        <div class="stat-box">
-          <h3>100%</h3>
-          <p>Free Learning</p>
-        </div>
-      </div>
+    <div class="logout-section">
+      <a href="index.html" class="logout-btn">Logout</a>
     </div>
-  </section>
+  </aside>
 
-  <!-- DASHBOARD CONTENT -->
-  <main class="dashboard-container">
+  <!-- MAIN CONTENT -->
+  <main class="main">
 
-    <!-- TEAM SECTION -->
-    <section class="card glass">
-      <h2>👥 My Team</h2>
-      <p class="subtext">Your current team members (Max: 5)</p>
+    <!-- TOP BAR -->
+    <header class="topbar">
+      <h2>Student Dashboard</h2>
+      <p>Track your learning progress in one place 🚀</p>
+    </header>
 
-      <div id="myTeamInfo" class="info-box"></div>
-      <ul id="myTeamMembers" class="team-list"></ul>
+    <!-- HERO CARDS -->
+    <section class="stats-grid">
+
+      <div class="stat-card">
+        <h3>👥 Team Limit</h3>
+        <p class="big">5 Members</p>
+      </div>
+
+      <div class="stat-card">
+        <h3>📚 Learning Mode</h3>
+        <p class="big">Active</p>
+      </div>
+
+      <div class="stat-card">
+        <h3>🏆 Rank Status</h3>
+        <p class="big">Updating...</p>
+      </div>
+
     </section>
 
-    <!-- QUICK ACTIONS -->
-    <section class="quick-actions">
+    <!-- TEAM SECTION -->
+    <section class="panel">
+
+      <div class="panel-header">
+        <h2>👥 My Team</h2>
+        <span class="badge">Max 5 members</span>
+      </div>
+
+      <p class="muted">Your team members and current group details appear below.</p>
+
+      <div id="myTeamInfo" class="team-info-box"></div>
+      <ul id="myTeamMembers" class="team-list"></ul>
+
+    </section>
+
+    <!-- ACTION CARDS -->
+    <section class="actions">
 
       <a href="resources.html" class="action-card">
         <div class="icon">📄</div>
-        <h3>Resources</h3>
-        <p>Download notes & materials</p>
+        <div>
+          <h3>Study Resources</h3>
+          <p>Access notes, PDFs & materials</p>
+        </div>
       </a>
 
       <a href="quiz.html" class="action-card">
         <div class="icon">🧠</div>
-        <h3>Quiz Zone</h3>
-        <p>Test your knowledge</p>
+        <div>
+          <h3>Take Quiz</h3>
+          <p>Test your knowledge instantly</p>
+        </div>
       </a>
 
       <a href="leaderboard.html" class="action-card">
         <div class="icon">🏆</div>
-        <h3>Leaderboard</h3>
-        <p>Check rankings</p>
+        <div>
+          <h3>Leaderboard</h3>
+          <p>See top performers</p>
+        </div>
       </a>
 
     </section>
 
-  </main>
+    <!-- FOOTER -->
+    <footer class="footer">
+      <p>© 2026 StudyConnect | Built with ❤️ for Students</p>
+    </footer>
 
-  <!-- FOOTER -->
-  <footer class="footer">
-    <p>© 2026 StudyConnect | Built for College Project 🚀</p>
-  </footer>
+  </main>
 
   <script type="module" src="app.js"></script>
 </body>
