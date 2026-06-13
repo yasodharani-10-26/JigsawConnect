@@ -5,165 +5,337 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Community Discussions | StudyConnect</title>
 
-<link rel="stylesheet" href="style.css">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* =========================
+   ROOT
+========================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    background: #0f172a;
+    color: #e5e7eb;
+}
+
+/* =========================
+   NAVBAR
+========================= */
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: #111827;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    z-index: 1000;
+}
+
+.logo {
+    font-size: 20px;
+    font-weight: bold;
+    color: #3b82f6;
+    text-decoration: none;
+}
+
+.logo span {
+    color: #06b6d4;
+}
+
+.nav-links {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.nav-links a {
+    color: #94a3b8;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.nav-links a:hover {
+    color: #3b82f6;
+}
+
+/* =========================
+   HERO
+========================= */
+.page-header {
+    padding: 120px 20px 50px;
+    text-align: center;
+    background: linear-gradient(135deg, #1d4ed8, #06b6d4);
+}
+
+.page-header h1 {
+    font-size: 2.8rem;
+}
+
+.page-header p {
+    margin-top: 10px;
+    opacity: 0.9;
+}
+
+/* =========================
+   MAIN
+========================= */
+.main-content {
+    max-width: 900px;
+    margin: auto;
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* =========================
+   CARD
+========================= */
+.discussion-card {
+    background: #1e293b;
+    padding: 20px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    transition: 0.3s;
+}
+
+.discussion-card:hover {
+    transform: translateY(-5px);
+}
+
+/* =========================
+   FORM
+========================= */
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #cbd5e1;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #334155;
+    background: #0f172a;
+    color: white;
+    outline: none;
+}
+
+input:focus, textarea:focus {
+    border-color: #3b82f6;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+.btn {
+    display: inline-block;
+    padding: 10px 16px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.btn-primary {
+    background: #3b82f6;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #1d4ed8;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 1px solid #3b82f6;
+    color: #3b82f6;
+}
+
+.btn-outline:hover {
+    background: #3b82f6;
+    color: white;
+}
+
+.btn-sm {
+    padding: 8px 12px;
+    font-size: 13px;
+}
+
+/* =========================
+   DISCUSSION HEADER
+========================= */
+.discussion-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.discussion-top h3 {
+    color: #3b82f6;
+}
+
+.discussion-author {
+    font-size: 12px;
+    color: #94a3b8;
+}
+
+/* TAG */
+.discussion-tag {
+    background: rgba(59,130,246,0.15);
+    color: #3b82f6;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+/* =========================
+   FOOTER
+========================= */
+.footer {
+    background: #111827;
+    padding: 40px 20px 20px;
+    margin-top: 40px;
+}
+
+.footer-content {
+    max-width: 900px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.footer h4 {
+    margin-bottom: 10px;
+}
+
+.footer-links {
+    list-style: none;
+}
+
+.footer-links li {
+    margin-bottom: 8px;
+}
+
+.footer-links a {
+    color: #94a3b8;
+    text-decoration: none;
+}
+
+.footer-links a:hover {
+    color: white;
+}
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 20px;
+    color: #94a3b8;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 15px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media(max-width:768px) {
+    .discussion-top {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .navbar {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+</style>
 </head>
 
 <body>
 
 <!-- NAVBAR -->
 <nav class="navbar">
-    <a href="index.html" class="logo">
-        📚 Study<span>Connect</span>
-    </a>
-
-    <button class="menu-toggle">
-        <span></span>
-        <span></span>
-        <span></span>
-    </button>
+    <a href="index.html" class="logo">📚 Study<span>Connect</span></a>
 
     <div class="nav-links">
         <a href="student-dashboard.html">Dashboard</a>
         <a href="resources.html">Resources</a>
         <a href="quiz.html">Quiz</a>
         <a href="leaderboard.html">Leaderboard</a>
-
-        <div class="nav-buttons">
-            <a href="index.html" class="btn btn-outline btn-sm">
-                Logout
-            </a>
-        </div>
+        <a href="index.html">Logout</a>
     </div>
 </nav>
 
 <!-- HERO -->
 <section class="page-header">
     <h1>💬 Community Discussions</h1>
-
-    <p>
-        Ask Questions • Share Ideas • Help Friends Learn Better
-    </p>
+    <p>Ask Questions • Share Ideas • Help Others Learn</p>
 </section>
 
 <!-- MAIN -->
 <main class="main-content">
 
-    <!-- NEW POST -->
+    <!-- POST FORM -->
     <div class="discussion-card">
-
         <h2>📝 Ask a Question</h2>
 
-        <form id="newPostForm">
-
+        <form>
             <div class="form-group">
                 <label>Question Title</label>
-
-                <input
-                    type="text"
-                    id="questionTitle"
-                    placeholder="Enter question title..."
-                    required
-                >
+                <input type="text" placeholder="Enter title..." required>
             </div>
 
             <div class="form-group">
                 <label>Description</label>
-
-                <textarea
-                    id="newQuestion"
-                    placeholder="Describe your question..."
-                    rows="5"
-                    required
-                ></textarea>
+                <textarea rows="4" placeholder="Write your question..." required></textarea>
             </div>
 
-            <button type="submit" class="btn btn-primary">
-                Post Discussion
-            </button>
-
+            <button class="btn btn-primary">Post Discussion</button>
         </form>
-
     </div>
 
-    <!-- SAMPLE POSTS -->
-
+    <!-- POSTS -->
     <div class="discussion-card">
-
         <div class="discussion-top">
             <div>
                 <h3>How does Firebase Authentication work?</h3>
-                <span class="discussion-author">
-                    Posted by Student
-                </span>
+                <span class="discussion-author">Posted by Student</span>
             </div>
-
-            <span class="discussion-tag">
-                Firebase
-            </span>
+            <span class="discussion-tag">Firebase</span>
         </div>
-
-        <p>
-            Can someone explain how login and signup
-            work using Firebase Authentication?
-        </p>
-
-        <button class="btn btn-outline btn-sm">
-            Reply
-        </button>
-
+        <p>Can someone explain login/signup using Firebase Authentication?</p>
+        <button class="btn btn-outline btn-sm">Reply</button>
     </div>
 
     <div class="discussion-card">
-
         <div class="discussion-top">
             <div>
-                <h3>Best resources for Data Structures?</h3>
-                <span class="discussion-author">
-                    Posted by Student
-                </span>
+                <h3>Best resources for DSA?</h3>
+                <span class="discussion-author">Posted by Student</span>
             </div>
-
-            <span class="discussion-tag">
-                DSA
-            </span>
+            <span class="discussion-tag">DSA</span>
         </div>
-
-        <p>
-            Looking for free websites and YouTube channels
-            to learn Data Structures and Algorithms.
-        </p>
-
-        <button class="btn btn-outline btn-sm">
-            Reply
-        </button>
-
-    </div>
-
-    <div class="discussion-card">
-
-        <div class="discussion-top">
-            <div>
-                <h3>Tips for Technical Interviews?</h3>
-                <span class="discussion-author">
-                    Posted by Student
-                </span>
-            </div>
-
-            <span class="discussion-tag">
-                Career
-            </span>
-        </div>
-
-        <p>
-            What are the most important topics to prepare
-            for internship interviews?
-        </p>
-
-        <button class="btn btn-outline btn-sm">
-            Reply
-        </button>
-
+        <p>Looking for free resources to learn Data Structures & Algorithms.</p>
+        <button class="btn btn-outline btn-sm">Reply</button>
     </div>
 
 </main>
@@ -172,15 +344,13 @@
 <footer class="footer">
 
     <div class="footer-content">
-
         <div>
             <h4>StudyConnect</h4>
-            <p>Collaborate, Learn & Grow Together.</p>
+            <p>Learn • Share • Grow Together</p>
         </div>
 
         <div>
-            <h4>Quick Links</h4>
-
+            <h4>Links</h4>
             <ul class="footer-links">
                 <li><a href="student-dashboard.html">Dashboard</a></li>
                 <li><a href="resources.html">Resources</a></li>
@@ -188,16 +358,13 @@
                 <li><a href="leaderboard.html">Leaderboard</a></li>
             </ul>
         </div>
-
     </div>
 
     <div class="footer-bottom">
-        <p>© 2026 StudyConnect. All Rights Reserved.</p>
+        2026 StudyConnect
     </div>
 
 </footer>
-
-<script type="module" src="app.js"></script>
 
 </body>
 </html>
