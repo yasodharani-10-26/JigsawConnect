@@ -1,51 +1,215 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Leaderboard – StudyConnect</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Leaderboard – StudyConnect</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Poppins",sans-serif;
+}
+
+body{
+  background:#0f172a;
+  color:#e5e7eb;
+}
+
+/* NAV */
+.navbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:15px 25px;
+  background:#111827;
+  position:sticky;
+  top:0;
+  z-index:1000;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+}
+
+.logo{
+  color:#3b82f6;
+  font-weight:700;
+  text-decoration:none;
+}
+
+.logo span{ color:#06b6d4; }
+
+.nav-links a{
+  color:#94a3b8;
+  text-decoration:none;
+  margin-left:15px;
+  font-weight:500;
+}
+
+.nav-links a:hover{
+  color:#3b82f6;
+}
+
+/* HEADER */
+.page-header{
+  text-align:center;
+  padding:70px 20px 40px;
+}
+
+.page-header h1{
+  font-size:2.5rem;
+  color:#3b82f6;
+}
+
+.page-header p{
+  color:#94a3b8;
+  margin-top:8px;
+}
+
+/* MAIN */
+.main-content{
+  max-width:1000px;
+  margin:auto;
+  padding:20px;
+}
+
+/* TABLE */
+.admin-table-wrap{
+  overflow-x:auto;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  background:#1e293b;
+  border-radius:15px;
+  overflow:hidden;
+}
+
+th{
+  background:#3b82f6;
+  color:white;
+  padding:15px;
+  text-align:left;
+}
+
+td{
+  padding:15px;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+  color:#e5e7eb;
+}
+
+tr:hover{
+  background:#0f172a;
+  transition:0.3s;
+}
+
+/* RANK BADGES */
+.rank-1{
+  background:rgba(255,215,0,0.1);
+}
+
+.rank-2{
+  background:rgba(192,192,192,0.1);
+}
+
+.rank-3{
+  background:rgba(205,127,50,0.1);
+}
+
+/* BUTTON */
+.btn{
+  display:inline-block;
+  padding:10px 18px;
+  border-radius:10px;
+  text-decoration:none;
+  font-weight:600;
+}
+
+.btn-primary{
+  background:#3b82f6;
+  color:white;
+}
+
+.btn-primary:hover{
+  background:#1d4ed8;
+}
+
+/* FOOTER */
+.footer{
+  text-align:center;
+  padding:20px;
+  margin-top:40px;
+  color:#94a3b8;
+}
+
+/* MOBILE */
+@media(max-width:768px){
+  .page-header h1{
+    font-size:2rem;
+  }
+
+  th,td{
+    padding:10px;
+    font-size:14px;
+  }
+}
+</style>
 </head>
+
 <body>
 
-  <nav class="navbar">
-    <a href="index.html" class="logo">📚 Study<span>Connect</span></a>
-    <button class="menu-toggle" aria-label="Open menu"><span></span><span></span><span></span></button>
-    <div class="nav-links">
-      <a href="index.html">Home</a>
-      <a href="quiz.html">Quiz</a>
-      <a href="leaderboard.html">Leaderboard</a>
-      <a href="login.html" class="btn btn-outline btn-sm">Login</a>
-    </div>
-  </nav>
+<!-- NAV -->
+<nav class="navbar">
+  <a href="index.html" class="logo">📚 Study<span>Connect</span></a>
 
-  <header class="page-header">
-    <h1>🏆 Leaderboard</h1>
-    <p>Quiz rankings saved from localStorage</p>
-  </header>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="quiz.html">Quiz</a>
+    <a href="leaderboard.html">Leaderboard</a>
+    <a href="login.html">Login</a>
+  </div>
+</nav>
 
-  <main class="main-content">
-    <div class="admin-table-wrap">
-      <table class="admin-table">
-        <thead>
-          <tr>
-            <th>Rank</th>
-            <th>Student</th>
-            <th>Score</th>
-            <th>Percentage</th>
-            <th>Date</th>
-          </tr>
-        </thead>
-        <tbody id="leaderboardBody"></tbody>
-      </table>
-    </div>
-    <p style="text-align:center;margin-top:2rem;">
-      <a href="quiz.html" class="btn btn-primary">Take the Quiz</a>
-    </p>
-  </main>
+<!-- HEADER -->
+<header class="page-header">
+  <h1>🏆 Leaderboard</h1>
+  <p>Top performing students based on quiz scores</p>
+</header>
 
-  <footer class="footer"><div class="footer-bottom"><p>&copy; 2026 StudyConnect College Project</p></div></footer>
-<script type="module" src="app.js"></script>
+<!-- TABLE -->
+<main class="main-content">
+
+  <div class="admin-table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Student</th>
+          <th>Score</th>
+          <th>Percentage</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+
+      <tbody id="leaderboardBody">
+        <!-- JS will inject rows -->
+      </tbody>
+    </table>
+  </div>
+
+  <div style="text-align:center;margin-top:30px;">
+    <a href="quiz.html" class="btn btn-primary">Take Quiz</a>
+  </div>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+  © 2026 StudyConnect | Built for Students 🚀
+</footer>
+
 </body>
 </html>
