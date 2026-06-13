@@ -198,16 +198,20 @@ async function setupStudentLoginPage() {
     }
   });
 }
-const API_KEY = "AQ.Ab8RN6I5v9SLrcWHnCuDqsBs_KcEFhyKam7_Ug-eprmrLog9uQY";
+const API_KEY = "AQ.Ab8RN6I5v9SLrcWHnCuDqsBs_KcEFhyKam7_Ug-eprmrLog9uQ";
 
-document.getElementById("askAI")?.addEventListener("click", askAI);
+document.getElementById("helpBtn").addEventListener("click", () => {
+  document.getElementById("aiPopup").classList.toggle("hidden");
+});
+
+document.getElementById("askAI").addEventListener("click", askAI);
 
 async function askAI() {
 
   const input = document.getElementById("aiInput");
   const question = input.value.trim();
 
-  if(!question) return;
+  if (!question) return;
 
   const chat = document.getElementById("chatMessages");
 
@@ -218,41 +222,37 @@ async function askAI() {
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`,
       {
-        method:"POST",
-        headers:{
-          "Content-Type":"application/json"
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
         },
-        body:JSON.stringify({
-          contents:[
-            {
-              parts:[
-                {
-                  text:question
-                }
-              ]
-            }
-          ]
+        body: JSON.stringify({
+          contents: [{
+            parts: [{
+              text: question
+            }]
+          }]
         })
       }
     );
 
     const data = await response.json();
 
-    const reply =
+    const answer =
       data.candidates?.[0]?.content?.parts?.[0]?.text ||
-      "No response";
+      "No response.";
 
-    chat.innerHTML += `<p><b>AI:</b> ${reply}</p>`;
+    chat.innerHTML += `<p><b>AI:</b> ${answer}</p>`;
 
-  } catch(error){
+    chat.scrollTop = chat.scrollHeight;
 
-    chat.innerHTML += `<p><b>AI:</b> Error occurred</p>`;
+  } catch (e) {
 
+    chat.innerHTML += `<p><b>AI:</b> Error connecting to Gemini.</p>`;
   }
 
   input.value = "";
 }
-
 function setupResourcesPage() {}
 
 function setupQuizPage() {}
