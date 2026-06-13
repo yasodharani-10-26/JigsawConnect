@@ -202,5 +202,44 @@ async function setupStudentLoginPage() {
 function setupResourcesPage() {}
 
 function setupQuizPage() {}
+function sendMessage() {
 
+    let input = document.getElementById("userInput");
+    let msg = input.value.trim();
+
+    if(msg === "") return;
+
+    let chatBody = document.getElementById("chat-body");
+
+    chatBody.innerHTML += `
+      <div class="user-msg">${msg}</div>
+    `;
+
+    let reply = "I didn't understand.";
+
+    if(msg.toLowerCase().includes("team")){
+        reply = "Each team can have up to 5 members.";
+    }
+    else if(msg.toLowerCase().includes("quiz")){
+        reply = "Students can participate in online quizzes.";
+    }
+    else if(msg.toLowerCase().includes("seminar")){
+        reply = "StudyConnect supports seminars and workshops.";
+    }
+    else if(msg.toLowerCase().includes("leaderboard")){
+        reply = "Leaderboard shows top performing students.";
+    }
+    else if(msg.toLowerCase().includes("login")){
+        reply = "Use Student Login or Admin Login from the navbar.";
+    }
+
+    setTimeout(() => {
+        chatBody.innerHTML += `
+          <div class="bot-msg">${reply}</div>
+        `;
+        chatBody.scrollTop = chatBody.scrollHeight;
+    },500);
+
+    input.value = "";
+}
 function setupLeaderboardPage() {}
