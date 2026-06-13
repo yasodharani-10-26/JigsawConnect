@@ -198,7 +198,7 @@ async function setupStudentLoginPage() {
     }
   });
 }
-const API_KEY = "AQ.Ab8RN6I5v9SLrcWHnCuDqsBs_KcEFhyKam7_Ug-eprmrLog9uQ";
+const API_KEY = "AQ.Ab8RN6JJ2MOPHTwFMkaLPXjoSHX5qiJK9E7LYSEUNE37Zau6Fg";
 
 document.getElementById("helpBtn").addEventListener("click", () => {
   document.getElementById("aiPopup").classList.toggle("hidden");
