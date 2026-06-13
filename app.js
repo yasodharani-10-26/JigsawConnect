@@ -1,6 +1,6 @@
 import { child } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-database.js";
-import { initializeApp } from "firebase/app";
 
+import { db, ref, set, get, remove } from "./firebase.js";
 
 const TEAM_SIZE = 5;
 
