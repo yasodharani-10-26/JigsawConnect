@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,11 +6,12 @@
   <title>Quiz – StudyConnect</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
+  <!-- NAVBAR -->
   <nav class="navbar">
     <a href="index.html" class="logo">📚 Study<span>Connect</span></a>
-    <button class="menu-toggle" aria-label="Open menu"><span></span><span></span><span></span></button>
     <div class="nav-links">
       <a href="dashboard.html">Dashboard</a>
       <a href="quiz.html">Quiz</a>
@@ -20,1015 +20,175 @@
     </div>
   </nav>
 
+  <!-- HEADER -->
   <header class="page-header">
     <h1>Computer Networks</h1>
-    <p>Submit your answers — score is saved to localStorage &amp; leaderboard</p>
+    <p>Submit your answers — score is saved to localStorage & leaderboard</p>
   </header>
 
-
-
   <main class="main-content">
-      <form id="quizForm" class="quiz-container">
-         <h2
-          style="text-align: center; color: var(--primary); margin-bottom: 2rem"
-        >
-          Computer Networks Quiz
-        </h2>
-        <!-- QUESTION 1 -->
-        <div class="quiz-question">
-          <h3>1. What is the network layer concerned with?</h3>
-          <div class="quiz-options">
-            <label class="option"
-            ><input type="radio" name="q1" value="Packets" /> Bits</label
-          >
-          <label class="option"
-            ><input type="radio" name="q1" value="Packets" /> Frames</label
-          >
-          <label class="option"
-            ><input type="radio" name="q1" value="Packets" /> Packets</label
-          >
-          <label class="option"
-            ><input type="radio" name="q1" value="Packets" /> Bytes</label
-          >
-          </div> 
+
+    <form id="quizForm" class="quiz-container">
+
+      <h2 style="text-align:center;color:var(--primary);margin-bottom:2rem;">
+        Computer Networks Quiz
+      </h2>
+
+      <!-- Q1 -->
+      <div class="quiz-question">
+        <h3>1. What is the network layer concerned with?</h3>
+        <div class="quiz-options">
+          <label class="option"><input type="radio" name="q1" value="Bits"> Bits</label>
+          <label class="option"><input type="radio" name="q1" value="Frames"> Frames</label>
+          <label class="option"><input type="radio" name="q1" value="Packets"> Packets</label>
+          <label class="option"><input type="radio" name="q1" value="Bytes"> Bytes</label>
         </div>
-
-        <!-- QUESTION 2 -->
-        <div class="quiz-question">
-          <h3>
-            2. Which routing algorithm can be used for network layer design?
-          </h3>
-          <div class="quiz-options">
-              <label class="option"
-            ><input type="radio" name="q2" value="All of the above" /> Shortest
-            path algorithm</label
-          >
-          <label class="option"
-            ><input type="radio" name="q2" value="All of the above" /> Distance
-            Vector algorithm</label
-          >
-          <label class="option"
-            ><input type="radio" name="q2" value="All of the above" /> Link
-            state routing</label
-          >
-          <label class="option"
-            ><input type="radio" name="q2" value="All of the above" /> All of
-            the above</label
-          >
-          </div>
-        </div>
-
-        <!-- QUESTION 3 -->
-        <div class="quiz-question">
-          <h3>
-            3. Which is NOT correct in relation to multi-destination routing?
-          </h3>
-          <div class="quiz-options">
-             <label class="option"
-            ><input
-              type="radio"
-              name="q3"
-              value="Data is not sent by packets"
-            />
-            Same as broadcast routing</label
-          >
-          <label class="option"
-            ><input
-              type="radio"
-              name="q3"
-              value="Data is not sent by packets"
-            />
-            Contains list of all destinations</label
-          >
-          <label class="option"
-            ><input
-              type="radio"
-              name="q3"
-              value="Data is not sent by packets"
-            />
-            Data is not sent by packets</label
-          >
-          <label class="option"
-            ><input
-              type="radio"
-              name="q3"
-              value="Data is not sent by packets"
-            />
-            There are multiple receivers</label
-          >
-          </div> 
-        </div>
-
-        <!-- QUESTION 4 -->
-        <div class="quiz-question">
-          <h3>4. Which algorithm is NOT used for congestion control?</h3>
-          <div class="quiz-options">
-            <label class="option"
-            ><input
-              type="radio"
-              name="q4"
-              value="Routing information protocol"
-            />
-            Traffic aware routing</label
-          >
-          <label class="option"
-            ><input
-              type="radio"
-              name="q4"
-              value="Routing information protocol"
-            />
-            Admission control</label
-          >
-          <label class="option"
-            ><input
-              type="radio"
-              name="q4"
-              value="Routing information protocol"
-            />
-            Load shedding</label
-          >
-          <label class="option"
-            ><input
-              type="radio"
-              name="q4"
-              value="Routing information protocol"
-            />
-            Routing information protocol</label>
-          </div>
-        </div>
-
-        <!-- QUESTION 5 -->
-        <div class="quiz-question">
-          <h3>5. Another name for Distance Vector Algorithm is:</h3>
-          <div class="quiz-options">
-            <label class="option"
-            ><input
-              type="radio"
-              name="q5"
-              value="Bellman-Ford routing algorithm"
-            />
-            Bellman-Ford routing algorithm</label
-          >
-          <label class="option"
-            ><input
-              type="radio"
-              name="q5"
-              value="Bellman-Ford routing algorithm"
-            />
-            Ford-Fulkerson algorithm</label
-          >
-          <label class="option"
-            ><input
-              type="radio"
-              name="q5"
-              value="Bellman-Ford routing algorithm"
-            />
-            Both</label
-          >
-          <label class="option"
-            ><input
-              type="radio"
-              name="q5"
-              value="Bellman-Ford routing algorithm"
-            />
-            None of the above</label
-          >
-          </div>
-        </div>
-
-        <!-- QUESTION 6 -->
-        <div class="quiz-question">
-          <h3>6. In Hierarchical routing all routers are called:</h3>
-          <div class="quiz-options">
-            <label class="option"
-            ><input type="radio" name="q6" values="Regions" /> Regions</label
-          >
-          <label class="option"
-            ><input type="radio" name="q6" values="Regions" /> Clusters</label
-          >
-          <label class="option"
-            ><input type="radio" name="q6" values="Regions" /> Pointers</label
-          >
-          <label class="option"
-            ><input type="radio" name="q6" values="Regions" /> Sequences</label
-          >
-          </div>
-        </div>
-
-        <!-- QUESTION 7 -->
-        <div class="quiz-question">
-          <h3>7. Minimum header size of an IP packet is:</h3>
-          <div class="quiz-options">
-             <label class="option"
-            ><input type="radio" name="q7" value="20 bytes" /> 16 bytes</label
-          >
-          <label class="option"
-            ><input type="radio" name="q7" value="20 bytes" /> 10 bytes</label
-          >
-          <label class="option"
-            ><input type="radio" name="q7" value="20 bytes" /> 20 bytes</label
-          >
-          <label class="option"
-            ><input type="radio" name="q7" value="20 bytes" /> 32 bytes</label
-          >
-          </div>
-        </div>
-
-        <!-- QUESTION 8 -->
-        <div class="quiz-question">
-          <h3>8. Which is NOT a possible way of data exchange?</h3>
-          <div class="quiz-options">
-             
-          <label class="option"
-            ><input type="radio" name="q8" value="Multiplex" /> Simplex</label
-          >
-          <label class="option"
-            ><input type="radio" name="q8" value="Multiplex" /> Multiplex</label
-          >
-          <label class="option"
-            ><input type="radio" name="q8" value="Multiplex" />
-            Half-duplex</label
-          >
-          <label class="option"
-            ><input type="radio" name="q8" value="Multiplex" />
-            Full-duplex</label
-          >
-          </div>
-        </div>
-
-        <!-- QUESTION 9 -->
-        <div class="quiz-question">
-          <h3>9. What does the port number in TCP specify?</h3>
-          <div class="quiz-options">
-            <label class="option"
-            ><input type="radio" name="q9" value="Communication process" />
-            Communication process</label
-          >
-          <label class="option"
-            ><input type="radio" name="q9" value="Communication process" />
-            Quality of data</label
-          >
-          <label class="option"
-            ><input type="radio" name="q9" value="Communication process" /> Size
-            of data</label
-          >
-          <label class="option"
-            ><input type="radio" name="q9" value="Communication process" /> All
-            of the above</label
-          >
-          </div>
-        </div>
-
-        <!-- QUESTION 10 -->
-        <div class="quiz-question">
-          <h3>10. Which protocols are defined in Transport Layer?</h3>
-          <div class="quiz-options">
-            <label class="option"
-            ><input type="radio" name="q10" value="TCP & UDP" /> FTP</label
-          >
-          <label class="option"
-            ><input type="radio" name="q10" value="TCP & UDP" /> TCP</label
-          >
-          <label class="option"
-            ><input type="radio" name="q10" value="TCP & UDP" /> UDP</label
-          >
-          <label class="option"
-            ><input type="radio" name="q10" value="TCP & UDP" /> TCP &
-            UDP</label
-          >
-          </div>
-        </div>
-
-        <!-- QUESTION 11 -->
-        <div class="quiz-question">
-          <h3>11. Repeater operates in which OSI layer?</h3>
-          <div class="quiz-options">
-            <label class="option"
-            ><input type="radio" name="q11" value="Physical Layer" /> Physical Layer</label
-          >
-          <label class="option"
-            ><input type="radio" name="q11" value="Physical Layer" /> Physical Layer</label
-            ><input type="radio" name="q11" /> Data Link Layer</label
-          >
-          <label class="option"
-            ><input type="radio" name="q11" value="Physical Layer" /> Physical Layer</label
-            ><input type="radio" name="q11" /> Network Layer</label
-          >
-          <label class="option"
-            ><input type="radio" name="q11" value="Physical Layer" /> Physical Layer</label
-            ><input type="radio" name="q11" /> Transport Layer</label
-          >
-          </div>
-        </div>
-
-        <!-- QUESTION 12 -->
-        <div class="quiz-question">
-          <h3>12. Router operates in which OSI layer?</h3>
-          <div class="quiz-options">
-            <label class="option"
-            ><input type="radio" name="q11" value="Layer 3" /> Physical Layer</label
-            ><input type="radio" name="q12" value="Layer 3" /> Layer 1</label
-          >
-          <label class="option"
-            ><input type="radio" name="q12" value="Layer 3"/> Layer 3</label
-          >
-          <label class="option"
-            ><input type="radio" name="q12" value="Layer 3"/> Layer 4</label
-          >
-          <label class="option"
-            ><input type="radio" name="q12" value="Layer 3"/> Layer 7</label
-          >
-          </div>
-        </div>
-
-        <!-- QUESTION 13 -->
-        <div class="quiz-question">
-          <h3>13. Physical layer concerns with:</h3>
-          <div class="quiz-options">
-            <label class="option"
-            ><input type="radio" name="q13" value="Bit-by-bit delivery"/> Bit-by-bit delivery</label
-          >
-          <label class="option"
-            ><input type="radio" name="q13" value="Bit-by-bit delivery"/> Process-to-process
-            delivery</label
-          >
-          <label class="option"
-            ><input type="radio" name="q13" value="Bit-by-bit delivery"/> Application delivery</label
-          >
-          <label class="option"><input type="radio" name="q13" value="Bit-by-bit delivery"/> None</label>
-          </div>
-        </div>
-
-        <!-- QUESTION 14 -->
-        <div class="quiz-question">
-          <h3>14. Highest transmission speed media is:</h3>
-          <div class="quiz-options">
-            
-          <label class="option"
-            ><input type="radio" name="q14" value="Optical fiber"/> Coaxial cable</label
-          >
-          <label class="option"
-            ><input type="radio" name="q14" value="Optical fiber"/> Twisted pair cable</label
-          >
-          <label class="option"
-            ><input type="radio" name="q14" value="Optical fiber"/> Optical fiber</label
-          >
-          <label class="option"
-            ><input type="radio" name="q14" value="Optical fiber"/> Electrical cable</label
-          >
-          </div>
-        </div>
-
-        <!-- QUESTION 15 -->
-        <div class="quiz-question">
-          <h3>15. Bits can be sent as analog signal by:</h3>
-          <div class="quiz-options">
-            <label class="option"
-            ><input type="radio" name="q15" value="Digital modulation"/> Digital modulation</label
-          >
-          <label class="option"
-            ><input type="radio" name="q15"  value="Digital modulation"/> Amplitude modulation</label
-          >
-          <label class="option"
-            ><input type="radio" name="q15"  value="Digital modulation"/> Frequency modulation</label
-          >
-          <label class="option"
-            ><input type="radio" name="q15"  value="Digital modulation"/> Phase modulation</label
-          >
-          </div>
-        </div>
-
-        <!-- QUESTION 16 -->
-        <div class="quiz-question">
-          <h3>16. Physical layer portion interfacing MAC sublayer is:</h3>
-          <div class="quiz-options">
-            <label class="option"
-            ><input type="radio" name="q16"  value="Physical signalling sub layer"/> Physical signalling sub
-            layer</label>
-          >
-          <label class="option"
-            ><input type="radio" name="q16" value="Physical signalling sub layer"/> Physical data sub layer</label
-          >
-          <label class="option"
-            ><input type="radio" name="q16" value="Physical signalling sub layer"/> Physical address sub layer</label
-          >
-          <label class="option"><input type="radio" name="q16" value="Physical signalling sub layer"/> None</label>
-          </div>
-        </div>
-
-        <!-- QUESTION 17 -->
-        <div class="quiz-question">
-          <h3>17. Asynchronous serial communication provides:</h3>
-          <div class="quiz-options">
-            <label class="option"
-            ><input type="radio" name="q17" value=" Both"/> Start and stop signalling</label
-          >
-          <label class="option"
-            ><input type="radio" name="q17" value=" Both"/> Flow control</label
-          >
-          <label class="option"><input type="radio" name="q17" value=" Both"/> Both</label>
-          <label class="option"
-            ><input type="radio" name="q17" value=" Both"/> Only start signalling</label
-          >
-          </div>
-        </div>
-
-        <!-- QUESTION 18 -->
-        <div class="quiz-question">
-          <h3>18. Physical layer translates logical requests from:</h3>
-          <div class="quiz-options">
-            <label class="option"
-            ><input type="radio" name="q18" value="Data link layer"/> Data link layer</label
-          >
-          <label class="option"
-            ><input type="radio" name="q18" value="Data link layer"/> Network layer</label
-          >
-          <label class="option"
-            ><input type="radio" name="q18" value="Data link layer"/> Transport layer</label
-          >
-          <label class="option"
-            ><input type="radio" name="q18" value="Data link layer"/> Application layer</label
-          >
-          </div>
-        </div>
-
-        <!-- QUESTION 19 -->
-        <div class="quiz-question">
-          <h3>19. A single channel shared by multiple signals is:</h3>
-          <div class="quiz-options">
-            <label class="option"
-            ><input type="radio" name="q19" value="Multiplexing"/> Analog modulation</label
-          >
-          <label class="option"
-            ><input type="radio" name="q19" value="Multiplexing"/> Digital modulation</label
-          >
-          <label class="option"
-            ><input type="radio" name="q19" value="Multiplexing"/> Multiplexing</label
-          >
-          <label class="option"
-            ><input type="radio" name="q19" value="Multiplexing"/> Phase modulation</label
-          >
-          </div>
-        </div>
-
-        <!-- QUESTION 20 -->
-        <div class="quiz-question">
-          <h3>20. Data link layer takes packets from:</h3>
-          <div class="quiz-options">
-            <label class="option"
-            ><input type="radio" name="q20" value="Network layer"/> Network layer</label
-          >
-          <label class="option"
-            ><input type="radio" name="q20" value="Network layer"/> Physical layer</label
-          >
-          <label class="option"
-            ><input type="radio" name="q20" value="Network layer"/> Transport layer</label
-          >
-          <label class="option"
-            ><input type="radio" name="q20" value="Network layer"/> Application layer</label
-          >
-          </div>
-        </div>
-
-        <!-- QUESTION 21 -->
-        <div class="quiz-question">
-          <h3>21. Which task is NOT done by Data Link Layer?</h3>
-           <div class="quiz-options">
-               <label class="option"
-            ><input type="radio" name="q21" value=" Channel coding"/> Framing</label
-          >
-          <label class="option"
-            ><input type="radio" name="q21" value=" Channel coding"/> Error control</label
-          >
-          <label class="option"
-            ><input type="radio" name="q21" value=" Channel coding"/> Flow control</label
-          >
-          <label class="option"
-            ><input type="radio" name="q21" value=" Channel coding"/> Channel coding</label
-          >
-           </div>
-        </div>
-
-        <!-- QUESTION 22 -->
-        <div class="quiz-question">
-          <h3>22. Which sub layer depends on medium type?</h3>
-          <div class="quiz-options">
-            <label class="option"
-            ><input type="radio" name="q22" value="Media access control"/> Logical link control</label
-          >
-          <label class="option"
-            ><input type="radio" name="q22" value="Media access control"/> Media access control</label
-          >
-          <label class="option"
-            ><input type="radio" name="q22" value="Media access control"/> Network interface control</label
-          >
-          <label class="option"
-            ><input type="radio" name="q22" value="Media access control"/> Error control</label
-          >
-          </div>
-        </div>
-
-        <!-- QUESTION 23 -->
-        <div class="quiz-question">
-          <h3>23. Header of a frame contains:</h3>
-          <div class="quiz-options">
-            <label class="option"
-            ><input type="radio" name="q23" value="All of the above"/> Synchronization bytes</label
-          >
-          <label class="option"
-            ><input type="radio" name="q23" value="All of the above"/> Addresses</label
-          >
-          <label class="option"
-            ><input type="radio" name="q23" value="All of the above"/> Frame identifier</label
-          >
-          <label class="option"
-            ><input type="radio" name="q23" value="All of the above"/> All of the above</label
-          >
-          </div>
-        </div>
-
-        <!-- QUESTION 24 -->
-        <div class="quiz-question">
-          <h3>24. Error where 2 or more bits change is:</h3>
-          <div class="quiz-options"><label class="option"
-            ><input type="radio" name="q24" value="Burst error"/> Random error</label
-          >
-          <label class="option"
-            ><input type="radio" name="q24" value="Burst error"/> Burst error</label
-          >
-          <label class="option"
-            ><input type="radio" name="q24" value="Burst error"/> Inverted error</label
-          >
-          <label class="option"
-            ><input type="radio" name="q24" value="Burst error"/> Double error</label
-          >
-          </div>
-        </div>
-
-        <!-- QUESTION 25 -->
-        <div class="quiz-question">
-          <h3>25. Which is a data link protocol?</h3>
-          <div class="quiz-options">
-            <label class="option"
-            ><input type="radio" name="q25" value="All of the above"/> Ethernet</label
-          >
-          <label class="option"><input type="radio" name="q25" value="All of the above"/> PPP</label>
-          <label class="option"><input type="radio" name="q25" value="All of the above"/> HDLC</label>
-          <label class="option"
-            ><input type="radio" name="q25" value="All of the above"/> All of the above</label
-          >
-          </div>
-        </div>
-
-        <!-- QUESTION 26 -->
-        <div class="quiz-question">
-          <h3>26. Multiple access protocol is:</h3>
-          <div></div>
-
-          <label class="option"
-            ><input type="radio" name="q26" value="Both"/> CSMA/CD</label
-          >
-          <label class="option"
-            ><input type="radio" name="q26" value="Both"/> CSMA/CA</label
-          >
-          <label class="option"><input type="radio" name="q26" value="Both"/> Both</label>
-          <label class="option"><input type="radio" name="q26" value="Both"/> HDLC</label>
-        </div>
-
-        <!-- QUESTION 27 -->
-        <div class="quiz-question">
-          <h3>27. Networking Hardware Address is:</h3>
-          <div class="quiz-options">
-            <label class="option"
-            ><input type="radio" name="q27" value="MAC address"/> IP address</label
-          >
-          <label class="option"
-            ><input type="radio" name="q27" value="MAC address"/> MAC address</label
-          >
-          <label class="option"><input type="radio" name="q27" value="MAC address"/> NIC</label>
-          <label class="option"><input type="radio" name="q27" value="MAC address"/> OUI</label>
-          </div>
-        </div>
-
-        <!-- QUESTION 28 -->
-        <div class="quiz-question">
-          <h3>28. MAC addresses are used as:</h3>
-          <div ckass></div>
-
-          <label class="option"
-            ><input type="radio" name="q28" value="Hardware address"/> Network address</label
-          >
-          <label class="option"
-            ><input type="radio" name="q28" value="Hardware address"/> IP address</label
-          >
-          <label class="option"
-            ><input type="radio" name="q28" value="Hardware address"/> Hardware address</label
-          >
-          <label class="option"
-            ><input type="radio" name="q28" value="Hardware address"/> Burned in address</label
-          >
-        </div>
-
-        <!-- QUESTION 29 -->
-        <div class="quiz-question">
-          <h3>29. IEEE 802 MAC address came from:</h3>
-          <div class="quiz-options">
-            <label class="option"
-            ><input type="radio" name="q29" value="Ethernet address"/> MAC address</label
-          >
-          <label class="option"
-            ><input type="radio" name="q29" value="Ethernet address"/> IP address</label
-          >
-          <label class="option"
-            ><input type="radio" name="q29" value="Ethernet address"/> Ethernet address</label
-          >
-          <label class="option"><input type="radio" name="q29" value="Ethernet address"/> HTTP</label>
-          </div>
-        </div>
-
-        <!-- QUESTION 30 -->
-        <div class="quiz-question">
-          <h3>30. Hardware address is known as:</h3>
-          <div class="quiz-options">
-            <label class="option"
-            ><input type="radio" name="q30" value="MAC address"/> MAC address</label
-          >
-          <label class="option"
-            ><input type="radio" name="q30" value="MAC address"/> IP address</label
-          >
-          <label class="option"><input type="radio" name="q30" value="MAC address"/> NIC</label>
-          <label class="option"><input type="radio" name="q30" value="MAC address"/> ARP</label>
-          </div>
-        </div>
-
-        <!-- QUESTION 31 -->
-        <div class="quiz-question">
-          <h3>31. Network layer is concerned with:</h3>
-          <div class="quiz-options">
-            <label class="option"><input type="radio" name="q31" value="Packets"/> Bits</label>
-          <label class="option"><input type="radio" name="q31" value="Packets"/> Frames</label>
-          <label class="option"
-            ><input type="radio" name="q31" value="Packets"/> Packets</label
-          >
-          <label class="option"><input type="radio" name="q31" value="Packets"/> Bytes</label>
-          </div>
-        </div>
-
-        <!-- QUESTION 32 -->
-        <div class="quiz-question">
-          <h3>32. A 4-byte IP address consists of:</h3>
-          <div class="quiz-options">
-            <label class="option"
-            ><input type="radio" name="q32" value="Network & host address"/> Only network address</label
-          >
-          <label class="option"
-            ><input type="radio" name="q32" value="Network & host address"/> Only host address</label
-          >
-          <label class="option"
-            ><input type="radio" name="q32" value="Network & host address"/> Network & host address</label
-          >
-          <label class="option"
-            ><input type="radio" name="q32" value="Network & host address"/> Network & MAC address</label
-          >
-          </div>
-        </div>
-
-        <!-- QUESTION 33 -->
-        <div class="quiz-question">
-          <h3>33. In virtual circuit network each packet contains:</h3>
-          <div class="quiz-options">
-            <label class="option"
-            ><input type="radio" name="q33" value="Short VC number"/> Full source & destination
-            address</label
-          >
-          <label class="option"
-            ><input type="radio" name="q33" value="Short VC number"/> Short VC number</label
-          >
-          <label class="option"
-            ><input type="radio" name="q33" value="Short VC number"/> Only source address</label
-          >
-          <label class="option"
-            ><input type="radio" name="q33" value="Short VC number"/> Only destination address</label
-          >
-          </div>
-        </div>
-
-        <!-- QUESTION 34 -->
-        <div class="quiz-question">
-          <h3>34. Routing algorithms used for network layer design:</h3>
-          <div class="quiz-options">
-            <label class="option"
-            ><input type="radio" name="q34" value="All of the above"/> Shortest path algorithm</label
-          >
-          <label class="option"
-            ><input type="radio" name="q34" value="All of the above"/> Distance vector routing</label
-          >
-          <label class="option"
-            ><input type="radio" name="q34" value="All of the above"/> Link state routing</label
-          >
-          <label class="option"
-            ><input type="radio" name="q34" value="All of the above"/> All of the above</label
-          >
-          </div>
-        </div>
-
-        <!-- QUESTION 35 -->
-        <div class="quiz-question">
-          <h3>35. Which is NOT correct in multi-destination routing?</h3>
-          <div class="quiz-options">
-            <label class="option"
-            ><input type="radio" name="q35" value="Data not sent by packets"/> Same as broadcast routing</label
-          >
-          <label class="option"
-            ><input type="radio" name="q35" value="Data not sent by packets"/> Contains all destinations</label
-          >
-          <label class="option"
-            ><input type="radio" name="q35" value="Data not sent by packets"/> Data not sent by packets</label
-          >
-          <label class="option"
-            ><input type="radio" name="q35" value="Data not sent by packets"/> Multiple receivers</label
-          >
-          </div>
-        </div>
-
-        <!-- QUESTION 36 -->
-        <div class="quiz-question">
-          <h3>36. A subset network with no loops is:</h3>
-          <div class="quiz-options">
-            <label class="option"
-            ><input type="radio" name="q36" value="Spanning tree"/> Spanning tree</label
-          >
-          <label class="option"
-            ><input type="radio" name="q36"  value="Spanning tree"/> Spider structure</label
-          >
-          <label class="option"
-            ><input type="radio" name="q36"  value="Spanning tree"/> Spider tree</label
-          >
-          <label class="option"
-            ><input type="radio" name="q36"  value="Spanning tree"/> Special tree</label
-          >
-          </div>
-        </div>
-
-        <!-- QUESTION 37 -->
-        <div class="quiz-question">
-          <h3>37. Which is NOT used for congestion control?</h3>
-          <div class="quiz-options">
-            <label class="option"
-            ><input type="radio" name="q37" value="Routing informationprotocol"/> Traffic aware routing</label
-          >
-          <label class="option"
-            ><input type="radio" name="q37" value="Routing informationprotocol"/> Admission control</label
-          >
-          <label class="option"
-            ><input type="radio" name="q37" value="Routing informationprotocol"/> Load shedding</label
-          >
-          <label class="option"
-            ><input type="radio" name="q37" value="Routing informationprotocol"/> Routing information
-            protocol</label
-          >
-          </div>
-        </div>
-
-        <!-- QUESTION 38 -->
-        <div class="quiz-question">
-          <h3>38. Internet network layer protocol is:</h3>
-          <div class="quiz-options">
-            <label class="option"
-            ><input type="radio" name="q38" value="Internet Protocol"/> Ethernet</label
-          >
-          <label class="option"
-            ><input type="radio" name="q38" value="Internet Protocol"/>Internet Protocol</label>
-          >
-          <label class="option"><input type="radio" name="q38" value="Internet Protocol"/> HTTP</label>
-          <label class="option"><input type="radio" name="q38" value="Internet Protocol"/> FTP</label>
-          </div>
-        </div>
-
-        <!-- QUESTION 39 -->
-        <div class="quiz-question">
-          <h3>39. ICMP is mainly used for:</h3>
-          <div class="quiz-options">
-            <label class="option"
-            ><input type="radio" name="q39" value="Error and diagnostics"/> Error and diagnostics</label
-          >
-          <label class="option"
-            ><input type="radio" name="q39" value="Error and diagnostics"/> Addressing</label
-          >
-          <label class="option"
-            ><input type="radio" name="q39" value="Error and diagnostics"/> Forwarding</label
-          >
-          <label class="option"
-            ><input type="radio" name="q39" value="Error and diagnostics"/> Routing</label
-          >
-          </div>
-        </div>
-
-        <!-- QUESTION 40 -->
-        <div class="quiz-question">
-          <h3>40. MAC stands for:</h3>
-          <div class="quiz-options">
-            <label class="option"
-            ><input type="radio" name="q40" value="Memory Access Control"/> Media Area Control</label
-          >
-          <label class="option"
-            ><input type="radio" name="q40" value="Memory Access Control"/> Memory Access Control</label
-          >
-          <label class="option"
-            ><input type="radio" name="q40" value="Memory Access Control"/> Memory Area Control</label
-          >
-          <label class="option"
-            ><input type="radio" name="q40" value="Memory Access Control"/> Media Access Control</label
-          >
-          </div>
-        </div>
-
-        <!-- QUESTION 41 -->
-        <div class="quiz-question">
-          <h3>41. Transport layer passes data to:</h3>
-          <div class="quiz-options">
-            <label class="option"
-            ><input type="radio" name="q41" value="Network layer"/> Network layer</label
-          >
-          <label class="option"
-            ><input type="radio" name="q41" value="Network layer"/> Data link layer</label
-          >
-          <label class="option"
-            ><input type="radio" name="q41" value="Network layer"/> Application layer</label
-          >
-          <label class="option"
-            ><input type="radio" name="q41" value="Network layer"/> Physical layer</label
-          >
-          </div>
-        </div>
-
-        <!-- QUESTION 42 -->
-        <div class="quiz-question">
-          <h3>42. Transport layer protocols are:</h3>
-          <div class="quiz-options">
-            <label class="option"
-            ><input type="radio" name="q42" value="TCP & UDP"/> TCP & FTP</label
-          >
-          <label class="option"
-            ><input type="radio" name="q42" value="TCP & UDP"/> UDP & HTTP</label
-          >
-          <label class="option"
-            ><input type="radio" name="q42" value="TCP & UDP"/> TCP & UDP</label
-          >
-          <label class="option"
-            ><input type="radio" name="q42" value="TCP & UDP"/> HTTP & FTP</label
-          >
-          </div>
-        </div>
-
-        <!-- QUESTION 43 -->
-        <div class="quiz-question">
-          <h3>43. UDP is called connectionless because:</h3>
-          <div class="quiz-options">
-            <label class="option"
-            ><input type="radio" name="q43" value=" Packets treated independently"/> Packets treated
-            independently</label
-          >
-          <label class="option"
-            ><input type="radio" name="q43" value=" Packets treated independently"/> Sends stream of packets</label
-          >
-          <label class="option"
-            ><input type="radio" name="q43" value=" Packets treated independently"/> Received in same order</label
-          >
-          <label class="option"
-            ><input type="radio" name="q43" value=" Packets treated independently"/> Sends data quickly</label
-          >
-          </div>
-        </div>
-
-        <!-- QUESTION 44 -->
-        <div class="quiz-question">
-          <h3>44. TCP:</h3>
-          <div class="quiz-options">
-            <label class="option"
-            ><input type="radio" name="q44" value="All of the above"/> Connection-oriented</label
-          >
-          <label class="option"
-            ><input type="radio" name="q44" value="All of the above"/> Uses 3-way handshake</label
-          >
-          <label class="option"
-            ><input type="radio" name="q44" value="All of the above"/> Receives stream data</label
-          >
-          <label class="option"
-            ><input type="radio" name="q44" value="All of the above"/> All of the above</label
-          >
-          </div>
-        </div>
-
-        <!-- QUESTION 45 -->
-        <div class="quiz-question">
-          <h3>45. Endpoint of communication is called:</h3>
-          <div class="quiz-options">
-            <label class="option"><input type="radio" name="q45" value="Socket"/> Socket</label>
-          <label class="option"><input type="radio" name="q45" value="Socket"/> Pipe</label>
-          <label class="option"><input type="radio" name="q45" value="Socket"/> Port</label>
-          <label class="option"
-            ><input type="radio" name="q45" value="Socket"/> Machine</label
-          >
-          </div>
-        </div>
-
-        <!-- QUESTION 46 -->
-        <div class="quiz-question">
-          <h3>46. Socket API for Windows is:</h3>
-          <div class="quiz-options">
-             <label class="option"><input type="radio" name="q46" value="winsock"/> wsock</label>
-          <label class="option"
-            ><input type="radio" name="q46" value="winsock"/> winsock</label
-          >
-          <label class="option"><input type="radio" name="q46" value="winsock"/> wins</label>
-          <label class="option"
-            ><input type="radio" name="q46" value="winsock"/> sockwin</label
-          >
-          </div>
-        </div>
-
-        <!-- QUESTION 47 -->
-        <div class="quiz-question">
-          <h3>47. UDP version with congestion control:</h3>
-          <div class="quiz-options">
-            <label class="option"><input type="radio" name="q47" value="DCCP"/> DCCP</label>
-          <label class="option"><input type="radio" name="q47" value="DCCP"/> SCTP</label>
-          <label class="option"
-            ><input type="radio" name="q47" value="DCCP"/> Structured stream
-            transport</label
-          >
-          <label class="option"
-            ><input type="radio" name="q47" value="DCCP"/> User congestion control</label
-          >
-          </div>
-        </div>
-
-        <!-- QUESTION 48 -->
-        <div class="quiz-question">
-          <h3>48. TCP name for transport service access point:</h3>
-          <div class="quiz-options">
-            <label class="option"><input type="radio" name="q48" value="Port"/> Port</label>
-          <label class="option"><input type="radio" name="q48" value="Port"/> Pipe</label>
-          <label class="option"><input type="radio" name="q48" value="Port"/> Node</label>
-          <label class="option"
-            ><input type="radio" name="q48" value="Port"/> Protocol</label
-          >
-          </div>
-        </div>
-
-        <!-- QUESTION 49 -->
-        <div class="quiz-question">
-          <h3>49. Transport layer protocols deal with:</h3>
-          <div class="quiz-options">
-            <label class="option"
-            ><input type="radio" name="q49" value="Process communication"/> Application communication</label
-          >
-          <label class="option"
-            ><input type="radio" name="q49" value="Process communication"/> Process communication</label
-          >
-          <label class="option"
-            ><input type="radio" name="q49" value="Process communication"/> Node communication</label
-          >
-          <label class="option"
-            ><input type="radio" name="q49" value="Process communication"/> Man communication</label
-          >
-          </div>
-        </div>
-
-        <!-- QUESTION 50 -->
-        <div class="quiz-question">
-          <h3>50. Which is a transport layer protocol?</h3>
-          <div class="quiz-options">
-             <label class="option"><input type="radio" name="q50" value="SCTP"/> SCTP</label>
-          <label class="option"><input type="radio" name="q50"  value="SCTP"/> ICMP</label>
-          <label class="option"><input type="radio" name="q50"  value="SCTP"/> NDP</label>
-          <label class="option"><input type="radio" name="q50"  value="SCTP"/> DHCP</label>
-          </div>
-        </div>
-
-        <button type="submit">Submit Quiz</button>
-        <h2 id="result"></h2>
-      </form>
-
-      <div id="quizScore" class="quiz-score">
-        <p>Your Score</p>
-        <h2 id="scoreValue">0 / 50</h2>
-        <p id="scorePercent">0%</p>
-        <p style="margin-top: 1rem; opacity: 0.9">
-          Great effort! Review any missed questions and try again.
-        </p>
-        <a
-          href="dashboard.html"
-          class="btn btn-outline"
-          style="margin-top: 1.5rem; color: white; border-color: white"
-          >Back to Dashboard</a
-        >
       </div>
 
-    </main>
-        
-  <footer class="footer"><div class="footer-bottom"><p>&copy; 2026 StudyConnect College Project</p></div></footer>
+      <!-- Q2 -->
+      <div class="quiz-question">
+        <h3>2. Which routing algorithm can be used for network layer design?</h3>
+        <div class="quiz-options">
+          <label class="option"><input type="radio" name="q2" value="Shortest path algorithm"> Shortest path algorithm</label>
+          <label class="option"><input type="radio" name="q2" value="Distance Vector algorithm"> Distance Vector algorithm</label>
+          <label class="option"><input type="radio" name="q2" value="Link state routing"> Link state routing</label>
+          <label class="option"><input type="radio" name="q2" value="All of the above"> All of the above</label>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="quiz-question">
+        <h3>3. Which is NOT correct in multi-destination routing?</h3>
+        <div class="quiz-options">
+          <label class="option"><input type="radio" name="q3" value="Same as broadcast routing"> Same as broadcast routing</label>
+          <label class="option"><input type="radio" name="q3" value="Contains list of all destinations"> Contains list of all destinations</label>
+          <label class="option"><input type="radio" name="q3" value="Data is not sent by packets"> Data is not sent by packets</label>
+          <label class="option"><input type="radio" name="q3" value="There are multiple receivers"> There are multiple receivers</label>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="quiz-question">
+        <h3>4. Which algorithm is NOT used for congestion control?</h3>
+        <div class="quiz-options">
+          <label class="option"><input type="radio" name="q4" value="Traffic aware routing"> Traffic aware routing</label>
+          <label class="option"><input type="radio" name="q4" value="Admission control"> Admission control</label>
+          <label class="option"><input type="radio" name="q4" value="Load shedding"> Load shedding</label>
+          <label class="option"><input type="radio" name="q4" value="Routing information protocol"> Routing information protocol</label>
+        </div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="quiz-question">
+        <h3>5. Distance Vector Algorithm is also called:</h3>
+        <div class="quiz-options">
+          <label class="option"><input type="radio" name="q5" value="Bellman-Ford routing algorithm"> Bellman-Ford routing algorithm</label>
+          <label class="option"><input type="radio" name="q5" value="Ford-Fulkerson algorithm"> Ford-Fulkerson algorithm</label>
+          <label class="option"><input type="radio" name="q5" value="Both"> Both</label>
+          <label class="option"><input type="radio" name="q5" value="None of the above"> None of the above</label>
+        </div>
+      </div>
+
+      <!-- Q6 -->
+      <div class="quiz-question">
+        <h3>6. In Hierarchical routing all routers are called:</h3>
+        <div class="quiz-options">
+          <label class="option"><input type="radio" name="q6" value="Regions"> Regions</label>
+          <label class="option"><input type="radio" name="q6" value="Clusters"> Clusters</label>
+          <label class="option"><input type="radio" name="q6" value="Pointers"> Pointers</label>
+          <label class="option"><input type="radio" name="q6" value="Sequences"> Sequences</label>
+        </div>
+      </div>
+
+      <!-- Q7 -->
+      <div class="quiz-question">
+        <h3>7. Minimum header size of an IP packet is:</h3>
+        <div class="quiz-options">
+          <label class="option"><input type="radio" name="q7" value="16 bytes"> 16 bytes</label>
+          <label class="option"><input type="radio" name="q7" value="10 bytes"> 10 bytes</label>
+          <label class="option"><input type="radio" name="q7" value="20 bytes"> 20 bytes</label>
+          <label class="option"><input type="radio" name="q7" value="32 bytes"> 32 bytes</label>
+        </div>
+      </div>
+
+      <!-- Q8 -->
+      <div class="quiz-question">
+        <h3>8. Which is NOT a possible way of data exchange?</h3>
+        <div class="quiz-options">
+          <label class="option"><input type="radio" name="q8" value="Simplex"> Simplex</label>
+          <label class="option"><input type="radio" name="q8" value="Multiplex"> Multiplex</label>
+          <label class="option"><input type="radio" name="q8" value="Half-duplex"> Half-duplex</label>
+          <label class="option"><input type="radio" name="q8" value="Full-duplex"> Full-duplex</label>
+        </div>
+      </div>
+
+      <!-- Q9 -->
+      <div class="quiz-question">
+        <h3>9. TCP port number specifies:</h3>
+        <div class="quiz-options">
+          <label class="option"><input type="radio" name="q9" value="Communication process"> Communication process</label>
+          <label class="option"><input type="radio" name="q9" value="Quality of data"> Quality of data</label>
+          <label class="option"><input type="radio" name="q9" value="Size of data"> Size of data</label>
+          <label class="option"><input type="radio" name="q9" value="All of the above"> All of the above</label>
+        </div>
+      </div>
+
+      <!-- Q10 -->
+      <div class="quiz-question">
+        <h3>10. Transport layer protocols are:</h3>
+        <div class="quiz-options">
+          <label class="option"><input type="radio" name="q10" value="FTP"> FTP</label>
+          <label class="option"><input type="radio" name="q10" value="TCP"> TCP</label>
+          <label class="option"><input type="radio" name="q10" value="UDP"> UDP</label>
+          <label class="option"><input type="radio" name="q10" value="TCP & UDP"> TCP & UDP</label>
+        </div>
+      </div>
+
+      <!-- Q11 -->
+      <div class="quiz-question">
+        <h3>11. Repeater operates in which OSI layer?</h3>
+        <div class="quiz-options">
+          <label class="option"><input type="radio" name="q11" value="Physical Layer"> Physical Layer</label>
+          <label class="option"><input type="radio" name="q11" value="Data Link Layer"> Data Link Layer</label>
+          <label class="option"><input type="radio" name="q11" value="Network Layer"> Network Layer</label>
+          <label class="option"><input type="radio" name="q11" value="Transport Layer"> Transport Layer</label>
+        </div>
+      </div>
+
+      <!-- Q12 -->
+      <div class="quiz-question">
+        <h3>12. Router operates in which OSI layer?</h3>
+        <div class="quiz-options">
+          <label class="option"><input type="radio" name="q12" value="Layer 1"> Layer 1</label>
+          <label class="option"><input type="radio" name="q12" value="Layer 2"> Layer 2</label>
+          <label class="option"><input type="radio" name="q12" value="Layer 3"> Layer 3</label>
+          <label class="option"><input type="radio" name="q12" value="Layer 7"> Layer 7</label>
+        </div>
+      </div>
+
+      <!-- SUBMIT -->
+      <button type="submit">Submit Quiz</button>
+      <h2 id="result"></h2>
+
+    </form>
+
+    <!-- SCORE BOX -->
+    <div id="quizScore" class="quiz-score">
+      <p>Your Score</p>
+      <h2 id="scoreValue">0 / 50</h2>
+      <p id="scorePercent">0%</p>
+      <p style="margin-top:1rem;">Great effort! Review and try again.</p>
+      <a href="dashboard.html" class="btn btn-outline">Back to Dashboard</a>
+    </div>
+
+  </main>
+
+  <footer class="footer">
+    <div class="footer-bottom">
+      <p>&copy; 2026 StudyConnect College Project</p>
+    </div>
+  </footer>
+
   <script type="module" src="app.js"></script>
 </body>
 </html>
