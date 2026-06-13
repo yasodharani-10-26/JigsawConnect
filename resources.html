@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,32 +6,61 @@
   <title>Resources – StudyConnect</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
+  <!-- NAVBAR -->
   <nav class="navbar">
     <a href="index.html" class="logo">📚 Study<span>Connect</span></a>
-    <button class="menu-toggle" aria-label="Open menu"><span></span><span></span><span></span></button>
+
+    <button class="menu-toggle" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+
     <div class="nav-links">
       <a href="dashboard.html">Dashboard</a>
-      <a href="resources.html">Resources</a>
+      <a href="resources.html" class="active">Resources</a>
       <a href="quiz.html">Quiz</a>
       <a href="index.html" class="btn btn-outline btn-sm logout-btn">Logout</a>
     </div>
   </nav>
 
+  <!-- HEADER -->
   <header class="page-header">
     <h1>Study Resources</h1>
     <p>Materials uploaded by admin</p>
   </header>
 
+  <!-- MAIN CONTENT -->
   <main class="main-content">
+
+    <!-- SEARCH TOOLBAR -->
     <div class="toolbar">
-      <input type="search" id="resourceSearch" class="search-bar" placeholder="Search by title, type or subject..." />
+      <input
+        type="search"
+        id="resourceSearch"
+        class="search-bar"
+        placeholder="Search resources by title, subject, or type..."
+        autocomplete="off"
+      />
     </div>
-    <div id="resourceList" class="card-list"></div>
+
+    <!-- RESOURCE LIST -->
+    <div id="resourceList" class="card-list">
+      <!-- Dynamic content from app.js -->
+    </div>
+
   </main>
 
-  <footer class="footer"><div class="footer-bottom"><p>&copy; 2026 StudyConnect College Project</p></div></footer>
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-bottom">
+      <p>&copy; 2026 StudyConnect College Project</p>
+    </div>
+  </footer>
+
+  <!-- SCRIPT -->
   <script type="module" src="app.js"></script>
+
 </body>
 </html>
