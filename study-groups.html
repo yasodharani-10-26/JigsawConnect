@@ -1,102 +1,230 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Study Groups – StudyConnect</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Study Groups | StudyConnect</title>
+
+<link rel="stylesheet" href="style.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
 
-  <nav class="navbar">
-    <a href="index.html" class="logo">📚 Study<span>Connect</span></a>
-    <button class="menu-toggle" aria-label="Open menu">
-      <span></span>
-      <span></span>
-      <span></span>
+<!-- NAVBAR -->
+
+<nav class="navbar">
+
+    <a href="index.html" class="logo">
+        📚 Study<span>Connect</span>
+    </a>
+
+    <button class="menu-toggle">
+        <span></span>
+        <span></span>
+        <span></span>
     </button>
+
     <div class="nav-links">
-      <a href="dashboard.html">Dashboard</a>
-      <a href="study-groups.html">Study Groups</a>
-      <a href="resources.html">Resources</a>
-      <a href="discussions.html">Discussions</a>
-      <a href="quiz.html">Quizzes</a>
-      <div class="nav-buttons">
-        <a href="index.html" class="btn btn-outline btn-sm logout-btn">Logout</a>
-      </div>
-    </div>
-  </nav>
+        <a href="student-dashboard.html">Dashboard</a>
+        <a href="resources.html">Resources</a>
+        <a href="quiz.html">Quiz</a>
+        <a href="leaderboard.html">Leaderboard</a>
 
-  <header class="page-header">
-    <h1>Study Groups</h1>
-    <p>Find a group that matches your subject and learning goals</p>
-  </header>
-
-  <nav class="dashboard-nav">
-    <ul>
-      <li><a href="dashboard.html">Dashboard</a></li>
-      <li><a href="study-groups.html">Study Groups</a></li>
-      <li><a href="resources.html">Resources</a></li>
-      <li><a href="discussions.html">Discussions</a></li>
-      <li><a href="quiz.html">Quizzes</a></li>
-    </ul>
-  </nav>
-
-  <main class="main-content">
-    <div class="toolbar">
-      <button type="button" id="createGroupBtn" class="btn btn-primary">+ Create Group</button>
+        <div class="nav-buttons">
+            <a href="index.html" class="btn btn-outline btn-sm">
+                Logout
+            </a>
+        </div>
     </div>
 
-    <div class="card-list">
-      <article class="item-card">
-        <div>
-          <h3>Computer Science Fundamentals</h3>
-          <p class="meta">24 members · Active daily · Programming &amp; algorithms</p>
-        </div>
-        <button type="button" class="btn btn-primary join-group-btn" data-group="Computer Science Fundamentals">Join Group</button>
-      </article>
+</nav>
 
-      <article class="item-card">
-        <div>
-          <h3>Mathematics Study Circle</h3>
-          <p class="meta">18 members · Calculus &amp; linear algebra</p>
-        </div>
-        <button type="button" class="btn btn-primary join-group-btn" data-group="Mathematics Study Circle">Join Group</button>
-      </article>
+<!-- HERO -->
 
-      <article class="item-card">
-        <div>
-          <h3>Physics &amp; Chemistry Lab Prep</h3>
-          <p class="meta">15 members · Lab reports &amp; exam prep</p>
-        </div>
-        <button type="button" class="btn btn-primary join-group-btn" data-group="Physics & Chemistry Lab Prep">Join Group</button>
-      </article>
+<section class="page-header">
 
-      <article class="item-card">
-        <div>
-          <h3>English Literature Club</h3>
-          <p class="meta">12 members · Essays &amp; book discussions</p>
-        </div>
-        <button type="button" class="btn btn-primary join-group-btn" data-group="English Literature Club">Join Group</button>
-      </article>
+    <h1>👥 Study Groups</h1>
 
-      <article class="item-card">
-        <div>
-          <h3>Final Exam Revision Squad</h3>
-          <p class="meta">32 members · All subjects · High activity</p>
-        </div>
-        <button type="button" class="btn btn-primary join-group-btn" data-group="Final Exam Revision Squad">Join Group</button>
-      </article>
+    <p>
+        Join Communities • Learn Together • Achieve More
+    </p>
+
+</section>
+
+<!-- MAIN -->
+
+<main class="main-content">
+
+    <div class="groups-header">
+
+        <h2>Available Study Groups</h2>
+
+        <button class="btn btn-primary">
+            + Create Group
+        </button>
+
     </div>
-  </main>
 
-  <footer class="footer">
+    <div class="study-groups-grid">
+
+        <div class="group-card">
+
+            <div class="group-icon">💻</div>
+
+            <h3>Programming Club</h3>
+
+            <p>
+                Learn Java, Python, Web Development and Coding Challenges.
+            </p>
+
+            <div class="group-info">
+                👥 45 Members
+            </div>
+
+            <button class="btn btn-primary">
+                Join Group
+            </button>
+
+        </div>
+
+        <div class="group-card">
+
+            <div class="group-icon">🤖</div>
+
+            <h3>AI & Data Science</h3>
+
+            <p>
+                Discuss Machine Learning, AI Projects and Data Analytics.
+            </p>
+
+            <div class="group-info">
+                👥 38 Members
+            </div>
+
+            <button class="btn btn-primary">
+                Join Group
+            </button>
+
+        </div>
+
+        <div class="group-card">
+
+            <div class="group-icon">📐</div>
+
+            <h3>Mathematics Hub</h3>
+
+            <p>
+                Practice Calculus, Statistics and Aptitude Problems.
+            </p>
+
+            <div class="group-info">
+                👥 27 Members
+            </div>
+
+            <button class="btn btn-primary">
+                Join Group
+            </button>
+
+        </div>
+
+        <div class="group-card">
+
+            <div class="group-icon">🚀</div>
+
+            <h3>Project Builders</h3>
+
+            <p>
+                Collaborate on Mini Projects, Major Projects and Hackathons.
+            </p>
+
+            <div class="group-info">
+                👥 52 Members
+            </div>
+
+            <button class="btn btn-primary">
+                Join Group
+            </button>
+
+        </div>
+
+        <div class="group-card">
+
+            <div class="group-icon">🎤</div>
+
+            <h3>Communication Skills</h3>
+
+            <p>
+                Improve Speaking, JAM Sessions and Presentation Skills.
+            </p>
+
+            <div class="group-info">
+                👥 30 Members
+            </div>
+
+            <button class="btn btn-primary">
+                Join Group
+            </button>
+
+        </div>
+
+        <div class="group-card">
+
+            <div class="group-icon">📚</div>
+
+            <h3>Exam Preparation</h3>
+
+            <p>
+                Prepare for Semester Exams, ECET and Competitive Exams.
+            </p>
+
+            <div class="group-info">
+                👥 60 Members
+            </div>
+
+            <button class="btn btn-primary">
+                Join Group
+            </button>
+
+        </div>
+
+    </div>
+
+</main>
+
+<!-- FOOTER -->
+
+<footer class="footer">
+
+    <div class="footer-content">
+
+        <div>
+            <h4>StudyConnect</h4>
+            <p>Connect • Collaborate • Succeed</p>
+        </div>
+
+        <div>
+            <h4>Quick Links</h4>
+
+            <ul class="footer-links">
+                <li><a href="student-dashboard.html">Dashboard</a></li>
+                <li><a href="resources.html">Resources</a></li>
+                <li><a href="quiz.html">Quiz</a></li>
+                <li><a href="leaderboard.html">Leaderboard</a></li>
+            </ul>
+        </div>
+
+    </div>
+
     <div class="footer-bottom">
-      <p>2026 StudyConnect. All rights reserved.</p>
+        <p>© 2026 StudyConnect. All Rights Reserved.</p>
     </div>
-  </footer>
 
- <script type="module" src="app.js"></script>
+</footer>
+
+<script type="module" src="app.js"></script>
+
 </body>
 </html>
