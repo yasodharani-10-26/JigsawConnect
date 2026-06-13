@@ -198,7 +198,7 @@ async function setupStudentLoginPage() {
     }
   });
 }
-const API_KEY = "YOUR_GEMINI_API_KEY";
+const API_KEY = "AQ.Ab8RN6I5v9SLrcWHnCuDqsBs_KcEFhyKam7_Ug-eprmrLog9uQY";
 
 document.getElementById("askAI")?.addEventListener("click", askAI);
 
