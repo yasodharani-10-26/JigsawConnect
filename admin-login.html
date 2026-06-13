@@ -1,47 +1,188 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin Login – StudyConnect</title>
- <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Admin Login | StudyConnect</title>
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+body{
+    margin:0;
+    font-family:'Segoe UI',sans-serif;
+    background:linear-gradient(135deg,#2563eb,#06b6d4);
+    min-height:100vh;
+}
+
+.login-container{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    padding:20px;
+}
+
+.login-card{
+    width:100%;
+    max-width:450px;
+    background:rgba(255,255,255,.15);
+    backdrop-filter:blur(15px);
+    border:1px solid rgba(255,255,255,.2);
+    border-radius:25px;
+    padding:40px;
+    box-shadow:0 15px 40px rgba(0,0,0,.2);
+    color:white;
+}
+
+.login-header{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.login-header h1{
+    margin:0;
+    font-size:2rem;
+}
+
+.login-header p{
+    opacity:.9;
+}
+
+.admin-icon{
+    font-size:4rem;
+    margin-bottom:15px;
+}
+
+.form-group{
+    margin-bottom:20px;
+}
+
+.form-group label{
+    display:block;
+    margin-bottom:8px;
+    font-weight:600;
+}
+
+.form-group input{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    outline:none;
+    font-size:1rem;
+}
+
+.login-btn{
+    width:100%;
+    padding:15px;
+    border:none;
+    border-radius:12px;
+    background:white;
+    color:#2563eb;
+    font-size:1rem;
+    font-weight:700;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.login-btn:hover{
+    transform:translateY(-3px);
+}
+
+.demo-box{
+    margin-top:20px;
+    text-align:center;
+    padding:12px;
+    background:rgba(255,255,255,.15);
+    border-radius:12px;
+}
+
+.demo-box code{
+    background:white;
+    color:#2563eb;
+    padding:3px 8px;
+    border-radius:5px;
+}
+
+.back-home{
+    text-align:center;
+    margin-top:20px;
+}
+
+.back-home a{
+    color:white;
+    text-decoration:none;
+}
+
+#loginMessage{
+    display:none;
+    padding:10px;
+    border-radius:10px;
+    margin-bottom:15px;
+    text-align:center;
+}
+</style>
 </head>
+
 <body>
 
-  <nav class="navbar">
-    <a href="index.html" class="logo">📚 Study<span>Connect</span></a>
-    <button class="menu-toggle" aria-label="Open menu"><span></span><span></span><span></span></button>
-    <div class="nav-links">
-      <a href="login.html">Back</a>
-      <a href="student-login.html">Student Login</a>
-    </div>
-  </nav>
+<div class="login-container">
 
-  <main class="auth-page">
-    <div class="auth-card">
-      <h1>Admin Login</h1>
-      <p class="subtitle">Administrator access only</p>
-      <div id="loginMessage" class="login-message" style="display:none;"></div>
+    <div class="login-card">
 
-      <form id="adminLoginForm">
-        <div class="form-group">
-          <label for="username">Username</label>
-          <input type="text" id="username" placeholder="admin" required autocomplete="username" />
+        <div class="login-header">
+            <div class="admin-icon">👨‍💼</div>
+            <h1>Admin Login</h1>
+            <p>StudyConnect Administration Portal</p>
         </div>
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input type="password" id="password" placeholder="Enter admin password" required autocomplete="current-password" />
+
+        <div id="loginMessage"></div>
+
+        <form id="adminLoginForm">
+
+            <div class="form-group">
+                <label>Username</label>
+                <input
+                    type="text"
+                    id="username"
+                    placeholder="Enter Username"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label>Password</label>
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Enter Password"
+                    required
+                >
+            </div>
+
+            <button type="submit" class="login-btn">
+                Login as Admin
+            </button>
+
+        </form>
+
+        <div class="demo-box">
+            Demo Login <br><br>
+            Username: <code>admin</code><br><br>
+            Password: <code>admin123</code>
         </div>
-        <button type="submit" class="btn btn-primary">Login as Admin</button>
-      </form>
 
-      <p class="auth-link demo-hint">
-        <strong>Demo:</strong> <code>admin</code> / <code>admin123</code>
-      </p>
+        <div class="back-home">
+            <a href="index.html">⬅ Back to Home</a>
+        </div>
+
     </div>
-  </main>
 
- <script type="module" src="app.js"></script>
+</div>
+
+<script type="module" src="app.js"></script>
+
 </body>
 </html>
