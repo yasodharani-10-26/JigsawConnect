@@ -6,122 +6,179 @@
 
 <title>Admin Login | StudyConnect</title>
 
-<link rel="stylesheet" href="style.css">
-
 <style>
-body{
-    margin:0;
-    font-family:'Segoe UI',sans-serif;
-    background:linear-gradient(135deg,#2563eb,#06b6d4);
-    min-height:100vh;
+/* =========================
+   ROOT
+========================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", sans-serif;
 }
 
-.login-container{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    min-height:100vh;
-    padding:20px;
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #0f172a, #1e3a8a, #06b6d4);
+    color: white;
 }
 
-.login-card{
-    width:100%;
-    max-width:450px;
-    background:rgba(255,255,255,.15);
-    backdrop-filter:blur(15px);
-    border:1px solid rgba(255,255,255,.2);
-    border-radius:25px;
-    padding:40px;
-    box-shadow:0 15px 40px rgba(0,0,0,.2);
-    color:white;
+/* =========================
+   CARD
+========================= */
+.login-container {
+    width: 100%;
+    padding: 20px;
 }
 
-.login-header{
-    text-align:center;
-    margin-bottom:30px;
+.login-card {
+    max-width: 420px;
+    margin: auto;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(18px);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 20px;
+    padding: 35px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.4);
 }
 
-.login-header h1{
-    margin:0;
-    font-size:2rem;
+/* =========================
+   HEADER
+========================= */
+.login-header {
+    text-align: center;
+    margin-bottom: 25px;
 }
 
-.login-header p{
-    opacity:.9;
+.admin-icon {
+    font-size: 3.5rem;
+    margin-bottom: 10px;
 }
 
-.admin-icon{
-    font-size:4rem;
-    margin-bottom:15px;
+.login-header h1 {
+    font-size: 1.8rem;
 }
 
-.form-group{
-    margin-bottom:20px;
+.login-header p {
+    font-size: 0.9rem;
+    opacity: 0.85;
 }
 
-.form-group label{
-    display:block;
-    margin-bottom:8px;
-    font-weight:600;
+/* =========================
+   MESSAGE
+========================= */
+#loginMessage {
+    display: none;
+    padding: 10px;
+    border-radius: 10px;
+    text-align: center;
+    margin-bottom: 15px;
 }
 
-.form-group input{
-    width:100%;
-    padding:14px;
-    border:none;
-    border-radius:12px;
-    outline:none;
-    font-size:1rem;
+/* =========================
+   FORM
+========================= */
+.form-group {
+    margin-bottom: 18px;
 }
 
-.login-btn{
-    width:100%;
-    padding:15px;
-    border:none;
-    border-radius:12px;
-    background:white;
-    color:#2563eb;
-    font-size:1rem;
-    font-weight:700;
-    cursor:pointer;
-    transition:.3s;
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    font-size: 14px;
 }
 
-.login-btn:hover{
-    transform:translateY(-3px);
+input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    font-size: 15px;
+    background: rgba(255,255,255,0.9);
+    color: #0f172a;
+    transition: 0.3s;
 }
 
-.demo-box{
-    margin-top:20px;
-    text-align:center;
-    padding:12px;
-    background:rgba(255,255,255,.15);
-    border-radius:12px;
+input:focus {
+    transform: scale(1.02);
+    box-shadow: 0 0 0 3px rgba(6,182,212,0.4);
 }
 
-.demo-box code{
-    background:white;
-    color:#2563eb;
-    padding:3px 8px;
-    border-radius:5px;
+/* =========================
+   BUTTON
+========================= */
+.login-btn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    background: #06b6d4;
+    color: white;
+    transition: 0.3s;
 }
 
-.back-home{
-    text-align:center;
-    margin-top:20px;
+.login-btn:hover {
+    background: #0891b2;
+    transform: translateY(-2px);
 }
 
-.back-home a{
-    color:white;
-    text-decoration:none;
+/* =========================
+   DEMO BOX
+========================= */
+.demo-box {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.08);
+    text-align: center;
+    font-size: 14px;
 }
 
-#loginMessage{
-    display:none;
-    padding:10px;
-    border-radius:10px;
-    margin-bottom:15px;
-    text-align:center;
+.demo-box code {
+    background: white;
+    color: #0f172a;
+    padding: 3px 6px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+/* =========================
+   BACK LINK
+========================= */
+.back-home {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.back-home a {
+    color: #93c5fd;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.back-home a:hover {
+    color: white;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 480px) {
+    .login-card {
+        padding: 25px;
+    }
+
+    .login-header h1 {
+        font-size: 1.5rem;
+    }
 }
 </style>
 </head>
@@ -144,26 +201,16 @@ body{
 
             <div class="form-group">
                 <label>Username</label>
-                <input
-                    type="text"
-                    id="username"
-                    placeholder="Enter Username"
-                    required
-                >
+                <input type="text" id="username" placeholder="Enter username" required>
             </div>
 
             <div class="form-group">
                 <label>Password</label>
-                <input
-                    type="password"
-                    id="password"
-                    placeholder="Enter Password"
-                    required
-                >
+                <input type="password" id="password" placeholder="Enter password" required>
             </div>
 
             <button type="submit" class="login-btn">
-                Login as Admin
+                Login
             </button>
 
         </form>
