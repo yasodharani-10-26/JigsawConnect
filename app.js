@@ -253,6 +253,11 @@ async function askAI() {
 
   input.value = "";
 }
+document.querySelectorAll(".group-card button").forEach(btn => {
+  btn.addEventListener("click", () => {
+    alert("Group Joined Successfully 🚀");
+  });
+});
 function setupResourcesPage() {}
 
 function setupQuizPage() {}
