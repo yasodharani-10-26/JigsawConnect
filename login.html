@@ -1,43 +1,209 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login – StudyConnect</title>
-<link rel="stylesheet" href="style.css"></head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Login – StudyConnect</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Poppins",sans-serif;
+}
+
+body{
+  background:linear-gradient(135deg,#0f172a,#1e293b);
+  color:#e5e7eb;
+  min-height:100vh;
+}
+
+/* NAV */
+.navbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:15px 25px;
+  background:rgba(17,24,39,0.8);
+  backdrop-filter:blur(10px);
+  position:sticky;
+  top:0;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+}
+
+.logo{
+  color:#3b82f6;
+  font-weight:700;
+  text-decoration:none;
+}
+
+.logo span{ color:#06b6d4; }
+
+.nav-links a{
+  margin-left:15px;
+  text-decoration:none;
+  color:#94a3b8;
+}
+
+.nav-links a:hover{
+  color:#3b82f6;
+}
+
+/* AUTH PAGE */
+.auth-page{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:90vh;
+  padding:20px;
+}
+
+/* CARD */
+.auth-card{
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.08);
+  backdrop-filter:blur(15px);
+  border-radius:20px;
+  padding:40px;
+  max-width:900px;
+  width:100%;
+  text-align:center;
+  box-shadow:0 10px 40px rgba(0,0,0,0.4);
+}
+
+.auth-card h1{
+  font-size:2.2rem;
+  margin-bottom:10px;
+  color:#3b82f6;
+}
+
+.subtitle{
+  color:#94a3b8;
+  margin-bottom:30px;
+}
+
+/* GRID */
+.login-portal-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:20px;
+}
+
+/* PORTAL CARD */
+.portal-card{
+  background:#1e293b;
+  padding:25px;
+  border-radius:15px;
+  text-decoration:none;
+  color:white;
+  transition:0.3s;
+  border:1px solid rgba(255,255,255,0.08);
+}
+
+.portal-card:hover{
+  transform:translateY(-6px);
+  background:#0f172a;
+}
+
+.portal-icon{
+  font-size:2.5rem;
+  display:block;
+  margin-bottom:10px;
+}
+
+.portal-card h3{
+  color:#3b82f6;
+  margin-bottom:8px;
+}
+
+.portal-card p{
+  color:#94a3b8;
+  font-size:0.9rem;
+  margin-bottom:15px;
+}
+
+/* BUTTONS */
+.btn{
+  display:inline-block;
+  padding:8px 14px;
+  border-radius:10px;
+  font-weight:600;
+  text-decoration:none;
+  font-size:0.85rem;
+}
+
+.btn-primary{
+  background:#3b82f6;
+  color:white;
+}
+
+.btn-primary:hover{
+  background:#1d4ed8;
+}
+
+.btn-outline{
+  border:1px solid #3b82f6;
+  color:#3b82f6;
+}
+
+.btn-outline:hover{
+  background:#3b82f6;
+  color:white;
+}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .auth-card h1{
+    font-size:1.6rem;
+  }
+}
+</style>
+</head>
+
 <body>
 
-  <nav class="navbar">
-    <a href="index.html" class="logo">📚 Study<span>Connect</span></a>
-    <button class="menu-toggle" aria-label="Open menu"><span></span><span></span><span></span></button>
-    <div class="nav-links">
-      <a href="index.html">Home</a>
-      <a href="leaderboard.html">Leaderboard</a>
-    </div>
-  </nav>
+<!-- NAV -->
+<nav class="navbar">
+  <a href="index.html" class="logo">📚 Study<span>Connect</span></a>
 
-  <main class="auth-page">
-    <div class="auth-card login-portal">
-      <h1>Welcome to StudyConnect</h1>
-      <p class="subtitle">Choose how you want to login</p>
-      <div class="login-portal-grid">
-        <a href="admin-login.html" class="portal-card">
-          <span class="portal-icon">👨‍💼</span>
-          <h3>Admin Login</h3>
-          <p>Manage students, teams, resources &amp; scores</p>
-          <span class="btn btn-primary btn-sm">Admin Login</span>
-        </a>
-        <a href="student-login.html" class="portal-card">
-          <span class="portal-icon">🎓</span>
-          <h3>Student Login</h3>
-          <p>View your team, resources &amp; take quiz</p>
-          <span class="btn btn-outline btn-sm">Student Login</span>
-        </a>
-      </div>
-    </div>
-  </main>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="leaderboard.html">Leaderboard</a>
+  </div>
+</nav>
 
- <script type="module" src="app.js"></script>
+<!-- MAIN -->
+<main class="auth-page">
+
+  <div class="auth-card">
+
+    <h1>Welcome to StudyConnect</h1>
+    <p class="subtitle">Choose your login type to continue</p>
+
+    <div class="login-portal-grid">
+
+      <a href="admin-login.html" class="portal-card">
+        <div class="portal-icon">👨‍💼</div>
+        <h3>Admin Login</h3>
+        <p>Manage students, teams, resources & quiz scores</p>
+        <span class="btn btn-primary">Login as Admin</span>
+      </a>
+
+      <a href="student-login.html" class="portal-card">
+        <div class="portal-icon">🎓</div>
+        <h3>Student Login</h3>
+        <p>Access dashboard, team & learning resources</p>
+        <span class="btn btn-outline">Login as Student</span>
+      </a>
+
+    </div>
+
+  </div>
+
+</main>
+
 </body>
 </html>
