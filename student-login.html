@@ -1,190 +1,203 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Login | StudyConnect</title>
 
-<title>Student Login | StudyConnect</title>
+  <link rel="stylesheet" href="style.css">
 
-<link rel="stylesheet" href="style.css">
+  <style>
+    body{
+      margin:0;
+      font-family:'Segoe UI',sans-serif;
+      background:linear-gradient(135deg,#0f172a,#2563eb,#06b6d4);
+      min-height:100vh;
+    }
 
-<style>
-body{
-    margin:0;
-    font-family:'Segoe UI',sans-serif;
-    background:linear-gradient(135deg,#0f172a,#2563eb,#06b6d4);
-    min-height:100vh;
-}
+    .login-container{
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:20px;
+    }
 
-.login-container{
-    min-height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    padding:20px;
-}
+    .login-card{
+      width:100%;
+      max-width:460px;
+      background:rgba(255,255,255,.12);
+      backdrop-filter:blur(18px);
+      border:1px solid rgba(255,255,255,.2);
+      border-radius:25px;
+      padding:40px;
+      color:white;
+      box-shadow:0 20px 40px rgba(0,0,0,.25);
+    }
 
-.login-card{
-    width:100%;
-    max-width:460px;
-    background:rgba(255,255,255,.12);
-    backdrop-filter:blur(18px);
-    border:1px solid rgba(255,255,255,.2);
-    border-radius:25px;
-    padding:40px;
-    color:white;
-    box-shadow:0 20px 40px rgba(0,0,0,.25);
-}
+    .login-header{
+      text-align:center;
+      margin-bottom:25px;
+    }
 
-.login-header{
-    text-align:center;
-    margin-bottom:30px;
-}
+    .student-icon{
+      font-size:4rem;
+      margin-bottom:10px;
+    }
 
-.student-icon{
-    font-size:4rem;
-    margin-bottom:10px;
-}
+    .login-header h1{
+      margin:0;
+      font-size:2rem;
+    }
 
-.login-header h1{
-    margin:0;
-    font-size:2rem;
-}
+    .login-header p{
+      opacity:.9;
+      margin-top:8px;
+    }
 
-.login-header p{
-    opacity:.9;
-    margin-top:8px;
-}
+    .form-group{
+      margin-bottom:18px;
+    }
 
-.form-group{
-    margin-bottom:18px;
-}
+    .form-group label{
+      display:block;
+      margin-bottom:8px;
+      font-weight:600;
+    }
 
-.form-group label{
-    display:block;
-    margin-bottom:8px;
-    font-weight:600;
-}
+    .form-group input{
+      width:100%;
+      padding:14px;
+      border:none;
+      border-radius:12px;
+      font-size:1rem;
+      outline:none;
+    }
 
-.form-group input{
-    width:100%;
-    padding:14px;
-    border:none;
-    border-radius:12px;
-    font-size:1rem;
-    outline:none;
-}
+    .login-btn{
+      width:100%;
+      padding:15px;
+      border:none;
+      border-radius:12px;
+      background:white;
+      color:#2563eb;
+      font-weight:700;
+      font-size:1rem;
+      cursor:pointer;
+      transition:.3s;
+    }
 
-.login-btn{
-    width:100%;
-    padding:15px;
-    border:none;
-    border-radius:12px;
-    background:white;
-    color:#2563eb;
-    font-weight:700;
-    font-size:1rem;
-    cursor:pointer;
-    transition:.3s;
-}
+    .login-btn:hover{
+      transform:translateY(-3px);
+    }
 
-.login-btn:hover{
-    transform:translateY(-3px);
-}
+    .demo-box{
+      margin-top:20px;
+      background:rgba(255,255,255,.12);
+      padding:15px;
+      border-radius:12px;
+      text-align:center;
+      font-size:0.95rem;
+    }
 
-.demo-box{
-    margin-top:20px;
-    background:rgba(255,255,255,.12);
-    padding:15px;
-    border-radius:12px;
-    text-align:center;
-}
+    .demo-box code{
+      background:white;
+      color:#2563eb;
+      padding:3px 8px;
+      border-radius:5px;
+      font-weight:600;
+    }
 
-.demo-box code{
-    background:white;
-    color:#2563eb;
-    padding:3px 8px;
-    border-radius:5px;
-}
+    .back-home{
+      margin-top:20px;
+      text-align:center;
+    }
 
-.back-home{
-    margin-top:20px;
-    text-align:center;
-}
+    .back-home a{
+      color:white;
+      text-decoration:none;
+      opacity:0.9;
+    }
 
-.back-home a{
-    color:white;
-    text-decoration:none;
-}
+    .back-home a:hover{
+      opacity:1;
+      text-decoration:underline;
+    }
 
-#loginMessage{
-    display:none;
-    padding:10px;
-    border-radius:10px;
-    margin-bottom:15px;
-    text-align:center;
-}
-</style>
-
+    #loginMessage{
+      display:none;
+      padding:10px;
+      border-radius:10px;
+      margin-bottom:15px;
+      text-align:center;
+      font-weight:600;
+    }
+  </style>
 </head>
+
 <body>
 
-<div class="login-container">
+  <div class="login-container">
 
     <div class="login-card">
 
-        <div class="login-header">
-            <div class="student-icon">🎓</div>
-            <h1>Student Login</h1>
-            <p>Access your StudyConnect Dashboard</p>
+      <!-- HEADER -->
+      <div class="login-header">
+        <div class="student-icon">🎓</div>
+        <h1>Student Login</h1>
+        <p>Access your StudyConnect Dashboard</p>
+      </div>
+
+      <!-- MESSAGE BOX -->
+      <div id="loginMessage"></div>
+
+      <!-- LOGIN FORM -->
+      <form id="studentLoginForm">
+
+        <div class="form-group">
+          <label for="username">Student ID / Email / Name</label>
+          <input
+            type="text"
+            id="username"
+            placeholder="Enter Student ID or Email"
+            required
+          >
         </div>
 
-        <div id="loginMessage"></div>
-
-        <form id="studentLoginForm">
-
-            <div class="form-group">
-                <label>Student ID / Email / Name</label>
-                <input
-                    type="text"
-                    id="username"
-                    placeholder="Enter Student ID or Email"
-                    required
-                >
-            </div>
-
-            <div class="form-group">
-                <label>Password</label>
-                <input
-                    type="password"
-                    id="password"
-                    placeholder="Enter Password"
-                    required
-                >
-            </div>
-
-            <button type="submit" class="login-btn">
-                Login as Student
-            </button>
-
-        </form>
-
-        <div class="demo-box">
-            Demo Login<br><br>
-            Student ID: <code>STU001</code><br><br>
-            Password: <code>pass123</code><br><br>
-            <small>Accounts are created by Admin</small>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            placeholder="Enter Password"
+            required
+          >
         </div>
 
-        <div class="back-home">
-            <a href="index.html">⬅ Back to Home</a>
-        </div>
+        <button type="submit" class="login-btn">
+          Login as Student
+        </button>
+
+      </form>
+
+      <!-- DEMO -->
+      <div class="demo-box">
+        Demo Login<br><br>
+        Student ID: <code>STU001</code><br><br>
+        Password: <code>pass123</code><br><br>
+        <small>Accounts are created by Admin</small>
+      </div>
+
+      <!-- BACK -->
+      <div class="back-home">
+        <a href="index.html">⬅ Back to Home</a>
+      </div>
 
     </div>
 
-</div>
+  </div>
 
-<script type="module" src="app.js"></script>
+  <script type="module" src="app.js"></script>
 
 </body>
 </html>
