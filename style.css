@@ -1288,3 +1288,57 @@ a.dash-card {
   padding:10px;
 }
 }
+#helpBtn{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  padding:12px 18px;
+  border:none;
+  border-radius:50px;
+  background:#2563eb;
+  color:#fff;
+  cursor:pointer;
+  z-index:999;
+}
+
+#aiPopup{
+  position:fixed;
+  right:20px;
+  bottom:80px;
+  width:350px;
+  height:500px;
+  background:#fff;
+  border-radius:15px;
+  box-shadow:0 0 15px rgba(0,0,0,.2);
+  overflow:hidden;
+}
+
+.hidden{
+  display:none;
+}
+
+.chat-header{
+  background:#2563eb;
+  color:#fff;
+  padding:15px;
+  font-weight:bold;
+}
+
+#chatMessages{
+  height:380px;
+  overflow-y:auto;
+  padding:10px;
+}
+
+.chat-input{
+  display:flex;
+}
+
+.chat-input input{
+  flex:1;
+  padding:10px;
+}
+
+.chat-input button{
+  padding:10px;
+}
