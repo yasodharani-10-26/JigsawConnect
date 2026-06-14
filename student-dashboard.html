@@ -1,117 +1,351 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Student Dashboard – StudyConnect</title>
-  <link rel="stylesheet" href="style.css"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Student Dashboard | StudyConnect</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+background:#0f172a;
+color:white;
+min-height:100vh;
+}
+
+/* NAVBAR */
+
+.navbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:18px 35px;
+background:#111827;
+border-bottom:1px solid rgba(255,255,255,.08);
+position:sticky;
+top:0;
+z-index:1000;
+}
+
+.logo{
+text-decoration:none;
+font-size:24px;
+font-weight:700;
+color:white;
+}
+
+.logo span{
+color:#06b6d4;
+}
+
+.nav-links{
+display:flex;
+gap:20px;
+align-items:center;
+}
+
+.nav-links a{
+text-decoration:none;
+color:#cbd5e1;
+}
+
+.nav-links a:hover{
+color:#38bdf8;
+}
+
+.logout-btn{
+background:#ef4444;
+padding:10px 15px;
+border-radius:10px;
+color:white !important;
+}
+
+/* HERO */
+
+.hero{
+padding:70px 20px;
+text-align:center;
+background:linear-gradient(135deg,#2563eb,#06b6d4);
+}
+
+.hero h1{
+font-size:3rem;
+margin-bottom:10px;
+}
+
+.hero p{
+opacity:.9;
+}
+
+/* MAIN */
+
+.main-content{
+max-width:1200px;
+margin:auto;
+padding:40px 20px;
+}
+
+/* STATS */
+
+.stats-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:25px;
+margin-bottom:35px;
+}
+
+.stat-card{
+background:#1e293b;
+padding:25px;
+border-radius:20px;
+text-align:center;
+border:1px solid rgba(255,255,255,.08);
+transition:.3s;
+}
+
+.stat-card:hover{
+transform:translateY(-6px);
+}
+
+.stat-card h3{
+margin-bottom:12px;
+color:#38bdf8;
+}
+
+.big{
+font-size:28px;
+font-weight:700;
+}
+
+/* PANEL */
+
+.panel{
+background:#1e293b;
+padding:30px;
+border-radius:20px;
+margin-bottom:35px;
+border:1px solid rgba(255,255,255,.08);
+}
+
+.panel-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:15px;
+}
+
+.badge{
+background:#2563eb;
+padding:8px 14px;
+border-radius:50px;
+font-size:13px;
+}
+
+.muted{
+color:#94a3b8;
+margin-bottom:20px;
+}
+
+.team-info-box{
+padding:20px;
+background:#0f172a;
+border-radius:15px;
+margin-bottom:20px;
+}
+
+.team-list{
+list-style:none;
+}
+
+.team-list li{
+padding:12px;
+margin-bottom:10px;
+background:#0f172a;
+border-radius:10px;
+}
+
+/* ACTIONS */
+
+.actions{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+gap:25px;
+}
+
+.action-card{
+display:flex;
+align-items:center;
+gap:15px;
+padding:25px;
+background:#1e293b;
+border-radius:20px;
+text-decoration:none;
+color:white;
+border:1px solid rgba(255,255,255,.08);
+transition:.3s;
+}
+
+.action-card:hover{
+transform:translateY(-6px);
+}
+
+.icon{
+font-size:2.5rem;
+}
+
+.action-card h3{
+color:#38bdf8;
+margin-bottom:5px;
+}
+
+/* FOOTER */
+
+.footer{
+text-align:center;
+padding:35px;
+margin-top:40px;
+color:#94a3b8;
+border-top:1px solid rgba(255,255,255,.08);
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+.navbar{
+flex-direction:column;
+gap:15px;
+}
+
+.hero h1{
+font-size:2rem;
+}
+
+.panel-header{
+flex-direction:column;
+gap:10px;
+align-items:flex-start;
+}
+
+}
+
+</style>
 </head>
 
-<body id="studentPage">
+<body>
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
+<nav class="navbar">
 
-    <div class="brand">
-      📚 Study<span>Connect</span>
-    </div>
+<a href="index.html" class="logo">
+📚 Study<span>Connect</span>
+</a>
 
-    <nav class="side-menu">
-      <a class="active" href="student-dashboard.html">🏠 Dashboard</a>
-      <a href="resources.html">📄 Resources</a>
-      <a href="quiz.html">🧠 Quiz</a>
-      <a href="leaderboard.html">🏆 Leaderboard</a>
-    </nav>
+<div class="nav-links">
+<a href="student-dashboard.html">Dashboard</a>
+<a href="resources.html">Resources</a>
+<a href="quiz.html">Quiz</a>
+<a href="leaderboard.html">Leaderboard</a>
+<a href="index.html" class="logout-btn">Logout</a>
+</div>
 
-    <div class="logout-section">
-      <a href="index.html" class="logout-btn">Logout</a>
-    </div>
+</nav>
 
-  </aside>
+<section class="hero">
+<h1>🎓 Student Dashboard</h1>
+<p>Track your learning journey, team progress and achievements</p>
+</section>
 
-  <!-- MAIN CONTENT -->
-  <main class="main">
+<main class="main-content">
 
-    <!-- TOP BAR -->
-    <header class="topbar">
-      <h2>Student Dashboard</h2>
-      <p>Track your learning progress in one place 🚀</p>
-    </header>
+<div class="stats-grid">
 
-    <!-- STATS CARDS -->
-    <section class="stats-grid">
+<div class="stat-card">
+<h3>👥 Team Limit</h3>
+<p class="big">5</p>
+</div>
 
-      <div class="stat-card">
-        <h3>👥 Team Limit</h3>
-        <p class="big">5 Members</p>
-      </div>
+<div class="stat-card">
+<h3>📚 Resources</h3>
+<p class="big">24+</p>
+</div>
 
-      <div class="stat-card">
-        <h3>📚 Learning Mode</h3>
-        <p class="big">Active</p>
-      </div>
+<div class="stat-card">
+<h3>🏆 Rank</h3>
+<p class="big">#--</p>
+</div>
 
-      <div class="stat-card">
-        <h3>🏆 Rank Status</h3>
-        <p class="big">Updating...</p>
-      </div>
+<div class="stat-card">
+<h3>🧠 Quizzes</h3>
+<p class="big">10+</p>
+</div>
 
-    </section>
+</div>
 
-    <!-- TEAM SECTION -->
-    <section class="panel">
+<section class="panel">
 
-      <div class="panel-header">
-        <h2>👥 My Team</h2>
-        <span class="badge">Max 5 members</span>
-      </div>
+<div class="panel-header">
+<h2>👥 My Team</h2>
+<span class="badge">Maximum 5 Members</span>
+</div>
 
-      <p class="muted">
-        Your team members and current group details appear below.
-      </p>
+<p class="muted">
+Team information and members will appear below.
+</p>
 
-      <div id="myTeamInfo" class="team-info-box"></div>
-      <ul id="myTeamMembers" class="team-list"></ul>
+<div id="myTeamInfo" class="team-info-box">
+Loading team details...
+</div>
 
-    </section>
+<ul id="myTeamMembers" class="team-list">
+</ul>
 
-    <!-- ACTION CARDS -->
-    <section class="actions">
+</section>
 
-      <a href="resources.html" class="action-card">
-        <div class="icon">📄</div>
-        <div>
-          <h3>Study Resources</h3>
-          <p>Access notes, PDFs & materials</p>
-        </div>
-      </a>
+<section class="actions">
 
-      <a href="quiz.html" class="action-card">
-        <div class="icon">🧠</div>
-        <div>
-          <h3>Take Quiz</h3>
-          <p>Test your knowledge instantly</p>
-        </div>
-      </a>
+<a href="resources.html" class="action-card">
+<div class="icon">📄</div>
+<div>
+<h3>Resources</h3>
+<p>Study notes, PDFs and materials</p>
+</div>
+</a>
 
-      <a href="leaderboard.html" class="action-card">
-        <div class="icon">🏆</div>
-        <div>
-          <h3>Leaderboard</h3>
-          <p>See top performers</p>
-        </div>
-      </a>
+<a href="quiz.html" class="action-card">
+<div class="icon">🧠</div>
+<div>
+<h3>Take Quiz</h3>
+<p>Check your knowledge instantly</p>
+</div>
+</a>
 
-    </section>
+<a href="leaderboard.html" class="action-card">
+<div class="icon">🏆</div>
+<div>
+<h3>Leaderboard</h3>
+<p>View top performing students</p>
+</div>
+</a>
 
-    <!-- FOOTER -->
-    <footer class="footer">
-      <p>© 2026 StudyConnect | Built with ❤️ for Students</p>
-    </footer>
+</section>
 
-  </main>
+</main>
 
-  <script type="module" src="app.js"></script>
+<footer class="footer">
+© 2026 StudyConnect | Learn • Collaborate • Grow 🚀
+</footer>
+
+<script type="module" src="app.js"></script>
 
 </body>
 </html>
