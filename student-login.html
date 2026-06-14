@@ -179,15 +179,6 @@
         </button>
 
       </form>
-
-      <!-- DEMO -->
-      <div class="demo-box">
-        Demo Login<br><br>
-        Student ID: <code>STU001</code><br><br>
-        Password: <code>pass123</code><br><br>
-        <small>Accounts are created by Admin</small>
-      </div>
-
       <!-- BACK -->
       <div class="back-home">
         <a href="index.html">⬅ Back to Home</a>
@@ -196,7 +187,34 @@
     </div>
 
   </div>
+<script>
+document.getElementById("studentLoginForm").addEventListener("submit", function(e) {
+  e.preventDefault();
 
+  let username = document.getElementById("username").value;
+  let password = document.getElementById("password").value;
+
+  let msg = document.getElementById("loginMessage");
+
+  // ANY EMAIL/PASSWORD ALLOWED
+  if(username && password) {
+    msg.style.display = "block";
+    msg.style.background = "lightgreen";
+    msg.style.color = "black";
+    msg.innerText = "Login Successful! Welcome " + username;
+
+    setTimeout(() => {
+      window.location.href = "student-dashboard.html"; // change page if needed
+    }, 1000);
+
+  } else {
+    msg.style.display = "block";
+    msg.style.background = "red";
+    msg.style.color = "white";
+    msg.innerText = "Please enter details";
+  }
+});
+</script>
   <script type="module" src="app.js"></script>
 
 </body>
