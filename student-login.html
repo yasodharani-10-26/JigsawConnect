@@ -225,7 +225,13 @@ form.addEventListener("submit", async (e) => {
   }
 
 });
+const helpBtn = document.getElementById("helpBtn");
 
+if(helpBtn){
+  helpBtn.addEventListener("click", () => {
+    document.getElementById("aiPopup").classList.toggle("hidden");
+  });
+}
 </script>
 </script>
 </body>
