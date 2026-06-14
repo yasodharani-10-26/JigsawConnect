@@ -258,8 +258,105 @@ document.querySelectorAll(".group-card button").forEach(btn => {
     alert("Group Joined Successfully 🚀");
   });
 });
-function setupResourcesPage() {}
 
-function setupQuizPage() {}
+function setupQuizPage() {
+  const form = document.getElementById("quizForm");
+  if (!form) return;
 
-function setupLeaderboardPage() {}
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    let score = 0;
+
+    const answers = {
+      q1: "Packets",
+      q2: "All of the above",
+      q3: "Not packet based",
+      q4: "RIP",
+      q5: "Bellman-Ford",
+      q6: "Clusters",
+      q7: "20 bytes",
+      q8: "Multiplex",
+      q9: "Process",
+      q10: "TCP & UDP"
+    };
+
+    for (let q in answers) {
+      const selected = document.querySelector(`input[name="${q}"]:checked`);
+      if (selected && selected.value === answers[q]) {
+        score++;
+      }
+    }
+
+    // Save locally
+    localStorage.setItem("quizScore", score);
+
+    // Save to Firebase (optional leaderboard use)
+    const student = JSON.parse(sessionStorage.getItem("student"));
+
+    if (student) {
+      const id = Date.now();
+
+      set(ref(db, "quizScores/" + id), {
+        name: student.name,
+        email: student.email,
+        score: score,
+        time: new Date().toISOString()
+      });
+    }
+
+    alert("Quiz Submitted! Score: " + score);
+
+    window.location.href = "leaderboard.html";
+  });
+}
+function setupResourcesPage() {
+  const container = document.getElementById("resourcesList");
+  if (!container) return;
+
+  // Example: load from Firebase
+  getResources().then((resources) => {
+    container.innerHTML = "";
+
+    resources.forEach((r) => {
+      const div = document.createElement("div");
+      div.className = "resource-card";
+
+      div.innerHTML = `
+        <h3>${r.title}</h3>
+        <p>${r.description || ""}</p>
+        <a href="${r.link}" target="_blank">Open</a>
+      `;
+
+      container.appendChild(div);
+    });
+  });
+}
+function setupLeaderboardPage() {
+  const table = document.getElementById("leaderboardTable");
+  if (!table) return;
+
+  getQuizScores().then((data) => {
+    if (!data) return;
+
+    let arr = Object.values(data);
+
+    // sort by score descending
+    arr.sort((a, b) => b.score - a.score);
+
+    table.innerHTML = "";
+
+    arr.forEach((item, index) => {
+      const row = document.createElement("tr");
+
+      row.innerHTML = `
+        <td>${index + 1}</td>
+        <td>${item.name}</td>
+        <td>${item.score}</td>
+        <td>${item.time.split("T")[0]}</td>
+      `;
+
+      table.appendChild(row);
+    });
+  });
+}
