@@ -175,41 +175,61 @@ body{
 
 </div>
 
-<script>
-document.getElementById("studentLoginForm")
-.addEventListener("submit", function(e){
+<script type="module">
 
-    e.preventDefault();
+import {
+  auth,
+  signInWithEmailAndPassword
+} from "./firebase.js";
 
-    let email = document.getElementById("studentEmail").value;
-    let password = document.getElementById("studentPassword").value;
+const form = document.getElementById("studentLoginForm");
 
-    let savedPassword = localStorage.getItem(email);
+form.addEventListener("submit", async (e) => {
 
-    let msg = document.getElementById("loginMessage");
+  e.preventDefault();
 
-    if(savedPassword === password){
+  const email =
+    document.getElementById("username").value.trim();
 
-        msg.style.display="block";
-        msg.style.background="lightgreen";
-        msg.style.color="black";
-        msg.innerHTML="✅ Login Successful";
+  const password =
+    document.getElementById("password").value.trim();
 
-        setTimeout(()=>{
-            window.location.href="student-dashboard.html";
-        },1000);
+  const msg =
+    document.getElementById("loginMessage");
 
-    }else{
+  try {
 
-        msg.style.display="block";
-        msg.style.background="#ef4444";
-        msg.style.color="white";
-        msg.innerHTML="❌ Account not found. Please register first.";
+    await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
 
-    }
+    msg.style.display = "block";
+    msg.style.background = "lightgreen";
+    msg.style.color = "black";
+    msg.innerText = "Login Successful ✅";
+
+    setTimeout(() => {
+      window.location.href =
+        "student-dashboard.html";
+    }, 1000);
+
+  } catch (error) {
+
+    msg.style.display = "block";
+    msg.style.background = "red";
+    msg.style.color = "white";
+
+    msg.innerText =
+      error.code.replace("auth/", "");
+
+    console.error(error);
+
+  }
 
 });
-</script>
 
+</script>
 </body>
 </html>
