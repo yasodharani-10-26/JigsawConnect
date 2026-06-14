@@ -321,36 +321,58 @@
       <div class="stat-card"><div class="stat-icon">🏆</div><div><div class="stat-value">0</div><div class="stat-label">Scores</div></div></div>
     </div>
 
-    <!-- STUDENTS -->
-    <section class="admin-panel">
-      <h2 class="admin-section-title">Add Students</h2>
+  <!-- STUDENTS -->
+<section class="admin-panel">
+  <h2 class="admin-section-title">Add Student</h2>
 
-      <form class="admin-upload-form">
-        <div class="form-row">
-          <div class="form-group">
-            <label>Name</label>
-            <input type="text">
-          </div>
-          <div class="form-group">
-            <label>Student ID</label>
-            <input type="text">
-          </div>
-        </div>
+  <form id="studentForm" class="admin-upload-form">
 
-        <div class="form-row">
-          <div class="form-group">
-            <label>Email</label>
-            <input type="email">
-          </div>
-          <div class="form-group">
-            <label>Password</label>
-            <input type="password">
-          </div>
-        </div>
+    <div class="form-group">
+      <label>Student Name</label>
+      <input
+        type="text"
+        id="studentName"
+        placeholder="Enter student name"
+        required
+      >
+    </div>
 
-        <button class="btn btn-primary">Add Student</button>
-      </form>
-    </section>
+    <div class="form-group">
+      <label>Student ID</label>
+      <input
+        type="text"
+        id="studentId"
+        placeholder="Enter student ID"
+        required
+      >
+    </div>
+
+    <div class="form-group">
+      <label>Email</label>
+      <input
+        type="email"
+        id="studentEmail"
+        placeholder="Enter email"
+        required
+      >
+    </div>
+
+    <div class="form-group">
+      <label>Password</label>
+      <input
+        type="password"
+        id="studentPassword"
+        placeholder="Enter password"
+        required
+      >
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+      ➕ Add Student
+    </button>
+
+  </form>
+</section>
 
     <!-- TABLE -->
     <section class="admin-panel">
