@@ -2,27 +2,6 @@
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
 
-// 🔥 Realtime Database
-import {
-  getDatabase,
-  ref,
-  set,
-  push,
-  get,
-  remove,
-  update,
-  child
-} from "https://www.gstatic.com/firebasejs/12.14.0/firebase-database.js";
-
-// 🔐 Authentication (VERY IMPORTANT for login/register)
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
-
 // ================= FIREBASE CONFIG =================
 const firebaseConfig = {
   apiKey: "AIzaSyCaCkliZr8HkNtOsJpoA084YhNY7MeMWM",
@@ -37,11 +16,31 @@ const firebaseConfig = {
 // ================= INITIALIZE APP =================
 const app = initializeApp(firebaseConfig);
 
-// ================= SERVICES =================
+// ================= FIREBASE SERVICES =================
+import {
+  getDatabase,
+  ref,
+  set,
+  push,
+  get,
+  remove,
+  update,
+  child
+} from "https://www.gstatic.com/firebasejs/12.14.0/firebase-database.js";
+
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
+
+// ================= INIT SERVICES =================
 export const db = getDatabase(app);
 export const auth = getAuth(app);
 
-// ================= DATABASE HELPERS =================
+// ================= EXPORT DATABASE METHODS =================
 export {
   ref,
   set,
@@ -52,7 +51,7 @@ export {
   child
 };
 
-// ================= AUTH HELPERS =================
+// ================= EXPORT AUTH METHODS =================
 export {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
