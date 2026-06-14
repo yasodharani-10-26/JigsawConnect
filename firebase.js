@@ -4,13 +4,14 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/fireba
 
 // ================= FIREBASE CONFIG =================
 const firebaseConfig = {
-  apiKey: "AIzaSyCaCkliZr8HkNtOsJpoA084YhNY7MeMWM",
+  apiKey: "AIzaSyCaCkliRZk8HmNtOsJpoA084YhNY7MeMWM",
   authDomain: "jigsawconnect-677da.firebaseapp.com",
   databaseURL: "https://jigsawconnect-677da-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "jigsawconnect-677da",
   storageBucket: "jigsawconnect-677da.firebasestorage.app",
   messagingSenderId: "200774226361",
-  appId: "1:200774226361:web:266cb216968403793f6668"
+  appId: "1:200774226361:web:266cb216968403793f6668",
+  measurementId: "G-D14L7VZRJM"
 };
 
 // ================= INITIALIZE APP =================
