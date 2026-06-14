@@ -204,7 +204,7 @@ document.getElementById("studentLoginForm").addEventListener("submit", function(
     msg.innerText = "Login Successful! Welcome " + username;
 
     setTimeout(() => {
-      window.location.href = "student-dashboard.html"; // change page if needed
+      window.location.href = "student-dashboard.html";
     }, 1000);
 
   } else {
@@ -215,6 +215,10 @@ document.getElementById("studentLoginForm").addEventListener("submit", function(
   }
 });
 </script>
+  <p style="text-align:center;margin-top:10px;">
+  Don't have an account?
+  <a href="register.html">Create Account</a>
+</p>
   <script type="module" src="app.js"></script>
 
 </body>
