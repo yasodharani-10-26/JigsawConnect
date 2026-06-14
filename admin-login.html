@@ -215,11 +215,7 @@ input:focus {
 
         </form>
 
-        <div class="demo-box">
-            Demo Login <br><br>
-            Username: <code>admin</code><br><br>
-            Password: <code>admin123</code>
-        </div>
+       
 
         <div class="back-home">
             <a href="index.html">⬅ Back to Home</a>
@@ -228,7 +224,34 @@ input:focus {
     </div>
 
 </div>
+<script>
+document.getElementById("adminLoginForm").addEventListener("submit", function(e) {
+  e.preventDefault();
 
+  let username = document.getElementById("username").value;
+  let password = document.getElementById("password").value;
+
+  let msg = document.getElementById("loginMessage");
+
+  // ANY LOGIN ALLOWED
+  if(username && password) {
+    msg.style.display = "block";
+    msg.style.background = "lightgreen";
+    msg.style.color = "black";
+    msg.innerText = "Admin Login Successful! Welcome " + username;
+
+    setTimeout(() => {
+      window.location.href = "admin-dashboard.html"; // change if needed
+    }, 1000);
+
+  } else {
+    msg.style.display = "block";
+    msg.style.background = "red";
+    msg.style.color = "white";
+    msg.innerText = "Please enter username & password";
+  }
+});
+</script>
 <script type="module" src="app.js"></script>
 
 </body>
