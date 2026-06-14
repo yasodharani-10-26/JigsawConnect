@@ -204,58 +204,6 @@ async function setupStudentLoginPage() {
 
 
 
-async function askAI() {
-
-  const input = document.getElementById("aiInput");
-  const question = input.value.trim();
-
-  if (!question) return;
-
-  const chat = document.getElementById("chatMessages");
-
-  chat.innerHTML += `<p><b>You:</b> ${question}</p>`;
-
-  try {
-
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          contents: [{
-            parts: [{
-              text: question
-            }]
-          }]
-        })
-      }
-    );
-
-    const data = await response.json();
-
-    const answer =
-      data.candidates?.[0]?.content?.parts?.[0]?.text ||
-      "No response.";
-
-    chat.innerHTML += `<p><b>AI:</b> ${answer}</p>`;
-
-    chat.scrollTop = chat.scrollHeight;
-
-  } catch (e) {
-
-    chat.innerHTML += `<p><b>AI:</b> Error connecting to Gemini.</p>`;
-  }
-
-  input.value = "";
-}
-document.querySelectorAll(".group-card button").forEach(btn => {
-  btn.addEventListener("click", () => {
-    alert("Group Joined Successfully 🚀");
-  });
-});
 
 function setupQuizPage() {
   const form = document.getElementById("quizForm");
@@ -309,27 +257,77 @@ function setupQuizPage() {
   });
 }
 function setupResourcesPage() {
- const container = document.getElementById("resourceList");
+
+  const container = document.getElementById("resourceList");
+
   if (!container) return;
 
-  // Example: load from Firebase
   getResources().then((resources) => {
+
     container.innerHTML = "";
 
+    if (!resources || resources.length === 0) {
+      container.innerHTML = `
+        <div class="resource-card">
+          <div class="resource-title">No Resources Found</div>
+        </div>
+      `;
+      return;
+    }
+
     resources.forEach((r) => {
+
       const div = document.createElement("div");
+
       div.className = "resource-card";
 
       div.innerHTML = `
-        <h3>${r.title}</h3>
-        <p>${r.description || ""}</p>
-        <a href="${r.link}" target="_blank">Open</a>
+        <div class="resource-icon">📄</div>
+
+        <div class="resource-title">
+          ${r.title}
+        </div>
+
+        <div class="resource-desc">
+          ${r.description || ""}
+        </div>
+
+        <a href="${r.link}"
+           target="_blank"
+           class="download-btn">
+          Open Resource
+        </a>
       `;
 
       container.appendChild(div);
     });
+
   });
+
 }
+<script>
+const search = document.getElementById("resourceSearch");
+
+if (search) {
+
+  search.addEventListener("keyup", () => {
+
+    const value = search.value.toLowerCase();
+
+    document.querySelectorAll(".resource-card")
+      .forEach(card => {
+
+        card.style.display =
+          card.innerText.toLowerCase().includes(value)
+          ? "block"
+          : "none";
+
+      });
+
+  });
+
+}
+  </script>
 function setupLeaderboardPage() {
   const table = document.getElementById("leaderboardTable");
   if (!table) return;
