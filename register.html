@@ -72,82 +72,106 @@ a{
 </style>
 </head>
 
-<body>
-
 <div class="card">
 
     <h2>Student Register</h2>
 
     <div id="msg"></div>
 
-    <input type="text" id="name" placeholder="Full Name">
-    <input type="email" id="email" placeholder="Email">
-    <input type="password" id="pass" placeholder="Password">
-    <input type="password" id="cpass" placeholder="Confirm Password">
+    <form id="registerForm">
 
-    <button onclick="register()">Register</button>
+        <input type="text" id="name" placeholder="Full Name" required>
 
-    <a href="login.html">Already have account? Login</a>
+        <input type="email" id="email" placeholder="Email" required>
+
+        <input type="password" id="pass" placeholder="Password" required>
+
+        <input type="password" id="cpass" placeholder="Confirm Password" required>
+
+        <button type="submit">Register</button>
+
+    </form>
+
+    <a href="student-login.html">
+        Already have account? Login
+    </a>
 
 </div>
 <script type="module">
 
 import {
   auth,
+  db,
+  ref,
+  set,
   createUserWithEmailAndPassword
 } from "./firebase.js";
 
+const form = document.getElementById("registerForm");
 const msg = document.getElementById("msg");
 
-window.register = async function(){
+form.addEventListener("submit", async (e) => {
 
-  const name = document.getElementById("name").value;
-  const email = document.getElementById("email").value;
-  const pass = document.getElementById("pass").value;
-  const cpass = document.getElementById("cpass").value;
+  e.preventDefault();
 
-  if(!name || !email || !pass || !cpass){
-    msg.style.color="yellow";
-    msg.innerText="Please fill all fields";
+  const name = document.getElementById("name").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const pass = document.getElementById("pass").value.trim();
+  const cpass = document.getElementById("cpass").value.trim();
+
+  if (!name || !email || !pass || !cpass) {
+    msg.style.color = "yellow";
+    msg.innerText = "Please fill all fields";
     return;
   }
 
-  if(pass !== cpass){
-    msg.style.color="red";
-    msg.innerText="Passwords do not match";
+  if (pass !== cpass) {
+    msg.style.color = "red";
+    msg.innerText = "Passwords do not match";
     return;
   }
 
-  try{
+  try {
 
-    await createUserWithEmailAndPassword(
-      auth,
-      email,
-      pass
-    );
+    const userCredential =
+      await createUserWithEmailAndPassword(
+        auth,
+        email,
+        pass
+      );
 
-    msg.style.color="lightgreen";
-    msg.innerText="Registration Successful ✅";
+    const uid = userCredential.user.uid;
 
-    setTimeout(()=>{
-      window.location.href="student-login.html";
-    },1500);
+    await set(ref(db, "students/" + uid), {
+      uid,
+      name,
+      email
+    });
+
+    msg.style.color = "lightgreen";
+    msg.innerText = "Registration Successful ✅";
+
+    setTimeout(() => {
+      window.location.href = "student-login.html";
+    }, 1500);
+
+  } catch (error) {
+
+    msg.style.color = "red";
+
+    if (error.code === "auth/email-already-in-use") {
+      msg.innerText = "Email already registered";
+    }
+    else if (error.code === "auth/weak-password") {
+      msg.innerText = "Password should be at least 6 characters";
+    }
+    else {
+      msg.innerText = error.message;
+    }
 
   }
-  catch(error){
 
-    msg.style.color="red";
-
-    if(error.code==="auth/email-already-in-use"){
-      msg.innerText="Email already registered";
-    }
-    else{
-      msg.innerText=error.message;
-    }
-
-  }
-
-}
+});
 
 </script>
 </body>
