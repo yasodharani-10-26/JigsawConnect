@@ -1,360 +1,554 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>StudyConnect - College Team Management</title>
+<title>StudyConnect | Smart Student Collaboration Platform</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-/* =========================
-   ROOT
-========================= */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Poppins", sans-serif;
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+scroll-behavior:smooth;
 }
 
-body {
-  background: #0f172a;
-  color: #e5e7eb;
-  line-height: 1.6;
+body{
+background:#0f172a;
+color:white;
+overflow-x:hidden;
 }
 
-/* =========================
-   NAVBAR
-========================= */
-.navbar {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  background: rgba(17,24,39,0.95);
-  backdrop-filter: blur(10px);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 30px;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-  z-index: 1000;
+/* BACKGROUND */
+
+body::before{
+content:'';
+position:fixed;
+width:500px;
+height:500px;
+background:#2563eb;
+filter:blur(200px);
+opacity:.20;
+top:-150px;
+left:-150px;
+z-index:-1;
 }
 
-.logo {
-  font-size: 20px;
-  font-weight: bold;
-  color: #3b82f6;
-  text-decoration: none;
+body::after{
+content:'';
+position:fixed;
+width:500px;
+height:500px;
+background:#06b6d4;
+filter:blur(200px);
+opacity:.20;
+bottom:-150px;
+right:-150px;
+z-index:-1;
 }
 
-.logo span {
-  color: #06b6d4;
+/* NAVBAR */
+
+.navbar{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:18px 40px;
+background:rgba(15,23,42,.75);
+backdrop-filter:blur(20px);
+border-bottom:1px solid rgba(255,255,255,.1);
+z-index:1000;
 }
 
-.nav-links {
-  display: flex;
-  gap: 20px;
-  align-items: center;
+.logo{
+font-size:24px;
+font-weight:800;
+color:white;
+text-decoration:none;
 }
 
-.nav-links a {
-  text-decoration: none;
-  color: #94a3b8;
-  font-weight: 500;
+.logo span{
+color:#06b6d4;
 }
 
-.nav-links a:hover {
-  color: #3b82f6;
+.nav-links{
+display:flex;
+align-items:center;
+gap:20px;
 }
 
-/* =========================
-   BUTTONS
-========================= */
-.btn {
-  padding: 10px 16px;
-  border-radius: 10px;
-  text-decoration: none;
-  font-weight: 600;
-  transition: 0.3s;
-  display: inline-block;
+.nav-links a{
+text-decoration:none;
+color:#cbd5e1;
+transition:.3s;
 }
 
-.btn-primary {
-  background: #3b82f6;
-  color: white;
+.nav-links a:hover{
+color:#06b6d4;
 }
 
-.btn-primary:hover {
-  background: #1d4ed8;
-  transform: translateY(-2px);
+/* BUTTONS */
+
+.btn{
+display:inline-block;
+padding:12px 22px;
+border-radius:12px;
+text-decoration:none;
+font-weight:600;
+transition:.3s;
 }
 
-.btn-outline {
-  border: 1px solid #3b82f6;
-  color: #3b82f6;
+.btn-primary{
+background:linear-gradient(135deg,#06b6d4,#2563eb);
+color:white;
 }
 
-.btn-outline:hover {
-  background: #3b82f6;
-  color: white;
+.btn-primary:hover{
+transform:translateY(-3px);
 }
 
-/* =========================
-   HERO
-========================= */
-.hero {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 120px 20px;
-  background: linear-gradient(135deg, #1d4ed8, #06b6d4, #0f172a);
+.btn-outline{
+border:1px solid #06b6d4;
+color:#06b6d4;
 }
 
-.hero-content {
-  max-width: 800px;
+.btn-outline:hover{
+background:#06b6d4;
+color:white;
 }
 
-.hero h1 {
-  font-size: 3rem;
-  margin-bottom: 15px;
+/* HERO */
+
+.hero{
+min-height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+text-align:center;
+padding:120px 20px;
 }
 
-.hero p {
-  font-size: 1.1rem;
-  color: #cbd5e1;
-  margin-bottom: 25px;
+.hero-content{
+max-width:850px;
 }
 
-/* =========================
-   SECTIONS
-========================= */
-section {
-  padding: 80px 20px;
-  max-width: 1200px;
-  margin: auto;
+.hero-badge{
+display:inline-block;
+padding:8px 18px;
+border-radius:30px;
+background:rgba(255,255,255,.08);
+border:1px solid rgba(255,255,255,.1);
+margin-bottom:20px;
 }
 
-.section-title {
-  text-align: center;
-  font-size: 2.2rem;
-  margin-bottom: 40px;
-  color: #3b82f6;
+.hero h1{
+font-size:4rem;
+font-weight:800;
+line-height:1.2;
+margin-bottom:20px;
 }
 
-/* =========================
-   STATS
-========================= */
-.stats-section {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 15px;
-  margin-top: -50px;
+.hero h1 span{
+background:linear-gradient(135deg,#06b6d4,#60a5fa);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
 }
 
-.stat-card {
-  background: #1e293b;
-  padding: 20px;
-  text-align: center;
-  border-radius: 15px;
-  border: 1px solid rgba(255,255,255,0.08);
-  transition: 0.3s;
+.hero p{
+font-size:1.1rem;
+color:#cbd5e1;
+margin-bottom:30px;
 }
 
-.stat-card:hover {
-  transform: translateY(-5px);
+.hero-buttons{
+display:flex;
+justify-content:center;
+gap:15px;
+flex-wrap:wrap;
 }
 
-.stat-card h2 {
-  color: #3b82f6;
+/* STATS */
+
+.stats{
+max-width:1200px;
+margin:auto;
+padding:0 20px 80px;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
 }
 
-/* =========================
-   FEATURES GRID
-========================= */
-.features-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 20px;
+.stat-card{
+background:rgba(255,255,255,.08);
+backdrop-filter:blur(20px);
+border:1px solid rgba(255,255,255,.1);
+border-radius:20px;
+padding:25px;
+text-align:center;
+transition:.3s;
 }
 
-.feature-card {
-  background: #1e293b;
-  padding: 25px;
-  border-radius: 15px;
-  border: 1px solid rgba(255,255,255,0.08);
-  transition: 0.3s;
-  text-align: center;
+.stat-card:hover{
+transform:translateY(-8px);
 }
 
-.feature-card:hover {
-  transform: translateY(-6px);
+.stat-card h2{
+font-size:2rem;
+color:#60a5fa;
+margin-bottom:8px;
 }
 
-.feature-icon {
-  font-size: 2rem;
-  margin-bottom: 10px;
+/* FEATURES */
+
+.features{
+max-width:1200px;
+margin:auto;
+padding:50px 20px;
 }
 
-/* =========================
-   TEAM SECTION
-========================= */
-.team-up-box {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 30px;
-  background: #1e293b;
-  padding: 30px;
-  border-radius: 20px;
-  border: 1px solid rgba(255,255,255,0.08);
+.section-title{
+text-align:center;
+font-size:2.5rem;
+margin-bottom:50px;
 }
 
-.team-up-visual {
-  background: linear-gradient(135deg,#3b82f6,#06b6d4);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  border-radius: 15px;
-  font-size: 1.5rem;
+.feature-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:25px;
 }
 
-/* =========================
-   CTA
-========================= */
-.cta-section {
-  text-align: center;
-  background: linear-gradient(135deg,#1d4ed8,#06b6d4);
-  padding: 60px 20px;
-  border-radius: 20px;
+.feature-card{
+background:rgba(255,255,255,.08);
+backdrop-filter:blur(20px);
+border:1px solid rgba(255,255,255,.1);
+padding:30px;
+border-radius:20px;
+text-align:center;
+transition:.3s;
 }
 
-/* =========================
-   FOOTER
-========================= */
-.footer {
-  background: #111827;
-  padding: 40px 20px;
-  margin-top: 50px;
+.feature-card:hover{
+transform:translateY(-8px);
 }
 
-.footer-content {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
-  gap: 20px;
+.feature-icon{
+font-size:3rem;
+margin-bottom:15px;
 }
 
-.footer-links {
-  list-style: none;
+.feature-card h3{
+margin-bottom:10px;
 }
 
-.footer-links a {
-  color: #94a3b8;
-  text-decoration: none;
+/* ABOUT */
+
+.about{
+max-width:1200px;
+margin:auto;
+padding:80px 20px;
 }
 
-.footer-bottom {
-  text-align: center;
-  margin-top: 20px;
-  color: #94a3b8;
+.about-box{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:30px;
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
-@media(max-width:768px) {
-  .hero h1 {
-    font-size: 2rem;
-  }
-
-  .team-up-box {
-    grid-template-columns: 1fr;
-  }
-
-  .navbar {
-    flex-direction: column;
-    gap: 10px;
-  }
+.about-card{
+background:rgba(255,255,255,.08);
+backdrop-filter:blur(20px);
+border:1px solid rgba(255,255,255,.1);
+border-radius:20px;
+padding:30px;
 }
+
+.about-card h2{
+margin-bottom:15px;
+}
+
+/* CTA */
+
+.cta{
+max-width:1200px;
+margin:80px auto;
+padding:60px 20px;
+text-align:center;
+background:linear-gradient(135deg,#2563eb,#06b6d4);
+border-radius:30px;
+}
+
+.cta h2{
+font-size:2.5rem;
+margin-bottom:15px;
+}
+
+.cta p{
+margin-bottom:25px;
+}
+
+/* FOOTER */
+
+.footer{
+margin-top:80px;
+padding:50px 20px;
+background:#111827;
+}
+
+.footer-content{
+max-width:1200px;
+margin:auto;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:30px;
+}
+
+.footer-links{
+list-style:none;
+}
+
+.footer-links li{
+margin-bottom:10px;
+}
+
+.footer-links a{
+color:#cbd5e1;
+text-decoration:none;
+}
+
+.footer-links a:hover{
+color:#06b6d4;
+}
+
+.footer-bottom{
+text-align:center;
+margin-top:30px;
+padding-top:20px;
+border-top:1px solid rgba(255,255,255,.1);
+color:#94a3b8;
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+.navbar{
+flex-direction:column;
+gap:15px;
+padding:15px;
+}
+
+.hero h1{
+font-size:2.5rem;
+}
+
+.about-box{
+grid-template-columns:1fr;
+}
+
+}
+
 </style>
 </head>
-
 <body>
 
-<!-- NAV -->
 <nav class="navbar">
-  <a href="index.html" class="logo">📚 Study<span>Connect</span></a>
 
-  <div class="nav-links">
-    <a href="index.html">Home</a>
-    <a href="#features">Features</a>
-    <a href="leaderboard.html">Leaderboard</a>
+<a href="#" class="logo">
+📚 Study<span>Connect</span>
+</a>
 
-    <a href="admin-login.html" class="btn btn-outline">Admin</a>
-    <a href="student-login.html" class="btn btn-primary">Student</a>
-  </div>
+<div class="nav-links">
+<a href="#features">Features</a>
+<a href="leaderboard.html">Leaderboard</a>
+<a href="admin-login.html" class="btn btn-outline">Admin</a>
+<a href="student-login.html" class="btn btn-primary">Student</a>
+</div>
+
 </nav>
 
-<!-- HERO -->
-<header class="hero">
-  <div class="hero-content">
-    <h1>Empowering Student Collaboration</h1>
-    <p>Build teams, share resources, attend seminars, and grow together with StudyConnect.</p>
-    <a href="student-login.html" class="btn btn-primary">Get Started</a>
-  </div>
-</header>
+<section class="hero">
 
-<!-- STATS -->
-<section class="stats-section">
-  <div class="stat-card"><h2>500+</h2><p>Students</p></div>
-  <div class="stat-card"><h2>100+</h2><p>Teams</p></div>
-  <div class="stat-card"><h2>80+</h2><p>Resources</p></div>
-  <div class="stat-card"><h2>50+</h2><p>Events</p></div>
+<div class="hero-content">
+
+<div class="hero-badge">
+🚀 Smart College Collaboration Platform
+</div>
+
+<h1>
+Learn, Build Teams &
+<span>Grow Together</span>
+</h1>
+
+<p>
+StudyConnect helps students collaborate on projects,
+share resources, participate in quizzes, attend seminars,
+and build stronger academic communities.
+</p>
+
+<div class="hero-buttons">
+<a href="student-login.html" class="btn btn-primary">
+Get Started
+</a>
+
+<a href="#features" class="btn btn-outline">
+Explore Features
+</a>
+</div>
+
+</div>
+
 </section>
 
-<!-- FEATURES -->
-<section id="features">
-  <h2 class="section-title">Platform Features</h2>
+<section class="stats">
 
-  <div class="features-grid">
-    <div class="feature-card">👨‍💼 Admin Dashboard</div>
-    <div class="feature-card">👥 Student Teams</div>
-    <div class="feature-card">📚 Resources</div>
-    <div class="feature-card">📝 Quizzes</div>
-    <div class="feature-card">🎤 Seminars</div>
-    <div class="feature-card">🏆 Leaderboard</div>
-  </div>
+<div class="stat-card">
+<h2>500+</h2>
+<p>Students</p>
+</div>
+
+<div class="stat-card">
+<h2>100+</h2>
+<p>Teams</p>
+</div>
+
+<div class="stat-card">
+<h2>80+</h2>
+<p>Resources</p>
+</div>
+
+<div class="stat-card">
+<h2>50+</h2>
+<p>Events</p>
+</div>
+
 </section>
 
-<!-- CTA -->
-<section class="cta-section">
-  <h2>Ready to Join StudyConnect?</h2>
-  <p>Collaborate and grow with your classmates</p>
-  <a href="student-login.html" class="btn btn-primary">Join Now</a>
+<section class="features" id="features">
+
+<h2 class="section-title">
+✨ Platform Features
+</h2>
+
+<div class="feature-grid">
+
+<div class="feature-card">
+<div class="feature-icon">👨‍💼</div>
+<h3>Admin Dashboard</h3>
+<p>Manage students, teams, quizzes and resources.</p>
+</div>
+
+<div class="feature-card">
+<div class="feature-icon">👥</div>
+<h3>Team Builder</h3>
+<p>Create project teams and collaborate effectively.</p>
+</div>
+
+<div class="feature-card">
+<div class="feature-icon">📚</div>
+<h3>Resources</h3>
+<p>Share notes, PDFs and learning materials.</p>
+</div>
+
+<div class="feature-card">
+<div class="feature-icon">📝</div>
+<h3>Quizzes</h3>
+<p>Practice skills with interactive quizzes.</p>
+</div>
+
+<div class="feature-card">
+<div class="feature-icon">🎤</div>
+<h3>Seminars</h3>
+<p>Discover and attend educational events.</p>
+</div>
+
+<div class="feature-card">
+<div class="feature-icon">🏆</div>
+<h3>Leaderboard</h3>
+<p>Track achievements and rankings.</p>
+</div>
+
+</div>
+
 </section>
 
-<!-- FOOTER -->
+<section class="about">
+
+<div class="about-box">
+
+<div class="about-card">
+<h2>🎯 Our Mission</h2>
+<p>
+To make college collaboration easier by connecting
+students, resources, teams and learning opportunities
+on a single platform.
+</p>
+</div>
+
+<div class="about-card">
+<h2>💡 Why StudyConnect?</h2>
+<p>
+A modern ecosystem where students can communicate,
+learn, collaborate and grow professionally.
+</p>
+</div>
+
+</div>
+
+</section>
+
+<section class="cta">
+
+<h2>Ready to Start Your Journey?</h2>
+
+<p>
+Join thousands of students already using StudyConnect.
+</p>
+
+<a href="student-login.html" class="btn btn-primary">
+🚀 Join Now
+</a>
+
+</section>
+
 <footer class="footer">
-  <div class="footer-content">
-    <div>
-      <h3>StudyConnect</h3>
-      <p>College Collaboration Platform</p>
-    </div>
 
-    <div>
-      <h4>Links</h4>
-      <ul class="footer-links">
-        <li><a href="admin-login.html">Admin Login</a></li>
-        <li><a href="student-login.html">Student Login</a></li>
-      </ul>
-    </div>
-  </div>
+<div class="footer-content">
 
-  <div class="footer-bottom">
-    © 2026 StudyConnect
-  </div>
+<div>
+<h3>📚 StudyConnect</h3>
+<p>
+Empowering students through collaboration,
+innovation and learning.
+</p>
+</div>
+
+<div>
+<h3>Quick Links</h3>
+
+<ul class="footer-links">
+<li><a href="admin-login.html">Admin Login</a></li>
+<li><a href="student-login.html">Student Login</a></li>
+<li><a href="leaderboard.html">Leaderboard</a></li>
+</ul>
+
+</div>
+
+</div>
+
+<div class="footer-bottom">
+2026 StudyConnect | Designed for Student Success
+</div>
+
 </footer>
 
 </body>
