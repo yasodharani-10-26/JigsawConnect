@@ -313,13 +313,41 @@
   <!-- MAIN -->
   <main class="main-content">
 
-    <!-- STATS -->
-    <div class="admin-stats">
-      <div class="stat-card"><div class="stat-icon">🎓</div><div><div class="stat-value">0</div><div class="stat-label">Students</div></div></div>
-      <div class="stat-card"><div class="stat-icon">👥</div><div><div class="stat-value">0</div><div class="stat-label">Teams</div></div></div>
-      <div class="stat-card"><div class="stat-icon">📄</div><div><div class="stat-value">0</div><div class="stat-label">Resources</div></div></div>
-      <div class="stat-card"><div class="stat-icon">🏆</div><div><div class="stat-value">0</div><div class="stat-label">Scores</div></div></div>
+   <div class="admin-stats">
+
+  <div class="stat-card">
+    <div class="stat-icon">🎓</div>
+    <div>
+      <div class="stat-value" id="studentCount">0</div>
+      <div class="stat-label">Students</div>
     </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon">👥</div>
+    <div>
+      <div class="stat-value" id="teamCount">0</div>
+      <div class="stat-label">Teams</div>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon">📄</div>
+    <div>
+      <div class="stat-value" id="resourceCount">0</div>
+      <div class="stat-label">Resources</div>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon">🏆</div>
+    <div>
+      <div class="stat-value" id="scoreCount">0</div>
+      <div class="stat-label">Scores</div>
+    </div>
+  </div>
+
+</div>
 
   <!-- STUDENTS -->
 <section class="admin-panel">
@@ -387,14 +415,14 @@
             <th>Team</th>
           </tr>
         </thead>
-        <tbody></tbody>
+        <tbody id="studentsTable"></tbody>
       </table>
     </section>
 
   </main>
 
   <footer class="footer">
-    © 2026 StudyConnect
+    2026 StudyConnect
   </footer>
 
   <script type="module" src="app.js"></script>
