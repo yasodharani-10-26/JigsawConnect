@@ -20,6 +20,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   setupAdminLoginPage();
   setupStudentLoginPage();
+
+  setupResourcesPage();
+  setupQuizPage();
+  setupLeaderboardPage();
 });
 
 /* ===================== FIREBASE HELPERS ===================== */
