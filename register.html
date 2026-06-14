@@ -90,45 +90,65 @@ a{
     <a href="login.html">Already have account? Login</a>
 
 </div>
+<script type="module">
 
-<script>
-function register(){
+import {
+  auth,
+  createUserWithEmailAndPassword
+} from "./firebase.js";
 
-    let name = document.getElementById("name").value;
-    let email = document.getElementById("email").value;
-    let pass = document.getElementById("pass").value;
-    let cpass = document.getElementById("cpass").value;
-    let msg = document.getElementById("msg");
+const msg = document.getElementById("msg");
 
-    if(!name || !email || !pass || !cpass){
-        msg.style.color="yellow";
-        msg.innerText="Please fill all fields";
-        return;
-    }
+window.register = async function(){
 
-    if(pass !== cpass){
-        msg.style.color="red";
-        msg.innerText="Passwords do not match";
-        return;
-    }
+  const name = document.getElementById("name").value;
+  const email = document.getElementById("email").value;
+  const pass = document.getElementById("pass").value;
+  const cpass = document.getElementById("cpass").value;
+
+  if(!name || !email || !pass || !cpass){
+    msg.style.color="yellow";
+    msg.innerText="Please fill all fields";
+    return;
+  }
+
+  if(pass !== cpass){
+    msg.style.color="red";
+    msg.innerText="Passwords do not match";
+    return;
+  }
+
+  try{
+
+    await createUserWithEmailAndPassword(
+      auth,
+      email,
+      pass
+    );
 
     msg.style.color="lightgreen";
-    msg.innerText="Registration Successful! Redirecting...";
+    msg.innerText="Registration Successful ✅";
 
     setTimeout(()=>{
-        window.location.href="login.html";
+      window.location.href="student-login.html";
     },1500);
-} 
-    localStorage.setItem(email, password);
-    let storedPass = localStorage.getItem(username);
 
-if(storedPass === password){
-    alert("Login Success");
-    window.location.href="dashboard.html";
+  }
+  catch(error){
+
+    msg.style.color="red";
+
+    if(error.code==="auth/email-already-in-use"){
+      msg.innerText="Email already registered";
+    }
+    else{
+      msg.innerText=error.message;
+    }
+
+  }
+
 }
-else{
-    alert("Account not found. Please register first");
-}
+
 </script>
 </body>
 </html>
