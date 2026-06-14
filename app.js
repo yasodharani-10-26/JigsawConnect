@@ -135,20 +135,17 @@ function setupAdminLoginPage() {
   form.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    // ✅ YOUR HTML IDs
-    const username = document.getElementById("username").value.trim();
-    const password = document.getElementById("password").value.trim();
+    const email = document.getElementById("adminEmail").value.trim();
+    const password = document.getElementById("adminPassword").value.trim();
     const msg = document.getElementById("loginMessage");
 
-    console.log("DEBUG:", username, password);
-
-    if (username === "admin" && password === "admin123") {
+    if (email === "admin@gmail.com" && password === "admin123") {
 
       sessionStorage.setItem("role", "admin");
-      sessionStorage.setItem("username", username);
+      sessionStorage.setItem("adminEmail", email);
 
       msg.style.display = "block";
-      msg.style.color = "green";
+      msg.style.color = "lightgreen";
       msg.textContent = "Login Successful";
 
       setTimeout(() => {
@@ -156,9 +153,11 @@ function setupAdminLoginPage() {
       }, 1000);
 
     } else {
+
       msg.style.display = "block";
       msg.style.color = "red";
       msg.textContent = "Invalid Credentials";
+
     }
   });
 }
