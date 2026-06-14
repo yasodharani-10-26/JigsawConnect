@@ -25,7 +25,27 @@ document.addEventListener("DOMContentLoaded", () => {
   setupQuizPage();
   setupLeaderboardPage();
 });
+const search = document.getElementById("resourceSearch");
 
+if (search) {
+
+  search.addEventListener("keyup", () => {
+
+    const value = search.value.toLowerCase();
+
+    document.querySelectorAll(".resource-card")
+      .forEach(card => {
+
+        card.style.display =
+          card.innerText.toLowerCase().includes(value)
+          ? "block"
+          : "none";
+
+      });
+
+  });
+
+}
 /* ===================== FIREBASE HELPERS ===================== */
 
 async function getData(path) {
@@ -305,29 +325,7 @@ function setupResourcesPage() {
   });
 
 }
-<script>
-const search = document.getElementById("resourceSearch");
 
-if (search) {
-
-  search.addEventListener("keyup", () => {
-
-    const value = search.value.toLowerCase();
-
-    document.querySelectorAll(".resource-card")
-      .forEach(card => {
-
-        card.style.display =
-          card.innerText.toLowerCase().includes(value)
-          ? "block"
-          : "none";
-
-      });
-
-  });
-
-}
-  </script>
 function setupLeaderboardPage() {
   const table = document.getElementById("leaderboardTable");
   if (!table) return;
