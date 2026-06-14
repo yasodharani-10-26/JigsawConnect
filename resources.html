@@ -1,66 +1,265 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Resources – StudyConnect</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Study Resources | StudyConnect</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+background:#0f172a;
+color:white;
+}
+
+/* NAVBAR */
+
+.navbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:18px 40px;
+background:#111827;
+position:sticky;
+top:0;
+z-index:1000;
+border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.logo{
+font-size:24px;
+font-weight:700;
+text-decoration:none;
+color:white;
+}
+
+.logo span{
+color:#06b6d4;
+}
+
+.nav-links{
+display:flex;
+gap:20px;
+align-items:center;
+}
+
+.nav-links a{
+text-decoration:none;
+color:#cbd5e1;
+font-weight:500;
+}
+
+.nav-links a:hover,
+.active{
+color:#38bdf8;
+}
+
+.logout-btn{
+background:#ef4444;
+padding:10px 16px;
+border-radius:10px;
+color:white !important;
+}
+
+/* HERO */
+
+.page-header{
+padding:80px 20px;
+text-align:center;
+background:linear-gradient(135deg,#2563eb,#06b6d4);
+}
+
+.page-header h1{
+font-size:3rem;
+margin-bottom:10px;
+}
+
+.page-header p{
+font-size:1rem;
+opacity:.9;
+}
+
+/* MAIN */
+
+.main-content{
+max-width:1200px;
+margin:auto;
+padding:40px 20px;
+}
+
+/* SEARCH */
+
+.toolbar{
+margin-bottom:30px;
+}
+
+.search-bar{
+width:100%;
+padding:16px;
+border:none;
+border-radius:15px;
+background:#1e293b;
+color:white;
+font-size:16px;
+outline:none;
+}
+
+.search-bar:focus{
+border:2px solid #38bdf8;
+}
+
+/* RESOURCE GRID */
+
+.card-list{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+gap:25px;
+}
+
+/* SAMPLE CARD STYLE */
+
+.resource-card{
+background:#1e293b;
+padding:25px;
+border-radius:20px;
+border:1px solid rgba(255,255,255,.08);
+transition:.3s;
+}
+
+.resource-card:hover{
+transform:translateY(-6px);
+}
+
+.resource-icon{
+font-size:2.5rem;
+margin-bottom:15px;
+}
+
+.resource-title{
+font-size:20px;
+font-weight:600;
+margin-bottom:10px;
+color:#38bdf8;
+}
+
+.resource-desc{
+font-size:14px;
+color:#cbd5e1;
+margin-bottom:20px;
+}
+
+.download-btn{
+display:inline-block;
+padding:10px 18px;
+background:linear-gradient(135deg,#06b6d4,#2563eb);
+border-radius:10px;
+text-decoration:none;
+color:white;
+font-weight:600;
+}
+
+/* FOOTER */
+
+.footer{
+margin-top:50px;
+padding:25px;
+text-align:center;
+border-top:1px solid rgba(255,255,255,.08);
+color:#94a3b8;
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+.navbar{
+flex-direction:column;
+gap:15px;
+}
+
+.page-header h1{
+font-size:2rem;
+}
+
+}
+
+</style>
 </head>
 
 <body>
 
-  <!-- NAVBAR -->
-  <nav class="navbar">
-    <a href="index.html" class="logo">📚 Study<span>Connect</span></a>
+<nav class="navbar">
 
-    <button class="menu-toggle" aria-label="Open menu">
-      <span></span><span></span><span></span>
-    </button>
+<a href="index.html" class="logo">
+📚 Study<span>Connect</span>
+</a>
 
-    <div class="nav-links">
-      <a href="student-dashboard.html">Dashboard</a>
-      <a href="resources.html" class="active">Resources</a>
-      <a href="quiz.html">Quiz</a>
-      <a href="index.html" class="btn btn-outline btn-sm logout-btn">Logout</a>
-    </div>
-  </nav>
+<div class="nav-links">
+<a href="student-dashboard.html">Dashboard</a>
+<a href="resources.html" class="active">Resources</a>
+<a href="quiz.html">Quiz</a>
+<a href="leaderboard.html">Leaderboard</a>
+<a href="index.html" class="logout-btn">Logout</a>
+</div>
 
-  <!-- HEADER -->
-  <header class="page-header">
-    <h1>Study Resources</h1>
-    <p>Materials uploaded by admin</p>
-  </header>
+</nav>
 
-  <!-- MAIN CONTENT -->
-  <main class="main-content">
+<header class="page-header">
+<h1>📚 Study Resources</h1>
+<p>Access notes, PDFs, presentations and learning materials</p>
+</header>
 
-    <!-- SEARCH TOOLBAR -->
-    <div class="toolbar">
-      <input
-        type="search"
-        id="resourceSearch"
-        class="search-bar"
-        placeholder="Search resources by title, subject, or type..."
-        autocomplete="off"
-      />
-    </div>
+<main class="main-content">
 
-    <!-- RESOURCE LIST -->
-    <div id="resourceList" class="card-list">
-      <!-- Dynamic content from app.js -->
-    </div>
+<div class="toolbar">
+<input
+type="search"
+id="resourceSearch"
+class="search-bar"
+placeholder="🔍 Search resources..."
+>
+</div>
 
-  </main>
+<!-- Firebase data ikkadaki load avutundi -->
+<div id="resourceList" class="card-list">
 
-  <!-- FOOTER -->
-  <footer class="footer">
-    <div class="footer-bottom">
-      <p>&copy; 2026 StudyConnect College Project</p>
-    </div>
-  </footer>
+<!-- Example Card -->
 
-  <!-- SCRIPT -->
-  <script type="module" src="app.js"></script>
+<div class="resource-card">
+<div class="resource-icon">📄</div>
+
+<div class="resource-title">
+Computer Networks Notes
+</div>
+
+<div class="resource-desc">
+Complete unit-wise notes uploaded by admin.
+</div>
+
+<a href="#" class="download-btn">
+Download
+</a>
+</div>
+
+</div>
+
+</main>
+
+<footer class="footer">
+© 2026 StudyConnect | Learning Made Better 🚀
+</footer>
+
+<script type="module" src="app.js"></script>
 
 </body>
 </html>
