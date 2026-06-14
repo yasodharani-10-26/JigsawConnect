@@ -40,19 +40,14 @@ import {
 export const db = getDatabase(app);
 export const auth = getAuth(app);
 
-// ================= EXPORT DATABASE METHODS =================
 export {
   ref,
   set,
-  push,
   get,
+  push,
   remove,
   update,
-  child
-};
-
-// ================= EXPORT AUTH METHODS =================
-export {
+  child,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
