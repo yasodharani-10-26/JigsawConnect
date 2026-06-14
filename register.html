@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register | StudyConnect</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Segoe UI;
+    background:linear-gradient(135deg,#0f172a,#1e3a8a,#06b6d4);
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    color:white;
+}
+
+.card{
+    width:380px;
+    background:rgba(255,255,255,0.1);
+    backdrop-filter:blur(15px);
+    padding:30px;
+    border-radius:20px;
+    box-shadow:0 20px 40px rgba(0,0,0,0.3);
+}
+
+h2{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+input{
+    width:100%;
+    padding:12px;
+    margin:8px 0;
+    border:none;
+    border-radius:10px;
+    outline:none;
+}
+
+button{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    border:none;
+    border-radius:10px;
+    background:white;
+    color:#1e3a8a;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+button:hover{
+    transform:translateY(-2px);
+}
+
+#msg{
+    text-align:center;
+    margin-bottom:10px;
+    font-weight:bold;
+}
+
+a{
+    color:#fff;
+    text-decoration:none;
+    display:block;
+    text-align:center;
+    margin-top:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+    <h2>Student Register</h2>
+
+    <div id="msg"></div>
+
+    <input type="text" id="name" placeholder="Full Name">
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="pass" placeholder="Password">
+    <input type="password" id="cpass" placeholder="Confirm Password">
+
+    <button onclick="register()">Register</button>
+
+    <a href="login.html">Already have account? Login</a>
+
+</div>
+
+<script>
+function register(){
+
+    let name = document.getElementById("name").value;
+    let email = document.getElementById("email").value;
+    let pass = document.getElementById("pass").value;
+    let cpass = document.getElementById("cpass").value;
+    let msg = document.getElementById("msg");
+
+    if(!name || !email || !pass || !cpass){
+        msg.style.color="yellow";
+        msg.innerText="Please fill all fields";
+        return;
+    }
+
+    if(pass !== cpass){
+        msg.style.color="red";
+        msg.innerText="Passwords do not match";
+        return;
+    }
+
+    msg.style.color="lightgreen";
+    msg.innerText="Registration Successful! Redirecting...";
+
+    setTimeout(()=>{
+        window.location.href="login.html";
+    },1500);
+}
+</script>
+
+</body>
+</html>
