@@ -315,7 +315,7 @@ function setupQuizPage() {
   });
 }
 function setupResourcesPage() {
-  const container = document.getElementById("resourcesList");
+ const container = document.getElementById("resourceList");
   if (!container) return;
 
   // Example: load from Firebase
