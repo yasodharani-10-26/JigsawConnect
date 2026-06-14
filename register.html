@@ -120,7 +120,15 @@ function register(){
     },1500);
 } 
     localStorage.setItem(email, password);
-</script>
+    let storedPass = localStorage.getItem(username);
 
+if(storedPass === password){
+    alert("Login Success");
+    window.location.href="dashboard.html";
+}
+else{
+    alert("Account not found. Please register first");
+}
+</script>
 </body>
 </html>
