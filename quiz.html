@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz Challenge | StudyConnect</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       GLOBAL DESIGN SYSTEM VARIABLES
+       ========================================================================== */
+    :root {
+      --bg: #0b0f19;
+      --card-bg: rgba(20, 30, 54, 0.45);
+      --border: rgba(255, 255, 255, 0.08);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-cyan: #06b6d4;
+      --accent-blue: #2563eb;
+      --success: #10b981;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ==========================================================================
+       STICKY NAVIGATION FRAMEWORK
+       ========================================================================== */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 6%;
+      background: rgba(11, 15, 25, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 800;
+      color: #fff;
+      text-decoration: none;
+      letter-spacing: -0.5px;
+    }
+
+    .logo span {
+      color: var(--accent-cyan);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-muted);
+      font-size: 14px;
+      font-weight: 600;
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a:hover, .nav-links a.active {
+      color: var(--accent-cyan);
+    }
+
+    .logout-btn {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      padding: 8px 16px;
+      border-radius: 10px;
+      color: #ef4444 !important;
+      transition: all 0.2s ease !important;
+    }
+
+    .logout-btn:hover {
+      background: #ef4444 !important;
+      color: #fff !important;
+    }
+
+    /* ==========================================================================
+       HERO BANNER COMPONENT
+       ========================================================================== */
+    .page-header {
+      padding: 40px 24px;
+      text-align: center;
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.15), rgba(6, 182, 212, 0.05));
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+
+    .page-header h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 10px;
+    }
+
+    /* Selection Panel Styling */
+    .quiz-selector-panel {
+      max-width: 500px;
+      margin: 20px auto 0 auto;
+      background: rgba(15, 23, 42, 0.6);
+      padding: 16px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+    }
+
+    .quiz-selector-panel label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    select, input[type="text"] {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #0f172a;
+      color: #fff;
+      font-size: 14px;
+      outline: none;
+      margin-bottom: 12px;
+    }
+
+    /* ==========================================================================
+       QUIZ SYSTEM WRAPPER & RUNTIME METRICS HUD
+       ========================================================================== */
+    .quiz-layout {
+      max-width: 950px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 30px 24px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+
+    .quiz-hud-tracker {
+      position: sticky;
+      top: 85px;
+      z-index: 900;
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 16px 24px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3);
+    }
+
+    .tracker-meta {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .tracker-meta span {
+      color: var(--accent-cyan);
+      font-weight: 700;
+    }
+
+    .quiz-container {
+      display: none; /* Hidden until a quiz is selected */
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .quiz-question {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 32px;
+      box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.2);
+    }
+
+    .quiz-question h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      line-height: 1.5;
+      margin-bottom: 20px;
+      color: #fff;
+    }
+
+    .quiz-question label {
+      display: flex;
+      align-items: center;
+      padding: 14px 20px;
+      margin-bottom: 12px;
+      background: rgba(15, 23, 42, 0.4);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      cursor: pointer;
+      font-size: 14px;
+      color: #cbd5e1;
+      transition: all 0.2s ease;
+    }
+
+    .quiz-question label:hover {
+      background: rgba(255, 255, 255, 0.03);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .quiz-question input[type="radio"] {
+      margin-right: 14px;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 16px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+      color: white;
+      box-shadow: 0 4px 20px rgba(37, 99, 235, 0.25);
+      margin-top: 15px;
+    }
+
+    .score-feedback-card {
+      display: none;
+      background: linear-gradient(145deg, rgba(20, 30, 54, 0.9), rgba(11, 15, 25, 0.95));
+      border: 2px solid var(--border);
+      border-radius: 24px;
+      padding: 40px;
+      text-align: center;
+    }
+
+    .score-feedback-card.show {
+      display: block;
+      animation: smoothCardSlideIn 0.5s ease forwards;
+    }
+
+    .metrics-summary-box {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin-top: 20px;
+    }
+
+    .metric-node {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .metric-node .metric-value {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    @keyframes smoothCardSlideIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .footer {
+      text-align: center;
+      padding: 35px 24px;
+      margin-top: auto;
+      border-top: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="index.html" class="logo">📚 Study<span>Connect</span></a>
+    <div class="nav-links">
+      <a href="student-dashboard.html">Dashboard</a>
+      <a href="resources.html">Resources</a>
+      <a href="leaderboard.html" class="active">Leaderboard</a>
+      <a href="index.html" class="logout-btn">Logout</a>
+    </div>
+  </nav>
+
+  <header class="page-header">
+    <h1>📝 Adaptive Assessment Portal</h1>
+    
+    <div class="quiz-selector-panel">
+      <label for="studentName">Enter Your Name</label>
+      <input type="text" id="studentName" placeholder="e.g., Rajesh Kumar" required />
+
+      <label for="quizDropdown">Select Available Quiz</label>
+      <select id="quizDropdown">
+        <option value="">-- Fetching Live Quizzes... --</option>
+      </select>
+    </div>
+  </header>
+
+  <main class="quiz-layout">
+
+    <div class="quiz-hud-tracker" id="quizHud" style="display: none;">
+      <div class="tracker-meta">Progress: <span id="progressCount">0</span> / <span id="hudTotalCount">0</span> Answered</div>
+      <div class="tracker-meta">Active Topic: <span id="hudTopicName">None</span></div>
+    </div>
+
+    <section id="quizScore" class="score-feedback-card">
+      <h2>🎉 Assessment Complete!</h2>
+      <p style="color: var(--text-muted); margin-top: 10px;">Your metric signatures have been successfully compiled into the cloud leaderboard ranking roster.</p>
+      <div class="metrics-summary-box">
+        <div class="metric-node">
+          <span class="metric-label" style="color: var(--success); font-weight: 700;">CORRECT ANSWERS</span>
+          <span id="scoreValue" class="metric-value">0 / 0</span>
+        </div>
+        <div class="metric-node">
+          <span class="metric-label" style="color: var(--accent-cyan); font-weight: 700;">EFFICIENCY INDEX</span>
+          <span id="percentageValue" class="metric-value">0%</span>
+        </div>
+      </div>
+    </section>
+
+    <form id="quizForm" class="quiz-container">
+      <div id="dynamicQuestionsContainer"></div>
+      <button type="submit" class="submit-btn">Submit Assessment Matrices</button>
+    </form>
+
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 StudyConnect | Connect &bull; Collaborate &bull; Succeed 🚀</p>
+  </footer>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+    import { getDatabase, ref, get, set, push } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCaCkliRZk8HmNtOsJpoA084YhNY7MeMWM",
+      authDomain: "jigsawconnect-677da.firebaseapp.com",
+      databaseURL: "https://jigsawconnect-677da-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "jigsawconnect-677da",
+      storageBucket: "jigsawconnect-677da.firebasestorage.app",
+      messagingSenderId: "200774226361",
+      appId: "1:200774226361:web:266cb216968403793f6668"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    let activeQuizQuestionsData = [];
+    let activeQuizTopic = "";
+
+    document.addEventListener("DOMContentLoaded", () => {
+      fetchAvailableQuizzes();
+
+      const quizDropdown = document.getElementById("quizDropdown");
+      quizDropdown.addEventListener("change", handleQuizSelection);
+
+      const quizForm = document.getElementById("quizForm");
+      quizForm.addEventListener("change", updateLiveProgressHUD);
+      quizForm.addEventListener("submit", processQuizSubmission);
+    });
+
+    // 1. Fetch all quizzes generated by Admin from Firebase
+    async function fetchAvailableQuizzes() {
+      const dropdown = document.getElementById("quizDropdown");
+      try {
+        const snapshot = await get(ref(db, "quizzes"));
+        if (snapshot.exists()) {
+          dropdown.innerHTML = '<option value="">-- Choose a Quiz to Begin --</option>';
+          Object.entries(snapshot.val()).forEach(([quizId, quizData]) => {
+            const option = document.createElement("option");
+            option.value = quizId;
+            option.textContent = `${quizData.topic} (${quizData.totalQuestions} Questions)`;
+            dropdown.appendChild(option);
+          });
+        } else {
+          dropdown.innerHTML = '<option value="">No quizzes staged by Admin yet.</option>';
+        }
+      } catch (err) {
+        console.error("Error loading quizzes:", err);
+        dropdown.innerHTML = '<option value="">Error loading ecosystem matrix.</option>';
+      }
+    }
+
+    // 2. Handle Quiz selection and dynamically render mock algorithmic questions
+    function handleQuizSelection(e) {
+      const quizId = e.target.value;
+      const quizForm = document.getElementById("quizForm");
+      const quizHud = document.getElementById("quizHud");
+      const questionsContainer = document.getElementById("dynamicQuestionsContainer");
+
+      if (!quizId) {
+        quizForm.style.display = "none";
+        quizHud.style.display = "none";
+        return;
+      }
+
+      // Read selection configuration details from selected text
+      const selectedOption = e.target.options[e.target.selectedIndex].text;
+      activeQuizTopic = selectedOption.split(" (")[0];
+      const questionsCount = parseInt(selectedOption.match(/\d+/)[0], 10);
+
+      // Generate simulation mock algorithmic technical question blocks structure based on requested volume
+      activeQuizQuestionsData = [];
+      questionsContainer.innerHTML = "";
+
+      for (let i = 1; i <= questionsCount; i++) {
+        // Mock algorithmic technical question matrix generator
+        const questionItem = {
+          number: i,
+          question: `Adaptive Validation Query ${i}: Evaluate fundamental architectural core properties linked inside "${activeQuizTopic}" context?`,
+          options: {
+            A: `Primary system node pipeline optimization protocols structure option Alpha`,
+            B: `Standard execution routine configuration variables option Beta`,
+            C: `Dynamic network resource synchronization paradigm option Gamma`,
+            D: `None of the optimized framework parameters mentioned above`
+          },
+          correct: ["A", "B", "C", "D"][Math.floor(Math.random() * 4)] // Randomly pre-stage correct key sequence
+        };
+        activeQuizQuestionsData.push(questionItem);
+
+        // Append HTML Elements
+        const questionDiv = document.createElement("div");
+        questionDiv.className = "quiz-question";
+        questionDiv.setAttribute("data-correct", questionItem.correct);
+        questionDiv.innerHTML = `
+          <h3>${questionItem.number}. ${questionItem.question}</h3>
+          <label><input type="radio" name="q${i}" value="A"> A. ${questionItem.options.A}</label>
+          <label><input type="radio" name="q${i}" value="B"> B. ${questionItem.options.B}</label>
+          <label><input type="radio" name="q${i}" value="C"> C. ${questionItem.options.C}</label>
+          <label><input type="radio" name="q${i}" value="D"> D. ${questionItem.options.D}</label>
+        `;
+        questionsContainer.appendChild(questionDiv);
+      }
+
+      // Configure HUD Displays
+      document.getElementById("hudTopicName").textContent = activeQuizTopic;
+      document.getElementById("hudTotalCount").textContent = questionsCount;
+      document.getElementById("progressCount").textContent = "0";
+
+      // Show Layout Frames
+      quizForm.style.display = "flex";
+      quizHud.style.display = "flex";
+      document.getElementById("quizScore").classList.remove("show");
+    }
+
+    // 3. Update HUD progress metadata counters
+    function updateLiveProgressHUD() {
+      const quizForm = document.getElementById("quizForm");
+      const selectedAnswers = new FormData(quizForm);
+      let count = 0;
+      for (let key of selectedAnswers.keys()) {
+        count++;
+      }
+      document.getElementById("progressCount").textContent = count;
+    }
+
+    // 4. Process compilation metrics evaluation & record directly onto leaderboard ledger
+    async function processQuizSubmission(e) {
+      e.preventDefault();
+
+      const studentNameInput = document.getElementById("studentName").value.trim();
+      if (!studentNameInput) {
+        alert("⚠️ Access Blocked: Please validate your Student Identity Name row before compilation submission.");
+        return;
+      }
+
+      const totalQuestions = activeQuizQuestionsData.length;
+      let score = 0;
+
+      activeQuizQuestionsData.forEach((q) => {
+        const selected = document.querySelector(`input[name="q${q.number}"]:checked`);
+        if (selected && selected.value === q.correct) {
+          score++;
+        }
+      });
+
+      const efficiencyPercentage = Math.round((score / totalQuestions) * 100);
+
+      // Display Local HUD Metrics Score Results Cards Panel
+      document.getElementById("scoreValue").textContent = `${score} / ${totalQuestions}`;
+      document.getElementById("percentageValue").textContent = `${efficiencyPercentage}%`;
+
+      document.getElementById("quizForm").style.display = "none";
+      document.getElementById("quizHud").style.display = "none";
+      document.getElementById("quizScore").classList.add("show");
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
+      // Write Sync Telemetry Packet structure straight to database target ledger node
+      try {
+        const scoreRef = ref(db, "quizScores");
+        const newScoreNode = push(scoreRef);
+        await set(newScoreNode, {
+          username: studentNameInput,
+          quizTitle: activeQuizTopic,
+          score: score,
+          totalQuestions: totalQuestions,
+          percentage: efficiencyPercentage,
+          timestamp: Date.now()
+        });
+        console.log("Cloud ecosystem synchronized successfully.");
+      } catch (err) {
+        console.error("Leaderboard transmission routing error:", err);
+      }
+    }
+  </script>
+</body>
+</html>

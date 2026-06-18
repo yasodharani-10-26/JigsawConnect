@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Dashboard | StudyConnect</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       GLOBAL ARCHITECTURAL DESIGN SYSTEM
+       ========================================================================== */
+    :root {
+      --bg: #0b0f19;
+      --card-bg: rgba(20, 30, 54, 0.45);
+      --border: rgba(255, 255, 255, 0.08);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-cyan: #06b6d4;
+      --accent-blue: #2563eb;
+      --success: #10b981;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ==========================================================================
+       STICKY NAVIGATION FRAMEWORK
+       ========================================================================== */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 6%;
+      background: rgba(11, 15, 25, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 800;
+      color: #fff;
+      text-decoration: none;
+      letter-spacing: -0.5px;
+    }
+
+    .logo span {
+      color: var(--accent-cyan);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-muted);
+      font-size: 14px;
+      font-weight: 600;
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a:hover, .nav-links a.active {
+      color: var(--accent-cyan);
+    }
+
+    .logout-btn {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      padding: 8px 16px;
+      border-radius: 10px;
+      color: #ef4444 !important;
+      transition: all 0.2s ease !important;
+    }
+
+    .logout-btn:hover {
+      background: #ef4444 !important;
+      color: #fff !important;
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+    }
+
+    /* ==========================================================================
+       HERO BANNER COMPONENT
+       ========================================================================== */
+    .hero {
+      padding: 60px 24px;
+      text-align: center;
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.15), rgba(6, 182, 212, 0.05));
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero h1 {
+      font-size: 2.75rem;
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 10px;
+    }
+
+    .hero p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+    }
+
+    /* ==========================================================================
+       MAIN DATA DISPLAY INTERFACE
+       ========================================================================== */
+    .main-content {
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 40px 24px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 24px;
+      margin-bottom: 35px;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      padding: 24px;
+      border-radius: 20px;
+      text-align: center;
+      border: 1px solid var(--border);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .stat-card h3 {
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+      color: var(--accent-cyan);
+    }
+
+    .big {
+      font-size: 32px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    /* ==========================================================================
+       DYNAMIC COLLABORATION MANAGEMENT PANEL
+       ========================================================================== */
+    .panel {
+      background: var(--card-bg);
+      padding: 32px;
+      border-radius: 24px;
+      margin-bottom: 35px;
+      border: 1px solid var(--border);
+      box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.2);
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .panel-header h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .badge {
+      background: rgba(37, 99, 235, 0.15);
+      border: 1px solid rgba(37, 99, 235, 0.3);
+      color: #60a5fa;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .muted {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+
+    .team-info-box {
+      padding: 18px 24px;
+      background: rgba(15, 23, 42, 0.5);
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      font-size: 14px;
+      color: #cbd5e1;
+      margin-bottom: 20px;
+    }
+
+    .team-list {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 14px;
+    }
+
+    .team-list li {
+      padding: 14px 18px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* NEW SESSIONS COMPONENT STYLING */
+    .sessions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+      margin-bottom: 35px;
+    }
+
+    .session-item-box {
+      background: rgba(15, 23, 42, 0.4);
+      padding: 16px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      margin-bottom: 14px;
+      transition: all 0.2s ease;
+    }
+
+    .session-item-box:hover {
+      background: rgba(15, 23, 42, 0.7);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .join-link {
+      display: inline-block;
+      margin-top: 10px;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .seminar-link {
+      background: rgba(6, 182, 212, 0.1);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(6, 182, 212, 0.2);
+    }
+    .seminar-link:hover {
+      background: var(--accent-cyan);
+      color: #000;
+    }
+
+    .jam-link {
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--success);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+    .jam-link:hover {
+      background: var(--success);
+      color: #000;
+    }
+
+    /* ==========================================================================
+       AI HELP & MULTIMODAL DOUBT SOLVER INTERFACE
+       ========================================================================== */
+    .solver-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .solver-form textarea {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border);
+      color: #fff;
+      padding: 14px;
+      border-radius: 14px;
+      font-size: 14px;
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+
+    .solver-form textarea:focus {
+      border-color: var(--accent-cyan);
+    }
+
+    .multimodal-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .input-card {
+      background: rgba(15, 23, 42, 0.3);
+      padding: 20px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .input-card label {
+      font-weight: 600;
+      font-size: 14px;
+      color: #cbd5e1;
+    }
+
+    .file-upload-wrapper input[type="file"] {
+      color: var(--text-muted);
+      font-size: 13px;
+      margin-top: 4px;
+    }
+
+    .voice-card {
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .voice-btn {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      padding: 10px;
+      border-radius: 10px;
+      color: #fff;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 13px;
+      transition: all 0.2s ease;
+    }
+
+    .voice-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: var(--text-muted);
+    }
+
+    .status-text {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .submit-solver-btn {
+      background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan));
+      border: none;
+      color: white;
+      padding: 14px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(6, 182, 212, 0.2);
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    .submit-solver-btn:hover {
+      transform: translateY(-2px);
+      opacity: 0.95;
+    }
+
+    /* ==========================================================================
+       ACTION CARD PLATFORM LAUNCH NAVIGATION ROUTING
+       ========================================================================== */
+    .actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    .action-card {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 28px;
+      background: var(--card-bg);
+      border-radius: 22px;
+      text-decoration: none;
+      color: white;
+      border: 1px solid var(--border);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .action-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--accent-cyan);
+      box-shadow: 0 15px 30px rgba(6, 182, 212, 0.15);
+    }
+
+    .icon {
+      font-size: 2rem;
+      background: rgba(255, 255, 255, 0.04);
+      width: 58px;
+      height: 58px;
+      display: grid;
+      place-content: center;
+      border-radius: 16px;
+      transition: background 0.2s ease;
+    }
+
+    .action-card:hover .icon {
+      background: rgba(6, 182, 212, 0.1);
+    }
+
+    .action-card h3 {
+      color: #fff;
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      transition: color 0.2s ease;
+    }
+
+    .action-card:hover h3 {
+      color: var(--accent-cyan);
+    }
+
+    .action-card p {
+      color: var(--text-muted);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    /* ==========================================================================
+       FOOTER & RESPONSIVE GRID OVERRIDES
+       ========================================================================== */
+    .footer {
+      text-align: center;
+      padding: 35px 24px;
+      margin-top: auto;
+      color: var(--text-muted);
+      font-size: 13px;
+      border-top: 1px solid var(--border);
+    }
+
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 16px 24px;
+        flex-direction: column;
+        gap: 15px;
+      }
+      .nav-links {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 16px;
+      }
+      .hero h1 { font-size: 2rem; }
+      .panel-header {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav class="navbar">
+    <a href="index.html" class="logo">📚 Study<span>Connect</span></a>
+    <div class="nav-links">
+      <a href="student-dashboard.html" class="active">Dashboard</a>
+      <a href="resources.html">Resources</a>
+      <a href="quiz.html">Quiz</a>
+      <a href="leaderboard.html">Leaderboard</a>
+      <a href="index.html" class="logout-btn">Logout</a>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <h1>🎓 Student Dashboard</h1>
+    <p>Track your learning journey, team progress, and cross-curriculum matrix achievements</p>
+  </section>
+
+  <main class="main-content">
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <h3>👥 Team Limit</h3>
+        <p class="big">5</p>
+      </div>
+      <div class="stat-card">
+        <h3>📚 Resources</h3>
+        <p class="big">24+</p>
+      </div>
+      <div class="stat-card">
+        <h3>🏆 Team Rank</h3>
+        <p id="dashboardRank" class="big">#--</p>
+      </div>
+      <div class="stat-card">
+        <h3>🧠 Quizzes Active</h3>
+        <p class="big">10+</p>
+      </div>
+    </div>
+
+    <section class="panel">
+      <div class="panel-header">
+        <h2>🤖 AI Help & Doubt Solver</h2>
+        <span class="badge" style="background:rgba(6,182,212,0.15); border-color:rgba(6,182,212,0.3); color:var(--accent-cyan);">Multimodal AI Engine</span>
+      </div>
+      <p class="muted">సందేహం ఉన్న ప్రాబ్లమ్‌ను టైప్ చేయండి, ఇమేజ్ అప్‌లోడ్ చేయండి లేదా వాయిస్ రికార్డ్ చేసి పంపండి.</p>
+
+      <form id="doubtSolverForm" class="solver-form">
+        <div class="form-group">
+          <textarea id="doubtText" rows="4" placeholder="Enter your question, copy-paste errors, or type your code/math problem here..."></textarea>
+        </div>
+
+        <div class="multimodal-grid">
+          <div class="input-card">
+            <label>📸 Upload Image / Screenshot:</label>
+            <div class="file-upload-wrapper">
+              <input type="file" id="doubtImage" accept="image/*">
+            </div>
+          </div>
+
+          <div class="input-card voice-card">
+            <label>🎙️ Record Voice Query:</label>
+            <button type="button" id="recordVoiceBtn" class="voice-btn">🎙️ Record Voice</button>
+            <span id="voiceStatus" class="status-text">Ready to record.</span>
+          </div>
+        </div>
+
+        <button type="submit" class="submit-solver-btn">Ask AI Engine for Solution</button>
+      </form>
+
+      <div id="solutionDisplay" style="margin-top: 15px;"></div>
+    </section>
+
+    <div class="sessions-grid">
+      
+      <section class="panel" style="margin-bottom: 0;">
+        <div class="panel-header">
+          <h2>📢 Live Seminars</h2>
+          <span class="badge" style="background:rgba(6,182,212,0.15); border-color:rgba(6,182,212,0.3); color:var(--accent-cyan);">Knowledge Share</span>
+        </div>
+        <p class="muted">Upcoming guest lectures and curriculum study presentations.</p>
+        <div id="seminarFeedList">
+          <p style="color: var(--text-muted); font-size: 14px;">Syncing cluster seminars...</p>
+        </div>
+      </section>
+
+      <section class="panel" style="margin-bottom: 0;">
+        <div class="panel-header">
+          <h2>⏱️ JAM Sessions</h2>
+          <span class="badge" style="background:rgba(16,185,129,0.15); border-color:rgba(16,185,129,0.3); color:var(--success);">Just A Minute</span>
+        </div>
+        <p class="muted">Active spontaneous communication rounds and group tasks.</p>
+        <div id="jamFeedList">
+          <p style="color: var(--text-muted); font-size: 14px;">Syncing active terminals...</p>
+        </div>
+      </section>
+
+    </div>
+
+    <section class="panel">
+      <div class="panel-header">
+        <h2>👥 My Team</h2>
+        <span class="badge">Maximum 5 Members</span>
+      </div>
+      <p class="muted">Real-time group distribution status across cluster assignments.</p>
+
+      <div id="myTeamInfo" class="team-info-box">
+        Synchronizing database nodes... Fetching local cluster metrics.
+      </div>
+
+      <ul id="myTeamMembers" class="team-list">
+      </ul>
+    </section>
+
+    <section class="actions">
+      <a href="resources.html" class="action-card">
+        <div class="icon">📄</div>
+        <div>
+          <h3>Resources Hub</h3>
+          <p>Access code bases, shared document tracks, and presentation files.</p>
+        </div>
+      </a>
+
+      <a href="quiz.html" class="action-card">
+        <div class="icon">🧠</div>
+        <div>
+          <h3>Take Evaluation Quiz</h3>
+          <p>Test current module concepts instantly with algorithmic indexing.</p>
+        </div>
+      </a>
+
+      <a href="leaderboard.html" class="action-card">
+        <div class="icon">🏆</div>
+        <div>
+          <h3>Leaderboard Index</h3>
+          <p>Check group standings across peer nodes globally.</p>
+        </div>
+      </a>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    &copy; 2026 StudyConnect &bull; Learn &bull; Collaborate &bull; Grow 🚀
+  </footer>
+
+  <script type="module" src="app.js"></script>
+  <script type="module" src="main.js"></script>
+
+  <script type="module">
+    import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCaCkliRZk8HmNtOsJpoA084YhNY7MeMWM",
+      authDomain: "jigsawconnect-677da.firebaseapp.com",
+      databaseURL: "https://jigsawconnect-677da-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "jigsawconnect-677da",
+      storageBucket: "jigsawconnect-677da.firebasestorage.app",
+      messagingSenderId: "200774226361",
+      appId: "1:200774226361:web:266cb216968403793f6668"
+    };
+
+    const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+    const db = getDatabase(app);
+
+    const seminarRef = ref(db, "seminars");
+    onValue(seminarRef, (snapshot) => {
+      const container = document.getElementById("seminarFeedList");
+      container.innerHTML = "";
+      
+      if (snapshot.exists()) {
+        snapshot.forEach((childSnapshot) => {
+          const data = childSnapshot.val();
+          container.innerHTML += `
+            <div class="session-item-box">
+              <h4 style="color:#fff; margin-bottom:6px; font-size:15px;">${data.topic}</h4>
+              <p style="font-size:12px; color:var(--text-muted);">📅 ${data.date} | 🕒 ${data.time}</p>
+              <p style="font-size:13px; margin-top:6px; color:#cbd5e1;">Speaker: <b>${data.speaker}</b></p>
+              <a href="${data.link}" target="_blank" class="join-link seminar-link">Join Stream ↗</a>
+            </div>
+          `;
+        });
+      } else {
+        container.innerHTML = `<p style="color:var(--text-muted); font-size:13px;">No upcoming seminars listed in database.</p>`;
+      }
+    });
+
+    const jamRef = ref(db, "jam_sessions");
+    onValue(jamRef, (snapshot) => {
+      const container = document.getElementById("jamFeedList");
+      container.innerHTML = "";
+      
+      if (snapshot.exists()) {
+        snapshot.forEach((childSnapshot) => {
+          const data = childSnapshot.val();
+          container.innerHTML += `
+            <div class="session-item-box" style="border-left: 3px solid var(--success);">
+              <h4 style="color:#fff; margin-bottom:6px; font-size:15px;">${data.topic}</h4>
+              <p style="font-size:12px; color:var(--text-muted);">📅 ${data.date} | 🕒 ${data.time}</p>
+              <p style="font-size:13px; margin-top:6px; color:#cbd5e1;">Rule: 1 Minute Spontaneous Talk</p>
+              <a href="${data.link}" target="_blank" class="join-link jam-link">Enter Room ↗</a>
+            </div>
+          `;
+        });
+      } else {
+        container.innerHTML = `<p style="color:var(--text-muted); font-size:13px;">No active JAM sessions setup yet.</p>`;
+      }
+    });
+  </script>
+
+</body>
+</html>

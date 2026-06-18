@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudyConnect | Smart Student Collaboration Platform</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       GLOBAL DESIGN SYSTEM DESIGN TOKENS
+       ========================================================================== */
+    :root {
+      --bg: #0b0f19;
+      --card-bg: rgba(20, 30, 54, 0.4);
+      --border: rgba(255, 255, 255, 0.08);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --primary: #2563eb;
+      --accent: #06b6d4;
+      --accent-glow: rgba(6, 182, 212, 0.15);
+      --primary-glow: rgba(37, 99, 235, 0.2);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text-main);
+      overflow-x: hidden;
+      line-height: 1.5;
+    }
+
+    /* ==========================================================================
+       PERFORMANCE-OPTIMIZED BACKGROUND EFFECTS
+       ========================================================================== */
+    body::before {
+      content: '';
+      position: fixed;
+      width: 600px;
+      height: 600px;
+      background: var(--primary);
+      filter: blur(220px);
+      opacity: 0.15;
+      top: -200px;
+      left: -200px;
+      z-index: -1;
+      pointer-events: none; /* FIXED: Prevents blocking user clicks */
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      width: 600px;
+      height: 600px;
+      background: var(--accent);
+      filter: blur(220px);
+      opacity: 0.12;
+      bottom: -200px;
+      right: -200px;
+      z-index: -1;
+      pointer-events: none; /* FIXED: Prevents blocking user clicks */
+    }
+
+    /* ==========================================================================
+       NAVIGATION LAYER
+       ========================================================================== */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 6%;
+      background: rgba(11, 15, 25, 0.75);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--border);
+      z-index: 1000;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 800;
+      color: #fff;
+      text-decoration: none;
+      letter-spacing: -0.5px;
+    }
+
+    .logo span {
+      color: var(--accent);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .nav-links a:not(.btn) {
+      text-decoration: none;
+      color: var(--text-muted);
+      font-size: 14px;
+      font-weight: 600;
+      transition: color 0.25s ease;
+    }
+
+    .nav-links a:not(.btn):hover {
+      color: var(--accent);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* ==========================================================================
+       INTERACTIVE BUTTON CONSTRUCTS
+       ========================================================================== */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 24px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 700;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--primary));
+      color: white;
+      box-shadow: 0 4px 20px var(--primary-glow);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(6, 182, 212, 0.4);
+    }
+
+    .btn-outline {
+      border: 1px solid rgba(6, 182, 212, 0.3);
+      background: rgba(6, 182, 212, 0.03);
+      color: var(--accent);
+    }
+
+    .btn-outline:hover {
+      background: var(--accent);
+      color: var(--bg);
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
+
+    /* ==========================================================================
+       HERO SYSTEM SECTION
+       ========================================================================== */
+    .hero {
+      min-height: 95vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 160px 24px 80px;
+    }
+
+    .hero-content {
+      max-width: 900px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 18px;
+      border-radius: 30px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 28px;
+      letter-spacing: 0.5px;
+    }
+
+    .hero h1 {
+      font-size: 4.5rem;
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 24px;
+      letter-spacing: -1.5px;
+      color: #fff;
+    }
+
+    .hero h1 span {
+      background: linear-gradient(135deg, #fff 30%, var(--text-muted));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero h1 em {
+      font-style: normal;
+      background: linear-gradient(135deg, var(--accent), #60a5fa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      margin-bottom: 36px;
+      max-width: 720px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.6;
+    }
+
+    .hero-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    /* ==========================================================================
+       TELEMETRY SYSTEM STAT CARDS
+       ========================================================================== */
+    .stats {
+      max-width: 1200px;
+      margin: auto;
+      padding: 0 24px 100px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 24px;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 32px 24px;
+      text-align: center;
+      box-shadow: 0 10px 30px -10px rgba(0,0,0,0.3);
+      transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(6, 182, 212, 0.25);
+    }
+
+    .stat-card h2 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--accent);
+      margin-bottom: 6px;
+      letter-spacing: -0.5px;
+    }
+
+    .stat-card p {
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* ==========================================================================
+       FUNCTIONAL PLATFORM FEATURES
+       ========================================================================== */
+    .features {
+      max-width: 1200px;
+      margin: auto;
+      padding: 60px 24px;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 60px;
+      letter-spacing: -0.5px;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      padding: 40px 32px;
+      border-radius: 24px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .feature-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+    }
+
+    .feature-icon {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      background: rgba(255, 255, 255, 0.03);
+      width: 70px;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+    }
+
+    .feature-card h3 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: #fff;
+    }
+
+    .feature-card p {
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* ==========================================================================
+       MISSION CORE OVERVIEW
+       ========================================================================== */
+    .about {
+      max-width: 1200px;
+      margin: auto;
+      padding: 80px 24px;
+    }
+
+    .about-box {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .about-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 40px;
+    }
+
+    .about-card h2 {
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 16px;
+      color: #fff;
+    }
+
+    .about-card p {
+      color: var(--text-muted);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    /* ==========================================================================
+       CALL TO ACTION REGISTRATION PANEL
+       ========================================================================== */
+    .cta {
+      max-width: 1152px;
+      margin: 100px auto;
+      padding: 80px 32px;
+      text-align: center;
+      background: linear-gradient(135deg, #1d4ed8, #0e7490);
+      border-radius: 32px;
+      box-shadow: 0 20px 50px rgba(37, 99, 235, 0.25);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: radial-gradient(circle at center, transparent, rgba(11, 15, 25, 0.4));
+    }
+
+    .cta-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .cta h2 {
+      font-size: 3rem;
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 16px;
+    }
+
+    .cta p {
+      font-size: 1.1rem;
+      margin-bottom: 32px;
+      color: #e2e8f0;
+    }
+
+    /* ==========================================================================
+       FOOTER ENGINE GRID
+       ========================================================================== */
+    .footer {
+      margin-top: 100px;
+      padding: 80px 24px 40px;
+      background: #070a10;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 60px;
+      margin-bottom: 60px;
+    }
+
+    .footer-brand h3 {
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 16px;
+    }
+
+    .footer-brand p {
+      color: var(--text-muted);
+      font-size: 14px;
+      max-width: 320px;
+      line-height: 1.6;
+    }
+
+    .footer-links-group h4 {
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 20px;
+      color: #fff;
+    }
+
+    .footer-links {
+      list-style: none;
+    }
+
+    .footer-links li {
+      margin-bottom: 12px;
+    }
+
+    .footer-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+
+    .footer-links a:hover {
+      color: var(--accent);
+    }
+
+    .footer-bottom {
+      max-width: 1200px;
+      margin: auto;
+      text-align: center;
+      padding-top: 30px;
+      border-top: 1px solid var(--border);
+      color: #64748b;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    /* ==========================================================================
+       MEDIA QUERY BREAKPOINTS
+       ========================================================================== */
+    @media (max-width: 960px) {
+      .hero h1 { font-size: 3.5rem; }
+      .about-box { grid-template-columns: 1fr; }
+      .footer-content { grid-template-columns: 1fr; gap: 40px; }
+    }
+
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 16px 24px;
+        flex-wrap: wrap; /* FIXED: Prevents clipping grid parameters */
+        gap: 16px;
+        justify-content: center;
+      }
+      .nav-links {
+        gap: 20px;
+      }
+      .hero { padding-top: 180px; }
+      .hero h1 { font-size: 2.75rem; }
+      .cta h2 { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="#" class="logo">
+      📚 Study<span>Connect</span>
+    </a>
+
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="leaderboard.html">Leaderboard</a>
+    </div>
+
+    <div class="nav-actions">
+      <a href="admin-login.html" class="btn btn-outline">Admin</a>
+      <a href="student-login.html" class="btn btn-primary">Student Portal</a>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span>🚀</span> Smart College Collaboration Platform
+      </div>
+      <h1>
+        <span>Learn, Build Teams &</span><br>
+        <em>Grow Together</em>
+      </h1>
+      <p>
+        StudyConnect helps students collaborate on projects, share vetted curriculum resources, 
+        participate in AI-generated quizzes, organize seminars, and engineer active academic communities.
+      </p>
+      <div class="hero-buttons">
+        <a href="student-login.html" class="btn btn-primary">Get Started Now</a>
+        <a href="#features" class="btn btn-outline">Explore Features</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="stats">
+    <div class="stat-card">
+      <h2>500+</h2>
+      <p>Active Students</p>
+    </div>
+    <div class="stat-card">
+      <h2>100+</h2>
+      <p>Project Teams</p>
+    </div>
+    <div class="stat-card">
+      <h2>80+</h2>
+      <p>Verified Resources</p>
+    </div>
+    <div class="stat-card">
+      <h2>50+</h2>
+      <p>Live Seminars</p>
+    </div>
+  </section>
+
+  <section class="features" id="features">
+    <h2 class="section-title">✨ Platform Ecosystem Features</h2>
+    
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-icon">👨‍💼</div>
+        <h3>Admin Controls</h3>
+        <p>Vet core users, monitor project team creations, generate assessment tests, and index learning repositories.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">👥</div>
+        <h3>Team Builder</h3>
+        <p>Form custom development modules, match skill vectors with peer nodes, and collaborate across technical stacks.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📚</div>
+        <h3>Resource Vault</h3>
+        <p>Distribute and access peer-reviewed documentation, structured lecture notes, and developmental media profiles.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📝</div>
+        <h3>Dynamic Quizzes</h3>
+        <p>Challenge operational proficiencies via automated sandbox questionnaires driven by advanced API generation blocks.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🎤</div>
+        <h3>Academic Events</h3>
+        <p>Schedule, discover, and trace structural milestones for regional seminars, tech hackathons, and guest keynotes.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🏆</div>
+        <h3>Global Leaderboard</h3>
+        <p>Earn reputation metrics, display parsed scoring benchmarks, and benchmark performance hierarchies across classes.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="about">
+    <div class="about-box">
+      <div class="about-card">
+        <h2>🎯 Our Core Mission</h2>
+        <p>
+          To systematically remove friction from collegiate networking by unifying distributed student nodes, 
+          resource repositories, code groups, and skill mapping metrics into one high-performance interface.
+        </p>
+      </div>
+      <div class="about-card">
+        <h2>💡 Why StudyConnect?</h2>
+        <p>
+          Unlike disconnected workspace channels, StudyConnect forms a tailored academic ecosystem engineered 
+          to log milestones, demonstrate performance data, and drive actual technical portfolio outputs.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="cta-content">
+      <h2>Ready to Start Your Journey?</h2>
+      <p>Initialize your profile parameters and collaborate with active students inside the pipeline today.</p>
+      <a href="student-login.html" class="btn btn-primary">🚀 Join Workspace Now</a>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <h3>📚 StudyConnect</h3>
+        <p>Empowering students through high-impact collaboration, continuous learning infrastructure, and system resource optimization.</p>
+      </div>
+      <div class="footer-links-group">
+        <h4>Navigation Gateways</h4>
+        <ul class="footer-links">
+          <li><a href="admin-login.html">Admin Portal Login</a></li>
+          <li><a href="student-login.html">Student Portal Login</a></li>
+          <li><a href="leaderboard.html">Global Leaderboard Ledger</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2026 StudyConnect | Automated Deployment Framework Pipeline
+    </div>
+  </footer>
+
+</body>
+</html>

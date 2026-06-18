@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Study Groups | StudyConnect</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       GLOBAL ARCHITECTURAL DESIGN SYSTEM VARIABLES
+       ========================================================================== */
+    :root {
+      --bg: #0b0f19;
+      --card-bg: rgba(20, 30, 54, 0.45);
+      --border: rgba(255, 255, 255, 0.08);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-blue: #2563eb;
+      --accent-cyan: #06b6d4;
+      --success: #10b981;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ==========================================================================
+       STICKY NAVIGATION FRAMEWORK
+       ========================================================================== */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 6%;
+      background: rgba(11, 15, 25, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 800;
+      color: #fff;
+      text-decoration: none;
+      letter-spacing: -0.5px;
+    }
+
+    .logo span {
+      color: var(--accent-cyan);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-muted);
+      font-size: 14px;
+      font-weight: 600;
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a:hover, .nav-links a.active {
+      color: var(--accent-cyan);
+    }
+
+    .logout-btn {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      padding: 8px 16px;
+      border-radius: 10px;
+      color: #ef4444 !important;
+      transition: all 0.2s ease !important;
+    }
+
+    .logout-btn:hover {
+      background: #ef4444 !important;
+      color: #fff !important;
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+    }
+
+    /* ==========================================================================
+       HERO BANNER COMPONENT
+       ========================================================================== */
+    .page-header {
+      padding: 60px 24px;
+      text-align: center;
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.15), rgba(6, 182, 212, 0.05));
+      border-bottom: 1px solid var(--border);
+    }
+
+    .page-header h1 {
+      font-size: 2.75rem;
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 10px;
+    }
+
+    .page-header p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+    }
+
+    /* ==========================================================================
+       MAIN MANAGEMENT HUB WORKSPACE
+       ========================================================================== */
+    .main-content {
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 40px 24px;
+    }
+
+    .groups-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 35px;
+    }
+
+    .groups-header h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .create-btn {
+      background: linear-gradient(135deg, var(--accent-blue), #1d4ed8);
+      color: white;
+      border: none;
+      padding: 12px 22px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+      transition: all 0.25s ease;
+    }
+
+    .create-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(37, 99, 235, 0.4);
+    }
+
+    /* ==========================================================================
+       STUDY GROUPS STABLE GRID SYSTEM
+       ========================================================================== */
+    .study-groups-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 28px;
+    }
+
+    .group-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 32px 28px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s ease;
+    }
+
+    .group-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .group-icon {
+      font-size: 2.2rem;
+      background: rgba(255, 255, 255, 0.04);
+      width: 76px;
+      height: 76px;
+      display: grid;
+      place-content: center;
+      border-radius: 20px;
+      margin: 0 auto 20px auto;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .group-card h3 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+
+    .group-card p {
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.6;
+      min-height: 68px;
+      margin-bottom: 16px;
+      flex-grow: 1;
+    }
+
+    .group-info {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent-cyan);
+      background: rgba(6, 182, 212, 0.08);
+      padding: 6px 14px;
+      border-radius: 30px;
+      display: inline-block;
+      margin: 0 auto 24px auto;
+      border: 1px solid rgba(6, 182, 212, 0.15);
+    }
+
+    /* Action Trigger States */
+    .join-btn {
+      width: 100%;
+      border: none;
+      padding: 12px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: white;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .join-btn:hover {
+      background: var(--accent-blue);
+      border-color: var(--accent-blue);
+      box-shadow: 0 4px 15px rgba(37, 99, 235, 0.25);
+    }
+
+    /* JavaScript Powered Active Connected Classes */
+    .group-card.joined {
+      border-color: rgba(16, 185, 129, 0.3);
+      background: linear-gradient(180deg, rgba(20, 30, 54, 0.45) 0%, rgba(16, 185, 129, 0.02) 100%);
+    }
+
+    .group-card.joined .group-info {
+      color: var(--success);
+      background: rgba(16, 185, 129, 0.1);
+      border-color: rgba(16, 185, 129, 0.2);
+    }
+
+    .join-btn.active-status {
+      background: var(--success);
+      border-color: var(--success);
+    }
+
+    .join-btn.active-status:hover {
+      background: #ef4444;
+      border-color: #ef4444;
+      box-shadow: 0 4px 15px rgba(239, 68, 68, 0.25);
+    }
+
+    /* ==========================================================================
+       MODAL FORM OVERLAY COMPONENT
+       ========================================================================== */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(2, 6, 17, 0.8);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 2000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-box {
+      background: #111827;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      width: 100%;
+      max-width: 460px;
+      padding: 32px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      transform: translateY(20px);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .modal-overlay.open .modal-box {
+      transform: translateY(0);
+    }
+
+    .modal-box h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: #fff;
+    }
+
+    .modal-box p {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+
+    /* Form Layout Elements */
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text-main);
+    }
+
+    .form-control {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 12px 16px;
+      color: white;
+      font-size: 14px;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .form-control:focus {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.2);
+    }
+
+    textarea.form-control {
+      resize: none;
+      height: 90px;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .cancel-btn {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-muted);
+      padding: 12px 20px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+
+    .cancel-btn:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+    }
+
+    .submit-group-btn {
+      background: var(--accent-cyan);
+      color: #000;
+      border: none;
+      padding: 12px 22px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+
+    .submit-group-btn:hover {
+      background: #22d3ee;
+      box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
+    }
+
+    /* ==========================================================================
+       FOOTER & RESPONSIVE LAYOUT CONFIGURATION
+       ========================================================================== */
+    .footer {
+      text-align: center;
+      padding: 35px 24px;
+      margin-top: auto;
+      border-top: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 16px 24px;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .page-header h1 {
+        font-size: 2rem;
+      }
+      .groups-header {
+        flex-direction: column;
+        gap: 16px;
+        text-align: center;
+      }
+      .study-groups-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="index.html" class="logo">📚 Study<span>Connect</span></a>
+    <div class="nav-links">
+      <a href="student-dashboard.html">Dashboard</a>
+      <a href="resources.html">Resources</a>
+      <a href="leaderboard.html">Leaderboard</a>
+      <a href="index.html" class="logout-btn">Logout</a>
+    </div>
+  </nav>
+
+  <header class="page-header">
+    <h1>Peer Study Groups</h1>
+    <p>Form dynamic project clusters, sync development sprints, and review complex architectures together</p>
+  </header>
+
+  <main class="main-content">
+    
+    <div class="groups-header">
+      <h2>Active Target Clusters</h2>
+      <button class="create-btn" id="openModalBtn">Create Study Group</button>
+    </div>
+
+    <div class="study-groups-grid" id="groupsDeck">
+      
+      <div class="group-card">
+        <div class="group-icon">☕</div>
+        <h3>Spring Boot Engineers</h3>
+        <p>Reviewing nested package schemas, inversion of control patterns, and setting up clean service tier connections.</p>
+        <div class="group-info"><span class="member-count">8</span> Members Active</div>
+        <button class="join-btn">Join Cluster</button>
+      </div>
+
+      <div class="group-card">
+        <div class="group-icon">📐</div>
+        <h3>Discrete Math & Relations</h3>
+        <p>Working on generating functions, power series transformations, and linear homogeneous recurrence formulas.</p>
+        <div class="group-info"><span class="member-count">5</span> Members Active</div>
+        <button class="join-btn">Join Cluster</button>
+      </div>
+
+      <div class="group-card">
+        <div class="group-icon">🖧</div>
+        <h3>OSI Layer 3 Specialists</h3>
+        <p>Deep-dive debugging of classless CIDR network partitions, distance vector parameters, and ARP hardware mappings.</p>
+        <div class="group-info"><span class="member-count">12</span> Members Active</div>
+        <button class="join-btn">Join Cluster</button>
+      </div>
+
+    </div>
+  </main>
+
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-box">
+      <h3>Initialize New Study Core</h3>
+      <p>Configure your target technical track specs to map out incoming peer requests.</p>
+      
+      <form id="groupCreationForm">
+        <div class="form-group">
+          <label for="groupTitle">Core Subject / Title</label>
+          <input type="text" id="groupTitle" class="form-control" placeholder="e.g., Relational Algebra Sprints" required>
+        </div>
+        <div class="form-group">
+          <label for="groupIcon">Cluster Aesthetic Icon</label>
+          <select id="groupIcon" class="form-control">
+            <option value="💻">💻 Code Sandbox</option>
+            <option value="📊">📊 Relational Databases</option>
+            <option value="🧮">🧮 Discrete Structures</option>
+            <option value="🌐">🌐 Network Fabrics</option>
+            <option value="📚">📚 Literature Sync</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="groupDesc">Sprint Objectives</label>
+          <textarea id="groupDesc" class="form-control" placeholder="Briefly specify your target engineering concepts, text guides, or project metrics..." required></textarea>
+        </div>
+        
+        <div class="modal-actions">
+          <button type="button" class="cancel-btn" id="closeModalBtn">Abort</button>
+          <button type="submit" class="submit-group-btn">Deploy Cluster</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>&copy; 2026 StudyConnect | Connect &bull; Collaborate &bull; Succeed 🚀</p>
+  </footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const openModalBtn = document.getElementById("openModalBtn");
+      const closeModalBtn = document.getElementById("closeModalBtn");
+      const modalOverlay = document.getElementById("modalOverlay");
+      const groupCreationForm = document.getElementById("groupCreationForm");
+      const groupsDeck = document.getElementById("groupsDeck");
+
+      /* ----- Modal View Visibility Handlers ----- */
+      const openModal = () => modalOverlay.classList.add("open");
+      const closeModal = () => {
+        modalOverlay.classList.remove("open");
+        groupCreationForm.reset();
+      };
+
+      openModalBtn.addEventListener("click", openModal);
+      closeModalBtn.addEventListener("click", closeModal);
+      
+      // Close viewport if clicking backdrop outer bounds safety layer
+      modalOverlay.addEventListener("click", (e) => {
+        if (e.target === modalOverlay) closeModal();
+      });
+
+      /* ----- Event Delegation for Cluster Membership State Toggles ----- */
+      groupsDeck.addEventListener("click", (e) => {
+        if (e.target.classList.contains("join-btn")) {
+          const targetBtn = e.target;
+          const targetCard = targetBtn.closest(".group-card");
+          const counterSpan = targetCard.querySelector(".member-count");
+          let currentCount = parseInt(counterSpan.innerText, 10);
+
+          if (!targetCard.classList.contains("joined")) {
+            // Join Sequence Applied
+            targetCard.classList.add("joined");
+            targetBtn.classList.add("active-status");
+            targetBtn.innerText = "Leave Cluster";
+            counterSpan.innerText = currentCount + 1;
+          } else {
+            // Drop Action Executed
+            targetCard.classList.remove("joined");
+            targetBtn.classList.remove("active-status");
+            targetBtn.innerText = "Join Cluster";
+            counterSpan.innerText = currentCount - 1;
+          }
+        }
+      });
+
+      /* ----- Core Dynamic Card Append Template Dispatch Engine ----- */
+      groupCreationForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const titleVal = document.getElementById("groupTitle").value.trim();
+        const iconVal = document.getElementById("groupIcon").value;
+        const descVal = document.getElementById("groupDesc").value.trim();
+
+        // Structural Component Node Building Assembly
+        const newCardHTML = document.createElement("div");
+        newCardHTML.className = "group-card";
+        newCardHTML.innerHTML = `
+          <div class="group-icon">${iconVal}</div>
+          <h3>${titleVal}</h3>
+          <p>${descVal}</p>
+          <div class="group-info"><span class="member-count">1</span> Member Active</div>
+          <button class="join-btn">Join Cluster</button>
+        `;
+
+        // Push new element to grid and gracefully close setup viewport frame
+        groupsDeck.appendChild(newCardHTML);
+        closeModal();
+      });
+    });
+  </script>
+</body>
+</html>

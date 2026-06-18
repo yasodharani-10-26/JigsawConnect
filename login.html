@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudyConnect | Login Portal Gateway</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       GLOBAL DESIGN SYSTEM VARIABLES
+       ========================================================================== */
+    :root {
+      --bg: #0b0f19;
+      --card-bg: rgba(20, 30, 54, 0.45);
+      --border: rgba(255, 255, 255, 0.08);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      
+      /* Context Token Pairs */
+      --student-primary: #2563eb;
+      --student-accent: #06b6d4;
+      --admin-primary: #dc2626;
+      --admin-accent: #ef4444;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ==========================================================================
+       AMBIENT GLOW GRAPHIC PIPELINES
+       ========================================================================== */
+    .bg-glow-layer {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .circle-blur {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(140px);
+      opacity: 0.15;
+    }
+
+    .c1 {
+      width: 400px;
+      height: 400px;
+      background: var(--student-primary);
+      top: -100px;
+      left: -100px;
+    }
+
+    .c2 {
+      width: 400px;
+      height: 400px;
+      background: var(--student-accent);
+      bottom: -100px;
+      right: -100px;
+    }
+
+    /* ==========================================================================
+       NAVIGATION FRAMEWORK
+       ========================================================================== */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 6%;
+      background: rgba(11, 15, 25, 0.75);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--border);
+      width: 100%;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 800;
+      color: #fff;
+      text-decoration: none;
+      letter-spacing: -0.5px;
+    }
+
+    .logo span {
+      color: var(--student-accent);
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      margin-left: 28px;
+      color: var(--text-muted);
+      font-size: 14px;
+      font-weight: 600;
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--student-accent);
+    }
+
+    /* ==========================================================================
+       PORTAL SHELL ARCHITECTURE
+       ========================================================================== */
+    .auth-page {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 60px 24px;
+    }
+
+    .auth-card {
+      max-width: 1000px;
+      width: 100%;
+      padding: 55px 45px;
+      border-radius: 32px;
+      background: var(--card-bg);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--border);
+      text-align: center;
+      box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.5);
+    }
+
+    .auth-card h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      margin-bottom: 12px;
+      color: #fff;
+    }
+
+    .auth-card p.subtitle {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      font-weight: 500;
+      margin-bottom: 45px;
+    }
+
+    /* Split Option Grid System */
+    .login-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 28px;
+      margin-bottom: 45px;
+    }
+
+    .portal-card {
+      padding: 40px 32px;
+      border-radius: 24px;
+      background: rgba(15, 23, 42, 0.3);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .portal-icon {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      width: 80px;
+      height: 80px;
+      background: rgba(255, 255, 255, 0.03);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      transition: transform 0.3s ease;
+    }
+
+    .portal-card h2 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: #fff;
+    }
+
+    .portal-card p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+
+    /* Distinct Portal Hover Responses */
+    .portal-card.admin-node:hover {
+      transform: translateY(-6px);
+      border-color: rgba(239, 68, 68, 0.3);
+      box-shadow: 0 15px 30px rgba(239, 68, 68, 0.1);
+    }
+
+    .portal-card.student-node:hover {
+      transform: translateY(-6px);
+      border-color: rgba(6, 182, 212, 0.3);
+      box-shadow: 0 15px 30px rgba(6, 182, 212, 0.1);
+    }
+    
+    .portal-card:hover .portal-icon {
+      transform: scale(1.08);
+    }
+
+    /* ==========================================================================
+       BUTTON INFRASTRUCTURE SYSTEM
+       ========================================================================== */
+    .btn {
+      width: 100%;
+      padding: 14px 24px;
+      border-radius: 14px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 700;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+
+    .btn-admin {
+      background: linear-gradient(135deg, var(--admin-accent), var(--admin-primary));
+      color: white;
+      box-shadow: 0 4px 15px rgba(220, 38, 38, 0.2);
+    }
+
+    .btn-admin:hover {
+      box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+      opacity: 0.95;
+    }
+
+    .btn-student {
+      background: linear-gradient(135deg, var(--student-accent), var(--student-primary));
+      color: white;
+      box-shadow: 0 4px 15px rgba(37, 99, 235, 0.2);
+    }
+
+    .btn-student:hover {
+      box-shadow: 0 6px 20px rgba(6, 182, 212, 0.4);
+      opacity: 0.95;
+    }
+
+    /* ==========================================================================
+       BOTTOM CAPABILITY CHIPS
+       ========================================================================== */
+    .features-tray {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      border-top: 1px solid var(--border);
+      padding-top: 35px;
+    }
+
+    .chip {
+      padding: 8px 18px;
+      border-radius: 30px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      font-size: 13px;
+      font-weight: 600;
+      color: #cbd5e1;
+    }
+
+    /* ==========================================================================
+       DYNAMIC RESPONSIVE ADJUSTMENTS
+       ========================================================================== */
+    .footer {
+      text-align: center;
+      padding: 25px 24px;
+      margin-top: auto;
+      border-top: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 16px 24px;
+        flex-direction: column;
+        gap: 14px;
+      }
+      
+      .nav-links a {
+        margin: 0 12px;
+      }
+
+      .auth-card {
+        padding: 40px 20px;
+      }
+
+      .auth-card h1 {
+        font-size: 2.2rem;
+      }
+
+      .login-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-glow-layer">
+    <div class="circle-blur c1"></div>
+    <div class="circle-blur c2"></div>
+  </div>
+
+  <nav class="navbar">
+    <a href="#" class="logo">📚 Study<span>Connect</span></a>
+    <div class="nav-links">
+      <a href="#">System Status</a>
+      <a href="#">Support</a>
+      <a href="#">Documentation</a>
+    </div>
+  </nav>
+
+  <main class="auth-page">
+    <div class="auth-card">
+      <h1>Central Access Portal</h1>
+      <p class="subtitle">Select your designated network node access environment to begin authorization</p>
+
+      <div class="login-grid">
+        
+        <div class="portal-card admin-node">
+          <div class="portal-icon" style="color: var(--admin-accent);">🛡️</div>
+          <h2>Administrative Node</h2>
+          <p>Configure directory system states, manage curriculum indexes, orchestrate pipeline parameters, and monitor peer global activities.</p>
+          <a href="admin-dashboard.html" class="btn btn-admin">Authenticate Admin</a>
+        </div>
+
+        <div class="portal-card student-node">
+          <div class="portal-icon" style="color: var(--student-accent);">🎓</div>
+          <h2>Student Workspace</h2>
+          <p>Access high-fidelity curriculum resources, collaborate directly inside peer study clusters, configure backends, and monitor rank levels.</p>
+          <a href="student-dashboard.html" class="btn btn-student">Launch Workspace</a>
+        </div>
+
+      </div>
+
+      <div class="features-tray">
+        <span class="chip">🔒 SHA-256 Authentication</span>
+        <span class="chip">⚡ Low-Latency Peer Routing</span>
+        <span class="chip">🌐 State Synced Pipeline</span>
+        <span class="chip">🛡️ RBAC Encapsulated</span>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 StudyConnect | Connect &bull; Collaborate &bull; Succeed 🚀</p>
+  </footer>
+
+</body>
+</html>

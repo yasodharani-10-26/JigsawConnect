@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@google/genai": "^2.8.0",
+    "formidable": "^3.5.4"
+  }
+}

@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Study Resources | StudyConnect</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       GLOBAL ARCHITECTURAL DESIGN SYSTEM
+       ========================================================================== */
+    :root {
+      --bg: #0b0f19;
+      --card-bg: rgba(20, 30, 54, 0.45);
+      --border: rgba(255, 255, 255, 0.08);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-cyan: #06b6d4;
+      --accent-blue: #2563eb;
+      --accent-purple: #a855f7;
+      --accent-orange: #f97316;
+      --success: #10b981;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* NAVIGATION FRAMEWORK */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 6%;
+      background: rgba(11, 15, 25, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 800;
+      color: #fff;
+      text-decoration: none;
+      letter-spacing: -0.5px;
+    }
+
+    .logo span { color: var(--accent-cyan); }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-muted);
+      font-size: 14px;
+      font-weight: 600;
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a:hover, .nav-links a.active { color: var(--accent-cyan); }
+
+    .logout-btn {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      padding: 8px 16px;
+      border-radius: 10px;
+      color: #ef4444 !important;
+      transition: all 0.2s ease !important;
+    }
+
+    /* HERO BANNER COMPONENT */
+    .page-header {
+      padding: 50px 24px;
+      text-align: center;
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.15), rgba(6, 182, 212, 0.05));
+      border-bottom: 1px solid var(--border);
+    }
+
+    .page-header h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 10px;
+    }
+
+    /* ADMIN UPLOAD PANEL PORTAL */
+    .admin-upload-panel {
+      max-width: 600px;
+      margin: 24px auto 0 auto;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px dashed var(--accent-cyan);
+      border-radius: 16px;
+      padding: 20px;
+      text-align: left;
+    }
+
+    .admin-upload-panel h3 {
+      font-size: 14px;
+      color: var(--accent-cyan);
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .upload-form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .upload-form-grid input, .upload-form-grid select {
+      padding: 10px;
+      background: #0f172a;
+      border: 1px solid var(--border);
+      color: white;
+      border-radius: 8px;
+      outline: none;
+      font-size: 13px;
+    }
+
+    .file-browse-container {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,0.02);
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    .file-browse-container input[type="file"] {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+    }
+
+    .upload-btn {
+      grid-column: 1 / -1;
+      padding: 12px;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+      border: none;
+      color: white;
+      font-weight: 700;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: opacity 0.2s;
+    }
+
+    .upload-btn:hover { opacity: 0.9; }
+
+    /* MAIN CONTENT */
+    .main-content {
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 30px 24px;
+    }
+
+    .search-bar {
+      width: 100%;
+      padding: 16px 16px 16px 48px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      background: rgba(15, 23, 42, 0.6);
+      color: white;
+      font-size: 16px;
+      outline: none;
+      margin-bottom: 30px;
+    }
+
+    /* RESOURCE CARD DECK GRID */
+    .card-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 28px;
+    }
+
+    .resource-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 280px;
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+
+    .resource-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 18px;
+    }
+
+    .resource-badge {
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .badge-cyan { background: rgba(6, 182, 212, 0.12); color: var(--accent-cyan); border: 1px solid rgba(6, 182, 212, 0.2); }
+    .badge-blue { background: rgba(37, 99, 235, 0.12); color: #60a5fa; border: 1px solid rgba(37, 99, 235, 0.2); }
+    .badge-purple { background: rgba(168, 85, 247, 0.12); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.2); }
+    .badge-orange { background: rgba(249, 115, 22, 0.12); color: #fb923c; border: 1px solid rgba(249, 115, 22, 0.2); }
+
+    .file-type {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.04);
+      padding: 4px 8px;
+      border-radius: 6px;
+    }
+
+    .card-mid h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+
+    .card-mid p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .card-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .download-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      color: #fff;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .download-btn:hover {
+      background: var(--accent-cyan);
+      color: #000;
+    }
+
+    .empty-state {
+      display: none;
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 50px;
+      border: 1px dashed rgba(255,255,255,0.1);
+      border-radius: 24px;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 35px 24px;
+      margin-top: auto;
+      border-top: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="index.html" class="logo">📚 Study<span>Connect</span></a>
+    <div class="nav-links">
+      <a href="student-dashboard.html">Dashboard</a>
+      <a href="resources.html" class="active">Resources</a>
+      <a href="leaderboard.html">Leaderboard</a>
+      <a href="index.html" class="logout-btn">Logout</a>
+    </div>
+  </nav>
+
+  <header class="page-header">
+    <h1>Architecture Curriculum Library</h1>
+    <p>Access high-fidelity target curriculum syllabi, source notes, and assessment logs</p>
+
+    <div class="admin-upload-panel" id="adminUploadPanel" style="display: none;">
+      <h3>⚡ Admin Resource Control Matrix</h3>
+      <form id="uploadForm" class="upload-form-grid">
+        <input type="text" id="assetTitle" placeholder="Asset Title (e.g., C Memory Management)" required>
+        <input type="text" id="assetSize" placeholder="File Size (e.g., 2.5 MB)" required>
+        <textarea id="assetDesc" placeholder="Enter resource operational objective details..." style="grid-column: 1 / -1; padding: 10px; background: #0f172a; border: 1px solid var(--border); color: white; border-radius: 8px; font-size:13px; height: 60px; outline: none; resize: none;" required></textarea>
+        
+        <select id="assetCategory" required>
+          <option value="cyan">C Programming (Tech)</option>
+          <option value="blue">Python Pipeline (Tech)</option>
+          <option value="orange">Computer Networks (Theory)</option>
+          <option value="purple">Other Mathematics</option>
+        </select>
+        
+        <select id="fileType" required>
+          <option value="PDF Blueprint">PDF Blueprint</option>
+          <option value="Cheat Sheet">Cheat Sheet</option>
+          <option value="Core Syllabus">Core Syllabus</option>
+          <option value="Reference Manual">Reference Manual</option>
+        </select>
+
+        <div class="file-browse-container">
+          <span style="font-size:12px; font-weight:700; color:var(--accent-cyan)">BROWSE FILE:</span>
+          <input type="file" id="fileSelector" required>
+        </div>
+
+        <button type="submit" class="upload-btn">Deploy Asset into Cloud Deck</button>
+      </form>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <input type="text" id="resourceSearch" class="search-bar" placeholder="Search parameters by engineering discipline, file type, or token descriptions...">
+
+    <section class="card-list" id="resourcesDeck">
+      <div class="resource-card" data-tags="c language pointers memory allocation technical management Arrays">
+        <div class="card-top">
+          <span class="resource-badge badge-cyan">C Programming</span>
+          <span class="file-type">Cheat Sheet</span>
+        </div>
+        <div class="card-mid">
+          <h3>Pointers & Dynamic Memory Architecture in C</h3>
+          <p>Detailed technical guide detailing malloc, calloc, realloc pipelines, memory leaks isolation, and structural multidimensional pointer dereferencing arrays.</p>
+        </div>
+        <div class="card-bottom">
+          <span class="meta-size">2.4 MB</span>
+          <button class="download-btn trigger-dl">Download Node</button>
+        </div>
+      </div>
+
+      <div class="resource-card" data-tags="python backend structures syntax advanced lambda decorators">
+        <div class="card-top">
+          <span class="resource-badge badge-blue">Python Pipeline</span>
+          <span class="file-type">Reference Manual</span>
+        </div>
+        <div class="card-mid">
+          <h3>Advanced Data Structures & Python Decorators</h3>
+          <p>Deep-dive architecture exploring generators expressions, custom decorators initialization, list comprehensions compilation, and native file logging modules.</p>
+        </div>
+        <div class="card-bottom">
+          <span class="meta-size">3.8 MB</span>
+          <button class="download-btn trigger-dl">Download Node</button>
+        </div>
+      </div>
+
+      <div class="resource-card" data-tags="computer networks layers osi protocol tcp ip dns server routing">
+        <div class="card-top">
+          <span class="resource-badge badge-orange">Computer Networks</span>
+          <span class="file-type">Core Syllabus</span>
+        </div>
+        <div class="card-mid">
+          <h3>TCP/IP Three-Way Handshake & Domain Name Resolution</h3>
+          <p>Non-technical logic overview explaining state packet control mapping, synchronization sequencing logs, and hierarchical global DNS server lookup nodes operations.</p>
+        </div>
+        <div class="card-bottom">
+          <span class="meta-size">4.5 MB</span>
+          <button class="download-btn trigger-dl">Download Node</button>
+        </div>
+      </div>
+
+      <div id="searchFailureBlock" class="empty-state">
+        <h3>No Matching Assets Cached</h3>
+        <p>Adjust your text tracking syntax string parameters to locate deep-index repository elements.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 StudyConnect | Connect &bull; Collaborate &bull; Succeed 🚀</p>
+  </footer>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+    import { getDatabase, ref, push, set, onValue } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
+
+    // Firebase Credentials Structure Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyCaCkliRZk8HmNtOsJpoA084YhNY7MeMWM",
+      authDomain: "jigsawconnect-677da.firebaseapp.com",
+      databaseURL: "https://jigsawconnect-677da-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "jigsawconnect-677da",
+      storageBucket: "jigsawconnect-677da.firebasestorage.app",
+      messagingSenderId: "200774226361",
+      appId: "1:200774226361:web:266cb216968403793f6668"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    const uploadForm = document.getElementById("uploadForm");
+    const resourcesDeck = document.getElementById("resourcesDeck");
+    const searchFailureBlock = document.getElementById("searchFailureBlock");
+    const adminUploadPanel = document.getElementById("adminUploadPanel");
+
+    // ==========================================
+    // ROLE BASED ACCESS CONTROL (PERMISSION LOGIC)
+    // ==========================================
+    // Fetch user token role from localStorage (should be set as 'admin' or 'student' during login)
+    const userRole = localStorage.getItem("userRole") || "student"; 
+
+    if (userRole === "admin") {
+      adminUploadPanel.style.display = "block"; // Show only if admin
+    } else {
+      adminUploadPanel.style.display = "none";  // Strict hide for students
+    }
+
+    // Handle Admin File Submission Upload Roster Pipeline
+    uploadForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      // Security check to prevent hard bypasses
+      if (userRole !== "admin") {
+        alert("❌ Access Denied: You do not have permissions to deploy resources!");
+        return;
+      }
+
+      const title = document.getElementById("assetTitle").value;
+      const size = document.getElementById("assetSize").value;
+      const desc = document.getElementById("assetDesc").value;
+      const category = document.getElementById("assetCategory").value;
+      const fType = document.getElementById("fileType").value;
+      const fileInput = document.getElementById("fileSelector");
+
+      // Extract structural mockup dummy file data parameters from path references
+      const fileName = fileInput.files[0] ? fileInput.files[0].name : "document.pdf";
+
+      try {
+        const dbRef = ref(db, "resources");
+        const newAssetNode = push(dbRef);
+        await set(newAssetNode, {
+          title, size, desc, category, fileType: fType, fileName,
+          timestamp: Date.now()
+        });
+
+        alert(`🎉 Success: Asset metadata file "${fileName}" attached & pushed straight to database ledger!`);
+        uploadForm.reset();
+      } catch (err) {
+        console.error("Transmission interruption:", err);
+      }
+    });
+
+    // Load Dynamic Assets Live from Firebase Infrastructure Node
+    onValue(ref(db, "resources"), (snapshot) => {
+      // Clear previous dynamic blocks, keeping native placeholders intact
+      const dynamicCards = document.querySelectorAll(".dynamic-resource-card");
+      dynamicCards.forEach(c => c.remove());
+
+      if (snapshot.exists()) {
+        Object.values(snapshot.val()).forEach(data => {
+          const card = document.createElement("div");
+          card.className = "resource-card dynamic-resource-card";
+          card.setAttribute("data-tags", `${data.title} ${data.desc} ${data.category}`.toLowerCase());
+
+          let categoryLabel = "C Programming";
+          if (data.category === "blue") categoryLabel = "Python Pipeline";
+          if (data.category === "orange") categoryLabel = "Computer Networks";
+          if (data.category === "purple") categoryLabel = "Mathematics";
+
+          card.innerHTML = `
+            <div class="card-top">
+              <span class="resource-badge badge-${data.category}">${categoryLabel}</span>
+              <span class="file-type">${data.fileType}</span>
+            </div>
+            <div class="card-mid">
+              <h3>${data.title}</h3>
+              <p>${data.desc}</p>
+            </div>
+            <div class="card-bottom">
+              <span class="meta-size">${data.size}</span>
+              <button class="download-btn trigger-dl">Download Node</button>
+            </div>
+          `;
+          resourcesDeck.insertBefore(card, searchFailureBlock);
+        });
+      }
+      attachDownloadHandlers();
+    });
+
+    // Interactive Filter Logic
+    document.getElementById("resourceSearch").addEventListener("input", (e) => {
+      const query = e.target.value.toLowerCase().trim();
+      const allCards = document.querySelectorAll(".resource-card");
+      let visibleCount = 0;
+
+      allCards.forEach(card => {
+        const title = card.querySelector("h3").innerText.toLowerCase();
+        const desc = card.querySelector("p").innerText.toLowerCase();
+        const tags = card.getAttribute("data-tags");
+
+        if (title.includes(query) || desc.includes(query) || tags.includes(query)) {
+          card.style.display = "flex";
+          visibleCount++;
+        } else {
+          card.style.display = "none";
+        }
+      });
+      searchFailureBlock.style.display = visibleCount === 0 ? "block" : "none";
+    });
+
+    // Simulate Download Event Trigger Action
+    function attachDownloadHandlers() {
+      document.querySelectorAll(".trigger-dl").forEach(btn => {
+        btn.onclick = (e) => {
+          const title = e.target.closest(".resource-card").querySelector("h3").innerText;
+          alert(`📥 Download Initialized: Data packets for "${title}" compiled and stored successfully into your system storage!`);
+        };
+      });
+    }
+    attachDownloadHandlers();
+  </script>
+</body>
+</html>
