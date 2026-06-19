@@ -18,7 +18,7 @@ window.get = get;
 window.set = set;
 window.update = update;
 
-console.log("🚀 StudyConnect Core Application Engine Loaded");
+console.log("🚀 JigsawConnect Core Application Engine Loaded");
 
 /* ==========================================================================
    INITIALIZATION CORE
