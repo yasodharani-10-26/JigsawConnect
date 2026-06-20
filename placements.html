@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Placements & Career Portal | StudyConnect</title>
+  <title>Branch-wise Placement Portal | StudyConnect</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,18 +11,19 @@
 
   <style>
     /* ==========================================================================
-       GLOBAL DESIGN MATRIX & THEME VARIABLES
+       GLOBAL MATRIX & GLASSMORPHISM THEME
        ========================================================================== */
     :root {
-      --bg: #090d16;
-      --card-bg: rgba(19, 28, 46, 0.4);
-      --border: rgba(255, 255, 255, 0.08);
-      --text-main: #f1f5f9;
+      --bg: #070a13;
+      --card-bg: rgba(16, 24, 42, 0.45);
+      --border: rgba(255, 255, 255, 0.06);
+      --text-main: #f8fafc;
       --text-muted: #94a3b8;
       --primary: #4f46e5;
       --accent: #06b6d4;
       --accent-glow: rgba(6, 182, 212, 0.15);
       --success: #10b981;
+      --warning: #f59e0b;
     }
 
     * {
@@ -36,15 +37,16 @@
       min-height: 100vh;
       color: var(--text-main);
       background: 
-        radial-gradient(circle at 50% 0%, rgba(79, 70, 229, 0.15), transparent 50%),
-        radial-gradient(circle at 100% 100%, rgba(6, 182, 212, 0.1), transparent 50%),
+        radial-gradient(circle at 10% 10%, rgba(79, 70, 229, 0.12), transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.08), transparent 40%),
         var(--bg);
       background-attachment: fixed;
-      padding-bottom: 60px;
+      padding-bottom: 80px;
+      line-height: 1.5;
     }
 
     /* ==========================================================================
-       NAVIGATION CONTROLLER BAR
+       NAVIGATION HEADER
        ========================================================================== */
     .navbar {
       position: fixed;
@@ -54,7 +56,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: rgba(9, 13, 22, 0.7);
+      background: rgba(7, 10, 19, 0.75);
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
       border-bottom: 1px solid var(--border);
@@ -66,230 +68,163 @@
       color: #fff;
       font-size: 22px;
       font-weight: 800;
-      letter-spacing: -0.5px;
     }
 
-    .logo span {
-      color: var(--accent);
-    }
+    .logo span { color: var(--accent); }
 
-    .nav-links {
-      display: flex;
-      gap: 28px;
-      align-items: center;
-    }
-
-    .nav-links a {
-      text-decoration: none;
-      color: var(--text-muted);
-      font-size: 14px;
-      font-weight: 600;
-      transition: all 0.25s ease;
-    }
-
-    .nav-links a:hover, .nav-links a.active {
-      color: var(--accent);
-    }
+    .nav-links { display: flex; gap: 28px; align-items: center; }
+    .nav-links a { text-decoration: none; color: var(--text-muted); font-size: 14px; font-weight: 600; }
+    .nav-links a.active { color: var(--accent); }
 
     /* ==========================================================================
-       HERO HEADER BANNER
+       HERO CONTROL STATION
        ========================================================================== */
     .page-header {
-      padding: 150px 20px 40px;
+      padding: 140px 20px 30px;
       text-align: center;
     }
 
     .page-header h1 {
-      font-size: 2.75rem;
+      font-size: 2.5rem;
       font-weight: 800;
-      letter-spacing: -1px;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       background: linear-gradient(135deg, #fff, #94a3b8);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
-    .page-header p {
-      color: var(--text-muted);
-      font-size: 1.05rem;
-    }
+    .page-header p { color: var(--text-muted); font-size: 1rem; }
 
     /* ==========================================================================
-       PORTAL MAIN ARCHITECTURE (TAB SYSTEM)
+       BRANCH CONTROLLER GRID (11 BRANCHES)
        ========================================================================== */
-    .main-content {
-      max-width: 1100px;
+    .main-container {
+      max-width: 1200px;
       margin: auto;
       padding: 20px;
     }
 
-    .tabs-container {
-      display: flex;
-      justify-content: center;
-      gap: 16px;
-      margin-bottom: 40px;
-      flex-wrap: wrap;
+    .branch-selector-title {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--accent);
+      margin-bottom: 16px;
+      text-align: center;
+      font-weight: 700;
     }
 
-    .tab-btn {
+    .branch-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 40px;
+    }
+
+    .branch-btn {
       background: var(--card-bg);
       border: 1px solid var(--border);
       color: var(--text-muted);
-      padding: 12px 24px;
+      padding: 10px 20px;
       border-radius: 12px;
       font-weight: 700;
-      font-size: 14px;
+      font-size: 13px;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.25s ease;
     }
 
-    .tab-btn:hover, .tab-btn.active {
+    .branch-btn:hover, .branch-btn.active {
       border-color: var(--accent);
       color: #fff;
-      background: rgba(6, 182, 212, 0.1);
+      background: rgba(6, 182, 212, 0.12);
       box-shadow: 0 0 15px var(--accent-glow);
-    }
-
-    .portal-section {
-      display: none;
-      animation: fadeIn 0.4s ease forwards;
-    }
-
-    .portal-section.active {
-      display: block;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+      transform: translateY(-2px);
     }
 
     /* ==========================================================================
-       CARDS GRID DESIGN (ROLES & INTERNSHIPS)
+       DYNAMIC ARCHITECTURE GRID LAYOUT
        ========================================================================== */
-    .grid {
+    .portal-layout {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      grid-template-columns: 1.2fr 1fr;
       gap: 24px;
     }
 
-    .card {
+    @media (max-width: 968px) {
+      .portal-layout { grid-template-columns: 1fr; }
+    }
+
+    .section-card {
       background: var(--card-bg);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
       border: 1px solid var(--border);
       border-radius: 24px;
-      padding: 30px;
-      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.4);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      padding: 32px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+      animation: fadeInUp 0.4s ease forwards;
     }
 
-    .card:hover {
-      transform: translateY(-4px);
-      border-color: rgba(6, 182, 212, 0.25);
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    .card h3 {
-      font-size: 20px;
-      font-weight: 800;
-      margin-bottom: 12px;
-      color: #fff;
-    }
+    .section-card h2 { font-size: 24px; font-weight: 800; margin-bottom: 6px; color: #fff; }
+    .role-title { font-size: 18px; color: var(--accent); font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 8px;}
 
-    .badge {
-      display: inline-block;
-      padding: 4px 12px;
-      background: rgba(6, 182, 212, 0.1);
-      border: 1px solid rgba(6, 182, 212, 0.2);
-      color: var(--accent);
-      border-radius: 30px;
-      font-size: 12px;
-      font-weight: 700;
+    .list-title { font-size: 14px; font-weight: 700; text-transform: uppercase; color: #cbd5e1; margin-bottom: 12px; letter-spacing: 0.5px; }
+    
+    .data-list { list-style: none; margin-bottom: 24px; }
+    .data-list li { font-size: 14px; color: #94a3b8; margin-bottom: 10px; display: flex; align-items: flex-start; gap: 8px; }
+    .data-list li::before { content: "▹"; color: var(--accent); font-weight: bold; }
+    .data-list strong { color: #f1f5f9; }
+
+    /* ==========================================================================
+       INTERACTIVE LABS (TEST & INTERVIEW BOXES)
+       ========================================================================== */
+    .lab-box {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 16px;
+      padding: 20px;
       margin-bottom: 16px;
     }
 
-    .roadmap-list {
-      list-style: none;
-      margin-bottom: 20px;
-    }
+    .lab-box h4 { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+    .lab-box p { font-size: 13px; color: var(--text-muted); margin-bottom: 14px; }
 
-    .roadmap-list li {
-      font-size: 14px;
-      color: #cbd5e1;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .roadmap-list li::before {
-      content: "⚡";
-      font-size: 12px;
-    }
+    .meta-tags { display: flex; gap: 12px; margin-bottom: 14px; font-size: 12px; font-weight: 600; }
+    .tag { padding: 4px 10px; border-radius: 6px; background: rgba(255, 255, 255, 0.05); color: #cbd5e1; }
+    .tag-accent { background: rgba(6, 182, 212, 0.1); color: var(--accent); }
 
     /* ==========================================================================
        BUTTON INFRASTRUCTURE
        ========================================================================== */
     .btn {
-      width: 100%;
-      border: none;
-      padding: 12px;
-      border-radius: 12px;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: 700;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
       text-decoration: none;
+      cursor: pointer;
+      border: none;
       transition: all 0.2s ease;
+      width: 100%;
     }
 
-    .btn-primary {
-      background: linear-gradient(135deg, var(--primary), #6366f1);
-      color: white;
-    }
+    .btn-primary { background: linear-gradient(135deg, var(--primary), #6366f1); color: #fff; }
+    .btn-primary:hover { box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4); transform: translateY(-1px); }
+    
+    .btn-outline { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); color: #fff; }
+    .btn-outline:hover { background: #fff; color: #000; }
 
-    .btn-primary:hover {
-      box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
-    }
-
-    .btn-outline {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid var(--border);
-      color: #fff;
-    }
-
-    .btn-outline:hover {
-      background: #fff;
-      color: var(--bg);
-    }
-
-    /* ==========================================================================
-       INTERVIEW & PRACTICE EXAM LABELS
-       ========================================================================== */
-    .test-meta {
-      display: flex;
-      justify-content: space-between;
-      color: var(--text-muted);
-      font-size: 13px;
-      margin-bottom: 20px;
-      font-weight: 500;
-    }
-
-    /* ==========================================================================
-       FOOTER MATRIX
-       ========================================================================== */
-    .footer {
-      margin-top: 80px;
-      text-align: center;
-      padding: 30px;
-      color: var(--text-muted);
-      font-size: 13px;
-      font-weight: 500;
-      border-top: 1px solid var(--border);
-    }
+    .footer { text-align: center; margin-top: 60px; padding: 30px; color: var(--text-muted); font-size: 13px; border-top: 1px solid var(--border); }
   </style>
 </head>
 <body>
@@ -298,156 +233,282 @@
     <a href="index.html" class="logo">📚 Study<span>Connect</span></a>
     <div class="nav-links">
       <a href="index.html">Home</a>
-      <a href="student-dashboard.html">Dashboard</a>
       <a href="discussions.html">Discussions</a>
-      <a href="quiz.html">Quiz</a>
-      <a href="placements.html" class="active">Placements</a>
+      <a href="placements.html" class="active">Placements Portal</a>
     </div>
   </nav>
 
   <header class="page-header">
-    <h1>🚀 Placements & Career Portal</h1>
-    <p>Discover Roadmaps • Apply for Internships • Crack Mock Technical Interviews</p>
+    <h1>🎯 Academic Branch Hub</h1>
+    <p>Select your specialized branch to fetch curated roadmaps, jobs, and assessment sandboxes.</p>
   </header>
 
-  <main class="main-content">
+  <main class="main-container">
     
-    <div class="tabs-container">
-      <button class="tab-btn active" onclick="switchTab(event, 'roles')">🎯 Career Roles & Roadmaps</button>
-      <button class="tab-btn" onclick="switchTab(event, 'internships')">💼 Live Internships</button>
-      <button class="tab-btn" onclick="switchTab(event, 'preparation')">📝 Mock Tests & Interviews</button>
+    <p class="branch-selector-title">Select Core Academic Branch</p>
+    
+    <div class="branch-grid">
+      <button class="branch-btn active" onclick="loadBranchData(this, 'cse')">💻 Core CSE</button>
+      <button class="branch-btn" onclick="loadBranchData(this, 'csd')">🎨 CSD (Design)</button>
+      <button class="branch-btn" onclick="loadBranchData(this, 'csm')">🤖 CSM (AI & ML)</button>
+      <button class="branch-btn" onclick="loadBranchData(this, 'cai')">🧠 CAI (AI & Data Science)</button>
+      <button class="branch-btn" onclick="loadBranchData(this, 'cyber')">🔒 Cyber Security</button>
+      <button class="branch-btn" onclick="loadBranchData(this, 'it')">🌐 IT</button>
+      <button class="branch-btn" onclick="loadBranchData(this, 'ece')">🎛️ ECE</button>
+      <button class="branch-btn" onclick="loadBranchData(this, 'eee')">⚡ EEE</button>
+      <button class="branch-btn" onclick="loadBranchData(this, 'mech')">⚙️ Mechanical</button>
+      <button class="branch-btn" onclick="loadBranchData(this, 'mca')">📊 MCA</button>
+      <button class="branch-btn" onclick="loadBranchData(this, 'mba')">📈 MBA</button>
     </div>
 
-    <section id="roles" class="portal-section active">
-      <div class="grid">
-        
-        <div class="card">
-          <span class="badge">Development</span>
-          <h3>Frontend Engineer</h3>
-          <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 16px;">Build modern, responsive, and high-performance UI interfaces.</p>
-          <ul class="roadmap-list">
-            <li>HTML5, CSS3 & Modern JavaScript (ES6+)</li>
-            <li>Tailwind CSS / Bootstrap Frameworks</li>
-            <li>React.js or Vue.js Component Frameworks</li>
-            <li>State Management (Redux/Context API)</li>
-          </ul>
-          <a href="https://roadmap.sh/frontend" target="_blank" class="btn btn-outline">🌐 View Full Roadmap & Resources</a>
-        </div>
-
-        <div class="card">
-          <span class="badge">Architecture</span>
-          <h3>Backend Developer</h3>
-          <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 16px;">Engineer secure APIs, server architectures, and databases.</p>
-          <ul class="roadmap-list">
-            <li>Node.js / Express or Python Django</li>
-            <li>SQL (PostgreSQL) & NoSQL (MongoDB)</li>
-            <li>RESTful APIs & Authentication (JWT/OAuth)</li>
-            <li>Cloud Basics (AWS / Google Cloud)</li>
-          </ul>
-          <a href="https://roadmap.sh/backend" target="_blank" class="btn btn-outline">🌐 View Full Roadmap & Resources</a>
-        </div>
-
-        <div class="card">
-          <span class="badge">Data & AI</span>
-          <h3>Data Scientist / AI Analyst</h3>
-          <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 16px;">Analyze core vectors and train smart Machine Learning models.</p>
-          <ul class="roadmap-list">
-            <li>Advanced Python & Core Libraries (NumPy, Pandas)</li>
-            <li>Statistical Mathematics & Probability Matrix</li>
-            <li>Machine Learning (Scikit-Learn, TensorFlow)</li>
-            <li>Data Visualization (PowerBI / Tableau)</li>
-          </ul>
-          <a href="https://roadmap.sh/data-science" target="_blank" class="btn btn-outline">🌐 View Full Roadmap & Resources</a>
-        </div>
-
+    <div class="portal-layout" id="portal-content">
       </div>
-    </section>
-
-    <section id="internships" class="portal-section">
-      <div class="grid">
-        
-        <div class="card">
-          <span class="badge" style="background: rgba(16, 185, 129, 0.1); color: var(--success); border-color: rgba(16, 185, 129, 0.2)">Remote</span>
-          <h3>Web Developer Intern</h3>
-          <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 12px;"><strong>Company:</strong> TechMatrix Solutions</p>
-          <p style="color: #cbd5e1; font-size: 14px; margin-bottom: 16px;">Stipend: ₹15,000 / Month • Duration: 3 Months. Core stack requirement: React and Firebase integrations.</p>
-          <button class="btn btn-primary" onclick="alert('Redirecting to Application Gateway Node...')">Apply Externally</button>
-        </div>
-
-        <div class="card">
-          <span class="badge" style="background: rgba(16, 185, 129, 0.1); color: var(--success); border-color: rgba(16, 185, 129, 0.2)">Hybrid (Hyderabad)</span>
-          <h3>Data Analyst Intern</h3>
-          <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 12px;"><strong>Company:</strong> Nexus Insights Global</p>
-          <p style="color: #cbd5e1; font-size: 14px; margin-bottom: 16px;">Stipend: ₹20,000 / Month • Duration: 6 Months. Working on large corporate data sets and Python scripting.</p>
-          <button class="btn btn-primary" onclick="alert('Redirecting to Application Gateway Node...')">Apply Externally</button>
-        </div>
-
-      </div>
-    </section>
-
-    <section id="preparation" class="portal-section">
-      <div class="grid">
-        
-        <div class="card">
-          <span class="badge" style="background: rgba(79, 70, 229, 0.1); color: #818cf8; border-color: rgba(79, 70, 229, 0.2)">Aptitude Sandbox</span>
-          <h3>General Placement Aptitude</h3>
-          <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 16px;">Quantitative, logical reasoning, and verbal validation metrics for core rounds.</p>
-          <div class="test-meta">
-            <span>⏱ 45 Minutes</span>
-            <span>❓ 30 Questions</span>
-          </div>
-          <button class="btn btn-primary" onclick="alert('Launching Sandbox Exam Module Environment...')">Start Practice Test</button>
-        </div>
-
-        <div class="card">
-          <span class="badge" style="background: rgba(79, 70, 229, 0.1); color: #818cf8; border-color: rgba(79, 70, 229, 0.2)">Technical Core</span>
-          <h3>Data Structures & Algorithms (DSA)</h3>
-          <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 16px;">Test your knowledge on Arrays, Linked Lists, Trees, and Dynamic Programming.</p>
-          <div class="test-meta">
-            <span>⏱ 60 Minutes</span>
-            <span>❓ 5 Coding Challenges</span>
-          </div>
-          <button class="btn btn-primary" onclick="alert('Initializing Code Compiler Matrix...')">Launch Coding Test</button>
-        </div>
-
-        <div class="card">
-          <span class="badge" style="background: rgba(239, 68, 68, 0.1); color: #f87171; border-color: rgba(239, 68, 68, 0.2)">AI Simulator</span>
-          <h3>AI Mock Technical Interview</h3>
-          <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 16px;">Automated dynamic voice/text technical interview based on your resume stack profile.</p>
-          <div class="test-meta">
-            <span>⏱ 20 Minutes</span>
-            <span>🗣 Audio/Text Enabled</span>
-          </div>
-          <button class="btn btn-outline" style="border-color: #f87171; color: #f87171;" onclick="alert('Accessing Audio/Mic permissions for AI Simulator...')">Start AI Interview</button>
-        </div>
-
-      </div>
-    </section>
 
   </main>
 
   <footer class="footer">
-    © 2026 StudyConnect | Placement Accelerator Engine
+    &copy; 2026 StudyConnect | Dynamic Multi-Branch Placement Pipeline Module
   </footer>
 
   <script>
-    function switchTab(event, sectionId) {
-      // పాత యాక్టివ్ సెక్షన్లని తీసివేయడం
-      document.querySelectorAll('.portal-section').forEach(function(sec) {
-        sec.classList.remove('active');
-      });
-      
-      // పాత యాక్టివ్ ట్యాబ్ బటన్ క్లాస్‌లని తీసివేయడం
-      document.querySelectorAll('.tab-btn').forEach(function(btn) {
-        btn.classList.remove('active');
-      });
+    // 11 బ్రాంచ్‌లకు సంబంధించిన పూర్తి డేటా మేట్రిక్స్
+    const branchDatabase = {
+      cse: {
+        title: "Software Development Engineer (SDE)",
+        roleDesc: "Core Computer Science Engine focuses on scalable system design, core algorithmic parsing, and backend architecture pipelines.",
+        roadmap: ["Advanced Data Structures & Algorithms (DSA)", "System Design (LLD & HLD)", "DBMS (SQL, NoSQL Architecture)", "Operating Systems & Networking Layers"],
+        resources: [
+          "<strong>LeetCode / GeeksforGeeks:</strong> Practice structural algorithmic loops.",
+          "<strong>Striver's SDE Sheet:</strong> Top placement checklist blueprint.",
+          "<strong>System Design Primer:</strong> GitHub repository for architectural data handling."
+        ],
+        internship: "<strong>SDE Intern</strong> at CloudScale Systems • Stipend: ₹35,000/mo • Status: Active",
+        testTitle: "Full-Stack System Coding Challenge",
+        testMeta: ["60 Mins", "3 Challenges", "Hard Difficulty"],
+        interviewTitle: "Technical Interview Loop: DSA & OOPs",
+        interviewDesc: "Simulate core code optimizations, algorithmic complexity analysis, and object-oriented memory mappings."
+      },
+      csd: {
+        title: "UI/UX Engineer & Product Designer",
+        roleDesc: "Computer Science & Design blends core frontend architectural nodes with creative user psychology layout structures.",
+        roadmap: ["Design Thinking & Component Wireframing", "Figma Design Tokens & Prototyping", "Advanced HTML5, CSS3, Tailwind CSS", "React JS component optimization frameworks"],
+        resources: [
+          "<strong>Figma Learning Portal:</strong> UI design system guidelines.",
+          "<strong>Refactoring UI:</strong> Practical design patterns for software engineers.",
+          "<strong>Don't Make Me Think:</strong> Product Usability metrics handbook."
+        ],
+        internship: "<strong>Product Design Intern</strong> at PixelCraft Studio • Stipend: ₹20,000/mo • Status: Active",
+        testTitle: "UI Component Architecture Test",
+        testMeta: ["45 Mins", "1 UX Case + 1 Coding", "Medium"],
+        interviewTitle: "Design Portfolio & Frontend Review",
+        interviewDesc: "Validate user interaction journeys, responsive DOM manipulation, and visual consistency benchmarks."
+      },
+      csm: {
+        title: "Machine Learning Engineer",
+        roleDesc: "CS & Machine Learning engineering structures analytical statistical pipelines and neural network processing graph arrays.",
+        roadmap: ["Advanced Applied Python Scripting", "Linear Algebra, Calculus & Statistical Matrices", "Supervised & Unsupervised Scikit-Learn Frameworks", "Deep Learning Architectures (TensorFlow / PyTorch)"],
+        resources: [
+          "<strong>Kaggle Datasets:</strong> Model validation sandboxes.",
+          "<strong>Andrew Ng's ML Specialization:</strong> Theoretical core structure.",
+          "<strong>Fast.ai:</strong> Deep Learning engineering protocols."
+        ],
+        internship: "<strong>AI/ML Research Intern</strong> at DeepMind Analytics • Stipend: ₹40,000/mo • Status: Live",
+        testTitle: "Data Modeling & Vector Optimization Test",
+        testMeta: ["50 Mins", "20 MCQs + 1 Python Node", "Hard"],
+        interviewTitle: "ML Pipeline & Model Deployment Review",
+        interviewDesc: "Practice model drift evaluations, hyperparameters fine-tuning, and matrix transformation logic."
+      },
+      cai: {
+        title: "AI Data Scientist",
+        roleDesc: "CS & Artificial Intelligence analyzes big data vectors, engineers LLM prompt patterns, and processes core neural metrics.",
+        roadmap: ["Data Wrangling with Pandas & NumPy", "NLP & Large Language Model Fine-Tuning", "Data Visualizations & Feature Engineering", "SQL Analytics & Big Data Warehousing (Snowflake)"],
+        resources: [
+          "<strong>Hugging Face Space:</strong> Pre-trained vector models framework.",
+          "<strong>StatQuest YouTube Channel:</strong> Complex algorithm simplification.",
+          "<strong>Python Data Science Handbook:</strong> Code execution methodologies."
+        ],
+        internship: "<strong>Data Intelligence Intern</strong> at QuantAI Global • Stipend: ₹30,000/mo • Status: Active",
+        testTitle: "SQL Matrix & Predictive Analytics Sandbox",
+        testMeta: ["40 Mins", "25 Structural Queries", "Medium"],
+        interviewTitle: "Statistical Validation & Data Strategy Panel",
+        interviewDesc: "Test hypothetical A/B processing, predictive analytics algorithms, and business data optimization logic."
+      },
+      cyber: {
+        title: "Cyber Security Analyst & PenTester",
+        roleDesc: "Cyber Security handles zero-trust networks, active threat vectors mitigation, cryptographic logic, and vulnerability assessments.",
+        roadmap: ["Linux Systems Architecture & Bash Scripting", "Network Protocol Layers Security (Wireshark)", "Ethical Hacking & Penetration Testing (OWASP Top 10)", "Cryptography & Access Token Control Systems"],
+        resources: [
+          "<strong>TryHackMe / HackTheBox:</strong> Gamified server infiltration environments.",
+          "<strong>PortSwigger Web Security Academy:</strong> Core web vulnerability ledger.",
+          "<strong>NIST Cyber Framework:</strong> Standard global compliance rules."
+        ],
+        internship: "<strong>SecOps Engineer Intern</strong> at SecureNet Solutions • Stipend: ₹25,000/mo • Status: Live",
+        testTitle: "Network Packet Analysis & Capture The Flag (CTF)",
+        testMeta: ["90 Mins", "5 Vulnerability Nodes", "Hard"],
+        interviewTitle: "Incident Response Protocol Mock Simulation",
+        interviewDesc: "Defend against simulated buffer overflows, DDoS packet configurations, and privilege escalation attacks."
+      },
+      it: {
+        title: "DevOps & Cloud Engineer",
+        roleDesc: "Information Technology optimizes horizontal pipeline deployments, automated CI/CD infrastructure loops, and global server management.",
+        roadmap: ["Cloud Architecture Platforms (AWS / Azure)", "Container Deployment Systems (Docker & Kubernetes)", "Infrastructure as Code (IaC via Terraform)", "CI/CD Pipeline Automation (Jenkins / GitHub Actions)"],
+        resources: [
+          "<strong>AWS Skill Builder:</strong> Authorized cloud module training.",
+          "<strong>DevOps Roadmap Guide:</strong> Comprehensive pipeline blueprints.",
+          "<strong>The Phoenix Project:</strong> IT operations scaling strategy book."
+        ],
+        internship: "<strong>Cloud Infrastructure Intern</strong> at AlphaCloud Corp • Stipend: ₹28,000/mo • Status: Active",
+        testTitle: "Docker Containerization & Server Setup Scripting",
+        testMeta: ["60 Mins", "1 YAML Fix + 10 MCQs", "Medium"],
+        interviewTitle: "Disaster Recovery & High-Availability Architecture Loop",
+        interviewDesc: "Demonstrate microservice load balancing, VPC network separation, and live server failure fallbacks."
+      },
+      ece: {
+        title: "Embedded Systems & VLSI Engineer",
+        roleDesc: "Electronics & Communication Engineering covers physical microchip architecture, circuit matrix boards, and low-level software engines.",
+        roadmap: ["Digital Electronics & Circuit Synthesis Matrix", "Microcontrollers & RTOS (8051, ARM Cortex)", "Hardware Description Languages (Verilog / VHDL)", "C/C++ Low-level Embedded Firmware Development"],
+        resources: [
+          "<strong>Ben Eater's Computer Architecture Series:</strong> Deep hardware understanding.",
+          "<strong>VLSI Expert Portal:</strong> Semiconductor physical synthesis documentation.",
+          "<strong>Embedded.com:</strong> Firmware coding logic and guidelines."
+        ],
+        internship: "<strong>VLSI Design Intern</strong> at Intellect Chipsets • Stipend: ₹30,000/mo • Status: Live",
+        testTitle: "Digital Circuit Verification & Verilog Compiler",
+        testMeta: ["45 Mins", "15 Hardware Logic Gates Tests", "Hard"],
+        interviewTitle: "Microchip Timing Diagram & Embedded Firmware Review",
+        interviewDesc: "Simulate edge-triggered clock distribution, I2C/SPI hardware protocols, and memory register configurations."
+      },
+      eee: {
+        title: "Power Systems & Automation Control Engineer",
+        roleDesc: "Electrical & Electronics focuses on smart electrical grids, IoT micro-grids, automated industrial SCADA, and power controllers.",
+        roadmap: ["Power Electronics & Converters Topology", "Control Systems Automation & MATLAB Modeling", "PLC & SCADA Architecture Systems", "EV Powertrain & Battery Management Systems (BMS)"],
+        resources: [
+          "<strong>MATLAB Central Open Modules:</strong> Control loops simulations.",
+          "<strong>All About Circuits:</strong> Power operational amplifiers guides.",
+          "<strong>NPTEL Electrical Lectures:</strong> Grid power transmission analysis."
+        ],
+        internship: "<strong>Automation System Intern</strong> at Siemens Energy • Stipend: ₹22,000/mo • Status: Active",
+        testTitle: "Electrical Power Grid Stability Simulation",
+        testMeta: ["45 Mins", "20 Network Theorem Tests", "Medium"],
+        interviewTitle: "Industrial Automation Scheme & PLC Scripting Loop",
+        interviewDesc: "Validate loop stability criteria, heavy load balancing logic, and sensor telemetry parsing."
+      },
+      mech: {
+        title: "Robotics & CAD Design Engineer",
+        roleDesc: "Mechanical Engineering structures finite element mesh distributions, automated CNC robotics, and physical thermal structures.",
+        roadmap: ["3D Parametric Solid Modeling (SolidWorks / CATIA)", "Finite Element Analysis (FEA via ANSYS)", "Thermodynamics & Computational Fluid Dynamics (CFD)", "Robotics Kinematics & CNC Micro-Machining Control"],
+        resources: [
+          "<strong>GrabCAD Tutorials:</strong> Community mechanical parts portfolio.",
+          "<strong>ANSYS Innovation Courses:</strong> Physics simulation training modules.",
+          "<strong>MIT OpenCourseWare Mechanics:</strong> Fundamental physics analysis."
+        ],
+        internship: "<strong>R&D Robotics Intern</strong> at Mahindra Advanced Systems • Stipend: ₹20,000/mo • Status: Active",
+        testTitle: "Structural Stress Analysis & Geometry Mesh Challenge",
+        testMeta: ["60 Mins", "1 CAD Design + 5 Structural Tests", "Medium"],
+        interviewTitle: "Material Selection Matrix & Manufacturing Tolerance Panel",
+        interviewDesc: "Test failure fatigue points analysis, geometric scaling limits, and kinematic joint stress loops."
+      },
+      mca: {
+        title: "Enterprise Application Developer",
+        roleDesc: "Master of Computer Applications scales distributed database schemas, cross-platform apps, and automated server testing systems.",
+        roadmap: ["Enterprise Java Stack (Spring Boot / Hibernate)", "Advanced Database Optimization & Indexing Schemes", "Cloud Integration Foundations (Docker Containers)", "System Validation & QA Automation Tools"],
+        resources: [
+          "<strong>Baeldung Spring Guides:</strong> Enterprise API structure templates.",
+          "<strong>Java Brains:</strong> Microservices interaction modules.",
+          "<strong>SQLZoo Database Track:</strong> Live interactive query testing."
+        ],
+        internship: "<strong>Enterprise Backend Intern</strong> at Infospectra Systems • Stipend: ₹22,000/mo • Status: Active",
+        testTitle: "Relational Database Indexing & REST API Build Test",
+        testMeta: ["50 Mins", "1 Java Module Setup", "Medium"],
+        interviewTitle: "Multithreaded Processing & Database Deadlock Resolution",
+        interviewDesc: "Simulate race conditions mitigation, server memory leaks mapping, and connection pool scaling parameters."
+      },
+      mba: {
+        title: "Business & Management Consultant",
+        roleDesc: "Master of Business Administration analyzes financial data streams, optimizes logistics operational pipelines, and builds marketing structures.",
+        roadmap: ["Financial Modeling & Valuation Metrics", "Data-Driven Market Strategy Tools", "Operations Management & Scrum Agile Frameworks", "Corporate Communication & Strategic Decision Matrices"],
+        resources: [
+          "<strong>Harvard Business Review:</strong> Strategy and structural model studies.",
+          "<strong>Investopedia Academic Network:</strong> Asset evaluation formulas ledger.",
+          "<strong>Product Management Exercises:</strong> Case studies for technical product managers."
+        ],
+        internship: "<strong>Business Strategy Intern</strong> at Deloitte Strategy Hub • Stipend: ₹35,000/mo • Status: Live",
+        testTitle: "Corporate Valuation & Market Entry Case Study",
+        testMeta: ["30 Mins", "1 Business Scenario Solution", "Medium"],
+        interviewTitle: "Strategic Operational Scale & Guesstimate Mock Panel",
+        interviewDesc: "Evaluate pricing logic, market sizing frameworks, resource allocation decisions, and investment risks analysis."
+      }
+    };
 
-      // క్లిక్ చేసిన కొత్త సెక్షన్‌ను యాక్టివేట్ చేయడం
-      document.getElementById(sectionId).classList.add('active');
-      
-      // క్లిక్ చేసిన బటన్‌కు 'active' క్లాస్ యాడ్ చేయడం
-      event.currentTarget.classList.add('active');
+  
+    function loadBranchData(buttonElement, branchKey) {
+  
+      document.querySelectorAll('.branch-btn').forEach(btn => btn.classList.remove('active'));
+  
+      buttonElement.classList.add('active');
+
+      const data = branchDatabase[branchKey];
+      const targetDiv = document.getElementById('portal-content');
+
+      let htmlContent = `
+        <div class="section-card">
+          <h2>${data.title}</h2>
+          <p class="role-title">💼 Core Specialization Target</p>
+          <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 24px;">${data.roleDesc}</p>
+          
+          <p class="list-title">🗺️ Recommended Placement Roadmap</p>
+          <ul class="data-list">
+            ${data.roadmap.map(step => `<li>${step}</li>`).join('')}
+          </ul>
+
+          <p class="list-title">📚 Vetted Study Resources</p>
+          <ul class="data-list">
+            ${data.resources.map(res => `<li>${res}</li>`).join('')}
+          </ul>
+
+          <p class="list-title">🔥 Live Internship Alert</p>
+          <div class="lab-box" style="border-left: 3px solid var(--success); background: rgba(16, 185, 129, 0.02);">
+            <p style="margin-bottom: 10px; font-size: 14px; color: #f1f5f9;">${data.internship}</p>
+            <button class="btn btn-primary" style="width: auto; padding: 8px 16px;" onclick="alert('Rerouting system traffic to external corporate application gateway node...')">Apply Now</button>
+          </div>
+        </div>
+
+        <div class="section-card" style="display: flex; flex-direction: column; gap: 20px;">
+          <div>
+            <h2>📝 Technical Assessment Lab</h2>
+            <p class="role-title">🤖 Placement Sandbox Simulator</p>
+          </div>
+
+          <div class="lab-box">
+            <h4>${data.testTitle}</h4>
+            <p>Evaluate your architectural competence and core knowledge metrics under real-time simulated parameters.</p>
+            <div class="meta-tags">
+              <span class="tag tag-accent">⏱ ${data.testMeta[0]}</span>
+              <span class="tag">${data.testMeta[1]}</span>
+              <span class="tag" style="color: var(--warning);">${data.testMeta[2]}</span>
+            </div>
+            <button class="btn btn-primary" onclick="alert('Initializing sandbox runtime engine parameters...')">Launch Practice Test</button>
+          </div>
+
+          <div class="lab-box">
+            <h4>${data.interviewTitle}</h4>
+            <p>${data.interviewDesc}</p>
+            <div class="meta-tags">
+              <span class="tag tag-accent">⏱ 30 Minutes</span>
+              <span class="tag">AI Voice + Code Sandbox Enabled</span>
+            </div>
+            <button class="btn btn-outline" style="border-color: var(--accent); color: var(--accent);" onclick="alert('Accessing microphone data blocks for AI Mock Voice Portal...')">Start AI Mock Interview</button>
+          </div>
+        </div>
+      `;
+
+      targetDiv.innerHTML = htmlContent;
     }
+
+    window.onload = function() {
+      const defaultBtn = document.querySelector('.branch-btn');
+      loadBranchData(defaultBtn, 'cse');
+    };
   </script>
 </body>
 </html>
