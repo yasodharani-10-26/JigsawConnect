@@ -760,21 +760,39 @@
         document.getElementById("teamCount").innerText = uniqueTeams.size;
         document.getElementById("studentsTable").innerHTML = rosterHTML || `<tr><td colspan="4" style="text-align:center; color: var(--muted);">No student records found inside data layer.</td></tr>`;
 
-        // Hydrate Quizzes Table Matrix
+        // Hydrate Quizzes Table Matrix (Fixed to support Subject-Wise nested node structure)
         const quizSnap = await get(ref(db, "quizzes"));
         let quizHTML = "";
         if (quizSnap.exists()) {
-          Object.entries(quizSnap.val()).forEach(([id, quiz]) => {
-            const dateStr = quiz.createdAt ? new Date(quiz.createdAt).toLocaleDateString() : "N/A";
-            quizHTML += `
-              <tr>
-                <td style="color:#fff; font-weight:600;">${escapeHTML(quiz.topic)}</td>
-                <td><span style="color:var(--accent); font-weight:700;">${quiz.totalQuestions} Items</span></td>
-                <td><span style="color:var(--muted); font-size:12px;">${dateStr}</span></td>
-              </tr>
-            `;
+          Object.entries(quizSnap.val()).forEach(([subjectOrKey, nestedData]) => {
+            if (nestedData.topic) {
+              // Flat data layout fallback
+              const dateStr = nestedData.createdAt ? new Date(nestedData.createdAt).toLocaleDateString() : "N/A";
+              quizHTML += `
+                <tr>
+                  <td style="color:#fff; font-weight:600;">${escapeHTML(nestedData.topic)}</td>
+                  <td><span style="color:var(--accent); font-weight:700;">${nestedData.totalQuestions} Items</span></td>
+                  <td><span style="color:var(--muted); font-size:12px;">${dateStr}</span></td>
+                </tr>
+              `;
+            } else {
+              // Nested data layout structure
+              Object.entries(nestedData).forEach(([quizId, quiz]) => {
+                const dateStr = quiz.createdAt ? new Date(quiz.createdAt).toLocaleDateString() : "N/A";
+                const subjectBadge = quiz.subject ? `[${quiz.subject.toUpperCase()}] ` : "";
+                quizHTML += `
+                  <tr>
+                    <td style="color:#fff; font-weight:600;">${escapeHTML(subjectBadge + quiz.topic)}</td>
+                    <td><span style="color:var(--accent); font-weight:700;">${quiz.totalQuestions} Items</span></td>
+                    <td><span style="color:var(--muted); font-size:12px;">${dateStr}</span></td>
+                  </tr>
+                `;
+              });
+            }
           });
           document.getElementById("quizzesTable").innerHTML = quizHTML;
+        } else {
+          document.getElementById("quizzesTable").innerHTML = `<tr><td colspan="3" style="text-align:center; color: var(--muted);">No quizzes active in pipeline.</td></tr>`;
         }
 
         // Hydrate Live Sessions Table (Seminars & JAM Combined)
@@ -940,7 +958,7 @@
       const name = document.getElementById("studentName").value.trim();
       const studentId = document.getElementById("studentId").value.trim();
       const email = document.getElementById("studentEmail").value.trim();
-      const password = document.getElementById("studentpassword").value.trim();
+      const password = document.getElementById("studentPassword").value.trim(); // Fixed case-sensitivity bug (Capital P)
       const generationKey = "user_" + Date.now();
 
       try {
@@ -963,42 +981,39 @@
     }
 
     /* ==========================================================================
-       INTERACTIVE QUIZ GENERATION PROTOTYPE HOOK
+       INTERACTIVE QUIZ GENERATION PROTOTYPE HOOK (FIXED FOR SUBJECTS)
        ========================================================================== */
-   /* ==========================================================================
-   INTERACTIVE QUIZ GENERATION PROTOTYPE HOOK (FIXED FOR SUBJECTS)
-   ========================================================================== */
-async function generateDynamicQuiz() {
-  const topic = document.getElementById("quizTopic").value.trim();
-  const count = document.getElementById("questionCount").value.trim();
-  const container = document.getElementById("quizContainer");
+    async function generateDynamicQuiz() {
+      const topic = document.getElementById("quizTopic").value.trim();
+      const count = document.getElementById("questionCount").value.trim();
+      const container = document.getElementById("quizContainer");
 
-  if (!topic || !count) {
-    alert("⚠️ Please state a configuration topic and question count target.");
-    return;
-  }
+      if (!topic || !count) {
+        alert("⚠️ Please state a configuration topic and question count target.");
+        return;
+      }
 
-  container.innerHTML = "<em>Constructing algorithmic question matrix traces...</em>";
+      container.innerHTML = "<em>Constructing algorithmic question matrix traces...</em>";
 
-  try {
-    const generationKey = "quiz_" + Date.now();
+      try {
+        const generationKey = "quiz_" + Date.now();
+        const subjectKey = topic.toLowerCase().replace(/[^a-z0-9]/g, "_");
 
-    const subjectKey = topic.toLowerCase().replace(/[^a-z0-9]/g, "_");
+        await set(ref(db, `quizzes/${subjectKey}/${generationKey}`), {
+          topic: topic,
+          subject: subjectKey, 
+          totalQuestions: parseInt(count, 10),
+          createdAt: Date.now()
+        });
 
-    await set(ref(db, `quizzes/${subjectKey}/${generationKey}`), {
-      topic: topic,
-      subject: subjectKey, 
-      totalQuestions: parseInt(count, 10),
-      createdAt: Date.now()
-    });
+        container.innerHTML = `✅ Successfully staged <strong>${escapeHTML(count)}</strong> questions under <strong>"${escapeHTML(topic)}"</strong> context.`;
+        loadDashboardData();
+      } catch (err) {
+        console.error("Quiz routing matrix failure:", err);
+        container.innerHTML = "<span style='color:var(--danger);'>Generation session parameters rejected.</span>";
+      }
+    }
 
-    container.innerHTML = `✅ Successfully staged <strong>${escapeHTML(count)}</strong> questions under <strong>"${escapeHTML(topic)}"</strong> context.`;
-    loadDashboardData();
-  } catch (err) {
-    console.error("Quiz routing matrix failure:", err);
-    container.innerHTML = "<span style='color:var(--danger);'>Generation session parameters rejected.</span>";
-  }
-}
     function escapeHTML(str) {
       if (!str) return "";
       return str.replace(/[&<>'"]/g, 
