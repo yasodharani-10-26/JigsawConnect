@@ -10,9 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
-    /* ==========================================================================
-       GLOBAL DESIGN SYSTEM VARIABLES
-       ========================================================================== */
+
     :root {
       --bg: #0b0f19;
       --card-bg: rgba(20, 30, 54, 0.45);
@@ -420,7 +418,7 @@
       }
     }
 
-    // 2. Handle Quiz selection and dynamically render real subject-specific questions
+   // 2. Handle Quiz selection and dynamically render real subject-specific questions
     function handleQuizSelection(e) {
       const quizId = e.target.value;
       const quizForm = document.getElementById("quizForm");
@@ -435,13 +433,15 @@
 
       const selectedOption = e.target.options[e.target.selectedIndex].text;
       activeQuizTopic = selectedOption.split(" (")[0];
-      // Cleans brackets if present in topic name
+      
       if (activeQuizTopic.includes("] ")) {
         activeQuizTopic = activeQuizTopic.split("] ")[1];
       }
+      
+      // అడ్మిన్ సెట్ చేసిన ప్రశ్నల సంఖ్యను సేకరించడం
       const questionsCount = parseInt(selectedOption.match(/\d+/)[0], 10);
 
-      // --- SUBJECT SPECIFIC QUESTION BANK CONTAINER ---
+      // --- SUBJECT SPECIFIC QUESTION BANK (ప్రశ్నల సంఖ్య పెంచబడింది) ---
       const questionBank = {
         java: [
           { q: "Which component is used to compile, debug and execute the Java programs?", a: "C", options: {A: "JRE", B: "JIT", C: "JDK", D: "JVM"} },
@@ -454,7 +454,7 @@
           { q: "Which keyword is used to initiate a reusable functional routine framework in Python?", a: "B", options: {A: "function", B: "def", C: "procedure", D: "define"} },
           { q: "What is the correct extension format used to compile standard Python script files?", a: "C", options: {A: ".pt", B: ".pyt", C: ".py", D: ".python"} },
           { q: "Which core data structure pipeline array is explicitly immutable inside Python?", a: "A", options: {A: "Tuple", B: "List", C: "Dictionary", D: "Set"} },
-          { q: "How do you define a single-line script comment signature parameter inside Python?", a: "D", options: {A: "// inline text", B: "/* block text */", C: "", D: "# configuration text"} },
+          { q: "How do you define a single-line script comment signature parameter inside Python?", a: "D", options: {A: "// inline text", B: "/* block text */", C: "' comment", D: "# configuration text"} },
           { q: "Which internal tool module is utilized to coordinate external ecosystem packages in Python?", a: "C", options: {A: "npm", B: "composer", C: "pip", D: "maven"} }
         ],
         webdev: [
@@ -467,21 +467,26 @@
         physics: [
           { q: "What basic core property defines the velocity of light waves running through a vacuum matrix?", a: "A", options: {A: "Approximately 300,000 km/s", B: "Exactly 150,000 km/s", C: "Around 450,000 km/s", D: "Infinite propagation vector speeds"} },
           { q: "Who formulated the foundational equations governing universal thermodynamic quantum mechanics?", a: "C", options: {A: "Isaac Newton", B: "Albert Einstein", C: "Erwin Schrödinger", D: "James Clerk Maxwell"} },
-          { q: "What subatomic component particle holds a definitive neutral charge signature?", a: "B", options: {A: "Proton", B: "Neutron", C: "Electron", D: "Positron"} }
+          { q: "What subatomic component particle holds a definitive neutral charge signature?", a: "B", options: {A: "Proton", B: "Neutron", C: "Electron", D: "Positron"} },
+          { q: "What is the primary particle responsible for electric current in a conductor?", a: "A", options: {A: "Electron", B: "Proton", C: "Photon", D: "Quark"} },
+          { q: "Which law states that stress is directly proportional to strain within elastic limits?", a: "B", options: {A: "Pascal's Law", B: "Hooke's Law", C: "Newton's Law", D: "Ohm's Law"} }
         ],
         general: [
           { q: "What does CPU stand for inside computing network structures?", a: "A", options: {A: "Central Processing Unit", B: "Computer Processing Unit", C: "Central Processor Unit", D: "Control Processing Unit"} },
           { q: "Which internet protocol structure enforces encryption during transactional communication data streams?", a: "C", options: {A: "HTTP", B: "FTP", C: "HTTPS", D: "SMTP"} },
-          { q: "What component is recognized as the core analytical memory architecture brain of computer system hardware?", a: "B", options: {A: "RAM Module", B: "CPU Microchip", C: "Solid State Drive", D: "Motherboard Bus"} }
+          { q: "What component is recognized as the core analytical memory architecture brain of computer system hardware?", a: "B", options: {A: "RAM Module", B: "CPU Microchip", C: "Solid State Drive", D: "Motherboard Bus"} },
+          { q: "Which storage type is volatile and loses data when power is turned off?", a: "A", options: {A: "RAM", B: "ROM", C: "SSD", D: "Hard Drive"} },
+          { q: "What is the main operating system developed by Microsoft?", a: "C", options: {A: "Linux", B: "macOS", C: "Windows", D: "Android"} }
         ]
       };
 
-      // Match the correct subject key based on the admin topic string
+      // సబ్జెక్ట్ కీ కరెక్ట్‌గా మ్యాచ్ అవ్వడానికి స్ట్రింగ్ ఫిల్టరింగ్
       let subjectKey = "general";
       const topicLower = activeQuizTopic.toLowerCase();
+      
       if (topicLower.includes("java") && !topicLower.includes("javascript")) subjectKey = "java";
       else if (topicLower.includes("python")) subjectKey = "python";
-      else if (topicLower.includes("web") || topicLower.includes("html") || topicLower.includes("css") || topicLower.includes("javascript")) subjectKey = "webdev";
+      else if (topicLower.includes("web") || topicLower.includes("html") || topicLower.includes("css") || topicLower.includes("javascript") || topicLower.includes("node")) subjectKey = "webdev";
       else if (topicLower.includes("physics") || topicLower.includes("quantum") || topicLower.includes("science")) subjectKey = "physics";
 
       const selectedQuestionsPool = questionBank[subjectKey] || questionBank["general"];
@@ -489,7 +494,7 @@
       activeQuizQuestionsData = [];
       questionsContainer.innerHTML = "";
 
-      // Limit the loop to the requested count or available questions in our pool
+      // ఒకవేళ అడ్మిన్ అడిగిన క్వశ్చన్స్ కౌంట్ పూల్ లో లేకపోతే, ఉన్నంత వరకే లూప్ రన్ అవుతుంది
       const finalCount = Math.min(questionsCount, selectedQuestionsPool.length);
 
       for (let i = 0; i < finalCount; i++) {
@@ -526,7 +531,6 @@
       quizHud.style.display = "flex";
       document.getElementById("quizScore").classList.remove("show");
     }
-
     // 3. Update HUD progress metadata counters
     function updateLiveProgressHUD() {
       const quizForm = document.getElementById("quizForm");
