@@ -313,9 +313,9 @@
   <main class="main-content">
     
     <div class="tabs-container">
-      <button class="tab-btn active" onclick="switchTab('roles')">🎯 Career Roles & Roadmaps</button>
-      <button class="tab-btn" onclick="switchTab('internships')">💼 Live Internships</button>
-      <button class="tab-btn" onclick="switchTab('preparation')">📝 Mock Tests & Interviews</button>
+      <button class="tab-btn active" onclick="switchTab(event, 'roles')">🎯 Career Roles & Roadmaps</button>
+      <button class="tab-btn" onclick="switchTab(event, 'internships')">💼 Live Internships</button>
+      <button class="tab-btn" onclick="switchTab(event, 'preparation')">📝 Mock Tests & Interviews</button>
     </div>
 
     <section id="roles" class="portal-section active">
@@ -427,17 +427,25 @@
   </main>
 
   <footer class="footer">
-     2026 Jigsaw Connect | Placement Accelerator Engine
+    © 2026 StudyConnect | Placement Accelerator Engine
   </footer>
 
   <script>
-    function switchTab(sectionId) {
-    ం
-      document.querySelectorAll('.portal-section').forEach(sec => sec.classList.remove('active'));
-      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    function switchTab(event, sectionId) {
+      // పాత యాక్టివ్ సెక్షన్లని తీసివేయడం
+      document.querySelectorAll('.portal-section').forEach(function(sec) {
+        sec.classList.remove('active');
+      });
+      
+      // పాత యాక్టివ్ ట్యాబ్ బటన్ క్లాస్‌లని తీసివేయడం
+      document.querySelectorAll('.tab-btn').forEach(function(btn) {
+        btn.classList.remove('active');
+      });
 
-
+      // క్లిక్ చేసిన కొత్త సెక్షన్‌ను యాక్టివేట్ చేయడం
       document.getElementById(sectionId).classList.add('active');
+      
+      // క్లిక్ చేసిన బటన్‌కు 'active' క్లాస్ యాడ్ చేయడం
       event.currentTarget.classList.add('active');
     }
   </script>
