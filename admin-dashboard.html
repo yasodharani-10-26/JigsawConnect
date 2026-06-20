@@ -721,7 +721,7 @@
           alert("⚠️ Delete request failed.");
         }
       }
-    }
+    };
 
     /* ==========================================================================
        DYNAMIC DASHBOARD HYDRATION ENGINE
@@ -940,6 +940,7 @@
       const name = document.getElementById("studentName").value.trim();
       const studentId = document.getElementById("studentId").value.trim();
       const email = document.getElementById("studentEmail").value.trim();
+      const password = document.getElementById("studentpassword").value.trim();
       const generationKey = "user_" + Date.now();
 
       try {
@@ -947,6 +948,7 @@
           name,
           studentId,
           email,
+          password,
           role: "student",
           score: 0
         });
