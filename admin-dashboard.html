@@ -979,41 +979,58 @@
         alert("⚠️ Transaction Failure: Cloud database rejected write session authorization parameters.");
       }
     }
-
-    /* ==========================================================================
-       INTERACTIVE QUIZ GENERATION PROTOTYPE HOOK (FIXED FOR SUBJECTS)
+/* ==========================================================================
+       INTERACTIVE QUIZ GENERATION PROTOTYPE HOOK (FIXED WITH DYNAMIC QUESTIONS)
        ========================================================================== */
     async function generateDynamicQuiz() {
       const topic = document.getElementById("quizTopic").value.trim();
-      const count = document.getElementById("questionCount").value.trim();
+      const countInput = document.getElementById("questionCount").value.trim();
       const container = document.getElementById("quizContainer");
 
-      if (!topic || !count) {
+      if (!topic || !countInput) {
         alert("⚠️ Please state a configuration topic and question count target.");
         return;
       }
 
+      const count = parseInt(countInput, 10);
       container.innerHTML = "<em>Constructing algorithmic question matrix traces...</em>";
 
       try {
         const generationKey = "quiz_" + Date.now();
         const subjectKey = topic.toLowerCase().replace(/[^a-z0-9]/g, "_");
 
+        // టాపిక్ ఆధారంగా విభిన్నమైన ప్రశ్నలను క్రియేట్ చేయడానికి ఒక శాంపిల్ పూల్
+        const generatedQuestions = [];
+        for (let i = 1; i <= count; i++) {
+          generatedQuestions.push({
+            id: `q_${i}`,
+            questionText: `What is core concept ${i} regarding ${topic}?`,
+            options: [
+              `Theoretical Approach A for ${topic}`,
+              `Empirical Solution B for ${topic}`,
+              `Standard Framework C`,
+              `Experimental Methodology D`
+            ],
+            correctAnswer: 0 // మొదటి ఆప్షన్ కరెక్ట్ అనుకుంటే (ఇండెక్స్ 0)
+          });
+        }
+
+        // ఫైర్‌బేస్‌లోకి ప్రశ్నల అరేని కూడా పంపుతున్నాము
         await set(ref(db, `quizzes/${subjectKey}/${generationKey}`), {
           topic: topic,
           subject: subjectKey, 
-          totalQuestions: parseInt(count, 10),
+          totalQuestions: count,
+          questions: generatedQuestions, // ఇక్కడ ప్రశ్నలు యాడ్ అవుతాయి
           createdAt: Date.now()
         });
 
-        container.innerHTML = `✅ Successfully staged <strong>${escapeHTML(count)}</strong> questions under <strong>"${escapeHTML(topic)}"</strong> context.`;
+        container.innerHTML = `✅ Successfully staged <strong>${escapeHTML(countInput)}</strong> dynamic questions under <strong>"${escapeHTML(topic)}"</strong> context.`;
         loadDashboardData();
       } catch (err) {
         console.error("Quiz routing matrix failure:", err);
         container.innerHTML = "<span style='color:var(--danger);'>Generation session parameters rejected.</span>";
       }
     }
-
     function escapeHTML(str) {
       if (!str) return "";
       return str.replace(/[&<>'"]/g, 
