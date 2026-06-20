@@ -965,34 +965,40 @@
     /* ==========================================================================
        INTERACTIVE QUIZ GENERATION PROTOTYPE HOOK
        ========================================================================== */
-    async function generateDynamicQuiz() {
-      const topic = document.getElementById("quizTopic").value.trim();
-      const count = document.getElementById("questionCount").value.trim();
-      const container = document.getElementById("quizContainer");
+   /* ==========================================================================
+   INTERACTIVE QUIZ GENERATION PROTOTYPE HOOK (FIXED FOR SUBJECTS)
+   ========================================================================== */
+async function generateDynamicQuiz() {
+  const topic = document.getElementById("quizTopic").value.trim();
+  const count = document.getElementById("questionCount").value.trim();
+  const container = document.getElementById("quizContainer");
 
-      if (!topic || !count) {
-        alert("⚠️ Please state a configuration topic and question count target.");
-        return;
-      }
+  if (!topic || !count) {
+    alert("⚠️ Please state a configuration topic and question count target.");
+    return;
+  }
 
-      container.innerHTML = "<em>Constructing algorithmic question matrix traces...</em>";
+  container.innerHTML = "<em>Constructing algorithmic question matrix traces...</em>";
 
-      try {
-        const generationKey = "quiz_" + Date.now();
-        await set(ref(db, `quizzes/${generationKey}`), {
-          topic: topic,
-          totalQuestions: parseInt(count, 10),
-          createdAt: Date.now()
-        });
+  try {
+    const generationKey = "quiz_" + Date.now();
 
-        container.innerHTML = `✅ Successfully staged <strong>${escapeHTML(count)}</strong> questions under <strong>"${escapeHTML(topic)}"</strong> context.`;
-        loadDashboardData();
-      } catch (err) {
-        console.error("Quiz routing matrix failure:", err);
-        container.innerHTML = "<span style='color:var(--danger);'>Generation session parameters rejected.</span>";
-      }
-    }
+    const subjectKey = topic.toLowerCase().replace(/[^a-z0-9]/g, "_");
 
+    await set(ref(db, `quizzes/${subjectKey}/${generationKey}`), {
+      topic: topic,
+      subject: subjectKey, 
+      totalQuestions: parseInt(count, 10),
+      createdAt: Date.now()
+    });
+
+    container.innerHTML = `✅ Successfully staged <strong>${escapeHTML(count)}</strong> questions under <strong>"${escapeHTML(topic)}"</strong> context.`;
+    loadDashboardData();
+  } catch (err) {
+    console.error("Quiz routing matrix failure:", err);
+    container.innerHTML = "<span style='color:var(--danger);'>Generation session parameters rejected.</span>";
+  }
+}
     function escapeHTML(str) {
       if (!str) return "";
       return str.replace(/[&<>'"]/g, 
