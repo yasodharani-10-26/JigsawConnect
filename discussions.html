@@ -460,13 +460,14 @@
   </main>
 
   <footer class="footer">
-     2026 JigsawConnect | Learn • Share • Grow
+    © 2026 StudyConnect | Learn • Share • Grow
   </footer>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
     import { getDatabase, ref, push, set, onValue } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
 
+    // మీ ప్రాజెక్ట్ యొక్క Firebase సమాచారం
     const firebaseConfig = {
       apiKey: "AIzaSyCaCkliRZk8HmNtOsJpoA084YhNY7MeMWM",
       authDomain: "jigsawconnect-677da.firebaseapp.com",
@@ -484,6 +485,7 @@
     const discussionList = document.getElementById("discussionList");
     const totalThreadsCount = document.getElementById("totalThreadsCount");
 
+    // 1. Firebase నుండి డిస్కషన్ త్రెడ్లను రియల్-టైమ్‌లో రీడ్ చేయడం
     const dbRef = ref(db, "communityDiscussions");
     onValue(dbRef, (snapshot) => {
       discussionList.innerHTML = "";
@@ -518,6 +520,7 @@
       }
     });
 
+    // 2. కొత్త డిస్కషన్ పోస్ట్ సబ్మిట్ చేయడం
     discussionForm.addEventListener("submit", async (e) => {
       e.preventDefault();
 
@@ -536,7 +539,7 @@
           timestamp: Date.now()
         });
 
-      
+        // ఫామ్ రీసెట్ చేయడం
         discussionForm.reset();
         alert("📡 Thread published successfully onto cloud feed matrix!");
       } catch (error) {
@@ -545,6 +548,7 @@
       }
     });
 
+    // సెక్యూరిటీ కోసం XSS ప్రొటెక్షన్ ఫంక్షన్
     function escapeHTML(str) {
       return str.replace(/[&<>'"]/g, 
         tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
