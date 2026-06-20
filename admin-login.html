@@ -98,7 +98,6 @@
       border-color: rgba(255, 255, 255, 0.15);
     }
 
-    /* Pause drifting motion safely while typing */
     .login-card:focus-within {
       animation-play-state: paused;
     }
@@ -210,7 +209,6 @@
       transition: all 0.2s ease;
     }
 
-    /* Padding adjust for password toggle space */
     #adminPassword {
       padding-right: 46px;
     }
@@ -225,7 +223,6 @@
       color: #475569;
     }
 
-    /* Interactive eye toggle icon */
     .password-toggle {
       position: absolute;
       right: 16px;
@@ -357,17 +354,31 @@
   </div>
 
   <script type="module">
-    import { 
-      auth, 
-      signInWithEmailAndPassword 
-    } from "./firebase.js";
+    // Firebase App మరియు Auth మోడ్యూల్స్ నేరుగా ఇంపోర్ట్ చేయడం జరిగింది
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
+
+    // మీ క్విజ్ పేజీలో ఉన్న అదే కాన్ఫిగరేషన్ ఇక్కడ ఉపయోగించబడింది
+    const firebaseConfig = {
+      apiKey: "AIzaSyCaCkliRZk8HmNtOsJpoA084YhNY7MeMWM",
+      authDomain: "jigsawconnect-677da.firebaseapp.com",
+      databaseURL: "https://jigsawconnect-677da-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "jigsawconnect-677da",
+      storageBucket: "jigsawconnect-677da.firebasestorage.app",
+      messagingSenderId: "200774226361",
+      appId: "1:200774226361:web:266cb216968403793f6668"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
 
     const form = document.getElementById("adminLoginForm");
     const msg = document.getElementById("loginMessage");
     const togglePassBtn = document.getElementById("togglePassBtn");
     const passwordInput = document.getElementById("adminPassword");
 
-    /* ----- Password Clear-Text Eye Toggler Element Engine ----- */
+    /* ----- Password Display Toggle Toggler ----- */
     togglePassBtn.addEventListener("click", () => {
       if (passwordInput.type === "password") {
         passwordInput.type = "text";
@@ -378,7 +389,7 @@
       }
     });
 
-    /* ----- Form Dispatch Interception Listener ----- */
+    /* ----- Form Submission Handler ----- */
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
@@ -391,9 +402,9 @@
       }
 
       const email = emailEl.value.trim();
-      const password = passwordEl.value; // Unaffected by character space trimming bugs
+      const password = passwordEl.value;
 
-      // Base Check Validation
+      // Basic Input Validation
       if (!email || !password) {
         msg.className = "error";
         msg.innerText = "Please complete all target inputs.";
@@ -401,6 +412,7 @@
       }
 
       try {
+        // Firebase Sign In Execution
         await signInWithEmailAndPassword(auth, email, password);
 
         msg.className = "success";
@@ -411,7 +423,7 @@
         }, 1200);
 
       } catch (error) {
-        console.error("Firebase System Catch Exception: ", error);
+        console.error("Firebase Auth Exception: ", error);
         msg.className = "error";
 
         switch (error.code) {
