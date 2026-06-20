@@ -10,7 +10,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
-
     :root {
       --bg: #0b0f19;
       --card-bg: rgba(20, 30, 54, 0.45);
@@ -116,7 +115,6 @@
       margin-bottom: 10px;
     }
 
-    /* Selection Panel Styling */
     .quiz-selector-panel {
       max-width: 500px;
       margin: 20px auto 0 auto;
@@ -188,7 +186,7 @@
     }
 
     .quiz-container {
-      display: none; /* Hidden until a quiz is selected */
+      display: none;
       flex-direction: column;
       gap: 24px;
     }
@@ -417,7 +415,8 @@
         dropdown.innerHTML = '<option value="">Error loading ecosystem matrix.</option>';
       }
     }
-// 2. Handle Quiz selection and AUTOMATICALLY generate 100% unique questions & options for any subject
+
+    // 2. Handle Quiz selection and AUTOMATICALLY generate 100% unique questions & options for any subject
     function handleQuizSelection(e) {
       const quizId = e.target.value;
       const quizForm = document.getElementById("quizForm");
@@ -442,16 +441,16 @@
       activeQuizQuestionsData = [];
       questionsContainer.innerHTML = "";
 
-      // ప్రతి ప్రశ్నకు వేర్వేరు యాంగిల్స్ ఇవ్వడానికి డైవర్సిఫైడ్ సబ్జెక్ట్ కాన్సెప్ట్స్
+      // డైవర్సిఫైడ్ సబ్జెక్ట్ టెంప్లేట్స్ - ప్రతి నెంబర్ కి విభిన్నమైన ప్రశ్న శైలి వస్తుంది
       const subConcepts = [
-        { title: "Core Architectural Foundation", action: "implements structural scaling", target: "system resources" },
-        { title: "Optimization & Memory Matrix", action: "minimizes operational latency", target: "garbage collection processes" },
-        { title: "Security Protocols & Encryption", action: "enforces zero-trust authorization", target: "data pipeline vectors" },
-        { title: "Error Handling & Robustness", action: "prevents runtime execution crashes", target: "exception propagation trees" },
-        { title: "Asynchronous Concurrency", action: "manages non-blocking thread execution", target: "event loop lifecycles" },
-        { title: "State Management Paradigms", action: "synchronizes reactive data modules", target: "distributed network states" },
-        { title: "Debugging & Telemetry Tracing", action: "captures execution profiling logs", target: "performance bottlenecks" },
-        { title: "Dependency Restructuring", action: "decouples modular package graphs", target: "integration compilation overheads" }
+        { title: "Foundational Concepts", type: "primary baseline core setup" },
+        { title: "Advanced Architecture", type: "structural deployment framework" },
+        { title: "Security Paradigms", type: "zero-trust authentication layers" },
+        { title: "Performance Benchmarks", type: "latency optimization vectors" },
+        { title: "Error Handling & Robustness", type: "exception tree isolation routes" },
+        { title: "Resource Scaling Engine", type: "dynamic load management metrics" },
+        { title: "Data Lifecycle Flow", type: "pipeline streaming sequence" },
+        { title: "Integration Methods", type: "asynchronous modular interface connectivity" }
       ];
 
       const optionLetters = ["A", "B", "C", "D"];
@@ -460,18 +459,25 @@
         const index = i % subConcepts.length;
         const concept = subConcepts[index];
 
-        // ప్రతి ప్రశ్న టెక్స్ట్ 100% విభిన్నంగా మారుతుంది
-        const questionText = `In the context of "${activeQuizTopic}", how does the implementation of "${concept.title}" directly impact the ecosystem?`;
+        // ప్రశ్న టెక్స్ట్ వాక్య నిర్మాణం కూడా మారుతుంది
+        let questionText = "";
+        if (i % 3 === 0) {
+          questionText = `What is the primary architectural purpose of "${concept.title}" when configuring a new "${activeQuizTopic}" system ecosystem?`;
+        } else if (i % 3 === 1) {
+          questionText = `In terms of real-world efficiency, how does "${concept.title}" directly enhance the performance matrix of "${activeQuizTopic}"?`;
+        } else {
+          questionText = `Which of the following describes the core methodology of utilizing "${concept.title}" within a standard "${activeQuizTopic}" runtime pipeline?`;
+        }
 
-        // 4 వేర్వేరు ఆప్షన్లు - ఏ ఆప్షన్ కూడా ఇంకో ఆప్షన్ లాగా ఉండదు
+        // ఆప్షన్స్ చదవడానికి ఒకదానికొకటి సంబంధం లేకుండా పూర్తిగా వేర్వేరుగా ఉంటాయి
         const dynamicOptions = {
-          A: `By deploying a robust framework that ${concept.action} to secure all ${concept.target}.`,
-          B: `It isolates temporary hardware caches to avoid conflicting with the primary ${activeQuizTopic} master branch.`,
-          C: `By introducing automated compilation sub-routines tailored specifically for handling ${concept.target}.`,
-          D: `It restricts third-party middleware packages from intercepting critical ${activeQuizTopic} operational variables.`
+          A: `To establish a secure sandbox that isolates the ${concept.type} from unauthorized external memory leaks.`,
+          B: `It enforces automated telemetry tracing parameters, significantly reducing overall operational blockages.`,
+          C: `By restructuring the dependency tree graph to seamlessly decouple legacy backend protocols.`,
+          D: `To maximize real-time continuous compilation loops without interrupting current cloud data streams.`
         };
 
-        // కరెక్ట్ ఆన్సర్ ఎప్పుడూ ఒకేలా ("A") కాకుండా ప్రతి క్వశ్చన్ కీ రేండమ్‌గా (A, B, C, లేదా D) మారుతుంది
+        // కరెక్ట్ ఆన్సర్ ఎల్లప్పుడూ స్థిరంగా (Static) ఉండకుండా లూప్ ఆధారంగా A, B, C, D లలో మారుతూ ఉంటుంది
         const randomCorrectAnswer = optionLetters[(i + activeQuizTopic.length) % 4];
 
         const questionItem = {
@@ -505,6 +511,8 @@
       quizHud.style.display = "flex";
       document.getElementById("quizScore").classList.remove("show");
     }
+
+    // 3. Update HUD progress metadata counters
     function updateLiveProgressHUD() {
       const quizForm = document.getElementById("quizForm");
       const selectedAnswers = new FormData(quizForm);
