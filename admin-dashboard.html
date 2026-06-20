@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quiz Challenge | StudyConnect</title>
+  <title>Admin Dashboard | StudyConnect</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,13 +11,13 @@
 
   <style>
     :root {
-      --bg: #0b0f19;
-      --card-bg: rgba(20, 30, 54, 0.45);
-      --border: rgba(255, 255, 255, 0.08);
+      --bg: #070a13;
+      --card-bg: rgba(16, 24, 42, 0.55);
+      --border: rgba(255, 255, 255, 0.06);
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
-      --accent-cyan: #06b6d4;
-      --accent-blue: #2563eb;
+      --primary: #4f46e5;
+      --accent: #06b6d4;
       --success: #10b981;
     }
 
@@ -36,21 +36,16 @@
       flex-direction: column;
     }
 
-    /* ==========================================================================
-       STICKY NAVIGATION FRAMEWORK
-       ========================================================================== */
+    /* NAVBAR */
     .navbar {
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 18px 6%;
-      background: rgba(11, 15, 25, 0.85);
+      background: rgba(7, 10, 19, 0.8);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border);
-      position: sticky;
-      top: 0;
-      z-index: 1000;
     }
 
     .logo {
@@ -58,235 +53,130 @@
       font-weight: 800;
       color: #fff;
       text-decoration: none;
-      letter-spacing: -0.5px;
     }
 
-    .logo span {
-      color: var(--accent-cyan);
-    }
+    .logo span { color: var(--accent); }
 
-    .nav-links {
-      display: flex;
-      gap: 24px;
-      align-items: center;
-    }
-
-    .nav-links a {
-      text-decoration: none;
-      color: var(--text-muted);
-      font-size: 14px;
-      font-weight: 600;
-      transition: color 0.2s ease;
-    }
-
-    .nav-links a:hover, .nav-links a.active {
-      color: var(--accent-cyan);
-    }
-
-    .logout-btn {
-      background: rgba(239, 68, 68, 0.1);
-      border: 1px solid rgba(239, 68, 68, 0.2);
-      padding: 8px 16px;
-      border-radius: 10px;
-      color: #ef4444 !important;
-      transition: all 0.2s ease !important;
-    }
-
-    .logout-btn:hover {
-      background: #ef4444 !important;
-      color: #fff !important;
-    }
-
-    /* ==========================================================================
-       HERO BANNER COMPONENT
-       ========================================================================== */
-    .page-header {
-      padding: 40px 24px;
-      text-align: center;
-      background: linear-gradient(135deg, rgba(37, 99, 235, 0.15), rgba(6, 182, 212, 0.05));
-      border-bottom: 1px solid var(--border);
-      position: relative;
-    }
-
-    .page-header h1 {
-      font-size: 2.5rem;
-      font-weight: 800;
-      letter-spacing: -1px;
-      margin-bottom: 10px;
-    }
-
-    .quiz-selector-panel {
-      max-width: 500px;
-      margin: 20px auto 0 auto;
-      background: rgba(15, 23, 42, 0.6);
-      padding: 16px;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-    }
-
-    .quiz-selector-panel label {
-      display: block;
-      font-size: 13px;
+    .nav-badge {
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      padding: 6px 14px;
+      border-radius: 20px;
+      color: #f59e0b;
+      font-size: 12px;
       font-weight: 700;
-      color: var(--accent-cyan);
-      margin-bottom: 8px;
       text-transform: uppercase;
     }
 
-    select, input[type="text"] {
+    /* MAIN CONTAINER */
+    .admin-container {
+      max-width: 800px;
       width: 100%;
-      padding: 12px 16px;
-      border-radius: 10px;
+      margin: 50px auto;
+      padding: 0 20px;
+    }
+
+    .dashboard-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 40px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
+    }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, #fff, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-bottom: 30px;
+    }
+
+    /* FORM CONTROLS */
+    .form-group {
+      margin-bottom: 24px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    select, input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 14px 18px;
+      border-radius: 12px;
       border: 1px solid var(--border);
       background: #0f172a;
       color: #fff;
       font-size: 14px;
       outline: none;
-      margin-bottom: 12px;
+      transition: border-color 0.2s ease;
     }
 
-    /* ==========================================================================
-       QUIZ SYSTEM WRAPPER & RUNTIME METRICS HUD
-       ========================================================================== */
-    .quiz-layout {
-      max-width: 950px;
-      width: 100%;
-      margin: 0 auto;
-      padding: 30px 24px;
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 30px;
+    select:focus, input:focus {
+      border-color: var(--accent);
     }
 
-    .quiz-hud-tracker {
-      position: sticky;
-      top: 85px;
-      z-index: 900;
-      background: rgba(15, 23, 42, 0.8);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      padding: 16px 24px;
-      border-radius: 16px;
-      border: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3);
-    }
-
-    .tracker-meta {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text-muted);
-    }
-
-    .tracker-meta span {
-      color: var(--accent-cyan);
-      font-weight: 700;
-    }
-
-    .quiz-container {
-      display: none;
-      flex-direction: column;
-      gap: 24px;
-    }
-
-    .quiz-question {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 32px;
-      box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.2);
-    }
-
-    .quiz-question h3 {
-      font-size: 1.2rem;
-      font-weight: 700;
-      line-height: 1.5;
-      margin-bottom: 20px;
-      color: #fff;
-    }
-
-    .quiz-question label {
-      display: flex;
-      align-items: center;
-      padding: 14px 20px;
-      margin-bottom: 12px;
-      background: rgba(15, 23, 42, 0.4);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      cursor: pointer;
-      font-size: 14px;
-      color: #cbd5e1;
-      transition: all 0.2s ease;
-    }
-
-    .quiz-question label:hover {
-      background: rgba(255, 255, 255, 0.03);
-      border-color: rgba(255, 255, 255, 0.2);
-    }
-
-    .quiz-question input[type="radio"] {
-      margin-right: 14px;
-    }
-
-    .submit-btn {
+    .btn-submit {
       width: 100%;
       padding: 16px;
       border: none;
-      border-radius: 16px;
-      font-size: 16px;
+      border-radius: 14px;
+      font-size: 15px;
       font-weight: 700;
       cursor: pointer;
-      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+      background: linear-gradient(135deg, var(--primary), #6366f1);
       color: white;
-      box-shadow: 0 4px 20px rgba(37, 99, 235, 0.25);
-      margin-top: 15px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 20px rgba(79, 70, 229, 0.3);
+      margin-top: 10px;
     }
 
-    .score-feedback-card {
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(79, 70, 229, 0.5);
+    }
+
+    /* STATUS LOG */
+    .status-box {
       display: none;
-      background: linear-gradient(145deg, rgba(20, 30, 54, 0.9), rgba(11, 15, 25, 0.95));
-      border: 2px solid var(--border);
-      border-radius: 24px;
-      padding: 40px;
+      margin-top: 24px;
+      padding: 16px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
       text-align: center;
     }
 
-    .score-feedback-card.show {
-      display: block !important;
-      animation: smoothCardSlideIn 0.5s ease forwards;
-    }
-
-    .metrics-summary-box {
-      display: flex;
-      justify-content: center;
-      gap: 40px;
-      margin-top: 20px;
-    }
-
-    .metric-node {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .metric-node .metric-value {
-      font-size: 2.5rem;
-      font-weight: 800;
-      color: #fff;
-    }
-
-    @keyframes smoothCardSlideIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+    .status-success {
+      display: block;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      color: var(--success);
     }
 
     .footer {
       text-align: center;
-      padding: 35px 24px;
+      padding: 30px;
       margin-top: auto;
       border-top: 1px solid var(--border);
       color: var(--text-muted);
+      font-size: 13px;
     }
   </style>
 </head>
@@ -294,65 +184,59 @@
 
   <nav class="navbar">
     <a href="index.html" class="logo">📚 Study<span>Connect</span></a>
-    <div class="nav-links">
-      <a href="index.html">Home</a>
-      <a href="discussions.html">Discussions</a>
-      <a href="quiz.html" class="active">Quiz</a>
-      <a href="placements.html">Placements Hub</a>
-    </div>
+    <div class="nav-badge">🔒 Control Console</div>
   </nav>
 
-  <header class="page-header">
-    <h1>📝 Adaptive Assessment Portal</h1>
-    
-    <div class="quiz-selector-panel">
-      <label for="studentName">Enter Your Name</label>
-      <input type="text" id="studentName" placeholder="e.g., Rajesh Kumar" required />
+  <main class="admin-container">
+    <div class="dashboard-card">
+      <h1>Quiz Deployment Engine</h1>
+      <p class="subtitle">Staging environment to dynamically inject adaptive assessments into the student runtime network.</p>
 
-      <label for="quizDropdown">Select Available Quiz</label>
-      <select id="quizDropdown">
-        <option value="">-- Fetching Live Quizzes... --</option>
-      </select>
-    </div>
-  </header>
-
-  <main class="quiz-layout">
-
-    <div class="quiz-hud-tracker" id="quizHud" style="display: none;">
-      <div class="tracker-meta">Progress: <span id="progressCount">0</span> / <span id="hudTotalCount">0</span> Answered</div>
-      <div class="tracker-meta">Active Topic: <span id="hudTopicName">None</span></div>
-    </div>
-
-    <section id="quizScore" class="score-feedback-card">
-      <h2>🎉 Assessment Complete!</h2>
-      <p style="color: var(--text-muted); margin-top: 10px;">Your metric signatures have been successfully compiled into the cloud leaderboard ranking roster.</p>
-      <div class="metrics-summary-box">
-        <div class="metric-node">
-          <span class="metric-label" style="color: var(--success); font-weight: 700;">CORRECT ANSWERS</span>
-          <span id="scoreValue" class="metric-value">0 / 0</span>
+      <form id="adminQuizForm">
+        
+        <div class="form-group">
+          <label for="quizSubject">Target Academic Branch / Subject</label>
+          <select id="quizSubject" required>
+            <option value="cse">💻 Core CSE (Computer Science)</option>
+            <option value="csd">🎨 CSD (Design)</option>
+            <option value="csm">🤖 CSM (AI & ML)</option>
+            <option value="cai">🧠 CAI (AI & Data Science)</option>
+            <option value="cyber">🔒 Cyber Security</option>
+            <option value="it">🌐 IT</option>
+            <option value="ece">🎛️ ECE</option>
+            <option value="eee">⚡ EEE</option>
+            <option value="mech">⚙️ Mechanical</option>
+            <option value="mca">📊 MCA</option>
+            <option value="mba">📈 MBA</option>
+          </select>
         </div>
-        <div class="metric-node">
-          <span class="metric-label" style="color: var(--accent-cyan); font-weight: 700;">EFFICIENCY INDEX</span>
-          <span id="percentageValue" class="metric-value">0%</span>
+
+        <div class="form-group">
+          <label for="quizTopic">Assessment Topic / Title</label>
+          <input type="text" id="quizTopic" placeholder="e.g., Data Structures, Microchips, Business Analytics" required />
         </div>
-      </div>
-    </section>
 
-    <form id="quizForm" class="quiz-container">
-      <div id="dynamicQuestionsContainer"></div>
-      <button type="submit" class="submit-btn">Submit Assessment Matrices</button>
-    </form>
+        <div class="form-group">
+          <label for="totalQuestions">Volume of Questions Matrix</label>
+          <input type="number" id="totalQuestions" min="3" max="25" value="5" required />
+        </div>
 
+        <button type="submit" class="btn-submit">🚀 Generate & Deploy Quiz Matrix</button>
+      </form>
+
+      <div id="statusNotification" class="status-box"></div>
+    </div>
   </main>
 
   <footer class="footer">
-    <p>&copy; 2026 StudyConnect | Connect &bull; Collaborate &bull; Succeed 🚀</p>
+    &copy; 2026 StudyConnect | Automated Admin Infrastructure Module
   </footer>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
-    import { getDatabase, ref, get, set, push } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
+    import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
 
+    // మీ ఒరిజినల్ Firebase కాన్ఫిగరేషన్ పారామితులు
     const firebaseConfig = {
       apiKey: "AIzaSyCaCkliRZk8HmNtOsJpoA084YhNY7MeMWM",
       authDomain: "jigsawconnect-677da.firebaseapp.com",
@@ -366,218 +250,44 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    let activeQuizQuestionsData = [];
-    let activeQuizTopic = "";
-
-    document.addEventListener("DOMContentLoaded", () => {
-      fetchAvailableQuizzes();
-
-      const quizDropdown = document.getElementById("quizDropdown");
-      quizDropdown.addEventListener("change", handleQuizSelection);
-
-      const quizForm = document.getElementById("quizForm");
-      quizForm.addEventListener("change", updateLiveProgressHUD);
-      quizForm.addEventListener("submit", processQuizSubmission);
-    });
-
-    async function fetchAvailableQuizzes() {
-      const dropdown = document.getElementById("quizDropdown");
-      try {
-        const snapshot = await get(ref(db, "quizzes"));
-        if (snapshot.exists()) {
-          dropdown.innerHTML = '<option value="">-- Choose a Quiz to Begin --</option>';
-          const quizData = snapshot.val();
-
-          Object.entries(quizData).forEach(([key, nestedData]) => {
-            if (nestedData.topic) {
-              appendQuizOption(key, nestedData);
-            } else {
-              Object.entries(nestedData).forEach(([quizId, internalData]) => {
-                appendQuizOption(quizId, internalData);
-              });
-            }
-          });
-
-          function appendQuizOption(id, data) {
-            const option = document.createElement("option");
-            option.value = id;
-            // సేఫ్ గా టోటల్ క్వశ్చన్స్ కౌంట్ రీడ్ చేయడం
-            const qCount = data.totalQuestions || 5;
-            option.setAttribute("data-count", qCount);
-            option.setAttribute("data-topic", data.topic);
-            const subjectLabel = data.subject ? `[${data.subject.toUpperCase()}] ` : "";
-            option.textContent = `${subjectLabel}${data.topic} (${qCount} Questions)`;
-            dropdown.appendChild(option);
-          }
-
-        } else {
-          dropdown.innerHTML = '<option value="">No quizzes staged by Admin yet.</option>';
-        }
-      } catch (err) {
-        console.error("Error loading quizzes:", err);
-        dropdown.innerHTML = '<option value="">Error loading ecosystem matrix.</option>';
-      }
-    }
-
-    function handleQuizSelection(e) {
-      const quizDropdown = e.target;
-      const quizId = quizDropdown.value;
-      const quizForm = document.getElementById("quizForm");
-      const quizHud = document.getElementById("quizHud");
-      const questionsContainer = document.getElementById("dynamicQuestionsContainer");
-      const scoreCard = document.getElementById("quizScore");
-
-      if (!quizId) {
-        quizForm.style.display = "none";
-        quizHud.style.display = "none";
-        return;
-      }
-
-      const selectedOption = quizDropdown.options[quizDropdown.selectedIndex];
-      activeQuizTopic = selectedOption.getAttribute("data-topic") || "General Assessment";
-      const questionsCount = parseInt(selectedOption.getAttribute("data-count"), 10) || 5;
-
-      activeQuizQuestionsData = [];
-      questionsContainer.innerHTML = "";
-      scoreCard.classList.remove("show");
-
-      // హై-క్వాలిటీ డైవర్సిఫైడ్ సబ్జెక్ట్ కాన్సెప్ట్స్
-      const subConcepts = [
-        { title: "Foundational Architecture", type: "system topology blueprints and primary environment variables" },
-        { title: "Data Pipeline Orchestration", type: "state transition metrics and transactional log processing" },
-        { title: "Cryptographic Security Controls", type: "zero-trust validation layers and authorization tokens" },
-        { title: "Throughput Optimization Vectors", type: "latency parsing algorithms and compilation overhead bottlenecks" },
-        { title: "Fault-Tolerant Exception Cascades", type: "isolated boundary failovers and recovery logic trees" },
-        { title: "Elastic Scale Engine Controls", type: "dynamic horizontal load balancing matrices and compute allocation" },
-        { title: "Asynchronous Network Protocols", type: "non-blocking IO multiplexing loops and stream synchronization" },
-        { title: "Granular Memory Mapping Rules", type: "garbage collection thresholds and volatile buffer pools" }
-      ];
-
-      for (let i = 0; i < questionsCount; i++) {
-        const conceptIndex = (i + activeQuizTopic.length) % subConcepts.length;
-        const concept = subConcepts[conceptIndex];
-
-        let questionText = "";
-        if (i % 3 === 0) {
-          questionText = `What is the primary architectural imperative of "${concept.title}" when structuring a high-availability "${activeQuizTopic}" infrastructure node?`;
-        } else if (i % 3 === 1) {
-          questionText = `Under intense simulation stress vectors, how does integrating "${concept.title}" directly prevent operational degradation inside "${activeQuizTopic}"?`;
-        } else {
-          questionText = `Which core operational signature characterizes the deployment of "${concept.title}" within a production-ready "${activeQuizTopic}" runtime schema?`;
-        }
-
-        // ఆప్షన్లు ఒకదానికొకటి పోలిక లేకుండా విభిన్నంగా ఉంటాయి
-        const baseOptions = [
-          { key: "A", text: `To provision a secure container network topology that sandboxes the ${concept.type}.` },
-          { key: "B", text: `Enforcing precise distributed state telemetry hooks, reducing overhead synchronization anomalies.` },
-          { key: "C", text: `Decoupling computational dependency layers by implementing custom micro-engine wrappers.` },
-          { key: "D", text: `Maximizing synchronous transaction consensus cycles across independent multi-tenant partitions.` }
-        ];
-
-        // 🌟 Fisher-Yates алгоритм ద్వారా ఆప్షన్లను కూడా పూర్తిగా షఫుల్ చేస్తున్నాము!
-        for (let k = baseOptions.length - 1; k > 0; k--) {
-          const m = Math.floor(Math.random() * (k + 1));
-          [baseOptions[k], baseOptions[m]] = [baseOptions[m], baseOptions[k]];
-        }
-
-        // డైనమిక్ గా ఏ బి సి డి లెటర్లను తిరిగి అసైన్ చేయడం
-        const mappedOptions = {};
-        const letters = ["A", "B", "C", "D"];
-        let finalCorrectLetter = "A";
-
-        baseOptions.forEach((opt, index) => {
-          const currentLetter = letters[index];
-          mappedOptions[currentLetter] = opt.text;
-          // ఒరిజినల్ గా మొదటి ఆప్షన్ నే కరెక్ట్ అనుకుని షఫుల్ అయ్యాక అది ఎక్కడికి వెళ్లిందో ట్రాక్ చేయడం
-          if (opt.key === "A") {
-            finalCorrectLetter = currentLetter;
-          }
-        });
-
-        const questionItem = {
-          number: i + 1,
-          question: questionText,
-          options: mappedOptions,
-          correct: finalCorrectLetter
-        };
-        activeQuizQuestionsData.push(questionItem);
-
-        const questionDiv = document.createElement("div");
-        questionDiv.className = "quiz-question";
-        questionDiv.innerHTML = `
-          <h3>${questionItem.number}. ${questionItem.question}</h3>
-          <label><input type="radio" name="q${questionItem.number}" value="A" required> A. ${questionItem.options.A}</label>
-          <label><input type="radio" name="q${questionItem.number}" value="B"> B. ${questionItem.options.B}</label>
-          <label><input type="radio" name="q${questionItem.number}" value="C"> C. ${questionItem.options.C}</label>
-          <label><input type="radio" name="q${questionItem.number}" value="D"> D. ${questionItem.options.D}</label>
-        `;
-        questionsContainer.appendChild(questionDiv);
-      }
-
-      document.getElementById("hudTopicName").textContent = activeQuizTopic;
-      document.getElementById("hudTotalCount").textContent = questionsCount;
-      document.getElementById("progressCount").textContent = "0";
-
-      quizForm.style.display = "flex";
-      quizHud.style.display = "flex";
-    }
-
-    function updateLiveProgressHUD() {
-      const quizForm = document.getElementById("quizForm");
-      const selectedAnswers = new FormData(quizForm);
-      let count = 0;
-      for (let key of selectedAnswers.keys()) {
-        count++;
-      }
-      document.getElementById("progressCount").textContent = count;
-    }
-
-    async function processQuizSubmission(e) {
+    document.getElementById("adminQuizForm").addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      const studentNameInput = document.getElementById("studentName").value.trim();
-      if (!studentNameInput) {
-        alert("⚠️ Access Blocked: Please validate your Student Identity Name row before compilation submission.");
-        return;
-      }
-
-      const totalQuestions = activeQuizQuestionsData.length;
-      let score = 0;
-
-      activeQuizQuestionsData.forEach((q) => {
-        const selected = document.querySelector(`input[name="q${q.number}"]:checked`);
-        if (selected && selected.value === q.correct) {
-          score++;
-        }
-      });
-
-      const efficiencyPercentage = Math.round((score / totalQuestions) * 100);
-
-      document.getElementById("scoreValue").textContent = `${score} / ${totalQuestions}`;
-      document.getElementById("percentageValue").textContent = `${efficiencyPercentage}%`;
-
-      document.getElementById("quizForm").style.display = "none";
-      document.getElementById("quizHud").style.display = "none";
-      document.getElementById("quizScore").classList.add("show");
-
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      const subject = document.getElementById("quizSubject").value;
+      const topic = document.getElementById("quizTopic").value.trim();
+      const count = parseInt(document.getElementById("totalQuestions").value, 10);
+      const statusBox = document.getElementById("statusNotification");
 
       try {
-        const scoreRef = ref(db, "quizScores");
-        const newScoreNode = push(scoreRef);
-        await set(newScoreNode, {
-          username: studentNameInput,
-          quizTitle: activeQuizTopic,
-          score: score,
-          totalQuestions: totalQuestions,
-          percentage: efficiencyPercentage,
+        // Firebase లోని 'quizzes' నోడ్ కి రిఫరెన్స్ సెట్ చేయడం
+        const quizzesRef = ref(db, "quizzes");
+        const newQuizNode = push(quizzesRef);
+
+        // స్టూడెంట్ పేజీ రీడ్ చేసే స్ట్రక్చర్ లో డేటాని క్లౌడ్ లో సేవ్ చేయడం
+        await set(newQuizNode, {
+          subject: subject,
+          topic: topic,
+          totalQuestions: count,
           timestamp: Date.now()
         });
-        console.log("Cloud ecosystem synchronized successfully.");
+
+        // సక్సెస్ అలర్ట్ సిగ్నల్
+        statusBox.className = "status-box status-success";
+        statusBox.innerHTML = `✅ <strong>Success:</strong> [${subject.toUpperCase()}] "${topic}" with ${count} questions deployed to student cluster successfully!`;
+        
+        // ఫార్మ్ రీసెట్ చేయడం
+        document.getElementById("quizTopic").value = "";
+        document.getElementById("totalQuestions").value = "5";
+
       } catch (err) {
-        console.error("Leaderboard transmission routing error:", err);
+        console.error("Deployment failure:", err);
+        statusBox.style.display = "block";
+        statusBox.style.background = "rgba(239, 68, 68, 0.1)";
+        statusBox.style.borderColor = "rgba(239, 68, 68, 0.3)";
+        statusBox.style.color = "#ef4444";
+        statusBox.textContent = "❌ Error pushing quiz structure to Firebase infrastructure.";
       }
-    }
+    });
   </script>
 </body>
 </html>
