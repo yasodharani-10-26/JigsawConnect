@@ -269,8 +269,7 @@
   <footer class="footer">
     &copy; 2026 StudyConnect | Dynamic Multi-Branch Placement Pipeline Module
   </footer>
-
-  <script>
+<script>
     // 11 బ్రాంచ్‌లకు సంబంధించిన పూర్తి డేటా మేట్రిక్స్
     const branchDatabase = {
       cse: {
@@ -440,17 +439,27 @@
       }
     };
 
-  
+    // డేటాను పేజీలోకి ఇంజెక్ట్ చేసే క్లీన్ ఫంక్షన్
     function loadBranchData(buttonElement, branchKey) {
-  
-      document.querySelectorAll('.branch-btn').forEach(btn => btn.classList.remove('active'));
-  
-      buttonElement.classList.add('active');
+      if (!branchDatabase[branchKey]) return;
+
+      // అన్ని బ్రాంచ్ బటన్ల నుండి active క్లాస్ తొలగించడం
+      document.querySelectorAll('.branch-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+
+      // క్లిక్ చేసిన బటన్‌కు active క్లాస్ ఇవ్వడం (బటన్ ఎలిమెంట్ పాస్ అయితేనే)
+      if (buttonElement) {
+        buttonElement.classList.add('active');
+      }
 
       const data = branchDatabase[branchKey];
       const targetDiv = document.getElementById('portal-content');
+      
+      if (!targetDiv) return;
 
-      let htmlContent = `
+      // డైనమిక్ HTML స్ట్రక్చర్ బిల్డ్ చేయడం
+      targetDiv.innerHTML = `
         <div class="section-card">
           <h2>${data.title}</h2>
           <p class="role-title">💼 Core Specialization Target</p>
@@ -501,14 +510,14 @@
           </div>
         </div>
       `;
-
-      targetDiv.innerHTML = htmlContent;
     }
 
-    window.onload = function() {
-      const defaultBtn = document.querySelector('.branch-btn');
-      loadBranchData(defaultBtn, 'cse');
-    };
+    // సురక్షితమైన డాక్యుమెంట్ ఈవెంట్ లిజినర్ (window.onload కంటే సేఫ్)
+    document.addEventListener("DOMContentLoaded", function() {
+      // మొదటి బటన్ (Core CSE) ని డీఫాల్ట్‌గా సెలెక్ట్ చేయడం
+      const firstBtn = document.querySelector('.branch-btn');
+      loadBranchData(firstBtn, 'cse');
+    });
   </script>
 </body>
 </html>
