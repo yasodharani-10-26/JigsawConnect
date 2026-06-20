@@ -234,7 +234,8 @@
     <div class="nav-links">
       <a href="index.html">Home</a>
       <a href="discussions.html">Discussions</a>
-      <a href="placements.html" class="active">Placements Portal</a>
+      <a href="quiz.html">Quiz</a>
+      <a href="placements.html" class="active">Placements Hub</a>
     </div>
   </nav>
 
@@ -269,8 +270,8 @@
   <footer class="footer">
     &copy; 2026 StudyConnect | Dynamic Multi-Branch Placement Pipeline Module
   </footer>
-<script>
-    // 11 బ్రాంచ్‌లకు సంబంధించిన పూర్తి డేటా మేట్రిక్స్
+
+  <script>
     const branchDatabase = {
       cse: {
         title: "Software Development Engineer (SDE)",
@@ -439,16 +440,13 @@
       }
     };
 
-    // డేటాను పేజీలోకి ఇంజెక్ట్ చేసే క్లీన్ ఫంక్షన్
     function loadBranchData(buttonElement, branchKey) {
       if (!branchDatabase[branchKey]) return;
 
-      // అన్ని బ్రాంచ్ బటన్ల నుండి active క్లాస్ తొలగించడం
       document.querySelectorAll('.branch-btn').forEach(btn => {
         btn.classList.remove('active');
       });
 
-      // క్లిక్ చేసిన బటన్‌కు active క్లాస్ ఇవ్వడం (బటన్ ఎలిమెంట్ పాస్ అయితేనే)
       if (buttonElement) {
         buttonElement.classList.add('active');
       }
@@ -458,7 +456,6 @@
       
       if (!targetDiv) return;
 
-      // డైనమిక్ HTML స్ట్రక్చర్ బిల్డ్ చేయడం
       targetDiv.innerHTML = `
         <div class="section-card">
           <h2>${data.title}</h2>
@@ -496,7 +493,7 @@
               <span class="tag">${data.testMeta[1]}</span>
               <span class="tag" style="color: var(--warning);">${data.testMeta[2]}</span>
             </div>
-            <button class="btn btn-primary" onclick="alert('Initializing sandbox runtime engine parameters...')">Launch Practice Test</button>
+            <button class="btn btn-primary" onclick="window.location.href='quiz.html'">Launch Practice Test</button>
           </div>
 
           <div class="lab-box">
@@ -506,15 +503,13 @@
               <span class="tag tag-accent">⏱ 30 Minutes</span>
               <span class="tag">AI Voice + Code Sandbox Enabled</span>
             </div>
-            <button class="btn btn-outline" style="border-color: var(--accent); color: var(--accent);" onclick="alert('Accessing microphone data blocks for AI Mock Voice Portal...')">Start AI Mock Interview</button>
+            <button class="btn btn-outline" style="border-color: var(--accent); color: var(--accent);" onclick="window.open('https://www.interviewbit.com/mock-interview/', '_blank')">Start AI Mock Interview</button>
           </div>
         </div>
       `;
     }
 
-    // సురక్షితమైన డాక్యుమెంట్ ఈవెంట్ లిజినర్ (window.onload కంటే సేఫ్)
     document.addEventListener("DOMContentLoaded", function() {
-      // మొదటి బటన్ (Core CSE) ని డీఫాల్ట్‌గా సెలెక్ట్ చేయడం
       const firstBtn = document.querySelector('.branch-btn');
       loadBranchData(firstBtn, 'cse');
     });
