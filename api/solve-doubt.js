@@ -1,16 +1,15 @@
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenAI } from "@google/generative-ai";
 import formidable from "formidable";
 import fs from "fs";
 
-// Vercel Default Body Parser ని డిసేబుల్ చేయాలి (ఎందుకంటే మనం ఫైల్స్/మల్టీపార్ట్ డేటా తీసుకుంటున్నాం)
+// Vercel Default Body Parser ని డిసేబుల్ చేయడం
 export const config = {
   api: {
     bodyParser: false,
   },
 };
 
-// Gemini API క్లయింట్ ఇన్షియలైజేషన్
-// మీ Vercel Dashboard లో GEMINI_API_KEY ని Environment Variable గా యాడ్ చేయండి
+// `@google/generative-ai` ప్రకారం క్లయింట్ ఇనిషియలైజేషన్
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 export default async function handler(req, res) {
@@ -31,7 +30,7 @@ export default async function handler(req, res) {
       const promptText = fields.text ? fields.text[0] : "";
       const aiContents = [];
 
-      // 1. ఇమేజ్ ఫైల్ ఉంటే దాన్ని Gemini ఫార్మాట్ లోకి మార్చడం
+      // 1. ఇమేజ్ ఫైల్ ఉంటే దాన్ని చేర్చడం
       if (files.image && files.image[0]) {
         const imageFile = files.image[0];
         const imageBuffer = fs.readFileSync(imageFile.filepath);
@@ -55,31 +54,38 @@ export default async function handler(req, res) {
         });
       }
 
-      // 3. సిస్టమ్ ఇన్‌స్ట్రక్షన్ మరియు ప్రాంప్ట్ సిద్ధం చేయడం
+      // 3. సిస్టమ్ ఇన్‌స్ట్రక్షన్ సిద్ధం చేయడం
       const systemInstruction = 
         "You are an expert tutor on StudyConnect. Analyze the given text query, image, or audio doubt. " +
         "Provide a clear, accurate, step-by-step educational solution. Use markdown for headings or bullet points if needed. " +
         "If the user asks in Telugu or English, respond in a clear, easy-to-understand language according to their tone.";
 
-      // టెక్స్ట్ ప్రాంప్ట్‌ను కంటెంట్‌లో యాడ్ చేయాలి
+      // టెక్స్ట్ ప్రాంప్ట్‌ను సిద్ధం చేయడం
       const finalPrompt = promptText 
         ? `${promptText}\n\nPlease solve the doubt attached in the multimodal inputs above.` 
         : "Please analyze the attached image/audio doubt and provide a detailed solution.";
         
       aiContents.push(finalPrompt);
 
-      // 4. Gemini Model ని కాల్ చేయడం (Multimodal కి gemini-2.5-flash బెస్ట్)
-      const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
-        contents: aiContents,
-        config: {
-          systemInstruction: systemInstruction,
+      // 4. `@google/generative-ai` కొత్త సింటాక్స్ ప్రకారం మోడల్ ని కాల్ చేయడం
+      // Multimodal కోసం అత్యంత వేగవంతమైన "gemini-1.5-flash" ఇక్కడ సెట్ చేయబడింది
+      const model = ai.getGenerativeModel({ 
+        model: "gemini-1.5-flash",
+        systemInstruction: systemInstruction
+      });
+
+      const result = await model.generateContent({
+        contents: [{ parts: aiContents }],
+        generationConfig: {
           temperature: 0.4,
         }
       });
 
+      const response = await result.response;
+      const text = response.text();
+
       // 5. సక్సెస్ రెస్పాన్స్ పంపడం
-      return res.status(200).json({ solution: response.text });
+      return res.status(200).json({ solution: text });
 
     } catch (apiError) {
       console.error("Gemini API Error:", apiError);
