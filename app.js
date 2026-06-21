@@ -42,7 +42,6 @@ function setupAdminOperations() {
     generateQuizBtn.addEventListener("click", handleQuizGeneration);
   }
 }
-
 async function handleQuizGeneration() {
   const topicInput = document.getElementById("quizTopic");
   const countInput = document.getElementById("questionCount");
@@ -71,22 +70,23 @@ async function handleQuizGeneration() {
       body: JSON.stringify({ topic, count })
     });
 
-    // సర్వర్ నుండి జెమిని ఎర్రర్ లేదా 500 ఎర్రర్ వస్తే దాన్ని టెక్స్ట్‌గా ముందే సేఫ్‌గా హ్యాండిల్ చేయడం
     if (!response.ok) {
       const errorText = await response.text();
       throw new Error(`Server Error (${response.status}): ${errorText}`);
     }
 
     const data = await response.json();
-    let rawText = data.result;
+    
+    // బ్యాకెండ్ నుండి 'result' లేదా 'solution' లేదా డైరెక్ట్ డేటా ఏది వచ్చినా సేఫ్‌గా తీసుకుంటుంది
+    let rawText = data.result || data.solution || data;
     
     if (!rawText) {
-      throw new Error("Missing 'result' property from serverless token stream.");
+      throw new Error("Missing response data structure from serverless API.");
     }
 
     let quizArray = [];
     if (typeof rawText === "string") {
-      // మార్క్‌డౌన్ బ్యాక్‌టిక్స్ (```json) క్లీన్ చేయడానికి మెరుగైన Regex
+      // మార్క్‌డౌన్ బ్యాక్‌టిక్స్ (```json) క్లీన్ చేయడానికి Regex
       const cleaned = rawText.replace(/```json|```/gi, "").trim();
       quizArray = JSON.parse(cleaned);
     } else {
@@ -109,7 +109,6 @@ async function handleQuizGeneration() {
     `;
   }
 }
-
 function renderQuiz(questions, container) {
   let html = `<div style="display:flex; flex-direction:column; gap:20px; margin-top:20px;">`;
   
