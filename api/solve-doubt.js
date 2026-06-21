@@ -2,14 +2,14 @@ import { GoogleGenAI } from "@google/generative-ai";
 import formidable from "formidable";
 import fs from "fs";
 
-// Vercel Default Body Parser ని డిసేబుల్ చేయడం
+// Vercel Default Body Parser ని డిసేబుల్ చేయడం (మల్టీపార్ట్ డేటా కోసం)
 export const config = {
   api: {
     bodyParser: false,
   },
 };
 
-// `@google/generative-ai` ప్రకారం క్లయింట్ ఇనిషియలైజేషన్
+// @google/generative-ai ప్యాకేజీ ప్రకారం క్లయింట్ ఇనిషియలైజేషన్
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 export default async function handler(req, res) {
@@ -30,7 +30,7 @@ export default async function handler(req, res) {
       const promptText = fields.text ? fields.text[0] : "";
       const aiContents = [];
 
-      // 1. ఇమేజ్ ఫైల్ ఉంటే దాన్ని చేర్చడం
+      // 1. ఇమేజ్ ఫైల్ ఉంటే చేర్చడం
       if (files.image && files.image[0]) {
         const imageFile = files.image[0];
         const imageBuffer = fs.readFileSync(imageFile.filepath);
@@ -42,7 +42,7 @@ export default async function handler(req, res) {
         });
       }
 
-      // 2. వాయిస్ రికార్డింగ్ ఫైల్ ఉంటే దాన్ని చేర్చడం
+      // 2. వాయిస్ రికార్డింగ్ ఫైల్ ఉంటే చేర్చడం
       if (files.voice && files.voice[0]) {
         const voiceFile = files.voice[0];
         const voiceBuffer = fs.readFileSync(voiceFile.filepath);
@@ -67,8 +67,8 @@ export default async function handler(req, res) {
         
       aiContents.push(finalPrompt);
 
-      // 4. `@google/generative-ai` కొత్త సింటాక్స్ ప్రకారం మోడల్ ని కాల్ చేయడం
-      // Multimodal కోసం అత్యంత వేగవంతమైన "gemini-1.5-flash" ఇక్కడ సెట్ చేయబడింది
+      // 4. @google/generative-ai కొత్త సింటాక్స్ ప్రకారం మోడల్ ని కాల్ చేయడం
+      // Multimodal సపోర్ట్ కోసం gemini-1.5-flash ఇక్కడ వాడబడింది
       const model = ai.getGenerativeModel({ 
         model: "gemini-1.5-flash",
         systemInstruction: systemInstruction
