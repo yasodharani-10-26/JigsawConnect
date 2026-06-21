@@ -144,7 +144,7 @@
     ========================== */
     .admin-stats {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 24px;
       margin-bottom: 40px;
     }
@@ -205,6 +205,8 @@
     .stat-card:nth-child(2) .stat-icon { color: var(--accent); background: rgba(6, 182, 212, 0.1); }
     .stat-card:nth-child(3) .stat-icon { color: #eab308; background: rgba(234, 179, 8, 0.1); }
     .stat-card:nth-child(4) .stat-icon { color: #10b981; background: rgba(16, 185, 129, 0.1); }
+    .stat-card:nth-child(5) .stat-icon { color: #f43f5e; background: rgba(244, 63, 94, 0.1); }
+    .stat-card:nth-child(6) .stat-icon { color: #a855f7; background: rgba(168, 85, 247, 0.1); }
 
     /* =========================
        PANELS & UTILITIES
@@ -408,7 +410,7 @@
     <div class="nav-links">
       <a href="admin-dashboard.html" class="active">Dashboard</a>
       <a href="leaderboard.html">Leaderboard</a>
-      <a href="index.html" class="logout-btn logout-btn">Logout</a>
+      <a href="index.html" class="logout-btn">Logout</a>
     </div>
   </nav>
 
@@ -446,6 +448,20 @@
         <div class="stat-info">
           <div class="stat-value" id="scoreCount">0</div>
           <div class="stat-label">Scores</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🎤</div>
+        <div class="stat-info">
+          <div class="stat-value" id="seminarCount">0</div>
+          <div class="stat-label">Seminars</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">⏱️</div>
+        <div class="stat-info">
+          <div class="stat-value" id="jamCount">0</div>
+          <div class="stat-label">JAM Slots</div>
         </div>
       </div>
     </div>
@@ -512,6 +528,52 @@
         </div>
       </section>
 
+      <section class="admin-panel">
+        <h2 class="admin-section-title">🎤 Seminar Management</h2>
+        <form id="seminarForm" class="admin-upload-form">
+          <div class="form-group">
+            <label>Seminar Topic Title</label>
+            <input type="text" id="seminarTitle" placeholder="Deep Learning Architectures" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Scheduled Date & Time</label>
+              <input type="datetime-local" id="seminarDateTime" required>
+            </div>
+            <div class="form-group">
+              <label>Host Team/Presenter</label>
+              <input type="text" id="seminarHost" placeholder="Team Alpha / Student Name" required>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-accent">
+            <span>📅</span> Schedule Seminar Session
+          </button>
+        </form>
+      </section>
+
+      <section class="admin-panel">
+        <h2 class="admin-section-title">⏱️ JAM (Just A Minute) Controller</h2>
+        <form id="jamForm" class="admin-upload-form">
+          <div class="form-group">
+            <label>Spontaneous JAM Topic</label>
+            <input type="text" id="jamTopicName" placeholder="Impact of AI on Modern Creativity" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Time Cap (Seconds)</label>
+              <input type="number" id="jamDuration" placeholder="60" value="60" required>
+            </div>
+            <div class="form-group">
+              <label>Target Cohort / Team</label>
+              <input type="text" id="jamTarget" placeholder="All Students / Specific Team" required>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary">
+            <span>🔥</span> Dispatch JAM Topic Blueprint
+          </button>
+        </form>
+      </section>
+
       <section class="admin-panel panel-fullwidth">
         <h2 class="admin-section-title">📂 Live Student Roster Ledger</h2>
         <div class="table-container">
@@ -544,7 +606,6 @@
   
   <script type="module">
     document.addEventListener("DOMContentLoaded", () => {
-      // Allow app.js module context bound lifecycle a brief tick to expose references globally
       setTimeout(() => {
         loadDashboardData();
         
@@ -553,6 +614,13 @@
 
         const studentForm = document.getElementById("studentForm");
         if (studentForm) studentForm.addEventListener("submit", onboardStudent);
+
+        // Bindings for new Seminar and JAM submissions
+        const seminarForm = document.getElementById("seminarForm");
+        if (seminarForm) seminarForm.addEventListener("submit", scheduleSeminar);
+
+        const jamForm = document.getElementById("jamForm");
+        if (jamForm) jamForm.addEventListener("submit", dispatchJamSession);
       }, 500);
     });
 
@@ -608,8 +676,64 @@
         const scoresSnap = await get(ref(db, "quizScores"));
         document.getElementById("scoreCount").innerText = scoresSnap.exists() ? Object.keys(scoresSnap.val()).length : 0;
 
+        // 4. Fetch Seminars Real-time Telemetry Count
+        const seminarSnap = await get(ref(db, "seminars"));
+        document.getElementById("seminarCount").innerText = seminarSnap.exists() ? Object.keys(seminarSnap.val()).length : 0;
+
+        // 5. Fetch JAM Sessions Real-time Telemetry Count
+        const jamSnap = await get(ref(db, "jamSessions"));
+        document.getElementById("jamCount").innerText = jamSnap.exists() ? Object.keys(jamSnap.val()).length : 0;
+
       } catch (err) {
         console.error("Critical dashboard ecosystem telemetry fetch exception:", err);
+      }
+    }
+
+    /* ==========================================================================
+       SEMINAR SCHEDULER ENGINE
+       ========================================================================== */
+    async function scheduleSeminar(e) {
+      e.preventDefault();
+      const { db, ref, set } = window;
+      if (!db || !ref || !set) return alert("❌ Connection offline.");
+
+      const title = document.getElementById("seminarTitle").value.trim();
+      const dateTime = document.getElementById("seminarDateTime").value;
+      const host = document.getElementById("seminarHost").value.trim();
+      const seminarKey = "seminar_" + Date.now();
+
+      try {
+        await set(ref(db, `seminars/${seminarKey}`), { title, dateTime, host, timestamp: Date.now() });
+        alert(`🎉 Seminar "${title}" has been successfully scheduled!`);
+        document.getElementById("seminarForm").reset();
+        loadDashboardData();
+      } catch (err) {
+        console.error(err);
+        alert("⚠️ Failed to write seminar architecture to database.");
+      }
+    }
+
+    /* ==========================================================================
+       JAM DISPATCH ENGINE
+       ========================================================================== */
+    async function dispatchJamSession(e) {
+      e.preventDefault();
+      const { db, ref, set } = window;
+      if (!db || !ref || !set) return alert("❌ Connection offline.");
+
+      const topic = document.getElementById("jamTopicName").value.trim();
+      const duration = document.getElementById("jamDuration").value;
+      const target = document.getElementById("jamTarget").value.trim();
+      const jamKey = "jam_" + Date.now();
+
+      try {
+        await set(ref(db, `jamSessions/${jamKey}`), { topic, duration, target, status: "active", timestamp: Date.now() });
+        alert(`🔥 JAM Session Topic distributed to active panels: "${topic}"`);
+        document.getElementById("jamForm").reset();
+        loadDashboardData();
+      } catch (err) {
+        console.error(err);
+        alert("⚠️ Failed to initialize JAM workflow data pipeline.");
       }
     }
 
@@ -618,7 +742,6 @@
        ========================================================================== */
     async function autoCreateTeams() {
       const { db, ref, get, set } = window;
-      
       if (!db || !ref || !get || !set) {
         alert("❌ Error: Firebase environment references are unassigned globally.");
         return;
@@ -637,33 +760,26 @@
           return;
         }
 
-        // Stratify and balance teams using evaluation scoring tiers
         users.sort((a, b) => (b.score || 0) - (a.score || 0));
-
-        // Derive dynamic slice thresholds based on cohort cluster volume metrics
         const leaderCount = Math.max(1, Math.min(10, Math.ceil(users.length / 4)));
         const leaders = users.slice(0, leaderCount);
         const members = users.slice(leaderCount);
 
         let leaderIndex = 0;
-
         for (const member of members) {
           const leader = leaders[leaderIndex];
-
           await set(ref(db, `users/${member.uid}/teamLeader`), leader.uid);
           await set(ref(db, `users/${member.uid}/teamName`), `Team ${leader.name || 'Alpha'}`);
-
           leaderIndex++;
           if (leaderIndex >= leaders.length) leaderIndex = 0;
         }
 
-        // Commit context bindings for team headers explicitly
         for (const leader of leaders) {
           await set(ref(db, `users/${leader.uid}/teamName`), `Team ${leader.name || 'Alpha'} (Leader)`);
         }
 
         alert("🎯 Balanced Dynamic Teams Generated & Synced Successfully!");
-        loadDashboardData(); // Instantly refresh layout view matrix parameters
+        loadDashboardData();
       } catch (error) {
         console.error("Execution error building team assignments:", error);
       }
@@ -675,7 +791,6 @@
     async function onboardStudent(e) {
       e.preventDefault();
       const { db, ref, set } = window;
-
       if (!db || !ref || !set) {
         alert("❌ Write Failure: Real-time telemetry core context unavailable.");
         return;
@@ -684,7 +799,6 @@
       const name = document.getElementById("studentName").value.trim();
       const studentId = document.getElementById("studentId").value.trim();
       const email = document.getElementById("studentEmail").value.trim();
-      
       const generationKey = "user_" + Date.now();
 
       try {
