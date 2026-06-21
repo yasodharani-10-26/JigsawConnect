@@ -9,17 +9,25 @@ export const config = {
   },
 };
 
-// Initialize client using the correct class name for @google/generative-ai
-const ai = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method Not Allowed" });
   }
 
-  // Wrap the formidable parsing logic in a Promise so Vercel waits for it to execute
-  return new Promise((resolve, reject) => {
-    const form = formidable({ multiples: false });
+  // 1. Grab the API key inside the handler function execution context
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) {
+    return res.status(500).json({ 
+      error: "Server Configuration Error: GEMINI_API_KEY environment variable is not defined or accessible." 
+    });
+  }
+
+  // 2. Initialize the client safely here
+  const ai = new GoogleGenerativeAI(apiKey);
+
+  // Wrap the formidable parsing logic in a Promise so Vercel waits for it to execute completely
+  return new Promise((resolve) => {
+    const form = formidable({ extremes: false });
 
     form.parse(req, async (err, fields, files) => {
       if (err) {
@@ -32,7 +40,7 @@ export default async function handler(req, res) {
         const promptText = fields.text ? fields.text[0] : "";
         const parts = [];
 
-        // 1. Add image if it exists
+        // Add image if it exists
         if (files.image && files.image[0]) {
           const imageFile = files.image[0];
           const imageBuffer = fs.readFileSync(imageFile.filepath);
@@ -44,7 +52,7 @@ export default async function handler(req, res) {
           });
         }
 
-        // 2. Add voice recording if it exists
+        // Add voice recording if it exists
         if (files.voice && files.voice[0]) {
           const voiceFile = files.voice[0];
           const voiceBuffer = fs.readFileSync(voiceFile.filepath);
@@ -56,14 +64,14 @@ export default async function handler(req, res) {
           });
         }
 
-        // 3. Add text prompt structure carefully as an object part
+        // Add text prompt structure carefully as an object part
         const finalPrompt = promptText 
           ? `${promptText}\n\nPlease solve the doubt attached in the multimodal inputs above.` 
           : "Please analyze the attached image/audio doubt and provide a detailed solution.";
           
         parts.push({ text: finalPrompt });
 
-        // 4. Setup system instruction
+        // Setup system instruction
         const systemInstruction = 
           "You are an expert tutor on StudyConnect. Analyze the given text query, image, or audio doubt. " +
           "Provide a clear, accurate, step-by-step educational solution. Use markdown for headings or bullet points if needed. " +
@@ -75,7 +83,7 @@ export default async function handler(req, res) {
           systemInstruction: systemInstruction
         });
 
-        // Execute request
+        // Execute request to Gemini API
         const result = await model.generateContent({
           contents: [{ parts: parts }],
           generationConfig: {
@@ -86,7 +94,7 @@ export default async function handler(req, res) {
         const response = await result.response;
         const text = response.text();
 
-        // 5. Send back a beautiful JSON object
+        // Send back successful JSON response
         res.status(200).json({ solution: text });
         return resolve();
 
