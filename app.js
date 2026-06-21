@@ -71,20 +71,23 @@ async function handleQuizGeneration() {
       body: JSON.stringify({ topic, count })
     });
 
-    const data = await response.json();
-
+    // సర్వర్ నుండి జెమిని ఎర్రర్ లేదా 500 ఎర్రర్ వస్తే దాన్ని టెక్స్ట్‌గా ముందే సేఫ్‌గా హ్యాండిల్ చేయడం
     if (!response.ok) {
-      throw new Error(data.error || `Server responded with status ${response.status}`);
+      const errorText = await response.text();
+      throw new Error(`Server Error (${response.status}): ${errorText}`);
     }
 
+    const data = await response.json();
     let rawText = data.result;
+    
     if (!rawText) {
       throw new Error("Missing 'result' property from serverless token stream.");
     }
 
     let quizArray = [];
     if (typeof rawText === "string") {
-      const cleaned = rawText.replace(/```json|```/g, "").trim();
+      // మార్క్‌డౌన్ బ్యాక్‌టిక్స్ (```json) క్లీన్ చేయడానికి మెరుగైన Regex
+      const cleaned = rawText.replace(/```json|```/gi, "").trim();
       quizArray = JSON.parse(cleaned);
     } else {
       quizArray = rawText;
@@ -111,16 +114,23 @@ function renderQuiz(questions, container) {
   let html = `<div style="display:flex; flex-direction:column; gap:20px; margin-top:20px;">`;
   
   questions.forEach((q, index) => {
+    // ఆబ్జెక్ట్ కీస్ లోయర్-కేస్ లేదా అప్పర్-కేస్ ఉన్నా సరే ఎర్రర్ రాకుండా సేఫ్ యాక్సెస్ ఫాల్‌బ్యాక్
+    const optionA = q.a || q.A || "";
+    const optionB = q.b || q.B || "";
+    const optionC = q.c || q.C || "";
+    const optionD = q.d || q.D || "";
+    const correctAnswer = q.answer || q.correctAnswer || "";
+
     html += `
       <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); padding: 18px; border-radius: var(--radius-md);">
         <p style="font-weight:700; color:#fff; margin-bottom:12px;">Q${index + 1}: ${escapeHTML(q.question)}</p>
         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; font-size:13px;">
-          <div><strong style="color:var(--accent)">A:</strong> ${escapeHTML(q.a)}</div>
-          <div><strong style="color:var(--accent)">B:</strong> ${escapeHTML(q.b)}</div>
-          <div><strong style="color:var(--accent)">C:</strong> ${escapeHTML(q.c)}</div>
-          <div><strong style="color:var(--accent)">D:</strong> ${escapeHTML(q.d)}</div>
+          <div><strong style="color:var(--accent)">A:</strong> ${escapeHTML(optionA)}</div>
+          <div><strong style="color:var(--accent)">B:</strong> ${escapeHTML(optionB)}</div>
+          <div><strong style="color:var(--accent)">C:</strong> ${escapeHTML(optionC)}</div>
+          <div><strong style="color:var(--accent)">D:</strong> ${escapeHTML(optionD)}</div>
         </div>
-        <p style="margin-top:10px; font-size:12px; color:#10b981; font-weight:700;">Correct Answer: ${escapeHTML(q.answer).toUpperCase()}</p>
+        <p style="margin-top:10px; font-size:12px; color:#10b981; font-weight:700;">Correct Answer: ${escapeHTML(correctAnswer).toUpperCase()}</p>
       </div>
     `;
   });
@@ -268,7 +278,6 @@ function setupResources() {
       }
 
       container.innerHTML = Object.entries(snap.val()).map(([id, resource]) => {
-        // Safe mapping fallback for url vs link structures
         const finalUrl = resource.url || resource.link || "#";
         return `
           <div class="stat-card" style="flex-direction: column; align-items: flex-start; gap: 8px;">
