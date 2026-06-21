@@ -11,6 +11,10 @@ export default async function handler(req, res) {
     // Safely grab the hidden key from Vercel's secret environment
     const apiKey = process.env.GEMINI_API_KEY; 
 
+    if (!apiKey) {
+      return res.status(500).json({ error: 'Gemini API key is not configured on the server.' });
+    }
+
     const prompt = `Generate exactly ${count} educational multiple choice questions focusing strictly on "${topic}".
 Return a JSON array matching this exact blueprint schema structure, with no markdown formatting, no backticks, and no wrapper objects:
 [
@@ -50,4 +54,18 @@ Return a JSON array matching this exact blueprint schema structure, with no mark
     const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
 
     if (!rawText) {
-      return res.status(50
+      return res.status(500).json({ error: 'Failed to retrieve a valid response structure from Gemini.' });
+    }
+
+    // Since responseMimeType is set to 'application/json', rawText will be a clean JSON string array.
+    // We parse it back into an actual JavaScript array before sending it back.
+    const quizQuestions = JSON.parse(rawText);
+
+    // Return the questions to your frontend
+    return res.status(200).json(quizQuestions);
+
+  } catch (error) {
+    console.error("Server Error:", error);
+    return res.status(500).json({ error: `Internal Server Error: ${error.message}` });
+  }
+}
