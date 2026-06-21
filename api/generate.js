@@ -12,7 +12,7 @@ export default async function handler(req, res) {
     const apiKey = process.env.GEMINI_API_KEY; 
 
     const prompt = `Generate exactly ${count} educational multiple choice questions focusing strictly on "${topic}".
-Return ONLY a valid JSON array matching this exact blueprint schema structure without conversational wrappers:
+Return a JSON array matching this exact blueprint schema structure, with no markdown formatting, no backticks, and no wrapper objects:
 [
   {
     "question": "Question text?",
@@ -31,18 +31,23 @@ Return ONLY a valid JSON array matching this exact blueprint schema structure wi
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }]
+          contents: [{ parts: [{ text: prompt }] }],
+          // కచ్చితంగా క్లీన్ JSON అరే మాత్రమే వచ్చేలా ఫోర్స్ సెట్టింగ్
+          generationConfig: {
+            responseMimeType: "application/json",
+            temperature: 0.3
+          }
         })
       }
     );
 
+    if (!response.ok) {
+      const errorText = await response.text();
+      return res.status(response.status).json({ error: `Gemini API Error: ${errorText}` });
+    }
+
     const data = await response.json();
     const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
 
-    // Send the raw AI response text straight back to your frontend app.js
-    return res.status(200).json({ result: rawText });
-
-  } catch (error) {
-    return res.status(500).json({ error: 'Internal Server Error' });
-  }
-}
+    if (!rawText) {
+      return res.status(50
