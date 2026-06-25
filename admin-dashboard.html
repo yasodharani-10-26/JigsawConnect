@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -500,25 +500,8 @@
       <section class="admin-panel">
         <h2 class="admin-section-title">🔮 Dynamic Operations</h2>
         
-        <div class="admin-upload-form" style="height: 100%; justify-content: space-between; gap: 24px;">
-          <div style="display:flex; flex-direction:column; gap:16px;">
-            <label style="margin-bottom: -5px;">Interactive Quiz Generation</label>
-            <div class="form-row">
-              <div class="form-group">
-                <input type="text" id="quizTopic" placeholder="Target Topic (e.g., Quantum Physics)">
-              </div>
-              <div class="form-group">
-                <input type="number" id="questionCount" placeholder="Volume of Questions">
-              </div>
-            </div>
-            <button id="generateQuizBtn" class="btn btn-accent">
-              <span>🚀</span> Generate Dynamic Quiz
-            </button>
-          </div>
-
-          <div id="quizContainer"></div>
-
-          <div style="border-top: 1px solid var(--border); padding-top: 20px;">
+        <div class="admin-upload-form" style="height: 100%; justify-content: center; gap: 24px;">
+          <div>
             <label>Algorithmic Team Formations</label>
             <p style="color: var(--muted); font-size: 13px; margin-bottom: 12px;">Auto-balances teams based on active point leaderboard scoring parameters.</p>
             <button id="autoCreateTeamsBtn" class="btn btn-primary" style="width: 100%;">
