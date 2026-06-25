@@ -115,13 +115,45 @@
       margin-bottom: 10px;
     }
 
-    .quiz-selector-panel {
+    .header-actions-wrapper {
       max-width: 500px;
       margin: 20px auto 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* HackerRank Navigation Button CSS */
+    .hackerrank-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: #2ec866;
+      color: #0e141e;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 15px;
+      padding: 14px 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(46, 200, 102, 0.2);
+      transition: all 0.25s ease;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .hackerrank-btn:hover {
+      background: #25a753;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(46, 200, 102, 0.35);
+      color: #fff;
+    }
+
+    .quiz-selector-panel {
       background: rgba(15, 23, 42, 0.6);
-      padding: 16px;
+      padding: 20px;
       border-radius: 14px;
       border: 1px solid var(--border);
+      text-align: left;
     }
 
     .quiz-selector-panel label {
@@ -143,6 +175,10 @@
       font-size: 14px;
       outline: none;
       margin-bottom: 12px;
+    }
+
+    select:last-child, input[type="text"]:last-child {
+      margin-bottom: 0;
     }
 
     /* ==========================================================================
@@ -305,14 +341,21 @@
   <header class="page-header">
     <h1>📝 Adaptive Assessment Portal</h1>
     
-    <div class="quiz-selector-panel">
-      <label for="studentName">Enter Your Name</label>
-      <input type="text" id="studentName" placeholder="e.g., Rajesh Kumar" required />
+    <div class="header-actions-wrapper">
+      <!-- HackerRank Coding Portal Route Button -->
+      <a href="https://www.hackerrank.com/view-batch-2023-exam-practice-cse-acse-it" target="_blank" rel="noopener noreferrer" class="hackerrank-btn">
+        <span>🚀 Launch HackerRank Practice Exam Dashboard</span>
+      </a>
 
-      <label for="quizDropdown">Select Available Quiz</label>
-      <select id="quizDropdown">
-        <option value="">-- Fetching Live Quizzes... --</option>
-      </select>
+      <div class="quiz-selector-panel">
+        <label for="studentName">Enter Your Name</label>
+        <input type="text" id="studentName" placeholder="e.g., Rajesh Kumar" required />
+
+        <label for="quizDropdown">Select Available Quiz</label>
+        <select id="quizDropdown">
+          <option value="">-- Fetching Live Quizzes... --</option>
+        </select>
+      </div>
     </div>
   </header>
 
@@ -479,7 +522,6 @@
           { key: "D", text: `Maximizing synchronous transaction consensus cycles across independent multi-tenant partitions.` }
         ];
 
-        // Fisher-Yates shuffle Implementation
         for (let k = baseOptions.length - 1; k > 0; k--) {
           const m = Math.floor(Math.random() * (k + 1));
           [baseOptions[k], baseOptions[m]] = [baseOptions[m], baseOptions[k]];
