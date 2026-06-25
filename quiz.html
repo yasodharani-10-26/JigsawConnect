@@ -83,20 +83,6 @@
       color: var(--accent-cyan);
     }
 
-    .logout-btn {
-      background: rgba(239, 68, 68, 0.1);
-      border: 1px solid rgba(239, 68, 68, 0.2);
-      padding: 8px 16px;
-      border-radius: 10px;
-      color: #ef4444 !important;
-      transition: all 0.2s ease !important;
-    }
-
-    .logout-btn:hover {
-      background: #ef4444 !important;
-      color: #fff !important;
-    }
-
     /* ==========================================================================
        HERO BANNER COMPONENT
        ========================================================================== */
@@ -120,21 +106,26 @@
       margin: 20px auto 0 auto;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 12px;
     }
 
-    /* HackerRank Navigation Button CSS */
+    .button-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
     .hackerrank-btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
+      gap: 8px;
       background: #2ec866;
       color: #0e141e;
       text-decoration: none;
       font-weight: 700;
-      font-size: 15px;
-      padding: 14px 20px;
+      font-size: 14px;
+      padding: 14px 16px;
       border-radius: 12px;
       box-shadow: 0 4px 15px rgba(46, 200, 102, 0.2);
       transition: all 0.25s ease;
@@ -145,7 +136,30 @@
       background: #25a753;
       transform: translateY(-2px);
       box-shadow: 0 6px 20px rgba(46, 200, 102, 0.35);
+      color: #0e141e;
+    }
+
+    .leaderboard-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #f59e0b, #d97706);
       color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 14px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.2);
+      transition: all 0.25s ease;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .leaderboard-btn:hover {
+      background: linear-gradient(135deg, #d97706, #b45309);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(245, 158, 11, 0.35);
     }
 
     .quiz-selector-panel {
@@ -342,10 +356,16 @@
     <h1>📝 Adaptive Assessment Portal</h1>
     
     <div class="header-actions-wrapper">
-      <!-- HackerRank Coding Portal Route Button -->
-      <a href="https://www.hackerrank.com/view-batch-2023-exam-practice-cse-acse-it" target="_blank" rel="noopener noreferrer" class="hackerrank-btn">
-        <span>🚀 Launch HackerRank Practice Exam Dashboard</span>
-      </a>
+      <div class="button-grid">
+        <!-- HackerRank Button -->
+        <a href="https://www.hackerrank.com/view-batch-2023-exam-practice-cse-acse-it" target="_blank" rel="noopener noreferrer" class="hackerrank-btn">
+          <span>🚀 HackerRank Practice</span>
+        </a>
+        <!-- Leaderboard Button -->
+        <a href="leaderboard.html" class="leaderboard-btn">
+          <span>🏆 View Leaderboard</span>
+        </a>
+      </div>
 
       <div class="quiz-selector-panel">
         <label for="studentName">Enter Your Name</label>
@@ -368,7 +388,7 @@
 
     <section id="quizScore" class="score-feedback-card">
       <h2>🎉 Assessment Complete!</h2>
-      <p style="color: var(--text-muted); margin-top: 10px;">Your metric signatures have been successfully compiled into the cloud leaderboard ranking roster.</p>
+      <p style="color: var(--text-muted); margin-top: 10px;">Redirecting you to the global ranking leaderboard matrices...</p>
       <div class="metrics-summary-box">
         <div class="metric-node">
           <span class="metric-label" style="color: var(--success); font-weight: 700;">CORRECT ANSWERS</span>
@@ -588,7 +608,7 @@
 
       const studentNameInputVal = studentNameInput.value.trim();
       if (!studentNameInputVal) {
-        alert("⚠️ Access Blocked: Please validate your Student Identity Name row before compilation submission.");
+        alert("⚠️ Access Blocked: Please validate your Student Identity Name before submission.");
         return;
       }
 
@@ -624,7 +644,12 @@
           percentage: efficiencyPercentage,
           timestamp: Date.now()
         });
-        console.log("Cloud ecosystem synchronized successfully.");
+        
+        // Auto redirection to leaderboard after 2.5 seconds
+        setTimeout(() => {
+          window.location.href = "leaderboard.html";
+        }, 2500);
+
       } catch (err) {
         console.error("Leaderboard transmission routing error:", err);
       }
