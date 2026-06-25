@@ -361,8 +361,8 @@
         <a href="https://www.hackerrank.com/view-batch-2023-exam-practice-cse-acse-it" target="_blank" rel="noopener noreferrer" class="hackerrank-btn">
           <span>🚀 HackerRank Practice</span>
         </a>
-        <!-- Leaderboard Button -->
-        <a href="leaderboard.html" class="leaderboard-btn">
+        <!-- Leaderboard Button (Updated Relative Path) -->
+        <a href="./leaderboard.html" class="leaderboard-btn">
           <span>🏆 View Leaderboard</span>
         </a>
       </div>
@@ -645,9 +645,9 @@
           timestamp: Date.now()
         });
         
-        // Auto redirection to leaderboard after 2.5 seconds
+        // Auto redirection to leaderboard (Updated Path)
         setTimeout(() => {
-          window.location.href = "leaderboard.html";
+          window.location.href = "./leaderboard.html";
         }, 2500);
 
       } catch (err) {
