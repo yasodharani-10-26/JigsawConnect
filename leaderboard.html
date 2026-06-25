@@ -6,7 +6,7 @@
   <title>Global Leaderboard | StudyConnect</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
     :root {
@@ -17,7 +17,7 @@
       --text-muted: #94a3b8;
       --accent-cyan: #06b6d4;
       --accent-blue: #2563eb;
-      --gold: #f59e0b;
+      --success: #10b981;
     }
 
     * {
@@ -91,11 +91,14 @@
       margin-bottom: 10px;
     }
 
-    .leaderboard-container {
+    .container {
       max-width: 950px;
       width: 100%;
       margin: 30px auto;
       padding: 0 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
     }
 
     .leaderboard-table {
@@ -146,11 +149,62 @@
     .rank-2 .rank-badge { background: #cbd5e1; color: #000; }
     .rank-3 .rank-badge { background: #b45309; color: #000; }
 
+    /* ==========================================================================
+       ADMIN PANEL STYLES
+       ========================================================================== */
+    .admin-panel {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+    }
+
+    .admin-panel h2 {
+      font-size: 18px;
+      color: var(--accent-cyan);
+      margin-bottom: 12px;
+    }
+
+    .admin-panel p {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 15px;
+    }
+
+    textarea {
+      width: 100%;
+      height: 120px;
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: #fff;
+      padding: 12px;
+      font-family: monospace;
+      font-size: 13px;
+      outline: none;
+      resize: vertical;
+      margin-bottom: 15px;
+    }
+
+    .import-btn {
+      background: var(--success);
+      color: #fff;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .import-btn:hover {
+      opacity: 0.9;
+    }
+
     .loading-text {
       text-align: center;
       padding: 40px;
       color: var(--text-muted);
-      font-size: 16px;
     }
 
     .footer {
@@ -176,26 +230,35 @@
 
   <header class="page-header">
     <h1>🏆 Global Leaderboard</h1>
-    <p style="color: var(--text-muted); margin-top: 5px;">Real-time student assessment performance matrices</p>
+    <p style="color: var(--text-muted); margin-top: 5px;">Real-time HackerRank & Quiz Performance Scoreboard</p>
   </header>
 
-  <main class="leaderboard-container">
+  <main class="container">
+    <!-- LEADERBOARD TABLE -->
     <table class="leaderboard-table">
       <thead>
         <tr>
           <th>Rank</th>
           <th>Student Name</th>
-          <th>Quiz Topic</th>
+          <th>Assessment Type</th>
           <th>Score</th>
-          <th>Efficiency</th>
+          <th>Efficiency Index</th>
         </tr>
       </thead>
       <tbody id="leaderboardBody">
         <tr>
-          <td colspan="5" class="loading-text">Fetching Live Leaderboard Data...</td>
+          <td colspan="5" class="loading-text">Fetching live ecosystem matrix...</td>
         </tr>
       </tbody>
     </table>
+
+    <!-- ADMIN HACKERRANK INJECTOR -->
+    <section class="admin-panel">
+      <h2>⚙️ Admin Panel: HackerRank CSV Import</h2>
+      <p>HackerRank Excel/CSV నుండి డేటాను కాపీ చేసి క్రింది ఫార్మాట్‌లో పేస్ట్ చేయండి: <b>Name, Score, Total</b> (లైన్ కి ఒకరు చొప్పున)</p>
+      <textarea id="csvPasteArea" placeholder="Rajesh Kumar, 80, 100&#10;Sita Rao, 95, 100&#10;Anil Kumar, 60, 100"></textarea>
+      <button id="importBtn" class="import-btn">🚀 Parse & Sync HackerRank Scores</button>
+    </section>
   </main>
 
   <footer class="footer">
@@ -204,7 +267,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
-    import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
+    import { getDatabase, ref, get, set, push } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCaCkliRZk8HmNtOsJpoA084YhNY7MeMWM",
@@ -219,14 +282,17 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
+    // FETCH AND DISPLAY LEADERBOARD
     async function loadLeaderboard() {
       const tbody = document.getElementById("leaderboardBody");
+      if (!tbody) return;
+
       try {
         const snapshot = await get(ref(db, "quizScores"));
         if (snapshot.exists()) {
           const data = snapshot.val();
           
-          // Convert object to array and sort by percentage (descending)
+          // Convert to array and sort by percentage descending
           const scoresArray = Object.values(data).sort((a, b) => b.percentage - a.percentage);
           
           tbody.innerHTML = "";
@@ -242,20 +308,67 @@
             tr.innerHTML = `
               <td><span class="rank-badge">${rank}</span></td>
               <td style="font-weight: 700;">${user.username || 'Anonymous'}</td>
-              <td>${user.quizTitle || 'General'}</td>
+              <td><span style="color: ${user.quizTitle.includes('HackerRank') ? '#2ec866' : '#06b6d4'}; font-weight:600;">${user.quizTitle}</span></td>
               <td>${user.score} / ${user.totalQuestions}</td>
               <td style="color: var(--accent-cyan); font-weight: 700;">${user.percentage}%</td>
             `;
             tbody.appendChild(tr);
           });
         } else {
-          tbody.innerHTML = '<tr><td colspan="5" class="loading-text">No quiz submissions found yet.</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="5" class="loading-text">No assessment data registered yet.</td></tr>';
         }
       } catch (err) {
-        console.error("Error loading leaderboard:", err);
-        tbody.innerHTML = '<tr><td colspan="5" class="loading-text" style="color: red;">Error loading scoreboard data.</td></tr>';
+        console.error("Scoreboard parsing fault:", err);
+        tbody.innerHTML = '<tr><td colspan="5" class="loading-text" style="color: #ef4444;">Ecosystem connection timeout.</td></tr>';
       }
     }
+
+    // PROCESS HACKERRANK DATA INJECTION
+    document.getElementById("importBtn").addEventListener("click", async () => {
+      const textData = document.getElementById("csvPasteArea").value.trim();
+      if (!textData) {
+        alert("⚠️ Please paste valid row data first!");
+        return;
+      }
+
+      const lines = textData.split("\n");
+      let count = 0;
+
+      try {
+        const scoreRef = ref(db, "quizScores");
+
+        for (let line of lines) {
+          const parts = line.split(",");
+          if (parts.length >= 3) {
+            const name = parts[0].trim();
+            const score = parseInt(parts[1].trim(), 10);
+            const total = parseInt(parts[2].trim(), 10);
+            const percentage = Math.round((score / total) * 100);
+
+            if (name && !isNaN(score) && !isNaN(total)) {
+              const newScoreNode = push(scoreRef);
+              await set(newScoreNode, {
+                username: name,
+                quizTitle: "🚀 HackerRank Exam",
+                score: score,
+                totalQuestions: total,
+                percentage: percentage,
+                timestamp: Date.now()
+              });
+              count++;
+            }
+          }
+        }
+
+        alert(`🎉 successfully synchronized ${count} student nodes from HackerRank!`);
+        document.getElementById("csvPasteArea").value = "";
+        loadLeaderboard(); // Automatically refresh UI
+
+      } catch (err) {
+        console.error("Data injection layer failure:", err);
+        alert("❌ Error synchronizing with Firebase.");
+      }
+    });
 
     document.addEventListener("DOMContentLoaded", loadLeaderboard);
   </script>
