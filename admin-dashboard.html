@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -144,7 +144,7 @@
     ========================== */
     .admin-stats {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 24px;
       margin-bottom: 40px;
     }
@@ -205,6 +205,8 @@
     .stat-card:nth-child(2) .stat-icon { color: var(--accent); background: rgba(6, 182, 212, 0.1); }
     .stat-card:nth-child(3) .stat-icon { color: #eab308; background: rgba(234, 179, 8, 0.1); }
     .stat-card:nth-child(4) .stat-icon { color: #10b981; background: rgba(16, 185, 129, 0.1); }
+    .stat-card:nth-child(5) .stat-icon { color: #f43f5e; background: rgba(244, 63, 94, 0.1); }
+    .stat-card:nth-child(6) .stat-icon { color: #a855f7; background: rgba(168, 85, 247, 0.1); }
 
     /* =========================
        PANELS & UTILITIES
@@ -330,20 +332,6 @@
       box-shadow: 0 6px 20px rgba(6, 182, 212, 0.35);
     }
 
-    .btn-danger-sm {
-      background: rgba(239, 68, 68, 0.1);
-      color: var(--danger);
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-size: 12px;
-      border: 1px solid rgba(239, 68, 68, 0.2);
-    }
-
-    .btn-danger-sm:hover {
-      background: var(--danger);
-      color: #fff;
-    }
-
     /* =========================
        TABLE DATA DESIGNS
     ========================== */
@@ -384,12 +372,6 @@
 
     .admin-table tr:hover {
       background: rgba(255, 255, 255, 0.02);
-    }
-
-    #quizContainer {
-      margin-top: 10px;
-      font-size: 14px;
-      color: var(--accent);
     }
 
     /* =========================
@@ -468,6 +450,20 @@
           <div class="stat-label">Scores</div>
         </div>
       </div>
+      <div class="stat-card">
+        <div class="stat-icon">🎤</div>
+        <div class="stat-info">
+          <div class="stat-value" id="seminarCount">0</div>
+          <div class="stat-label">Seminars</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">⏱️</div>
+        <div class="stat-info">
+          <div class="stat-value" id="jamCount">0</div>
+          <div class="stat-label">JAM Slots</div>
+        </div>
+      </div>
     </div>
 
     <div class="dashboard-grid">
@@ -503,146 +499,61 @@
 
       <section class="admin-panel">
         <h2 class="admin-section-title">🔮 Dynamic Operations</h2>
-        
-        <div class="admin-upload-form" style="height: 100%; justify-content: space-between; gap: 24px;">
-          <div style="display:flex; flex-direction:column; gap:16px;">
-            <label style="margin-bottom: -5px;">Interactive Quiz Generation</label>
-            <div class="form-row">
-              <div class="form-group">
-                <input type="text" id="quizTopic" placeholder="Target Topic (e.g., Quantum Physics)">
-              </div>
-              <div class="form-group">
-                <input type="number" id="questionCount" placeholder="Volume of Questions">
-              </div>
-            </div>
-            <button id="generateQuizBtn" type="button" class="btn btn-accent">
-              <span>🚀</span> Generate Dynamic Quiz
-            </button>
-          </div>
-
-          <div id="quizContainer"></div>
-
-          <div style="border-top: 1px solid var(--border); padding-top: 20px;">
-            <label>Algorithmic Team Formations</label>
-            <p style="color: var(--muted); font-size: 13px; margin-bottom: 12px;">Auto-balances teams based on active point leaderboard scoring parameters.</p>
-            <button id="autoCreateTeamsBtn" type="button" class="btn btn-primary" style="width: 100%;">
+        <div class="admin-upload-form" style="height: 100%; justify-content: center; gap: 24px;">
+          <div>
+            <label>Algorithmic HackerRank Team Formations</label>
+            <p style="color: var(--muted); font-size: 13px; margin-bottom: 12px;">Auto-balances teams up to 5 members based on live HackerRank Leaderboard points.</p>
+            <button id="autoCreateTeamsBtn" class="btn btn-primary" style="width: 100%;">
               <span>🤖</span> Initialize Auto-Balancing Engine
             </button>
           </div>
         </div>
       </section>
 
-      <section class="admin-panel panel-fullwidth">
-        <h2 class="admin-section-title">📅 Schedule Live Session (Seminar / JAM)</h2>
-        <form id="sessionForm" class="admin-upload-form">
-          <div class="form-row">
-            <div class="form-group">
-              <label>Session Type</label>
-              <select id="sessionType" required>
-                <option value="seminar">📢 Seminar / Guest Lecture</option>
-                <option value="jam">⏱️ JAM Session (Just A Minute)</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>Topic / Title</label>
-              <input type="text" id="sessionTopic" placeholder="Advanced Node Architectures" required>
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label>Scheduled Date</label>
-              <input type="date" id="sessionDate" required>
-            </div>
-            <div class="form-group">
-              <label>Scheduled Time</label>
-              <input type="time" id="sessionTime" required>
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label>Speaker / Conductor (For Seminars only)</label>
-              <input type="text" id="sessionSpeaker" placeholder="Dr. Sarah Jenkins (Optional for JAM)">
-            </div>
-            <div class="form-group">
-              <label>Live Meeting Link (Zoom / Meet / Teams)</label>
-              <input type="url" id="sessionLink" placeholder="https://meet.google.com/..." required>
-            </div>
-          </div>
-          <button type="submit" class="btn btn-primary" style="background: linear-gradient(135deg, #10b981, #059669);">
-            <span>🚀</span> Broadcast Session to Ecosystem
-          </button>
-        </form>
-      </section>
-
-      <section class="admin-panel panel-fullwidth">
-        <h2 class="admin-section-title">📋 Active Live Sessions Ledger (Seminars & JAM)</h2>
-        <div class="table-container">
-          <table class="admin-table">
-            <thead>
-              <tr>
-                <th>Type</th>
-                <th>Topic / Context</th>
-                <th>Speaker / Conductor</th>
-                <th>Date & Time</th>
-                <th>Link</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody id="sessionsTable">
-              <tr>
-                <td colspan="6" style="text-align:center; color: var(--muted);">Loading broadcast pipelines...</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
       <section class="admin-panel">
-        <h2 class="admin-section-title">📂 Publish New Learning Resource</h2>
-        <form id="resourceForm" class="admin-upload-form">
+        <h2 class="admin-section-title">🎤 Seminar Management</h2>
+        <form id="seminarForm" class="admin-upload-form">
           <div class="form-group">
-            <label>Resource Title</label>
-            <input type="text" id="resourceTitle" placeholder="Data Structures & Algorithms Guide" required>
+            <label>Seminar Topic Title</label>
+            <input type="text" id="seminarTitle" placeholder="Deep Learning Architectures" required>
           </div>
           <div class="form-row">
             <div class="form-group">
-              <label>Resource Type</label>
-              <select id="resourceType" required>
-                <option value="PDF Document">PDF Document</option>
-                <option value="Video Lecture">Video Lecture</option>
-                <option value="External Article">External Article</option>
-                <option value="Dataset File">Dataset File</option>
-              </select>
+              <label>Scheduled Date & Time</label>
+              <input type="datetime-local" id="seminarDateTime" required>
             </div>
             <div class="form-group">
-              <label>Secure URL / Link</label>
-              <input type="url" id="resourceURL" placeholder="https://drive.google.com/..." required>
+              <label>Host Team/Presenter</label>
+              <input type="text" id="seminarHost" placeholder="Team Alpha / Student Name" required>
             </div>
           </div>
           <button type="submit" class="btn btn-accent">
-            <span>🚀</span> Sync Resource to Ecosystem
+            <span>📅</span> Schedule Seminar Session
           </button>
         </form>
       </section>
 
       <section class="admin-panel">
-        <h2 class="admin-section-title">📝 Active Staged Quizzes</h2>
-        <div class="table-container">
-          <table class="admin-table">
-            <thead>
-              <tr>
-                <th>Topic / Context</th>
-                <th>Volume</th>
-                <th>Staged Date</th>
-              </tr>
-            </thead>
-            <tbody id="quizzesTable">
-              <tr>
-                <td colspan="3" style="text-align:center; color: var(--muted);">No quizzes active in pipeline.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <h2 class="admin-section-title">⏱️ JAM (Just A Minute) Controller</h2>
+        <form id="jamForm" class="admin-upload-form">
+          <div class="form-group">
+            <label>Spontaneous JAM Topic</label>
+            <input type="text" id="jamTopicName" placeholder="Impact of AI on Modern Creativity" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Time Cap (Seconds)</label>
+              <input type="number" id="jamDuration" placeholder="60" value="60" required>
+            </div>
+            <div class="form-group">
+              <label>Target Cohort / Team</label>
+              <input type="text" id="jamTarget" placeholder="All Students / Specific Team" required>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary">
+            <span>🔥</span> Dispatch JAM Topic Blueprint
+          </button>
+        </form>
       </section>
 
       <section class="admin-panel panel-fullwidth">
@@ -673,60 +584,40 @@
     &copy; 2026 StudyConnect Platform Ecosystem. All rights reserved.
   </footer>
 
+  <script type="module" src="app.js"></script>
+  
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
-    import { getDatabase, ref, get, set, push, remove } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyCaCkliRZk8HmNtOsJpoA084YhNY7MeMWM",
-      authDomain: "jigsawconnect-677da.firebaseapp.com",
-      databaseURL: "https://jigsawconnect-677da-default-rtdb.asia-southeast1.firebasedatabase.app",
-      projectId: "jigsawconnect-677da",
-      storageBucket: "jigsawconnect-677da.firebasestorage.app",
-      messagingSenderId: "200774226361",
-      appId: "1:200774226361:web:266cb216968403793f6668"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
+    // 💡 సరిచేసిన చోటు: Firebase Functions ఇంపోర్ట్స్ యాడ్ చేసాము మరియు SDK ని కనెక్ట్ చేసాము
+    import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-functions.js";
 
     document.addEventListener("DOMContentLoaded", () => {
-      loadDashboardData();
-      
-      const teamBtn = document.getElementById("autoCreateTeamsBtn");
-      if (teamBtn) teamBtn.addEventListener("click", autoCreateTeams);
+      setTimeout(() => {
+        loadDashboardData();
+        
+        const teamBtn = document.getElementById("autoCreateTeamsBtn");
+        if (teamBtn) teamBtn.addEventListener("click", autoCreateTeams);
 
-      const studentForm = document.getElementById("studentForm");
-      if (studentForm) studentForm.addEventListener("submit", onboardStudent);
+        const studentForm = document.getElementById("studentForm");
+        if (studentForm) studentForm.addEventListener("submit", onboardStudent);
 
-      const quizBtn = document.getElementById("generateQuizBtn");
-      if (quizBtn) quizBtn.addEventListener("click", generateDynamicQuiz);
+        const seminarForm = document.getElementById("seminarForm");
+        if (seminarForm) seminarForm.addEventListener("submit", scheduleSeminar);
 
-      const resourceForm = document.getElementById("resourceForm");
-      if (resourceForm) resourceForm.addEventListener("submit", uploadResource);
-
-      const sessionForm = document.getElementById("sessionForm");
-      if (sessionForm) sessionForm.addEventListener("submit", broadcastSession);
+        const jamForm = document.getElementById("jamForm");
+        if (jamForm) jamForm.addEventListener("submit", dispatchJamSession);
+      }, 500);
     });
-
-    // Make deleteSession globally accessible since it's an inline event inside a module script
-    window.deleteSession = async function(type, id) {
-      if (confirm(`Are you sure you want to delete this ${type === 'seminars' ? 'Seminar' : 'JAM Session'}?`)) {
-        try {
-          await remove(ref(db, `${type}/${id}`));
-          alert("🗑️ Session deleted successfully!");
-          loadDashboardData();
-        } catch (err) {
-          console.error("Error removing session entity:", err);
-          alert("⚠️ Delete request failed.");
-        }
-      }
-    }
 
     /* ==========================================================================
        DYNAMIC DASHBOARD HYDRATION ENGINE
        ========================================================================== */
     async function loadDashboardData() {
+      const { db, ref, get } = window;
+      if (!db || !ref || !get) {
+        console.warn("Ecosystem engine context offline. Retrying setup connection trace...");
+        return;
+      }
+
       try {
         const usersSnap = await get(ref(db, "users"));
         let studentCount = 0;
@@ -738,7 +629,10 @@
           Object.entries(data).forEach(([uid, profile]) => {
             if (profile.role === "student" || !profile.role) {
               studentCount++;
-              if (profile.teamName) uniqueTeams.add(profile.teamName);
+              if (profile.teamName) {
+                const cleanTeamName = profile.teamName.replace(" (Leader)", "").trim();
+                uniqueTeams.add(cleanTeamName);
+              }
 
               rosterHTML += `
                 <tr>
@@ -760,64 +654,17 @@
         document.getElementById("teamCount").innerText = uniqueTeams.size;
         document.getElementById("studentsTable").innerHTML = rosterHTML || `<tr><td colspan="4" style="text-align:center; color: var(--muted);">No student records found inside data layer.</td></tr>`;
 
-        // Hydrate Quizzes Table Matrix
-        const quizSnap = await get(ref(db, "quizzes"));
-        let quizHTML = "";
-        if (quizSnap.exists()) {
-          Object.entries(quizSnap.val()).forEach(([id, quiz]) => {
-            const dateStr = quiz.createdAt ? new Date(quiz.createdAt).toLocaleDateString() : "N/A";
-            quizHTML += `
-              <tr>
-                <td style="color:#fff; font-weight:600;">${escapeHTML(quiz.topic)}</td>
-                <td><span style="color:var(--accent); font-weight:700;">${quiz.totalQuestions} Items</span></td>
-                <td><span style="color:var(--muted); font-size:12px;">${dateStr}</span></td>
-              </tr>
-            `;
-          });
-          document.getElementById("quizzesTable").innerHTML = quizHTML;
-        }
-
-        // Hydrate Live Sessions Table (Seminars & JAM Combined)
-        let sessionsHTML = "";
-        const seminarsSnap = await get(ref(db, "seminars"));
-        if (seminarsSnap.exists()) {
-          Object.entries(seminarsSnap.val()).forEach(([id, s]) => {
-            sessionsHTML += `
-              <tr>
-                <td><span style="color:#10b981; font-weight:700;">📢 Seminar</span></td>
-                <td style="color:#fff; font-weight:600;">${escapeHTML(s.topic)}</td>
-                <td>${escapeHTML(s.speaker || "N/A")}</td>
-                <td><code>${escapeHTML(s.date)} @ ${escapeHTML(s.time)}</code></td>
-                <td><a href="${escapeHTML(s.link)}" target="_blank" style="color:var(--accent); text-decoration:none;">Join Link 🔗</a></td>
-                <td><button onclick="deleteSession('seminars', '${id}')" class="btn btn-danger-sm">Delete</button></td>
-              </tr>
-            `;
-          });
-        }
-
-        const jamSnap = await get(ref(db, "jam_sessions"));
-        if (jamSnap.exists()) {
-          Object.entries(jamSnap.val()).forEach(([id, j]) => {
-            sessionsHTML += `
-              <tr>
-                <td><span style="color:#eab308; font-weight:700;">⏱️ JAM</span></td>
-                <td style="color:#fff; font-weight:600;">${escapeHTML(j.topic)}</td>
-                <td>N/A</td>
-                <td><code>${escapeHTML(j.date)} @ ${escapeHTML(j.time)}</code></td>
-                <td><a href="${escapeHTML(j.link)}" target="_blank" style="color:var(--accent); text-decoration:none;">Join Link 🔗</a></td>
-                <td><button onclick="deleteSession('jam_sessions', '${id}')" class="btn btn-danger-sm">Delete</button></td>
-              </tr>
-            `;
-          });
-        }
-        document.getElementById("sessionsTable").innerHTML = sessionsHTML || `<tr><td colspan="6" style="text-align:center; color: var(--muted);">No scheduled sessions running in workspace.</td></tr>`;
-
-        // Counter Metric Badges Updates
         const resSnap = await get(ref(db, "resources"));
         document.getElementById("resourceCount").innerText = resSnap.exists() ? Object.keys(resSnap.val()).length : 0;
 
         const scoresSnap = await get(ref(db, "quizScores"));
         document.getElementById("scoreCount").innerText = scoresSnap.exists() ? Object.keys(scoresSnap.val()).length : 0;
+
+        const seminarSnap = await get(ref(db, "seminars"));
+        document.getElementById("seminarCount").innerText = seminarSnap.exists() ? Object.keys(seminarSnap.val()).length : 0;
+
+        const jamSnap = await get(ref(db, "jamSessions"));
+        document.getElementById("jamCount").innerText = jamSnap.exists() ? Object.keys(jamSnap.val()).length : 0;
 
       } catch (err) {
         console.error("Critical dashboard ecosystem telemetry fetch exception:", err);
@@ -825,74 +672,69 @@
     }
 
     /* ==========================================================================
-       BROADCAST SEMINAR / JAM SESSION ENGINE
+       SEMINAR SCHEDULER ENGINE
        ========================================================================== */
-    async function broadcastSession(e) {
+    async function scheduleSeminar(e) {
       e.preventDefault();
-      const type = document.getElementById("sessionType").value;
-      const topic = document.getElementById("sessionTopic").value.trim();
-      const date = document.getElementById("sessionDate").value;
-      const time = document.getElementById("sessionTime").value;
-      const speaker = document.getElementById("sessionSpeaker").value.trim() || "N/A";
-      const link = document.getElementById("sessionLink").value.trim();
+      const { db, ref, set } = window;
+      if (!db || !ref || !set) return alert("❌ Connection offline.");
 
-      const nodePath = type === "seminar" ? "seminars" : "jam_sessions";
-      const targetRef = ref(db, nodePath);
-      const newSessionRef = push(targetRef);
+      const title = document.getElementById("seminarTitle").value.trim();
+      const dateTime = document.getElementById("seminarDateTime").value;
+      const host = document.getElementById("seminarHost").value.trim();
+      const seminarKey = "seminar_" + Date.now();
 
       try {
-        const payload = {
-          topic,
-          date,
-          time,
-          link,
-          createdAt: Date.now()
-        };
-        if (type === "seminar") payload.speaker = speaker;
-
-        await set(newSessionRef, payload);
-        alert(`🎉 Live ${type.toUpperCase()} session broadcasted to student grid successfully!`);
-        document.getElementById("sessionForm").reset();
+        await set(ref(db, `seminars/${seminarKey}`), { title, dateTime, host, timestamp: Date.now() });
+        alert(`🎉 Seminar "${title}" has been successfully scheduled!`);
+        document.getElementById("seminarForm").reset();
         loadDashboardData();
       } catch (err) {
-        console.error("Session sync transmission error:", err);
-        alert("⚠️ Cloud sync block: Operation rejected by Firebase cluster.");
+        console.error(err);
+        alert("⚠️ Failed to write seminar architecture to database.");
       }
     }
 
     /* ==========================================================================
-       RESOURCE UPLOADER ENGINE
+       JAM DISPATCH ENGINE
        ========================================================================== */
-    async function uploadResource(e) {
+    async function dispatchJamSession(e) {
       e.preventDefault();
-      const title = document.getElementById("resourceTitle").value.trim();
-      const type = document.getElementById("resourceType").value;
-      const url = document.getElementById("resourceURL").value.trim();
-      const key = "res_" + Date.now();
+      const { db, ref, set } = window;
+      if (!db || !ref || !set) return alert("❌ Connection offline.");
+
+      const topic = document.getElementById("jamTopicName").value.trim();
+      const duration = document.getElementById("jamDuration").value;
+      const target = document.getElementById("jamTarget").value.trim();
+      const jamKey = "jam_" + Date.now();
 
       try {
-        await set(ref(db, `resources/${key}`), {
-          title,
-          type,
-          url,
-          uploadedAt: Date.now()
-        });
-        alert(`🎉 Material "${title}" synced successfully into learning streams.`);
-        document.getElementById("resourceForm").reset();
+        await set(ref(db, `jamSessions/${jamKey}`), { topic, duration, target, status: "active", timestamp: Date.now() });
+        alert(`🔥 JAM Session Topic distributed to active panels: "${topic}"`);
+        document.getElementById("jamForm").reset();
         loadDashboardData();
       } catch (err) {
-        console.error("Resource creation structural block exception:", err);
-        alert("⚠️ Architecture Failure: Firebase structure cluster rejected write transaction pipeline.");
+        console.error(err);
+        alert("⚠️ Failed to initialize JAM workflow data pipeline.");
       }
     }
 
     /* ==========================================================================
-       ALGORITHMIC AUTOMATED BALANCE TEAM SYSTEM
+       ALGORITHMIC AUTOMATED BALANCE TEAM SYSTEM (HACKERRANK - MAX 5 MEMBERS)
        ========================================================================== */
     async function autoCreateTeams() {
+      const { db, ref, get, set } = window;
+      if (!db || !ref || !get || !set) {
+        alert("❌ Error: Firebase environment references are unassigned globally.");
+        return;
+      }
+
       try {
         const snap = await get(ref(db, "users"));
-        if (!snap.exists()) return;
+        if (!snap.exists()) {
+          alert("⚠️ Request Deferred: Roster ledger contains no registered components.");
+          return;
+        }
 
         const users = Object.entries(snap.val())
           .map(([uid, data]) => ({ uid, ...data }))
@@ -903,31 +745,79 @@
           return;
         }
 
-        users.sort((a, b) => (b.score || 0) - (a.score || 0));
+        // 1. HackerRank స్కోర్ల ఆధారంగా Descending Order లో సార్ట్ చేయడం
+        users.sort((a, b) => {
+          const scoreA = a.hackerrankScore !== undefined ? a.hackerrankScore : (a.score || 0);
+          const scoreB = b.hackerrankScore !== undefined ? b.hackerrankScore : (b.score || 0);
+          return scoreB - scoreA;
+        });
 
-        const leaderCount = Math.max(1, Math.min(10, Math.ceil(users.length / 4)));
-        const leaders = users.slice(0, leaderCount);
-        const members = users.slice(leaderCount);
+        const TEAM_SIZE = 5;
+        const totalTeams = Math.ceil(users.length / TEAM_SIZE);
+        const teams = Array.from({ length: totalTeams }, () => []);
 
-        let leaderIndex = 0;
+        // 2. Serpentine/Zig-zag అల్గారిథమ్
+        let teamIndex = 0;
+        let forward = true;
 
-        for (const member of members) {
-          const leader = leaders[leaderIndex];
-          await set(ref(db, `users/${member.uid}/teamLeader`), leader.uid);
-          await set(ref(db, `users/${member.uid}/teamName`), `Team ${leader.name || 'Alpha'}`);
-
-          leaderIndex++;
-          if (leaderIndex >= leaders.length) leaderIndex = 0;
+        for (let i = 0; i < users.length; i++) {
+          teams[teamIndex].push(users[i]);
+          if (forward) {
+            if (teamIndex < totalTeams - 1) {
+              teamIndex++;
+            } else {
+              forward = false;
+            }
+          } else {
+            if (teamIndex > 0) {
+              teamIndex--;
+            } else {
+              forward = true;
+            }
+          }
         }
 
-        for (const leader of leaders) {
-          await set(ref(db, `users/${leader.uid}/teamName`), `Team ${leader.name || 'Alpha'} (Leader)`);
+        // 💡 సరిచేసిన చోటు: ఇక్కడ క్లౌడ్ ఫంక్షన్‌ను సరిగ్గా డిక్లేర్ చేశాము
+        const functions = getFunctions();
+        const createHackerRankTeamFn = httpsCallable(functions, 'createHackerRankTeam');
+
+        // 3. ప్రతి టీమ్‌లో మొదటి ప్లేస్ లో ఉన్న వ్యక్తినే లీడర్ గా పెట్టి డేటాబేస్ లో సేవ్ చేయడం
+        for (let t = 0; t < teams.length; t++) {
+          const currentTeam = teams[t];
+          const teamName = `Team ${t + 1}`;
+          const leader = currentTeam[0];
+
+          // టీమ్ మెంబర్స్ అందరి ఈమెయిల్స్ లిస్ట్ సిద్ధం చేయడం
+          const memberEmails = currentTeam.map(member => member.email || "");
+
+          // A. ఫైర్‌బేస్ రియల్ టైమ్ డేటాబేస్ అప్‌డేట్ లాజిక్
+          for (let m = 0; m < currentTeam.length; m++) {
+            const member = currentTeam[m];
+            const isLeader = m === 0;
+
+            await set(ref(db, `users/${member.uid}/teamName`), isLeader ? `${teamName} (Leader)` : teamName);
+            await set(ref(db, `users/${member.uid}/teamLeader`), leader.uid);
+          }
+
+          // B. క్లౌడ్ ఫంక్షన్ లాజిక్ (HackerRank కోసం)
+          try {
+            console.log(`Sending ${teamName} to Cloud Function...`);
+            const result = await createHackerRankTeamFn({
+              teamName: teamName,
+              leaderEmail: leader.email || "",
+              memberEmails: memberEmails
+            });
+            console.log(`🎯 Backend Response:`, result.data);
+          } catch (cloudError) {
+            console.error(`⚠️ HackerRank లో ${teamName} క్రియేట్ చేయడం విఫలమైంది:`, cloudError);
+          }
         }
 
-        alert("🎯 Balanced Dynamic Teams Generated & Synced Successfully!");
-        loadDashboardData(); 
+        alert(`🎯 లీడర్‌బోర్డ్ టాపర్స్ లీడర్లుగా మొత్తం ${totalTeams} బ్యాలెన్స్‌డ్ టీమ్స్ Firebase మరియు HackerRank లలలో విజయవంతంగా క్రియేట్ అయ్యాయి!`);
+        loadDashboardData();
       } catch (error) {
         console.error("Execution error building team assignments:", error);
+        alert("⚠️ Failed to write dynamically balanced teams matrix to cloud environment.");
       }
     }
 
@@ -936,6 +826,11 @@
        ========================================================================== */
     async function onboardStudent(e) {
       e.preventDefault();
+      const { db, ref, set } = window;
+      if (!db || !ref || !set) {
+        alert("❌ Write Failure: Real-time telemetry core context unavailable.");
+        return;
+      }
 
       const name = document.getElementById("studentName").value.trim();
       const studentId = document.getElementById("studentId").value.trim();
@@ -948,7 +843,8 @@
           studentId,
           email,
           role: "student",
-          score: 0
+          score: 0,
+          hackerrankScore: 0
         });
 
         alert(`🎉 Profile records for ${name} compiled into server architectures successfully!`);
@@ -957,37 +853,6 @@
       } catch (err) {
         console.error("Database schema entry violation:", err);
         alert("⚠️ Transaction Failure: Cloud database rejected write session authorization parameters.");
-      }
-    }
-
-    /* ==========================================================================
-       INTERACTIVE QUIZ GENERATION PROTOTYPE HOOK
-       ========================================================================== */
-    async function generateDynamicQuiz() {
-      const topic = document.getElementById("quizTopic").value.trim();
-      const count = document.getElementById("questionCount").value.trim();
-      const container = document.getElementById("quizContainer");
-
-      if (!topic || !count) {
-        alert("⚠️ Please state a configuration topic and question count target.");
-        return;
-      }
-
-      container.innerHTML = "<em>Constructing algorithmic question matrix traces...</em>";
-
-      try {
-        const generationKey = "quiz_" + Date.now();
-        await set(ref(db, `quizzes/${generationKey}`), {
-          topic: topic,
-          totalQuestions: parseInt(count, 10),
-          createdAt: Date.now()
-        });
-
-        container.innerHTML = `✅ Successfully staged <strong>${escapeHTML(count)}</strong> questions under <strong>"${escapeHTML(topic)}"</strong> context.`;
-        loadDashboardData();
-      } catch (err) {
-        console.error("Quiz routing matrix failure:", err);
-        container.innerHTML = "<span style='color:var(--danger);'>Generation session parameters rejected.</span>";
       }
     }
 
