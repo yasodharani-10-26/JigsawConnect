@@ -587,10 +587,9 @@
   <script type="module" src="app.js"></script>
   
   <script type="module">
-    // 💡 సరిచేసిన చోటు: Firebase Functions ఇంపోర్ట్స్ యాడ్ చేసాము మరియు SDK ని కనెక్ట్ చేసాము
-    import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-functions.js";
+    // ✅ సింక్ చేసిన కరెక్ట్ వెర్షన్ (12.14.0) తో ఇంపోర్ట్ చేసాము
+    import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-functions.js";
 
-import { getApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     document.addEventListener("DOMContentLoaded", () => {
       setTimeout(() => {
         loadDashboardData();
@@ -724,9 +723,15 @@ import { getApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.j
        ALGORITHMIC AUTOMATED BALANCE TEAM SYSTEM (HACKERRANK - MAX 5 MEMBERS)
        ========================================================================== */
     async function autoCreateTeams() {
-      const { db, ref, get, set } = window;
+      const { db, ref, get, set, app } = window;
       if (!db || !ref || !get || !set) {
         alert("❌ Error: Firebase environment references are unassigned globally.");
+        return;
+      }
+
+      // ✅ window context నుండి సురక్షితంగా ఇనిషియలైజ్ చేశాము
+      if (!app) {
+        alert("❌ Error: Core Firebase app is not fully initialized in window context yet.");
         return;
       }
 
@@ -777,24 +782,10 @@ import { getApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.j
             }
           }
         }
-// ✅ సరిచేసిన కొత్త కోడ్:
-let functions;
-try {
-  // app.js లో ఇప్పటికే ఇనిషియలైజ్ అయిన DEFAULT App ని తీసుకుంటుంది
-  const defaultApp = getApp(); 
-  functions = getFunctions(defaultApp);
-} catch (e) {
-  console.warn("Default app not initialized yet, trying window context...", e);
-  // ఒకవేళ window object లో ఉంటే అక్కడ నుండి తీసుకుంటుంది
-  if (window.app) {
-    functions = getFunctions(window.app);
-  } else {
-    // ఒకవేళ ఎక్కడా లేకపోతే నేరుగా default గా ట్రై చేస్తుంది
-    functions = getFunctions(); 
-  }
-}
 
-const createHackerRankTeamFn = httpsCallable(functions, 'createHackerRankTeam');
+        // ✅ కరెక్ట్ పద్ధతిలో గ్లోబల్ విండో యాప్‌తో ఇనిషియలైజ్ చేశాము
+        const functions = getFunctions(app, "asia-southeast1");
+        const createHackerRankTeamFn = httpsCallable(functions, 'createHackerRankTeam');
 
         // 3. ప్రతి టీమ్‌లో మొదటి ప్లేస్ లో ఉన్న వ్యక్తినే లీడర్ గా పెట్టి డేటాబేస్ లో సేవ్ చేయడం
         for (let t = 0; t < teams.length; t++) {
