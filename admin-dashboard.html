@@ -717,150 +717,162 @@
         alert("⚠️ Failed to initialize JAM workflow data pipeline.");
       }
     }
+/* ==========================================================================
+   AUTO TEAM CREATION ENGINE (FULLY FIXED & RE-ARCHITECTED)
+   ========================================================================== */
+async function autoCreateTeams() {
+  const { db, ref, get, set, app } = window;
+  if (!db || !ref || !get || !set) {
+    alert("❌ Error: Firebase environment references are unassigned globally.");
+    return;
+  }
 
-    /* ==========================================================================
-       AUTO TEAM CREATION ENGINE (OPTIMIZED WITH PROMISE.ALL)
-       ========================================================================== */
-    async function autoCreateTeams() {
-      const { db, ref, get, set, app } = window;
-      if (!db || !ref || !get || !set) {
-        alert("❌ Error: Firebase environment references are unassigned globally.");
-        return;
-      }
+  if (!app) {
+    alert("❌ Error: Core Firebase app is not fully initialized in window context yet.");
+    return;
+  }
 
-      if (!app) {
-        alert("❌ Error: Core Firebase app is not fully initialized in window context yet.");
-        return;
-      }
+  try {
+    // 1. Fetch both Website Users and Leaderboard Logs
+    const [usersSnap, leaderboardSnap] = await Promise.all([
+      get(ref(db, "users")),
+      get(ref(db, "leaderboard"))
+    ]);
 
-      try {
-        const [usersSnap, leaderboardSnap] = await Promise.all([
-          get(ref(db, "users")),
-          get(ref(db, "leaderboard"))
-        ]);
+    let allStudentsMap = new Map();
 
-        let allStudentsMap = new Map();
+    // 2. Process HackerRank Leaderboard Data first
+    if (leaderboardSnap.exists()) {
+      const leaderboardData = leaderboardSnap.val();
+      Object.entries(leaderboardData).forEach(([key, student]) => {
+        const studentEmail = (student.email || student.studentEmail || "").trim();
+        if (studentEmail) {
+          const emailKey = studentEmail.toLowerCase();
+          // generate a stable predictable fake UID if not present to avoid collisions
+          const stableHRUid = student.uid || `hr_${btoa(emailKey).replace(/=/g, "").substr(0, 10)}`;
+          
+          allStudentsMap.set(emailKey, {
+            uid: stableHRUid,
+            name: student.name || student.studentName || "HackerRank Student",
+            email: studentEmail,
+            studentId: student.studentId || "HR-STUDENT",
+            hackerrankScore: Number(student.hackerrankScore || student.score || 0),
+            role: "student"
+          });
+        }
+      });
+    }
 
-        if (leaderboardSnap.exists()) {
-          const leaderboardData = leaderboardSnap.val();
-          Object.entries(leaderboardData).forEach(([key, student]) => {
-            const studentEmail = student.email || student.studentEmail || "";
-            if (studentEmail) {
-              allStudentsMap.set(studentEmail.toLowerCase(), {
-                uid: student.uid || `hr_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
-                name: student.name || student.studentName || "HackerRank Student",
-                email: studentEmail,
-                studentId: student.studentId || "HR-STUDENT",
-                hackerrankScore: Number(student.hackerrankScore || student.score || 0),
+    // 3. Blend & Overlay Real Registered Website Users
+    if (usersSnap.exists()) {
+      const usersData = usersSnap.val();
+      Object.entries(usersData).forEach(([uid, profile]) => {
+        if (profile.role === "student" || !profile.role) {
+          const userEmail = (profile.email || "").trim().toLowerCase();
+          if (userEmail) {
+            if (allStudentsMap.has(userEmail)) {
+              let existing = allStudentsMap.get(userEmail);
+              existing.uid = uid; // Merge and upgrade with actual authentic authenticated user UID
+              if (profile.name) existing.name = profile.name;
+              if (profile.studentId) existing.studentId = profile.studentId;
+              allStudentsMap.set(userEmail, existing);
+            } else {
+              allStudentsMap.set(userEmail, {
+                uid: uid,
+                name: profile.name || "Anonymous Learner",
+                email: profile.email,
+                studentId: profile.studentId || "PENDING-REG",
+                hackerrankScore: Number(profile.hackerrankScore || profile.score || 0),
                 role: "student"
               });
             }
-          });
-        }
-
-        if (usersSnap.exists()) {
-          const usersData = usersSnap.val();
-          Object.entries(usersData).forEach(([uid, profile]) => {
-            if (profile.role === "student" || !profile.role) {
-              const userEmail = (profile.email || "").toLowerCase();
-              if (userEmail) {
-                if (allStudentsMap.has(userEmail)) {
-                  let existing = allStudentsMap.get(userEmail);
-                  existing.uid = uid;
-                  if (profile.name) existing.name = profile.name;
-                  if (profile.studentId) existing.studentId = profile.studentId;
-                  allStudentsMap.set(userEmail, existing);
-                } else {
-                  allStudentsMap.set(userEmail, {
-                    uid: uid,
-                    name: profile.name || "Anonymous Learner",
-                    email: profile.email,
-                    studentId: profile.studentId || "PENDING-REG",
-                    hackerrankScore: Number(profile.hackerrankScore || profile.score || 0),
-                    role: "student"
-                  });
-                }
-              }
-            }
-          });
-        }
-
-        const users = Array.from(allStudentsMap.values());
-
-        if (users.length === 0) {
-          alert("⚠️ Request Deferred: No students found in Users or Leaderboard logs.");
-          return;
-        }
-
-        users.sort((a, b) => b.hackerrankScore - a.hackerrankScore);
-
-        const TEAM_SIZE = 5;
-        const totalTeams = Math.ceil(users.length / TEAM_SIZE);
-        const teams = Array.from({ length: totalTeams }, () => []);
-
-        let teamIndex = 0;
-        let forward = true;
-
-        for (let i = 0; i < users.length; i++) {
-          teams[teamIndex].push(users[i]);
-          if (forward) {
-            if (teamIndex < totalTeams - 1) teamIndex++;
-            else forward = false;
-          } else {
-            if (teamIndex > 0) teamIndex--;
-            else forward = true;
           }
         }
+      });
+    }
 
-        const functions = getFunctions(app, "asia-southeast1");
-        const createHackerRankTeamFn = httpsCallable(functions, 'createHackerRankTeam');
+    const users = Array.from(allStudentsMap.values());
 
-        // Parallel Batch Updates using Promise.all for high performance
-        let databasePromises = [];
+    if (users.length === 0) {
+      alert("⚠️ Request Deferred: No students found in Users or Leaderboard logs.");
+      return;
+    }
 
-        for (let t = 0; t < teams.length; t++) {
-          const currentTeam = teams[t];
-          const teamName = `Team ${t + 1}`;
-          const leader = currentTeam[0];
-          const memberEmails = currentTeam.map(m => m.email || "");
+    // 4. Sort descending based on performance score
+    users.sort((a, b) => b.hackerrankScore - a.hackerrankScore);
 
-          for (let m = 0; m < currentTeam.length; m++) {
-            const member = currentTeam[m];
-            const isLeader = m === 0;
+    const TEAM_SIZE = 5;
+    const totalTeams = Math.ceil(users.length / TEAM_SIZE);
+    const teams = Array.from({ length: totalTeams }, () => []);
 
-            databasePromises.push(set(ref(db, `users/${member.uid}/name`), member.name));
-            databasePromises.push(set(ref(db, `users/${member.uid}/email`), member.email));
-            databasePromises.push(set(ref(db, `users/${member.uid}/studentId`), member.studentId));
-            databasePromises.push(set(ref(db, `users/${member.uid}/role`), "student"));
-            databasePromises.push(set(ref(db, `users/${member.uid}/hackerrankScore`), member.hackerrankScore));
-            databasePromises.push(set(ref(db, `users/${member.uid}/teamName`), isLeader ? `${teamName} (Leader)` : teamName));
-            databasePromises.push(set(ref(db, `users/${member.uid}/teamLeader`), leader.uid));
-          }
+    // 5. Serpentine distribution pattern matrix allocation
+    let teamIndex = 0;
+    let forward = true;
 
-          // Cloud Function execution call
-          try {
-            console.log(`Sending ${teamName} to Cloud Function...`);
-            await createHackerRankTeamFn({
-              teamName: teamName,
-              leaderEmail: leader.email || "",
-              memberEmails: memberEmails
-            });
-          } catch (cloudError) {
-            console.error(`⚠️ Cloud function failed for ${teamName}:`, cloudError);
-          }
-        }
-
-        // Complete all Realtime DB writes simultaneously
-        await Promise.all(databasePromises);
-
-        alert(`🎯 సక్సెస్! వెబ్‌సైట్ యూజర్స్ మరియు హాకర్‌రాంక్ ఎగ్జామ్ రాసిన వాళ్ళను కలిపి మొత్తం ${totalTeams} బ్యాలెన్స్‌డ్ టీమ్స్ క్రియేట్ అయ్యాయి!`);
-        loadDashboardData();
-      } catch (error) {
-        console.error("Execution error building team assignments:", error);
-        alert("⚠️ Failed to write dynamically balanced teams matrix to cloud environment.");
+    for (let i = 0; i < users.length; i++) {
+      teams[teamIndex].push(users[i]);
+      if (forward) {
+        if (teamIndex < totalTeams - 1) teamIndex++;
+        else forward = false;
+      } else {
+        if (teamIndex > 0) teamIndex--;
+        else forward = true;
       }
     }
 
+    // Initialize Cloud Functions Connection (Verify your cloud region here!)
+    const functions = getFunctions(app, "asia-southeast1"); 
+    const createHackerRankTeamFn = httpsCallable(functions, 'createHackerRankTeam');
+
+    let databasePromises = [];
+    let cloudFunctionPromises = [];
+
+    // 6. Build operational batches
+    for (let t = 0; t < teams.length; t++) {
+      const currentTeam = teams[t];
+      const teamName = `Team ${t + 1}`;
+      const leader = currentTeam[0];
+      const memberEmails = currentTeam.map(m => m.email || "");
+
+      for (let m = 0; m < currentTeam.length; m++) {
+        const member = currentTeam[m];
+        const isLeader = m === 0;
+
+        // Push updates into structural transaction batch array
+        databasePromises.push(set(ref(db, `users/${member.uid}/name`), member.name));
+        databasePromises.push(set(ref(db, `users/${member.uid}/email`), member.email));
+        databasePromises.push(set(ref(db, `users/${member.uid}/studentId`), member.studentId));
+        databasePromises.push(set(ref(db, `users/${member.uid}/role`), "student"));
+        databasePromises.push(set(ref(db, `users/${member.uid}/hackerrankScore`), member.hackerrankScore));
+        databasePromises.push(set(ref(db, `users/${member.uid}/teamName`), isLeader ? `${teamName} (Leader)` : teamName));
+        databasePromises.push(set(ref(db, `users/${member.uid}/teamLeader`), leader.uid));
+      }
+
+      // Execute Cloud Function asynchronously to prevent locking execution thread loops
+      cloudFunctionPromises.push(
+        createHackerRankTeamFn({
+          teamName: teamName,
+          leaderEmail: leader.email || "",
+          memberEmails: memberEmails
+        }).catch(err => {
+          console.error(`⚠️ Cloud Function failed execution parameters for ${teamName}:`, err);
+          return null; // Resolve safely even if one team fails cloud triggers
+        })
+      );
+    }
+
+    // 7. Fire all promises in parallel context simultaneously
+    console.log("Synchronizing data nodes across systems...");
+    await Promise.all([...databasePromises, ...cloudFunctionPromises]);
+
+    alert(`🎯 సక్సెస్! వెబ్‌సైట్ యూజర్స్ మరియు హాకర్‌రాంక్ ఎగ్జామ్ రాసిన వాళ్ళను కలిపి మొత్తం ${totalTeams} బ్యాలెన్స్‌డ్ టీమ్స్ విజయవంతంగా క్రియేట్ అయ్యి డేటాబేస్ లో సేవ్ అయ్యాయి!`);
+    loadDashboardData();
+  } catch (error) {
+    console.error("Execution error building team assignments matrix logs:", error);
+    alert("⚠️ Failed to write dynamically balanced teams matrix to cloud environment. Console logs check చేయండి.");
+  }
+}
+    
     /* ==========================================================================
        ONBOARD NEW STUDENT HANDLER ENGINE
        ========================================================================== */
