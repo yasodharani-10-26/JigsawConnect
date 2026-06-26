@@ -36,6 +36,7 @@ const auth = getAuth(app);
 
 // Unified Module Export Grid
 export {
+  app, // 💡 ఇక్కడ 'app' ని యాడ్ చేసాము! దీనివల్ల app.js కి గ్లోబల్ కనెక్షన్ దొరుకుతుంది.
   db,
   auth,
   ref,
