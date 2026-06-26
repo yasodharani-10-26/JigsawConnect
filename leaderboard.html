@@ -18,202 +18,53 @@
       --accent-cyan: #06b6d4;
       --accent-blue: #2563eb;
       --success: #10b981;
+      --danger: #ef4444;
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-    }
-
-    body {
-      background: var(--bg);
-      color: var(--text-main);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+    body { background: var(--bg); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
 
     .navbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 18px 6%;
-      background: rgba(11, 15, 25, 0.85);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border);
-      position: sticky;
-      top: 0;
-      z-index: 1000;
+      display: flex; justify-content: space-between; align-items: center; padding: 18px 6%;
+      background: rgba(11, 15, 25, 0.85); backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000;
     }
+    .logo { font-size: 24px; font-weight: 800; color: #fff; text-decoration: none; }
+    .logo span { color: var(--accent-cyan); }
+    .nav-links { display: flex; gap: 24px; align-items: center; }
+    .nav-links a { text-decoration: none; color: var(--text-muted); font-size: 14px; font-weight: 600; }
+    .nav-links a.active { color: var(--accent-cyan); }
 
-    .logo {
-      font-size: 24px;
-      font-weight: 800;
-      color: #fff;
-      text-decoration: none;
-    }
+    .page-header { padding: 40px 24px; text-align: center; background: linear-gradient(135deg, rgba(37, 99, 235, 0.15), rgba(6, 182, 212, 0.05)); border-bottom: 1px solid var(--border); }
+    .page-header h1 { font-size: 2.5rem; font-weight: 800; letter-spacing: -1px; margin-bottom: 10px; }
 
-    .logo span {
-      color: var(--accent-cyan);
-    }
+    .container { max-width: 1000px; width: 100%; margin: 30px auto; padding: 0 24px; display: flex; flex-direction: column; gap: 40px; }
 
-    .nav-links {
-      display: flex;
-      gap: 24px;
-      align-items: center;
-    }
+    .leaderboard-table { width: 100%; border-collapse: collapse; background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.2); }
+    .leaderboard-table th, .leaderboard-table td { padding: 16px 20px; text-align: left; }
+    .leaderboard-table th { background: rgba(15, 23, 42, 0.8); color: var(--accent-cyan); font-weight: 700; font-size: 14px; text-transform: uppercase; border-bottom: 1px solid var(--border); }
+    .leaderboard-table tr { border-bottom: 1px solid var(--border); transition: background 0.2s ease; }
+    .leaderboard-table tr:hover { background: rgba(255, 255, 255, 0.02); }
 
-    .nav-links a {
-      text-decoration: none;
-      color: var(--text-muted);
-      font-size: 14px;
-      font-weight: 600;
-      transition: color 0.2s ease;
-    }
-
-    .nav-links a:hover, .nav-links a.active {
-      color: var(--accent-cyan);
-    }
-
-    .page-header {
-      padding: 40px 24px;
-      text-align: center;
-      background: linear-gradient(135deg, rgba(37, 99, 235, 0.15), rgba(6, 182, 212, 0.05));
-      border-bottom: 1px solid var(--border);
-    }
-
-    .page-header h1 {
-      font-size: 2.5rem;
-      font-weight: 800;
-      letter-spacing: -1px;
-      margin-bottom: 10px;
-    }
-
-    .container {
-      max-width: 950px;
-      width: 100%;
-      margin: 30px auto;
-      padding: 0 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 40px;
-    }
-
-    .leaderboard-table {
-      width: 100%;
-      border-collapse: collapse;
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.2);
-    }
-
-    .leaderboard-table th, .leaderboard-table td {
-      padding: 16px 20px;
-      text-align: left;
-    }
-
-    .leaderboard-table th {
-      background: rgba(15, 23, 42, 0.8);
-      color: var(--accent-cyan);
-      font-weight: 700;
-      font-size: 14px;
-      text-transform: uppercase;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .leaderboard-table tr {
-      border-bottom: 1px solid var(--border);
-      transition: background 0.2s ease;
-    }
-
-    .leaderboard-table tr:hover {
-      background: rgba(255, 255, 255, 0.02);
-    }
-
-    .rank-badge {
-      display: inline-block;
-      width: 28px;
-      height: 28px;
-      line-height: 28px;
-      text-align: center;
-      border-radius: 50%;
-      font-weight: 700;
-      background: rgba(255, 255, 255, 0.1);
-    }
-
+    .rank-badge { display: inline-block; width: 28px; height: 28px; line-height: 28px; text-align: center; border-radius: 50%; font-weight: 700; background: rgba(255, 255, 255, 0.1); }
     .rank-1 .rank-badge { background: #f59e0b; color: #000; }
     .rank-2 .rank-badge { background: #cbd5e1; color: #000; }
     .rank-3 .rank-badge { background: #b45309; color: #000; }
 
-    /* ==========================================================================
-       ADMIN PANEL STYLES
-       ========================================================================== */
-    .admin-panel {
-      background: rgba(15, 23, 42, 0.6);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 24px;
-    }
+    .sync-badge { display: inline-block; padding: 2px 8px; background: rgba(6, 182, 212, 0.15); color: var(--accent-cyan); border-radius: 4px; font-size: 11px; font-weight: 700; }
 
-    .admin-panel h2 {
-      font-size: 18px;
-      color: var(--accent-cyan);
-      margin-bottom: 12px;
-    }
-
-    .admin-panel p {
-      font-size: 13px;
-      color: var(--text-muted);
-      margin-bottom: 15px;
-    }
-
-    textarea {
-      width: 100%;
-      height: 120px;
-      background: #0f172a;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      color: #fff;
-      padding: 12px;
-      font-family: monospace;
-      font-size: 13px;
-      outline: none;
-      resize: vertical;
-      margin-bottom: 15px;
-    }
-
-    .import-btn {
-      background: var(--success);
-      color: #fff;
-      border: none;
-      padding: 12px 24px;
-      border-radius: 10px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: opacity 0.2s;
-    }
-
-    .import-btn:hover {
-      opacity: 0.9;
-    }
-
-    .loading-text {
-      text-align: center;
-      padding: 40px;
-      color: var(--text-muted);
-    }
-
-    .footer {
-      text-align: center;
-      padding: 35px 24px;
-      margin-top: auto;
-      border-top: 1px solid var(--border);
-      color: var(--text-muted);
-    }
+    /* ADMIN PANEL STYLES */
+    .admin-panel { background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border); border-radius: 16px; padding: 24px; }
+    .admin-panel h2 { font-size: 18px; color: var(--accent-cyan); margin-bottom: 12px; }
+    .admin-panel p { font-size: 13px; color: var(--text-muted); margin-bottom: 15px; }
+    
+    .admin-input-group { display: flex; gap: 12px; margin-bottom: 15px; }
+    input[type="text"] { flex: 1; background: #0f172a; border: 1px solid var(--border); border-radius: 10px; color: #fff; padding: 12px; font-size: 14px; outline: none; }
+    
+    .save-btn { background: var(--accent-blue); color: #fff; border: none; padding: 12px 24px; border-radius: 10px; font-weight: 700; cursor: pointer; transition: opacity 0.2s; }
+    .save-btn:hover { opacity: 0.9; }
+    .loading-text { text-align: center; padding: 40px; color: var(--text-muted); }
+    .footer { text-align: center; padding: 35px 24px; margin-top: auto; border-top: 1px solid var(--border); color: var(--text-muted); }
   </style>
 </head>
 <body>
@@ -230,7 +81,7 @@
 
   <header class="page-header">
     <h1>🏆 Global Leaderboard</h1>
-    <p style="color: var(--text-muted); margin-top: 5px;">Real-time HackerRank & Quiz Performance Scoreboard</p>
+    <p style="color: var(--text-muted); margin-top: 5px;">Automated HackerRank Live Scoreboard Sync Engine</p>
   </header>
 
   <main class="container">
@@ -239,35 +90,38 @@
       <thead>
         <tr>
           <th>Rank</th>
-          <th>Student Name</th>
-          <th>Assessment Type</th>
+          <th>Student Name (HR Username)</th>
+          <th>Assessment Source</th>
           <th>Score</th>
-          <th>Efficiency Index</th>
+          <th>Rank Position</th>
         </tr>
       </thead>
       <tbody id="leaderboardBody">
         <tr>
-          <td colspan="5" class="loading-text">Fetching live ecosystem matrix...</td>
+          <td colspan="5" class="loading-text">Connecting to Live Sync Gateway...</td>
         </tr>
       </tbody>
     </table>
 
-    <!-- ADMIN HACKERRANK INJECTOR -->
+    <!-- ADMIN LIVE CONFIGURATOR -->
     <section class="admin-panel">
-      <h2>⚙️ Admin Panel: HackerRank CSV Import</h2>
-      <p>HackerRank Excel/CSV నుండి డేటాను కాపీ చేసి క్రింది ఫార్మాట్‌లో పేస్ట్ చేయండి: <b>Name, Score, Total</b> (లైన్ కి ఒకరు చొప్పున)</p>
-      <textarea id="csvPasteArea" placeholder="Rajesh Kumar, 80, 100&#10;Sita Rao, 95, 100&#10;Anil Kumar, 60, 100"></textarea>
-      <button id="importBtn" class="import-btn">🚀 Parse & Sync HackerRank Scores</button>
+      <h2>⚙️ Admin Live Settings: HackerRank Automator</h2>
+      <p>మీ HackerRank Contest URL లో చివర ఉండే పేరును (Slug) ఇక్కడ ఎంటర్ చేయండి. సిస్టమ్ ఆటోమేటిక్‌గా డేటా సింక్ చేస్తుంది.</p>
+      <div class="admin-input-group">
+        <input type="text" id="contestSlugInput" placeholder="e.g., weekly-coding-contest-2026">
+        <button id="saveSlugBtn" class="save-btn">🔒 Save & Auto-Sync</button>
+      </div>
+      <p style="font-size: 11px; color: #eab308;">💡 బ్రౌజర్ లో పేజీ ఓపెన్ అయిన ప్రతిసారీ హ్యాకర్‌రాంక్ నుండి లేటెస్ట్ మార్కులు ఆటోమేటిక్‌గా అప్‌డేట్ అవుతాయి.</p>
     </section>
   </main>
 
   <footer class="footer">
-    <p>&copy; 2026 StudyConnect | Connect &bull; Collaborate &bull; Succeed 🚀</p>
+    <p>&copy; 2026 StudyConnect | Automated System Deployment 🚀</p>
   </footer>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
-    import { getDatabase, ref, get, set, push } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
+    import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCaCkliRZk8HmNtOsJpoA084YhNY7MeMWM",
@@ -282,110 +136,113 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    // FETCH AND DISPLAY LEADERBOARD
-    async function loadLeaderboard() {
+    // FETCH LIVE DATA FROM HACKERRANK AND SYNC TO FIREBASE
+    async function syncHackerRankData(slug) {
+      if (!slug) return;
+      try {
+        // Using a reliable CORS proxy to hit HackerRank's public API endpoint
+        const proxyUrl = "https://api.allorigins.win/get?url=";
+        const targetUrl = encodeURIComponent(`https://www.hackerrank.com/rest/contests/${slug}/leaderboard?offset=0&limit=50`);
+        
+        const response = await fetch(proxyUrl + targetUrl);
+        if (!response.ok) throw new Error("Proxy connection issue");
+        
+        const wrapper = await response.json();
+        const hrData = JSON.parse(wrapper.contents);
+        
+        if (hrData && hrData.models) {
+          const syncUpdates = {};
+          
+          hrData.models.forEach((row) => {
+            // Unique identifier per student in Firebase node
+            const studentKey = row.username.replace(/[.#$\[\]]/g, "_"); 
+            syncUpdates[studentKey] = {
+              username: row.username,
+              score: row.score,
+              rank: row.rank,
+              contest: slug,
+              timestamp: Date.now()
+            };
+          });
+
+          // Save synced clean data to Firebase node
+          await set(ref(db, "hackerRankLive"), syncUpdates);
+          console.log("HackerRank Cloud Ecosystem Synchronized.");
+        }
+      } catch (err) {
+        console.error("Automated Scraper Stream Interrupted:", err);
+      }
+    }
+
+    // LOAD COMBINED RESULTS IN REAL-TIME
+    async function displayLeaderboard() {
       const tbody = document.getElementById("leaderboardBody");
       if (!tbody) return;
 
+      // 1. First fetch config slug
+      let slug = "";
+      const configSnap = await get(ref(db, "adminConfig/contestSlug"));
+      if (configSnap.exists()) {
+        slug = configSnap.val();
+        document.getElementById("contestSlugInput").value = slug;
+        // Trigger background live sync
+        await syncHackerRankData(slug);
+      }
+
+      // 2. Fetch data from Firebase and draw
       try {
-        const snapshot = await get(ref(db, "quizScores"));
+        const snapshot = await get(ref(db, "hackerRankLive"));
         if (snapshot.exists()) {
           const data = snapshot.val();
-          
-          // Convert to array and sort by percentage descending
-          const scoresArray = Object.values(data).sort((a, b) => b.percentage - a.percentage);
+          // Sort rows by score descending
+          const sortedList = Object.values(data).sort((a, b) => b.score - a.score);
           
           tbody.innerHTML = "";
-          scoresArray.forEach((user, index) => {
-            const rank = index + 1;
+          sortedList.forEach((student, index) => {
+            const currentRank = index + 1;
             let rankClass = "";
-            if (rank === 1) rankClass = "rank-1";
-            else if (rank === 2) rankClass = "rank-2";
-            else if (rank === 3) rankClass = "rank-3";
+            if (currentRank === 1) rankClass = "rank-1";
+            else if (currentRank === 2) rankClass = "rank-2";
+            else if (currentRank === 3) rankClass = "rank-3";
 
             const tr = document.createElement("tr");
             tr.className = rankClass;
-            
-            const quizTitle = user.quizTitle || "Assessment";
-            const isHackerRank = quizTitle.toLowerCase().includes('hackerrank');
-            const titleColor = isHackerRank ? '#2ec866' : '#06b6d4';
 
             tr.innerHTML = `
-              <td><span class="rank-badge">${rank}</span></td>
-              <td style="font-weight: 700;">${user.username || 'Anonymous'}</td>
-              <td><span style="color: ${titleColor}; font-weight:600;">${quizTitle}</span></td>
-              <td>${user.score} / ${user.totalQuestions}</td>
-              <td style="color: var(--accent-cyan); font-weight: 700;">${user.percentage}%</td>
+              <td><span class="rank-badge">${currentRank}</span></td>
+              <td style="font-weight: 700;">${student.username}</td>
+              <td><span class="sync-badge">📡 Live HackerRank</span></td>
+              <td style="color: var(--accent-cyan); font-weight: 700;">${student.score} Pts</td>
+              <td>Rank #${student.rank}</td>
             `;
             tbody.appendChild(tr);
           });
         } else {
-          tbody.innerHTML = '<tr><td colspan="5" class="loading-text">No assessment data registered yet.</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="5" class="loading-text">No active contest tracked. Set slug in admin options below.</td></tr>';
         }
       } catch (err) {
-        console.error("Scoreboard parsing fault:", err);
-        tbody.innerHTML = '<tr><td colspan="5" class="loading-text" style="color: #ef4444;">Ecosystem connection timeout.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="5" class="loading-text" style="color:var(--danger)">Ecosystem runtime error.</td></tr>';
       }
     }
 
-    // PROCESS HACKERRANK DATA INJECTION
-    async function handleImport() {
-      const textData = document.getElementById("csvPasteArea").value.trim();
-      if (!textData) {
-        alert("⚠️ Please paste valid row data first!");
+    // SAVE CONTEST CONFIG
+    document.getElementById("saveSlugBtn").addEventListener("click", async () => {
+      const slugVal = document.getElementById("contestSlugInput").value.trim();
+      if (!slugVal) {
+        alert("⚠️ Please enter a valid contest slug name!");
         return;
       }
-
-      const lines = textData.split("\n");
-      let count = 0;
-
       try {
-        const scoreRef = ref(db, "quizScores");
-
-        for (let line of lines) {
-          line = line.trim();
-          if (!line) continue; // Skip empty lines to prevent crashes
-
-          const parts = line.split(",");
-          if (parts.length >= 3) {
-            const name = parts[0].trim();
-            const score = parseInt(parts[1].trim(), 10);
-            const total = parseInt(parts[2].trim(), 10);
-            const percentage = Math.round((score / total) * 100);
-
-            if (name && !isNaN(score) && !isNaN(total)) {
-              const newScoreNode = push(scoreRef);
-              await set(newScoreNode, {
-                username: name,
-                quizTitle: "🚀 HackerRank Exam",
-                score: score,
-                totalQuestions: total,
-                percentage: percentage,
-                timestamp: Date.now()
-              });
-              count++;
-            }
-          }
-        }
-
-        alert(`🎉 Successfully synchronized ${count} student nodes from HackerRank!`);
-        document.getElementById("csvPasteArea").value = "";
-        loadLeaderboard(); // Automatically refresh UI
-
-      } catch (err) {
-        console.error("Data injection layer failure:", err);
-        alert("❌ Error synchronizing with Firebase.");
+        await set(ref(db, "adminConfig/contestSlug"), slugVal);
+        alert("🔒 Admin configuration updated! Syncing live dashboard now...");
+        displayLeaderboard();
+      } catch(e) {
+        alert("❌ Failed to save config to database layer.");
       }
-    }
+    });
 
-    // INITIALIZE & ATTACH EVENTS IMMEDATELY (Safe for type="module")
-    const importBtn = document.getElementById("importBtn");
-    if (importBtn) {
-      importBtn.addEventListener("click", handleImport);
-    }
-
-    // Call directly instead of listening to DOMContentLoaded since modules run deferred
-    loadLeaderboard();
+    // Initial Trigger
+    displayLeaderboard();
   </script>
 </body>
 </html>
