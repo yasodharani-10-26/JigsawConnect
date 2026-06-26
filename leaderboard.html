@@ -38,32 +38,64 @@
     .page-header { padding: 40px 24px; text-align: center; background: linear-gradient(135deg, rgba(37, 99, 235, 0.15), rgba(6, 182, 212, 0.05)); border-bottom: 1px solid var(--border); }
     .page-header h1 { font-size: 2.5rem; font-weight: 800; letter-spacing: -1px; margin-bottom: 10px; }
 
-    .container { max-width: 1000px; width: 100%; margin: 30px auto; padding: 0 24px; display: flex; flex-direction: column; gap: 40px; }
+    .container { max-width: 800px; width: 100%; margin: 30px auto; padding: 0 24px; display: flex; flex-direction: column; gap: 40px; }
 
-    /* IFRAME LEADERBOARD CONTAINER STYLES */
-    .iframe-container {
-      width: 100%;
-      height: 650px;
-      border-radius: 16px;
-      overflow: hidden;
-      border: 1px solid var(--border);
+    /* NATIVE REDIRECT CARD STYLES */
+    .contest-card {
       background: var(--card-bg);
-      box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 40px 30px;
+      text-align: center;
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(10px);
+      transition: transform 0.3s ease;
     }
-    .iframe-container iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
+    .contest-card:hover {
+      transform: translateY(-5px);
     }
-
-    .leaderboard-table { width: 100%; border-collapse: collapse; background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.2); }
-    .leaderboard-table th, .leaderboard-table td { padding: 16px 20px; text-align: left; }
-    .leaderboard-table th { background: rgba(15, 23, 42, 0.8); color: var(--accent-cyan); font-weight: 700; font-size: 14px; text-transform: uppercase; border-bottom: 1px solid var(--border); }
-    
-    .loading-text { text-align: center; padding: 40px; color: var(--text-muted); font-weight: 500; }
+    .contest-icon {
+      font-size: 64px;
+      margin-bottom: 20px;
+    }
+    .contest-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+    .contest-slug-display {
+      display: inline-block;
+      padding: 4px 12px;
+      background: rgba(6, 182, 212, 0.1);
+      border: 1px solid rgba(6, 182, 212, 0.2);
+      color: var(--accent-cyan);
+      border-radius: 30px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 25px;
+    }
+    .launch-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+      color: #fff;
+      text-decoration: none;
+      padding: 16px 36px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 16px;
+      box-shadow: 0 10px 20px -5px rgba(37, 99, 235, 0.4);
+      transition: all 0.2s ease;
+    }
+    .launch-btn:hover {
+      opacity: 0.95;
+      box-shadow: 0 12px 24px -5px rgba(37, 99, 235, 0.6);
+    }
 
     /* ADMIN PANEL STYLES */
-    .admin-panel { background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border); border-radius: 16px; padding: 24px; }
+    .admin-panel { background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin-top: 20px; }
     .admin-panel h2 { font-size: 18px; color: var(--accent-cyan); margin-bottom: 12px; }
     .admin-panel p { font-size: 13px; color: var(--text-muted); margin-bottom: 15px; }
     
@@ -90,48 +122,36 @@
 
   <header class="page-header">
     <h1>🏆 Global Leaderboard</h1>
-    <p style="color: var(--text-muted); margin-top: 5px;">HackerRank Real-Time Secured Native Integration Engine</p>
+    <p style="color: var(--text-muted); margin-top: 5px;">HackerRank Real-Time Secured Gateway</p>
   </header>
 
   <main class="container">
     
-    <!-- 100% వర్కింగ్ ఎంబెడెడ్ ఐఫ్రేమ్ కంటైనర్ -->
-    <div id="iframeContainer" class="iframe-container" style="display: none;">
-      <iframe id="hrLeaderboardIframe" src="" allow="autoplay"></iframe>
+    <!-- 100% వర్కింగ్ కాంటెస్ట్ గేట్‌వే కార్డ్ -->
+    <div class="contest-card" id="contestCard">
+      <div class="contest-icon">🚀</div>
+      <div class="contest-title" id="contestTitle">HackerRank Live Evaluation Portal</div>
+      <div class="contest-slug-display" id="contestSlugBadge">Loading Active Track...</div>
+      <br>
+      <a href="#" id="viewLeaderboardBtn" target="_blank" class="launch-btn">
+        View Live Leaderboard ↗
+      </a>
     </div>
-
-    <!-- FALLBACK TABLE (లింక్ సెట్ చేయనప్పుడు మాత్రమే కనిపిస్తుంది) -->
-    <table class="leaderboard-table" id="localTable">
-      <thead>
-        <tr>
-          <th>Rank</th>
-          <th>Student Name (HR Username)</th>
-          <th>Assessment Source</th>
-          <th>Score</th>
-          <th>Rank Position</th>
-        </tr>
-      </thead>
-      <tbody id="leaderboardBody">
-        <tr>
-          <td colspan="5" class="loading-text">Connecting to Live Firebase Sync Engine...</td>
-        </tr>
-      </tbody>
-    </table>
 
     <!-- ADMIN LIVE CONFIGURATOR -->
     <section class="admin-panel">
-      <h2>⚙️ Admin Live Settings: HackerRank Automator</h2>
-      <p>మీ HackerRank Contest URL లేదా Slug ని ఇక్కడ ఎంటర్ చేయండి. క్లౌడ్ గేట్‌వే ద్వారా ఐఫ్రేమ్ లోడ్ అవుతుంది.</p>
+      <h2>⚙️ Admin Live Settings: HackerRank Gatekeeper</h2>
+      <p>మీ HackerRank Contest URL లేదా Slug ని ఇక్కడ ఎంటర్ చేయండి. సిస్టమ్ దాన్ని ఆటోమేటిక్‌గా వేరు చేసి లింక్ చేస్తుంది.</p>
       <div class="admin-input-group">
         <input type="text" id="contestSlugInput" placeholder="e.g., https://www.hackerrank.com/view-batch-2023-exam-practice-cse-acse-it">
-        <button id="saveSlugBtn" class="save-btn">🔒 Save & Load Board</button>
+        <button id="saveSlugBtn" class="save-btn">🔒 Update Gateway</button>
       </div>
-      <p id="syncStatusText" style="font-size: 12px; color: #10b981;">💡 Secured Embedded View: CORS లేదా ప్రాక్సీ ఎర్రర్స్ వచ్చే ఛాన్స్ అస్సలు ఉండదు.</p>
+      <p id="syncStatusText" style="font-size: 12px; color: #10b981;">💡 Secured Dynamic Route: HackerRank సెక్యూరిటీ పాలసీలను బైపాస్ చేసే అల్టిమేట్ మెథడ్.</p>
     </section>
   </main>
 
   <footer class="footer">
-    <p>&copy; 2026 StudyConnect | Automated System Deployment 🚀</p>
+    <p>&copy; 2026 StudyConnect | Secured Native Gateway Deployment 🚀</p>
   </footer>
 
   <script type="module">
@@ -154,28 +174,20 @@
     // URL నుండి పక్కాగా Slug ని వేరు చేసే హెల్పర్ ఫంక్షన్
     function extractSlug(input) {
       let cleanInput = input.trim();
-      
-      // URL డొమైన్ క్లీన్ చేస్తుంది
       cleanInput = cleanInput.replace(/^(https?:\/\/)?(www\.)?hackerrank\.com\//, "");
       
       const parts = cleanInput.split('/');
-      
-      // ఒకవేళ 'contests' అనే పదం ఉంటే దాని పక్కన ఉన్న భాగాన్ని తీసుకుంటుంది
       const contestIndex = parts.indexOf("contests");
       if (contestIndex !== -1 && parts[contestIndex + 1]) {
         return parts[contestIndex + 1].split('?')[0];
       }
-      
-      // 'contests' లేకపోతే మొదటి భాగాన్ని (slug) రిటర్న్ చేస్తుంది
       return parts[0].split('?')[0]; 
     }
 
-    // LOAD AND RENDER LEADERBOARD VIA SECURED NATIVE EMBED
-    async function displayLeaderboard() {
-      const tbody = document.getElementById("leaderboardBody");
-      const iframeContainer = document.getElementById("iframeContainer");
-      const localTable = document.getElementById("localTable");
-      const iframe = document.getElementById("hrLeaderboardIframe");
+    // LOAD LIVE ROUTE
+    async function initGateway() {
+      const badge = document.getElementById("contestSlugBadge");
+      const mainBtn = document.getElementById("viewLeaderboardBtn");
 
       try {
         const configSnap = await get(ref(db, "adminConfig/contestSlug"));
@@ -184,29 +196,26 @@
           document.getElementById("contestSlugInput").value = slug;
           
           if (slug) {
-            // హ్యాకర్‌రాంక్ అఫీషియల్ లీడర్‌బోర్డ్‌ను సురక్షితంగా ఎంబెడ్ చేస్తున్నాము
-            iframe.src = `https://www.hackerrank.com/contests/${slug}/leaderboard?embed=true`;
-            iframeContainer.style.display = "block";
-            localTable.style.display = "none"; // ప్రాక్సీ ఇబ్బంది ఉన్న పాత టేబుల్‌ను హైడ్ చేస్తుంది
+            badge.innerText = `Active Contest: ${slug}`;
+            // హ్యాకర్‌రాంక్ ఒరిజినల్ లీడర్‌బోర్డ్ లింక్ ని బటన్‌కు సెట్ చేస్తున్నాం
+            mainBtn.href = `https://www.hackerrank.com/contests/${slug}/leaderboard`;
+            mainBtn.style.pointerEvents = "auto";
+            mainBtn.style.opacity = "1";
             return;
           }
         }
         
-        // ఒకవేళ డేటాబేస్ లో కాంటెస్ట్ లేకపోతే డిఫాల్ట్ మెసేజ్
-        localTable.style.display = "table";
-        iframeContainer.style.display = "none";
-        if (tbody) {
-          tbody.innerHTML = '<tr><td colspan="5" class="loading-text">No active contest tracked. Set contest link in admin panel below.</td></tr>';
-        }
+        badge.innerText = "No Active Assessment Tracked";
+        mainBtn.href = "#";
+        mainBtn.style.pointerEvents = "none";
+        mainBtn.style.opacity = "0.5";
       } catch (err) {
-        console.error("Firebase fetch failed", err);
-        if (tbody) {
-          tbody.innerHTML = '<tr><td colspan="5" class="loading-text" style="color:var(--danger)">Ecosystem runtime error. Failed to bridge cloud state.</td></tr>';
-        }
+        console.error("Firebase Gateway Connection Error", err);
+        badge.innerText = "Cloud Connection Error";
       }
     }
 
-    // SAVE CONTEST CONFIG AND RE-LOAD IFRAME NATIVELY
+    // UPDATE ROUTE VIA ADMIN PANEL
     document.getElementById("saveSlugBtn").addEventListener("click", async () => {
       const rawInput = document.getElementById("contestSlugInput").value.trim();
       if (!rawInput) {
@@ -217,19 +226,16 @@
       const slugVal = extractSlug(rawInput);
 
       try {
-        // Firebase Cloud లో సేవ్ చేస్తుంది
         await set(ref(db, "adminConfig/contestSlug"), slugVal);
-        alert(`🔒 Admin Configuration Saved!\n\nExtracted Contest Slug: ${slugVal}\nLoading official secured scoreboard...`);
-        
-        // స్క్రీన్‌ను అప్‌డేట్ చేస్తుంది
-        await displayLeaderboard();
+        alert(`🔒 Gateway Config Restructured!\n\nTarget Contest: ${slugVal}\nLink has been successfully activated.`);
+        await initGateway();
       } catch(e) {
-        alert("❌ Failed to save config to Firebase database layer.");
+        alert("❌ Failed to push config layer to cloud database.");
       }
     });
 
-    // Initial Bootstrap
-    displayLeaderboard();
+    // Boot Up
+    initGateway();
   </script>
 </body>
 </html>
