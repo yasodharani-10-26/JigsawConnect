@@ -113,6 +113,7 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 12px;
+      margin-bottom: 5px;
     }
 
     .hackerrank-btn {
@@ -179,7 +180,7 @@
       text-transform: uppercase;
     }
 
-    select, input[type="text"], input[type="number"] {
+    select, input[type="text"] {
       width: 100%;
       padding: 12px 16px;
       border-radius: 10px;
@@ -189,29 +190,6 @@
       font-size: 14px;
       outline: none;
       margin-bottom: 12px;
-    }
-
-    .hr-sync-section {
-      margin-top: 15px;
-      padding-top: 15px;
-      border-top: 1px dashed var(--border);
-    }
-
-    .sync-btn {
-      width: 100%;
-      padding: 12px;
-      border: none;
-      border-radius: 10px;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      background: #2ec866;
-      color: #0e141e;
-      transition: all 0.2s ease;
-    }
-
-    .sync-btn:hover {
-      background: #25a753;
     }
 
     /* ==========================================================================
@@ -394,17 +372,6 @@
         <select id="quizDropdown">
           <option value="">-- Choose an Action --</option>
         </select>
-
-        <!-- HackerRank Manual Verified Gate -->
-        <div class="hr-sync-section">
-          <label for="hrScoreInput" style="color: #2ec866;">HackerRank Score (After Exam)</label>
-          <input type="number" id="hrScoreInput" placeholder="Enter your HackerRank Score" min="0" />
-          
-          <label for="hrUsername" style="color: #2ec866;">HackerRank Username / Profile ID</label>
-          <input type="text" id="hrUsername" placeholder="e.g., rajesh_kumar23" />
-          
-          <button type="button" id="submitHRScoreBtn" class="sync-btn">🔗 Submit HackerRank to Leaderboard</button>
-        </div>
       </div>
     </div>
   </header>
@@ -474,12 +441,6 @@
       if (quizForm) {
         quizForm.addEventListener("change", updateLiveProgressHUD);
         quizForm.addEventListener("submit", processQuizSubmission);
-      }
-
-      // Handle HackerRank Score Submission
-      const submitHRBtn = document.getElementById("submitHRScoreBtn");
-      if (submitHRBtn) {
-        submitHRBtn.addEventListener("click", processHackerRankSubmission);
       }
     });
 
@@ -687,54 +648,6 @@
 
       } catch (err) {
         console.error("Leaderboard transmission routing error:", err);
-      }
-    }
-
-    // NEW FUNCTION: Process HackerRank Score Submission to Firebase Database
-    async function processHackerRankSubmission() {
-      const studentNameInput = document.getElementById("studentName");
-      const hrScoreInput = document.getElementById("hrScoreInput");
-      const hrUsernameInput = document.getElementById("hrUsername");
-
-      if (!studentNameInput || !hrScoreInput || !hrUsernameInput) return;
-
-      const studentName = studentNameInput.value.trim();
-      const hrScoreRaw = hrScoreInput.value.trim();
-      const hrUsername = hrUsernameInput.value.trim();
-
-      if (!studentName) {
-        alert("⚠️ Please enter your Name in the 'Enter Your Name' field first.");
-        return;
-      }
-      if (!hrScoreRaw || !hrUsername) {
-        alert("⚠️ Please provide both your HackerRank Score and Profile Username.");
-        return;
-      }
-
-      const score = parseInt(hrScoreRaw, 10);
-      // Assuming a standardized full scale of 100 points for percentage math
-      const totalQuestions = 100; 
-      const percentage = Math.min(Math.round((score / totalQuestions) * 100), 100);
-
-      try {
-        const scoreRef = ref(db, "quizScores");
-        const newScoreNode = push(scoreRef);
-        
-        await set(newScoreNode, {
-          username: `${studentName} (HR: ${hrUsername})`,
-          quizTitle: "HackerRank Practice Exam",
-          score: score,
-          totalQuestions: totalQuestions,
-          percentage: percentage,
-          timestamp: Date.now()
-        });
-
-        alert("🎉 HackerRank metrics uploaded successfully! Routing you to the global ranking leaderboard...");
-        window.location.href = "./leaderboard.html";
-
-      } catch (err) {
-        console.error("Firebase HackerRank link upload failed:", err);
-        alert("❌ Infrastructure routing error. Failed to send data to Firebase.");
       }
     }
   </script>
