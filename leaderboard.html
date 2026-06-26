@@ -135,31 +135,35 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    // URL నుండి కేవలం Slug ని వేరు చేసే హెల్పర్ ఫంక్షన్
+    // పక్కాగా URL నుండి Slug ని మాత్రమే వేరు చేసే పవర్ ఫుల్ హెల్పర్ ఫంక్షన్
     function extractSlug(input) {
       let cleanInput = input.trim();
+      
+      // ఒకవేళ పూర్తి URL ఇస్తే
       if (cleanInput.includes("hackerrank.com/")) {
-        // ఒకవేళ పూర్తి లింక్ ఇస్తే (e.g., https://www.hackerrank.com/contests/my-test-2026/leaderboard)
-        // అది కాంటెస్ట్ పేరును మాత్రమే ఫిల్టర్ చేస్తుంది
+        // URL ని '/' లతో విడగొడతాం
         const parts = cleanInput.split('/');
+        
+        // 'contests' అనే పదం ఎక్కడ ఉందో వెతుకుతాం
         const contestIndex = parts.indexOf("contests");
+        
+        // 'contests' పక్కన ఉన్న పదమే మనకు కావలసిన అసలైన Slug
         if (contestIndex !== -1 && parts[contestIndex + 1]) {
-          return parts[contestIndex + 1];
+          return parts[contestIndex + 1].split('?')[0]; // ఒకవేళ క్వెరీ పారామిటర్స్ ఉంటే తీసేస్తుంది
         }
-        return parts[parts.length - 1] || cleanInput;
       }
-      return cleanInput; // కేవలం slug ఇస్తే అలాగే ఉంచుతుంది
+      // ఒకవేళ ముందే డైరెక్ట్ గా slug ఇస్తే (లింక్ కాకుండా)
+      return cleanInput; 
     }
 
     // FETCH LIVE DATA FROM HACKERRANK AND SYNC TO FIREBASE
     async function syncHackerRankData(slug) {
       if (!slug) return;
       try {
-        // More resilient fallback handling for open proxies
+        // HackerRank లీడర్‌బోర్డ్ పబ్లిక్ API ఎండ్‌పాయింట్
         const targetUrl = `https://www.hackerrank.com/rest/contests/${slug}/leaderboard?offset=0&limit=100`;
-        const b64Url = btoa(targetUrl);
         
-        // Using an alternative open data worker stream
+        // AllOrigins ప్రాక్సీ సర్వర్ ద్వారా రిక్వెస్ట్ పంపుతాం
         const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`);
         if (!response.ok) throw new Error("Sync network gateway failure");
         
@@ -168,6 +172,7 @@
         
         const hrData = JSON.parse(wrapper.contents);
         
+        // హ్యాకర్‌రాంక్ నుండి డేటా వస్తే ఫైర్‌బేస్ లో అప్‌డేట్ చేస్తాం
         if (hrData && hrData.models && hrData.models.length > 0) {
           const syncUpdates = {};
           
@@ -182,11 +187,11 @@
             };
           });
 
-          // Save synced clean data to Firebase node
+          // ఫైర్‌బేస్ లోని hackerRankLive నోడ్ లో డేటా సేవ్ అవుతుంది
           await set(ref(db, "hackerRankLive"), syncUpdates);
           console.log("HackerRank Sync Completed Successfully.");
         } else {
-          console.warn("No data returned from HackerRank API. Check if the contest is public or slug is correct.");
+          console.warn("HackerRank API నుండి డేటా రాలేదు. Slug కరెక్టేనా లేదా కాంటెస్ట్ పబ్లిక్ గా ఉందో లేదో చూడండి.");
         }
       } catch (err) {
         console.error("Automated Scraper Stream Interrupted:", err);
@@ -198,22 +203,22 @@
       const tbody = document.getElementById("leaderboardBody");
       if (!tbody) return;
 
-      // 1. First fetch config slug
+      // 1. మొదట అడ్మిన్ కాన్ఫిగ్ నుండి స్లగ్‌ని తెచ్చుకుంటుంది
       let slug = "";
       const configSnap = await get(ref(db, "adminConfig/contestSlug"));
       if (configSnap.exists()) {
         slug = configSnap.val();
         document.getElementById("contestSlugInput").value = slug;
-        // Trigger background live sync
+        // బ్యాక్‌గ్రౌండ్ లో డేటా సింక్ స్టార్ట్ అవుతుంది
         await syncHackerRankData(slug);
       }
 
-      // 2. Fetch data from Firebase and draw
+      // 2. ఫైర్‌బేస్ నుండి డేటా రీడ్ చేసి టేబుల్ డ్రా చేస్తుంది
       try {
         const snapshot = await get(ref(db, "hackerRankLive"));
         if (snapshot.exists()) {
           const data = snapshot.val();
-          // Sort rows by score descending
+          // స్కోర్ ఆధారంగా డిసెండింగ్ ఆర్డర్ లో సార్ట్ చేస్తుంది
           const sortedList = Object.values(data).sort((a, b) => b.score - a.score);
           
           if(sortedList.length === 0) {
@@ -257,14 +262,14 @@
         return;
       }
 
-      // టెక్స్ట్ నుండి కేవలం Slug ని సేకరిస్తుంది
+      // లింక్ నుండి క్లీన్ Slug ని వేరు చేస్తుంది
       const slugVal = extractSlug(rawInput);
 
       try {
         await set(ref(db, "adminConfig/contestSlug"), slugVal);
-        alert(`🔒 Admin config updated! Extracted Slug: ${slugVal}. Syncing live leaderboard now...`);
+        alert(`🔒 Admin config updated!\nExtracted Slug: ${slugVal}\n\nSyncing live leaderboard now...`);
         
-        // టేబుల్‌ను అప్‌డేట్ చేయడానికి వెంటనే రన్ చేయండి
+        // వెంటనే సింక్ రన్ చేసి టేబుల్ అప్‌డేట్ చేస్తుంది
         await syncHackerRankData(slugVal);
         displayLeaderboard();
       } catch(e) {
