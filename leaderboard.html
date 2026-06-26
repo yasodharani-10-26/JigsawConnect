@@ -118,8 +118,7 @@
   <footer class="footer">
     <p>&copy; 2026 StudyConnect | Automated System Deployment 🚀</p>
   </footer>
-
-  <script type="module">
+<script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
     import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
 
@@ -136,25 +135,43 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
+    // URL నుండి కేవలం Slug ని వేరు చేసే హెల్పర్ ఫంక్షన్
+    function extractSlug(input) {
+      let cleanInput = input.trim();
+      if (cleanInput.includes("hackerrank.com/")) {
+        // ఒకవేళ పూర్తి లింక్ ఇస్తే (e.g., https://www.hackerrank.com/contests/my-test-2026/leaderboard)
+        // అది కాంటెస్ట్ పేరును మాత్రమే ఫిల్టర్ చేస్తుంది
+        const parts = cleanInput.split('/');
+        const contestIndex = parts.indexOf("contests");
+        if (contestIndex !== -1 && parts[contestIndex + 1]) {
+          return parts[contestIndex + 1];
+        }
+        return parts[parts.length - 1] || cleanInput;
+      }
+      return cleanInput; // కేవలం slug ఇస్తే అలాగే ఉంచుతుంది
+    }
+
     // FETCH LIVE DATA FROM HACKERRANK AND SYNC TO FIREBASE
     async function syncHackerRankData(slug) {
       if (!slug) return;
       try {
-        // Using a reliable CORS proxy to hit HackerRank's public API endpoint
-        const proxyUrl = "https://api.allorigins.win/get?url=";
-        const targetUrl = encodeURIComponent(`https://www.hackerrank.com/rest/contests/${slug}/leaderboard?offset=0&limit=50`);
+        // More resilient fallback handling for open proxies
+        const targetUrl = `https://www.hackerrank.com/rest/contests/${slug}/leaderboard?offset=0&limit=100`;
+        const b64Url = btoa(targetUrl);
         
-        const response = await fetch(proxyUrl + targetUrl);
-        if (!response.ok) throw new Error("Proxy connection issue");
+        // Using an alternative open data worker stream
+        const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`);
+        if (!response.ok) throw new Error("Sync network gateway failure");
         
         const wrapper = await response.json();
+        if (!wrapper.contents) return;
+        
         const hrData = JSON.parse(wrapper.contents);
         
-        if (hrData && hrData.models) {
+        if (hrData && hrData.models && hrData.models.length > 0) {
           const syncUpdates = {};
           
           hrData.models.forEach((row) => {
-            // Unique identifier per student in Firebase node
             const studentKey = row.username.replace(/[.#$\[\]]/g, "_"); 
             syncUpdates[studentKey] = {
               username: row.username,
@@ -167,7 +184,9 @@
 
           // Save synced clean data to Firebase node
           await set(ref(db, "hackerRankLive"), syncUpdates);
-          console.log("HackerRank Cloud Ecosystem Synchronized.");
+          console.log("HackerRank Sync Completed Successfully.");
+        } else {
+          console.warn("No data returned from HackerRank API. Check if the contest is public or slug is correct.");
         }
       } catch (err) {
         console.error("Automated Scraper Stream Interrupted:", err);
@@ -197,6 +216,11 @@
           // Sort rows by score descending
           const sortedList = Object.values(data).sort((a, b) => b.score - a.score);
           
+          if(sortedList.length === 0) {
+             tbody.innerHTML = '<tr><td colspan="5" class="loading-text">No active records parsed. Wait for sync...</td></tr>';
+             return;
+          }
+
           tbody.innerHTML = "";
           sortedList.forEach((student, index) => {
             const currentRank = index + 1;
@@ -218,7 +242,7 @@
             tbody.appendChild(tr);
           });
         } else {
-          tbody.innerHTML = '<tr><td colspan="5" class="loading-text">No active contest tracked. Set slug in admin options below.</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="5" class="loading-text">No active contest tracked. Set slug or link in admin options below.</td></tr>';
         }
       } catch (err) {
         tbody.innerHTML = '<tr><td colspan="5" class="loading-text" style="color:var(--danger)">Ecosystem runtime error.</td></tr>';
@@ -227,14 +251,21 @@
 
     // SAVE CONTEST CONFIG
     document.getElementById("saveSlugBtn").addEventListener("click", async () => {
-      const slugVal = document.getElementById("contestSlugInput").value.trim();
-      if (!slugVal) {
-        alert("⚠️ Please enter a valid contest slug name!");
+      const rawInput = document.getElementById("contestSlugInput").value.trim();
+      if (!rawInput) {
+        alert("⚠️ Please enter a valid HackerRank Contest Link or Slug!");
         return;
       }
+
+      // టెక్స్ట్ నుండి కేవలం Slug ని సేకరిస్తుంది
+      const slugVal = extractSlug(rawInput);
+
       try {
         await set(ref(db, "adminConfig/contestSlug"), slugVal);
-        alert("🔒 Admin configuration updated! Syncing live dashboard now...");
+        alert(`🔒 Admin config updated! Extracted Slug: ${slugVal}. Syncing live leaderboard now...`);
+        
+        // టేబుల్‌ను అప్‌డేట్ చేయడానికి వెంటనే రన్ చేయండి
+        await syncHackerRankData(slugVal);
         displayLeaderboard();
       } catch(e) {
         alert("❌ Failed to save config to database layer.");
