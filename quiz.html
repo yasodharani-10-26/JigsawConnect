@@ -10,9 +10,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
-    /* ==========================================================================
-       GLOBAL DESIGN SYSTEM VARIABLES
-       ========================================================================== */
     :root {
       --bg: #0b0f19;
       --card-bg: rgba(20, 30, 54, 0.45);
@@ -86,20 +83,6 @@
       color: var(--accent-cyan);
     }
 
-    .logout-btn {
-      background: rgba(239, 68, 68, 0.1);
-      border: 1px solid rgba(239, 68, 68, 0.2);
-      padding: 8px 16px;
-      border-radius: 10px;
-      color: #ef4444 !important;
-      transition: all 0.2s ease !important;
-    }
-
-    .logout-btn:hover {
-      background: #ef4444 !important;
-      color: #fff !important;
-    }
-
     /* ==========================================================================
        HERO BANNER COMPONENT
        ========================================================================== */
@@ -118,14 +101,74 @@
       margin-bottom: 10px;
     }
 
-    /* Selection Panel Styling */
-    .quiz-selector-panel {
+    .header-actions-wrapper {
       max-width: 500px;
       margin: 20px auto 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .button-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 5px;
+    }
+
+    .hackerrank-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: #2ec866;
+      color: #0e141e;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 14px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(46, 200, 102, 0.2);
+      transition: all 0.25s ease;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .hackerrank-btn:hover {
+      background: #25a753;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(46, 200, 102, 0.35);
+      color: #0e141e;
+    }
+
+    .leaderboard-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 14px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.2);
+      transition: all 0.25s ease;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .leaderboard-btn:hover {
+      background: linear-gradient(135deg, #d97706, #b45309);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(245, 158, 11, 0.35);
+    }
+
+    .quiz-selector-panel {
       background: rgba(15, 23, 42, 0.6);
-      padding: 16px;
+      padding: 20px;
       border-radius: 14px;
       border: 1px solid var(--border);
+      text-align: left;
     }
 
     .quiz-selector-panel label {
@@ -190,7 +233,7 @@
     }
 
     .quiz-container {
-      display: none; /* Hidden until a quiz is selected */
+      display: none;
       flex-direction: column;
       gap: 24px;
     }
@@ -258,7 +301,7 @@
     }
 
     .score-feedback-card.show {
-      display: block;
+      display: block !important;
       animation: smoothCardSlideIn 0.5s ease forwards;
     }
 
@@ -299,24 +342,37 @@
   <nav class="navbar">
     <a href="index.html" class="logo">📚 Study<span>Connect</span></a>
     <div class="nav-links">
-      <a href="student-dashboard.html">Dashboard</a>
-      <a href="resources.html">Resources</a>
-      <a href="leaderboard.html" class="active">Leaderboard</a>
-      <a href="index.html" class="logout-btn">Logout</a>
+      <a href="index.html">Home</a>
+      <a href="discussions.html">Discussions</a>
+      <a href="quiz.html" class="active">Quiz</a>
+      <a href="placements.html">Placements Hub</a>
     </div>
   </nav>
 
   <header class="page-header">
     <h1>📝 Adaptive Assessment Portal</h1>
     
-    <div class="quiz-selector-panel">
-      <label for="studentName">Enter Your Name</label>
-      <input type="text" id="studentName" placeholder="e.g., Rajesh Kumar" required />
+    <div class="header-actions-wrapper">
+      <div class="button-grid">
+        <!-- HackerRank Button -->
+        <a href="https://www.hackerrank.com/view-batch-2023-exam-practice-cse-acse-it" target="_blank" rel="noopener noreferrer" class="hackerrank-btn">
+          <span>🚀 HackerRank Practice</span>
+        </a>
+        <!-- Leaderboard Button -->
+        <a href="./leaderboard.html" class="leaderboard-btn">
+          <span>🏆 View Leaderboard</span>
+        </a>
+      </div>
 
-      <label for="quizDropdown">Select Available Quiz</label>
-      <select id="quizDropdown">
-        <option value="">-- Fetching Live Quizzes... --</option>
-      </select>
+      <div class="quiz-selector-panel">
+        <label for="studentName">Enter Your Name</label>
+        <input type="text" id="studentName" placeholder="e.g., Rajesh Kumar" required />
+
+        <label for="quizDropdown">Select Available Quiz</label>
+        <select id="quizDropdown">
+          <option value="">-- Choose an Action --</option>
+        </select>
+      </div>
     </div>
   </header>
 
@@ -329,7 +385,7 @@
 
     <section id="quizScore" class="score-feedback-card">
       <h2>🎉 Assessment Complete!</h2>
-      <p style="color: var(--text-muted); margin-top: 10px;">Your metric signatures have been successfully compiled into the cloud leaderboard ranking roster.</p>
+      <p style="color: var(--text-muted); margin-top: 10px;">Redirecting you to the global ranking leaderboard matrices...</p>
       <div class="metrics-summary-box">
         <div class="metric-node">
           <span class="metric-label" style="color: var(--success); font-weight: 700;">CORRECT ANSWERS</span>
@@ -377,26 +433,48 @@
       fetchAvailableQuizzes();
 
       const quizDropdown = document.getElementById("quizDropdown");
-      quizDropdown.addEventListener("change", handleQuizSelection);
+      if (quizDropdown) {
+        quizDropdown.addEventListener("change", handleQuizSelection);
+      }
 
       const quizForm = document.getElementById("quizForm");
-      quizForm.addEventListener("change", updateLiveProgressHUD);
-      quizForm.addEventListener("submit", processQuizSubmission);
+      if (quizForm) {
+        quizForm.addEventListener("change", updateLiveProgressHUD);
+        quizForm.addEventListener("submit", processQuizSubmission);
+      }
     });
 
-    // 1. Fetch all quizzes generated by Admin from Firebase
     async function fetchAvailableQuizzes() {
       const dropdown = document.getElementById("quizDropdown");
+      if (!dropdown) return;
+      
       try {
         const snapshot = await get(ref(db, "quizzes"));
         if (snapshot.exists()) {
           dropdown.innerHTML = '<option value="">-- Choose a Quiz to Begin --</option>';
-          Object.entries(snapshot.val()).forEach(([quizId, quizData]) => {
+          const quizData = snapshot.val();
+
+          const appendQuizOption = (id, data) => {
             const option = document.createElement("option");
-            option.value = quizId;
-            option.textContent = `${quizData.topic} (${quizData.totalQuestions} Questions)`;
+            option.value = id;
+            const qCount = data.totalQuestions || 5;
+            option.setAttribute("data-count", qCount);
+            option.setAttribute("data-topic", data.topic || "General Topic");
+            const subjectLabel = data.subject ? `[${data.subject.toUpperCase()}] ` : "";
+            option.textContent = `${subjectLabel}${data.topic || "General"} (${qCount} Questions)`;
             dropdown.appendChild(option);
+          };
+
+          Object.entries(quizData).forEach(([key, nestedData]) => {
+            if (nestedData && nestedData.topic) {
+              appendQuizOption(key, nestedData);
+            } else if (nestedData) {
+              Object.entries(nestedData).forEach(([quizId, internalData]) => {
+                if (internalData) appendQuizOption(quizId, internalData);
+              });
+            }
           });
+
         } else {
           dropdown.innerHTML = '<option value="">No quizzes staged by Admin yet.</option>';
         }
@@ -406,12 +484,15 @@
       }
     }
 
-    // 2. Handle Quiz selection and dynamically render mock algorithmic questions
     function handleQuizSelection(e) {
-      const quizId = e.target.value;
+      const quizDropdown = e.target;
+      const quizId = quizDropdown.value;
       const quizForm = document.getElementById("quizForm");
       const quizHud = document.getElementById("quizHud");
       const questionsContainer = document.getElementById("dynamicQuestionsContainer");
+      const scoreCard = document.getElementById("quizScore");
+
+      if (!quizForm || !quizHud || !questionsContainer || !scoreCard) return;
 
       if (!quizId) {
         quizForm.style.display = "none";
@@ -419,73 +500,112 @@
         return;
       }
 
-      // Read selection configuration details from selected text
-      const selectedOption = e.target.options[e.target.selectedIndex].text;
-      activeQuizTopic = selectedOption.split(" (")[0];
-      const questionsCount = parseInt(selectedOption.match(/\d+/)[0], 10);
+      const selectedOption = quizDropdown.options[quizDropdown.selectedIndex];
+      activeQuizTopic = selectedOption.getAttribute("data-topic") || "General Assessment";
+      const questionsCount = parseInt(selectedOption.getAttribute("data-count"), 10) || 5;
 
-      // Generate simulation mock algorithmic technical question blocks structure based on requested volume
       activeQuizQuestionsData = [];
       questionsContainer.innerHTML = "";
+      scoreCard.classList.remove("show");
 
-      for (let i = 1; i <= questionsCount; i++) {
-        // Mock algorithmic technical question matrix generator
+      const subConcepts = [
+        { title: "Foundational Architecture", type: "system topology blueprints and primary environment variables" },
+        { title: "Data Pipeline Orchestration", type: "state transition metrics and transactional log processing" },
+        { title: "Cryptographic Security Controls", type: "zero-trust validation layers and authorization tokens" },
+        { title: "Throughput Optimization Vectors", type: "latency parsing algorithms and compilation overhead bottlenecks" },
+        { title: "Fault-Tolerant Exception Cascades", type: "isolated boundary failovers and recovery logic trees" },
+        { title: "Elastic Scale Engine Controls", type: "dynamic horizontal load balancing matrices and compute allocation" },
+        { title: "Asynchronous Network Protocols", type: "non-blocking IO multiplexing loops and stream synchronization" },
+        { title: "Granular Memory Mapping Rules", type: "garbage collection thresholds and volatile buffer pools" }
+      ];
+
+      for (let i = 0; i < questionsCount; i++) {
+        const conceptIndex = (i + activeQuizTopic.length) % subConcepts.length;
+        const concept = subConcepts[conceptIndex];
+
+        let questionText = "";
+        if (i % 3 === 0) {
+          questionText = `What is the primary architectural imperative of "${concept.title}" when structuring a high-availability "${activeQuizTopic}" infrastructure node?`;
+        } else if (i % 3 === 1) {
+          questionText = `Under intense simulation stress vectors, how does integrating "${concept.title}" directly prevent operational degradation inside "${activeQuizTopic}"?`;
+        } else {
+          questionText = `Which core operational signature characterizes the deployment of "${concept.title}" within a production-ready "${activeQuizTopic}" runtime schema?`;
+        }
+
+        const baseOptions = [
+          { key: "A", text: `To provision a secure container network topology that sandboxes the ${concept.type}.` },
+          { key: "B", text: `Enforcing precise distributed state telemetry hooks, reducing overhead synchronization anomalies.` },
+          { key: "C", text: `Decoupling computational dependency layers by implementing custom micro-engine wrappers.` },
+          { key: "D", text: `Maximizing synchronous transaction consensus cycles across independent multi-tenant partitions.` }
+        ];
+
+        for (let k = baseOptions.length - 1; k > 0; k--) {
+          const m = Math.floor(Math.random() * (k + 1));
+          [baseOptions[k], baseOptions[m]] = [baseOptions[m], baseOptions[k]];
+        }
+
+        const mappedOptions = {};
+        const letters = ["A", "B", "C", "D"];
+        let finalCorrectLetter = "A";
+
+        baseOptions.forEach((opt, index) => {
+          const currentLetter = letters[index];
+          mappedOptions[currentLetter] = opt.text;
+          if (opt.key === "A") {
+            finalCorrectLetter = currentLetter;
+          }
+        });
+
         const questionItem = {
-          number: i,
-          question: `Adaptive Validation Query ${i}: Evaluate fundamental architectural core properties linked inside "${activeQuizTopic}" context?`,
-          options: {
-            A: `Primary system node pipeline optimization protocols structure option Alpha`,
-            B: `Standard execution routine configuration variables option Beta`,
-            C: `Dynamic network resource synchronization paradigm option Gamma`,
-            D: `None of the optimized framework parameters mentioned above`
-          },
-          correct: ["A", "B", "C", "D"][Math.floor(Math.random() * 4)] // Randomly pre-stage correct key sequence
+          number: i + 1,
+          question: questionText,
+          options: mappedOptions,
+          correct: finalCorrectLetter
         };
         activeQuizQuestionsData.push(questionItem);
 
-        // Append HTML Elements
         const questionDiv = document.createElement("div");
         questionDiv.className = "quiz-question";
-        questionDiv.setAttribute("data-correct", questionItem.correct);
         questionDiv.innerHTML = `
           <h3>${questionItem.number}. ${questionItem.question}</h3>
-          <label><input type="radio" name="q${i}" value="A"> A. ${questionItem.options.A}</label>
-          <label><input type="radio" name="q${i}" value="B"> B. ${questionItem.options.B}</label>
-          <label><input type="radio" name="q${i}" value="C"> C. ${questionItem.options.C}</label>
-          <label><input type="radio" name="q${i}" value="D"> D. ${questionItem.options.D}</label>
+          <label><input type="radio" name="q${questionItem.number}" value="A" required> A. ${questionItem.options.A}</label>
+          <label><input type="radio" name="q${questionItem.number}" value="B"> B. ${questionItem.options.B}</label>
+          <label><input type="radio" name="q${questionItem.number}" value="C"> C. ${questionItem.options.C}</label>
+          <label><input type="radio" name="q${questionItem.number}" value="D"> D. ${questionItem.options.D}</label>
         `;
         questionsContainer.appendChild(questionDiv);
       }
 
-      // Configure HUD Displays
       document.getElementById("hudTopicName").textContent = activeQuizTopic;
-      document.getElementById("hudTotalCount").textContent = questionsCount;
+      document.getElementById("hudTotalCount").textContent = questionsCount.toString();
       document.getElementById("progressCount").textContent = "0";
 
-      // Show Layout Frames
       quizForm.style.display = "flex";
       quizHud.style.display = "flex";
-      document.getElementById("quizScore").classList.remove("show");
     }
 
-    // 3. Update HUD progress metadata counters
     function updateLiveProgressHUD() {
       const quizForm = document.getElementById("quizForm");
+      if (!quizForm) return;
+
       const selectedAnswers = new FormData(quizForm);
       let count = 0;
       for (let key of selectedAnswers.keys()) {
         count++;
       }
-      document.getElementById("progressCount").textContent = count;
+      const progressCountEl = document.getElementById("progressCount");
+      if (progressCountEl) progressCountEl.textContent = count.toString();
     }
 
-    // 4. Process compilation metrics evaluation & record directly onto leaderboard ledger
     async function processQuizSubmission(e) {
       e.preventDefault();
 
-      const studentNameInput = document.getElementById("studentName").value.trim();
-      if (!studentNameInput) {
-        alert("⚠️ Access Blocked: Please validate your Student Identity Name row before compilation submission.");
+      const studentNameInput = document.getElementById("studentName");
+      if (!studentNameInput) return;
+
+      const studentNameInputVal = studentNameInput.value.trim();
+      if (!studentNameInputVal) {
+        alert("⚠️ Access Blocked: Please validate your Student Identity Name before submission.");
         return;
       }
 
@@ -501,7 +621,6 @@
 
       const efficiencyPercentage = Math.round((score / totalQuestions) * 100);
 
-      // Display Local HUD Metrics Score Results Cards Panel
       document.getElementById("scoreValue").textContent = `${score} / ${totalQuestions}`;
       document.getElementById("percentageValue").textContent = `${efficiencyPercentage}%`;
 
@@ -511,19 +630,22 @@
 
       window.scrollTo({ top: 0, behavior: "smooth" });
 
-      // Write Sync Telemetry Packet structure straight to database target ledger node
       try {
         const scoreRef = ref(db, "quizScores");
         const newScoreNode = push(scoreRef);
         await set(newScoreNode, {
-          username: studentNameInput,
+          username: studentNameInputVal,
           quizTitle: activeQuizTopic,
           score: score,
           totalQuestions: totalQuestions,
           percentage: efficiencyPercentage,
           timestamp: Date.now()
         });
-        console.log("Cloud ecosystem synchronized successfully.");
+        
+        setTimeout(() => {
+          window.location.href = "./leaderboard.html";
+        }, 2500);
+
       } catch (err) {
         console.error("Leaderboard transmission routing error:", err);
       }

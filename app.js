@@ -18,7 +18,7 @@ window.get = get;
 window.set = set;
 window.update = update;
 
-console.log("🚀 StudyConnect Core Application Engine Loaded");
+console.log("🚀 JigsawConnect Core Application Engine Loaded");
 
 /* ==========================================================================
    INITIALIZATION CORE
@@ -30,104 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupQuiz();
   setupResources();
   setupLeaderboard();
-  setupAdminOperations();
 });
-
-/* ==========================================================================
-   QUIZ ENGINE & ARTIFICIAL INTELLIGENCE PIPELINE
-   ========================================================================== */
-function setupAdminOperations() {
-  const generateQuizBtn = document.getElementById("generateQuizBtn");
-  if (generateQuizBtn) {
-    generateQuizBtn.addEventListener("click", handleQuizGeneration);
-  }
-}
-
-async function handleQuizGeneration() {
-  const topicInput = document.getElementById("quizTopic");
-  const countInput = document.getElementById("questionCount");
-  const quizContainer = document.getElementById("quizContainer");
-
-  if (!topicInput || !countInput || !quizContainer) return;
-
-  const topic = topicInput.value.trim();
-  const count = parseInt(countInput.value, 10);
-
-  if (!topic || isNaN(count) || count <= 0) {
-    alert("Please enter a valid topic and question volume.");
-    return;
-  }
-
-  quizContainer.innerHTML = `
-    <div style="color: var(--accent); font-weight:600; text-align:center; padding:20px;">
-      🔮 Quantum algorithms weaving questions... Please wait...
-    </div>
-  `;
-
-  try {
-    const response = await fetch("/api/generate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ topic, count })
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.error || `Server responded with status ${response.status}`);
-    }
-
-    let rawText = data.result;
-    if (!rawText) {
-      throw new Error("Missing 'result' property from serverless token stream.");
-    }
-
-    let quizArray = [];
-    if (typeof rawText === "string") {
-      const cleaned = rawText.replace(/```json|```/g, "").trim();
-      quizArray = JSON.parse(cleaned);
-    } else {
-      quizArray = rawText;
-    }
-
-    if (!Array.isArray(quizArray)) {
-      throw new Error("Generative ecosystem failed to return a strict array configuration.");
-    }
-
-    renderQuiz(quizArray, quizContainer);
-
-  } catch (error) {
-    console.error("Quiz Matrix Generation Exception:", error);
-    quizContainer.innerHTML = `
-      <div style="border: 1px solid rgba(239, 68, 68, 0.2); background: rgba(239, 68, 68, 0.05); padding: 16px; border-radius: 8px; color: var(--danger); font-size: 14px;">
-        <strong>Operational Error:</strong> ${error.message}<br>
-        <span style="font-size:12px; color:var(--muted);">Check Vercel Serverless Logs or Gemini API Key status.</span>
-      </div>
-    `;
-  }
-}
-
-function renderQuiz(questions, container) {
-  let html = `<div style="display:flex; flex-direction:column; gap:20px; margin-top:20px;">`;
-  
-  questions.forEach((q, index) => {
-    html += `
-      <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); padding: 18px; border-radius: var(--radius-md);">
-        <p style="font-weight:700; color:#fff; margin-bottom:12px;">Q${index + 1}: ${escapeHTML(q.question)}</p>
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; font-size:13px;">
-          <div><strong style="color:var(--accent)">A:</strong> ${escapeHTML(q.a)}</div>
-          <div><strong style="color:var(--accent)">B:</strong> ${escapeHTML(q.b)}</div>
-          <div><strong style="color:var(--accent)">C:</strong> ${escapeHTML(q.c)}</div>
-          <div><strong style="color:var(--accent)">D:</strong> ${escapeHTML(q.d)}</div>
-        </div>
-        <p style="margin-top:10px; font-size:12px; color:#10b981; font-weight:700;">Correct Answer: ${escapeHTML(q.answer).toUpperCase()}</p>
-      </div>
-    `;
-  });
-
-  html += `</div>`;
-  container.innerHTML = html;
-}
 
 /* ==========================================================================
    AUTHENTICATION & SESSION TRANSACTION LAYERS
@@ -268,7 +171,6 @@ function setupResources() {
       }
 
       container.innerHTML = Object.entries(snap.val()).map(([id, resource]) => {
-        // Safe mapping fallback for url vs link structures
         const finalUrl = resource.url || resource.link || "#";
         return `
           <div class="stat-card" style="flex-direction: column; align-items: flex-start; gap: 8px;">

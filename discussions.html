@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Community Discussions | StudyConnect</title>
+  <title>Community Discussions | JigsawConnect</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -90,7 +90,6 @@
       color: var(--accent);
     }
 
-    /* Highlight style for critical actions */
     .nav-links a.logout-btn {
       color: #f87171;
       padding: 6px 12px;
@@ -136,7 +135,6 @@
       padding: 20px;
     }
 
-    /* Live Telemetry System Cards */
     .stats {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -175,7 +173,6 @@
       letter-spacing: 0.5px;
     }
 
-    /* Structural Glassmorphic Display Blocks */
     .discussion-card {
       background: var(--card-bg);
       backdrop-filter: blur(20px);
@@ -323,6 +320,13 @@
       margin-bottom: 20px;
     }
 
+    .no-threads {
+      text-align: center;
+      padding: 40px;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
     /* ==========================================================================
        FOOTER MATRIX
        ========================================================================== */
@@ -336,9 +340,6 @@
       border-top: 1px solid var(--border);
     }
 
-    /* ==========================================================================
-       RESPONSIVE RESOLUTION ENGINE
-       ========================================================================== */
     @media (max-width: 768px) {
       .navbar {
         padding: 14px 20px;
@@ -369,9 +370,7 @@
 <body>
 
   <nav class="navbar">
-    <a href="index.html" class="logo">
-      📚 Study<span>Connect</span>
-    </a>
+    <a href="index.html" class="logo">📚 Study<span>Connect</span></a>
     <div class="nav-links">
       <a href="student-dashboard.html">Dashboard</a>
       <a href="resources.html">Resources</a>
@@ -390,12 +389,12 @@
 
     <section class="stats">
       <div class="stat-card">
-        <h2>120+</h2>
-        <p>Active Learners</p>
+        <h2 id="totalThreadsCount">0</h2>
+        <p>Knowledge Inquiries</p>
       </div>
       <div class="stat-card">
-        <h2>75+</h2>
-        <p>Knowledge Inquiries</p>
+        <h2>120+</h2>
+        <p>Active Learners</p>
       </div>
       <div class="stat-card">
         <h2>250+</h2>
@@ -410,7 +409,17 @@
       
       <form id="discussionForm">
         <div class="form-group">
-          <label>Discussion Title</label>
+          <label for="studentAuthorName">Your Identity Name</label>
+          <input 
+            type="text" 
+            id="studentAuthorName" 
+            placeholder="e.g., Rajesh Kumar" 
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="discussionTitle">Discussion Title</label>
           <input 
             type="text" 
             id="discussionTitle" 
@@ -420,7 +429,7 @@
         </div>
 
         <div class="form-group">
-          <label>Target Language / Category Tag</label>
+          <label for="discussionCategory">Target Language / Category Tag</label>
           <input 
             type="text" 
             id="discussionCategory" 
@@ -430,7 +439,7 @@
         </div>
 
         <div class="form-group">
-          <label>Deep Context Description</label>
+          <label for="discussionDescription">Deep Context Description</label>
           <textarea 
             rows="5" 
             id="discussionDescription" 
@@ -446,39 +455,7 @@
     </section>
 
     <section id="discussionList">
-
-      <div class="discussion-card">
-        <div class="discussion-top">
-          <div>
-            <h3 class="discussion-title">🔥 How to resolve secure cross-path data calls in Firebase?</h3>
-            <div class="discussion-author">Originated by System Administrator • Today</div>
-          </div>
-          <span class="discussion-tag">Firebase</span>
-        </div>
-        <p class="discussion-body">
-          Currently optimizing batch updates across security domains. Seeking best practices for handling asynchronous data validation hooks during multiple route sets.
-        </p>
-        <button class="btn btn-outline">
-          💬 Provide Solution Reply
-        </button>
-      </div>
-
-      <div class="discussion-card">
-        <div class="discussion-top">
-          <div>
-            <h3 class="discussion-title">📚 Optimal strategies for optimizing complex Tree traversal patterns</h3>
-            <div class="discussion-author">Originated by Peer Student • 1 Hour Ago</div>
-          </div>
-          <span class="discussion-tag">DSA</span>
-        </div>
-        <p class="discussion-body">
-          What is the most effective approach to handling space complexity when dealing with large structural data models across client-side modules?
-        </p>
-        <button class="btn btn-outline">
-          💬 Provide Solution Reply
-        </button>
-      </div>
-
+      <div class="no-threads">Syncing with cloud threads network...</div>
     </section>
   </main>
 
@@ -486,7 +463,97 @@
     © 2026 StudyConnect | Learn • Share • Grow
   </footer>
 
-  <script type="module" src="app.js"></script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+    import { getDatabase, ref, push, set, onValue } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
 
+    // మీ ప్రాజెక్ట్ యొక్క Firebase సమాచారం
+    const firebaseConfig = {
+      apiKey: "AIzaSyCaCkliRZk8HmNtOsJpoA084YhNY7MeMWM",
+      authDomain: "jigsawconnect-677da.firebaseapp.com",
+      databaseURL: "https://jigsawconnect-677da-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "jigsawconnect-677da",
+      storageBucket: "jigsawconnect-677da.firebasestorage.app",
+      messagingSenderId: "200774226361",
+      appId: "1:200774226361:web:266cb216968403793f6668"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    const discussionForm = document.getElementById("discussionForm");
+    const discussionList = document.getElementById("discussionList");
+    const totalThreadsCount = document.getElementById("totalThreadsCount");
+
+    // 1. Firebase నుండి డిస్కషన్ త్రెడ్లను రియల్-టైమ్‌లో రీడ్ చేయడం
+    const dbRef = ref(db, "communityDiscussions");
+    onValue(dbRef, (snapshot) => {
+      discussionList.innerHTML = "";
+      
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        const threads = Object.entries(data).reverse(); // కొత్త పోస్ట్లు పైకి రావడానికి reverse
+        
+        totalThreadsCount.textContent = threads.length;
+
+        threads.forEach(([id, thread]) => {
+          const card = document.createElement("div");
+          card.className = "discussion-card";
+          card.innerHTML = `
+            <div class="discussion-top">
+              <div>
+                <h3 class="discussion-title">${escapeHTML(thread.title)}</h3>
+                <div class="discussion-author">Originated by ${escapeHTML(thread.author)} • ${new Date(thread.timestamp).toLocaleDateString()}</div>
+              </div>
+              <span class="discussion-tag">${escapeHTML(thread.category)}</span>
+            </div>
+            <p class="discussion-body">${escapeHTML(thread.description).replace(/\n/g, '<br>')}</p>
+            <button class="btn btn-outline" onclick="alert('Solution channel coming soon!')">
+              💬 Provide Solution Reply
+            </button>
+          `;
+          discussionList.appendChild(card);
+        });
+      } else {
+        totalThreadsCount.textContent = "0";
+        discussionList.innerHTML = `<div class="no-threads">No discussion threads open yet. Start a new topic above!</div>`;
+      }
+    });
+
+    // 2. కొత్త డిస్కషన్ పోస్ట్ సబ్మిట్ చేయడం
+    discussionForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const author = document.getElementById("studentAuthorName").value.trim();
+      const title = document.getElementById("discussionTitle").value.trim();
+      const category = document.getElementById("discussionCategory").value.trim();
+      const description = document.getElementById("discussionDescription").value.trim();
+
+      try {
+        const newThreadRef = push(ref(db, "communityDiscussions"));
+        await set(newThreadRef, {
+          author: author,
+          title: title,
+          category: category,
+          description: description,
+          timestamp: Date.now()
+        });
+
+        // ఫామ్ రీసెట్ చేయడం
+        discussionForm.reset();
+        alert("📡 Thread published successfully onto cloud feed matrix!");
+      } catch (error) {
+        console.error("Firebase write error: ", error);
+        alert("Failure pushing node matrix to database.");
+      }
+    });
+
+    // సెక్యూరిటీ కోసం XSS ప్రొటెక్షన్ ఫంక్షన్
+    function escapeHTML(str) {
+      return str.replace(/[&<>'"]/g, 
+        tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+      );
+    }
+  </script>
 </body>
 </html>

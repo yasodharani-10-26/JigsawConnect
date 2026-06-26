@@ -121,8 +121,8 @@ function setupLoginForm() {
   form.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    const username = document.getElementById("username").value.trim();
-    const password = document.getElementById("password").value;
+    const username = document.getElementById("username")?.value.trim();
+    const password = document.getElementById("password")?.value;
 
     if (!username || !password) {
       alert("Missing Credentials: Verification entries cannot be blank.");
@@ -152,10 +152,10 @@ function setupRegisterForm() {
   form.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    const name = document.getElementById("name").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const studentId = document.getElementById("studentId").value.trim();
-    const password = document.getElementById("regPassword").value;
+    const name = document.getElementById("name")?.value.trim();
+    const email = document.getElementById("email")?.value.trim();
+    const studentId = document.getElementById("studentId")?.value.trim();
+    const password = document.getElementById("regPassword")?.value;
 
     if (!name || !email || !studentId || !password) {
       alert("Invalid Form Submission: All verification inputs are mandatory.");
@@ -247,11 +247,11 @@ function renderAdminStats() {
 
   tbody.innerHTML = uploaded.map(resource => `
     <tr>
-      <td><strong>${resource.title}</strong></td>
-      <td><span class="chip-type">${resource.type}</span></td>
-      <td>${resource.subject}</td>
-      <td>${resource.fileSize}</td>
-      <td>${resource.date || "—"}</td>
+      <td><strong>${escapeHTML(resource.title)}</strong></td>
+      <td><span class="chip-type">${escapeHTML(resource.type)}</span></td>
+      <td>${escapeHTML(resource.subject)}</td>
+      <td>${escapeHTML(resource.fileSize)}</td>
+      <td>${escapeHTML(resource.date || "—")}</td>
       <td>
         <button type="button" class="btn btn-outline btn-sm admin-delete-btn" data-id="${resource.id}">Remove</button>
       </td>
@@ -282,7 +282,7 @@ function setupResourcesPage() {
   
   const globalPurgeBtn = document.getElementById("deleteAllResourcesBtn");
   if (globalPurgeBtn) {
-    if (Auth.isAdmin()) globalPurgeBtn.style.display = "inline-block";
+    if (Auth.isAdmin()) globalPurgeBtn.style.style.display = "inline-block";
     globalPurgeBtn.addEventListener("click", executeSystemPurge);
   }
 }
@@ -313,8 +313,8 @@ function renderResourceList() {
 
     card.innerHTML = `
       <div class="resource-details">
-        <h3>${res.emoji || getResourceIcon(res.type)} ${res.title}</h3>
-        <p class="meta">${metadataText}</p>
+        <h3>${res.emoji || getResourceIcon(res.type)} ${escapeHTML(res.title)}</h3>
+        <p class="meta">${escapeHTML(metadataText)}</p>
       </div>
       <div class="resource-actions">
         <button type="button" class="btn btn-primary btn-sm download-trigger" data-id="${res.id}">Download</button>
@@ -351,12 +351,12 @@ function setupResourceUploadForm(formId, titleId, typeId, subjectId, fileInputId
       return;
     }
 
-    const title = document.getElementById(titleId).value.trim();
-    const type = document.getElementById(typeId).value;
-    const subject = document.getElementById(subjectId).value.trim();
+    const title = document.getElementById(titleId)?.value.trim();
+    const type = document.getElementById(typeId)?.value;
+    const subject = document.getElementById(subjectId)?.value.trim();
     const fileInput = document.getElementById(fileInputId);
 
-    if (!title || !subject || !fileInput.files[0]) {
+    if (!title || !subject || !fileInput?.files?.[0]) {
       alert("Incomplete Parameter Matrix: Please check all required variables.");
       return;
     }
@@ -468,7 +468,7 @@ function setupDiscussionForum() {
   postSubmitForm.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    const entryText = document.getElementById("newQuestion").value.trim();
+    const entryText = document.getElementById("newQuestion")?.value.trim();
     if (!entryText) {
       alert("Submission Rejected: Message structure cannot be empty.");
       return;
@@ -493,13 +493,13 @@ function assemblePostNode(user, message, chronologicalReplies) {
 
   const stamp = new Date().toLocaleDateString();
   const repliesStackHTML = chronologicalReplies.map(r => `
-    <div class="reply"><strong>${r.author}:</strong> ${r.text}</div>
+    <div class="reply"><strong>${escapeHTML(r.author)}:</strong> ${escapeHTML(r.text)}</div>
   `).join("");
 
   shell.innerHTML = `
-    <p class="author">${user}</p>
-    <p class="date">${stamp}</p>
-    <p class="question-text">${message}</p>
+    <p class="author">${escapeHTML(user)}</p>
+    <p class="date">${escapeHTML(stamp)}</p>
+    <p class="question-text">${escapeHTML(message)}</p>
     <div class="reply-section">
       <div class="replies">${repliesStackHTML}</div>
       <form class="reply-form">
@@ -521,13 +521,15 @@ function assemblePostNode(user, message, chronologicalReplies) {
 
 function processFormReply(formElement) {
   const feedbackInput = formElement.querySelector("input");
-  const valuePayload = feedbackInput.value.trim();
+  const valuePayload = feedbackInput?.value.trim();
   if (!valuePayload) return;
 
   const logsWrapper = formElement.closest(".discussion-post").querySelector(".replies");
+  if (!logsWrapper) return;
+  
   const genericResponseItem = document.createElement("div");
   genericResponseItem.className = "reply";
-  genericResponseItem.innerHTML = `<strong>${Auth.getUsername()}:</strong> ${valuePayload}`;
+  genericResponseItem.innerHTML = `<strong>${escapeHTML(Auth.getUsername())}:</strong> ${escapeHTML(valuePayload)}`;
   
   logsWrapper.appendChild(genericResponseItem);
   formElement.reset();
@@ -571,8 +573,12 @@ function setupQuiz() {
     }
 
     const calculatedPercentage = Math.round((runtimeScore / totalQuestionsCount) * 100);
-    document.getElementById("scoreValue").textContent = `${runtimeScore} / ${totalQuestionsCount}`;
-    document.getElementById("scorePercent").textContent = `${calculatedPercentage}%`;
+    
+    const scoreValueEl = document.getElementById("scoreValue");
+    const scorePercentEl = document.getElementById("scorePercent");
+    
+    if (scoreValueEl) scoreValueEl.textContent = `${runtimeScore} / ${totalQuestionsCount}`;
+    if (scorePercentEl) scorePercentEl.textContent = `${calculatedPercentage}%`;
     
     metricsBox.classList.add("show");
     metricsBox.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -607,6 +613,9 @@ function setupStudyGroups() {
 /* ==========================================================================
    AI HELP & MULTIMODAL DOUBT SOLVER FEATURE
    ========================================================================== */
+// Initialize global audio tracking safely
+window.latestRecordedAudioBlob = null;
+
 function setupDoubtSolver() {
   const solverForm = document.getElementById("doubtSolverForm");
   const solutionDisplay = document.getElementById("solutionDisplay");
@@ -617,7 +626,7 @@ function setupDoubtSolver() {
     e.preventDefault();
 
     const textInput = document.getElementById("doubtText")?.value.trim();
-    const imageInput = document.getElementById("doubtImage")?.files[0];
+    const imageInput = document.getElementById("doubtImage")?.files?.[0];
     const voiceInput = window.latestRecordedAudioBlob;
 
     if (!textInput && !imageInput && !voiceInput) {
@@ -661,7 +670,7 @@ function setupDoubtSolver() {
       console.error("Doubt Solver Exception:", error);
       solutionDisplay.innerHTML = `
         <div style="border: 1px solid rgba(239, 68, 68, 0.2); background: rgba(239, 68, 68, 0.05); padding: 16px; border-radius: 8px; color: var(--danger); font-size: 14px;">
-          <strong>Error Resolving Doubt:</strong> ${error.message}<br>
+          <strong>Error Resolving Doubt:</strong> ${escapeHTML(error.message)}<br>
           <span style="font-size:12px; color:var(--muted);">Check backend endpoints or Gemini API Multi-modal configuration.</span>
         </div>
       `;
@@ -681,7 +690,6 @@ function setupAudioRecorder() {
 
   let mediaRecorder;
   let audioChunks = [];
-  window.latestRecordedAudioBlob = null;
 
   recordBtn.addEventListener("click", async () => {
     if (mediaRecorder && mediaRecorder.state === "recording") {

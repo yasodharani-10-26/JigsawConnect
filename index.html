@@ -54,7 +54,7 @@
       top: -200px;
       left: -200px;
       z-index: -1;
-      pointer-events: none; /* FIXED: Prevents blocking user clicks */
+      pointer-events: none;
     }
 
     body::after {
@@ -68,7 +68,7 @@
       bottom: -200px;
       right: -200px;
       z-index: -1;
-      pointer-events: none; /* FIXED: Prevents blocking user clicks */
+      pointer-events: none;
     }
 
     /* ==========================================================================
@@ -505,15 +505,16 @@
     @media (max-width: 768px) {
       .navbar {
         padding: 16px 24px;
-        flex-wrap: wrap; /* FIXED: Prevents clipping grid parameters */
+        flex-direction: column;
         gap: 16px;
         justify-content: center;
+        text-align: center;
       }
       .nav-links {
         gap: 20px;
       }
-      .hero { padding-top: 180px; }
-      .hero h1 { font-size: 2.75rem; }
+      .hero { padding-top: 220px; }
+      .hero h1 { font-size: 2.5rem; }
       .cta h2 { font-size: 2rem; }
     }
   </style>
@@ -528,6 +529,8 @@
     <div class="nav-links">
       <a href="#features">Features</a>
       <a href="leaderboard.html">Leaderboard</a>
+      <a href="discussions.html">Discussions</a>
+      <a href="placements.html">Placements</a>
     </div>
 
     <div class="nav-actions">
@@ -604,9 +607,9 @@
       </div>
 
       <div class="feature-card">
-        <div class="feature-icon">🎤</div>
-        <h3>Academic Events</h3>
-        <p>Schedule, discover, and trace structural milestones for regional seminars, tech hackathons, and guest keynotes.</p>
+        <div class="feature-icon">💬</div>
+        <h3>Community Discussions</h3>
+        <p>Interact with peers, clear technical queries, and share conceptual frameworks across multiple programming groups.</p>
       </div>
 
       <div class="feature-card">
@@ -655,6 +658,7 @@
         <ul class="footer-links">
           <li><a href="admin-login.html">Admin Portal Login</a></li>
           <li><a href="student-login.html">Student Portal Login</a></li>
+          <li><a href="discussions.html">Community Discussions Feed</a></li>
           <li><a href="leaderboard.html">Global Leaderboard Ledger</a></li>
         </ul>
       </div>
