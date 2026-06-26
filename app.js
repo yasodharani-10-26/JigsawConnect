@@ -1,4 +1,5 @@
 import {
+  app, // 💡 ఇక్కడ 'app' ని యాడ్ చేసాము (మీ firebase.js లో initializeApp చేసిన వేరియబుల్ పేరు)
   auth,
   db,
   ref,
@@ -11,6 +12,7 @@ import {
 // ==========================================================================
 // SCOPE BRIDGE MATRIX (Resolves admin-dashboard.html global reference errors)
 // ==========================================================================
+window.app = app;   // 💡 ఈ లైన్ కొత్తగా యాడ్ చేసాము! దీనివల్ల html పేజీలో getFunctions() కి App దొరుకుతుంది.
 window.auth = auth;
 window.db = db;
 window.ref = ref;
