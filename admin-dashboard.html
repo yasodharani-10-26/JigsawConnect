@@ -587,7 +587,6 @@
   <script type="module" src="app.js"></script>
   
   <script type="module">
-    // ✅ సింక్ చేసిన కరెక్ట్ వెర్షన్ (12.14.0) తో ఇంపోర్ట్ చేసాము
     import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-functions.js";
 
     document.addEventListener("DOMContentLoaded", () => {
@@ -718,6 +717,10 @@
         alert("⚠️ Failed to initialize JAM workflow data pipeline.");
       }
     }
+
+    /* ==========================================================================
+       AUTO TEAM CREATION ENGINE (OPTIMIZED WITH PROMISE.ALL)
+       ========================================================================== */
     async function autoCreateTeams() {
       const { db, ref, get, set, app } = window;
       if (!db || !ref || !get || !set) {
@@ -731,7 +734,6 @@
       }
 
       try {
-        // 1. వెబ్‌సైట్ యూజర్స్ మరియు లీడర్‌బోర్డ్ (HackerRank) డేటా రెండింటినీ ఫెచ్ చేస్తున్నాము
         const [usersSnap, leaderboardSnap] = await Promise.all([
           get(ref(db, "users")),
           get(ref(db, "leaderboard"))
@@ -739,11 +741,9 @@
 
         let allStudentsMap = new Map();
 
-        // 2. మొదట లీడర్‌బోర్డ్ (HackerRank) లో ఉన్న అందరినీ లిస్ట్‌లోకి తీసుకుందాం
         if (leaderboardSnap.exists()) {
           const leaderboardData = leaderboardSnap.val();
           Object.entries(leaderboardData).forEach(([key, student]) => {
-            // ఈమెయిల్ లేదా పేరును బట్టి ఐడెంటిఫై చేయడానికి కీని వాడుకుందాం
             const studentEmail = student.email || student.studentEmail || "";
             if (studentEmail) {
               allStudentsMap.set(studentEmail.toLowerCase(), {
@@ -758,7 +758,6 @@
           });
         }
 
-        // 3. వెబ్‌సైట్ లో రిజిస్టర్ అయిన యూజర్స్ డేటాను కూడా కలిపి అప్‌డేట్ చేద్దాం
         if (usersSnap.exists()) {
           const usersData = usersSnap.val();
           Object.entries(usersData).forEach(([uid, profile]) => {
@@ -766,14 +765,12 @@
               const userEmail = (profile.email || "").toLowerCase();
               if (userEmail) {
                 if (allStudentsMap.has(userEmail)) {
-                  // ఒకవేళ ఆల్రెడీ లీడర్‌బోర్డ్‌లో ఉంటే, వెబ్‌సైట్ UID మరియు పక్కా వివరాలను అప్‌డేట్ చేస్తాం
                   let existing = allStudentsMap.get(userEmail);
                   existing.uid = uid;
                   if (profile.name) existing.name = profile.name;
                   if (profile.studentId) existing.studentId = profile.studentId;
                   allStudentsMap.set(userEmail, existing);
                 } else {
-                  // లీడర్‌బోర్డ్‌లో లేకపోయినా వెబ్‌సైట్‌లో ఉంటే వారిని కూడా యాడ్ చేస్తాం
                   allStudentsMap.set(userEmail, {
                     uid: uid,
                     name: profile.name || "Anonymous Learner",
@@ -788,7 +785,6 @@
           });
         }
 
-        // Map నుండి లిస్ట్ లాగా మార్చడం
         const users = Array.from(allStudentsMap.values());
 
         if (users.length === 0) {
@@ -796,14 +792,12 @@
           return;
         }
 
-        // 4. HackerRank స్కోర్ల ఆధారంగా Descending Order లో సార్ట్ చేయడం
         users.sort((a, b) => b.hackerrankScore - a.hackerrankScore);
 
         const TEAM_SIZE = 5;
         const totalTeams = Math.ceil(users.length / TEAM_SIZE);
         const teams = Array.from({ length: totalTeams }, () => []);
 
-        // 5. Serpentine/Zig-zag అల్గారిథమ్ ద్వారా టీమ్స్ విడగొట్టడం
         let teamIndex = 0;
         let forward = true;
 
@@ -821,7 +815,9 @@
         const functions = getFunctions(app, "asia-southeast1");
         const createHackerRankTeamFn = httpsCallable(functions, 'createHackerRankTeam');
 
-        // 6. ప్రతి టీమ్‌ను డేటాబేస్ లో సేవ్ చేయడం మరియు క్లౌడ్ ఫంక్షన్ రన్ చేయడం
+        // Parallel Batch Updates using Promise.all for high performance
+        let databasePromises = [];
+
         for (let t = 0; t < teams.length; t++) {
           const currentTeam = teams[t];
           const teamName = `Team ${t + 1}`;
@@ -832,18 +828,16 @@
             const member = currentTeam[m];
             const isLeader = m === 0;
 
-            // వెబ్‌సైట్ మరియు హాకర్‌రాంక్ స్టూడెంట్స్ ఇద్దరికీ ఒకేలా ఫైర్‌బేస్‌లో టీమ్స్ అసైన్ చేయడం
-            // ఒకవేళ యూజర్ ఫైర్‌బేస్ లో లేకపోతే కొత్తగా క్రియేట్ అవుతుంది, ఉంటే అప్‌డేట్ అవుతుంది
-            await set(ref(db, `users/${member.uid}/name`), member.name);
-            await set(ref(db, `users/${member.uid}/email`), member.email);
-            await set(ref(db, `users/${member.uid}/studentId`), member.studentId);
-            await set(ref(db, `users/${member.uid}/role`), "student");
-            await set(ref(db, `users/${member.uid}/hackerrankScore`), member.hackerrankScore);
-            await set(ref(db, `users/${member.uid}/teamName`), isLeader ? `${teamName} (Leader)` : teamName);
-            await set(ref(db, `users/${member.uid}/teamLeader`), leader.uid);
+            databasePromises.push(set(ref(db, `users/${member.uid}/name`), member.name));
+            databasePromises.push(set(ref(db, `users/${member.uid}/email`), member.email));
+            databasePromises.push(set(ref(db, `users/${member.uid}/studentId`), member.studentId));
+            databasePromises.push(set(ref(db, `users/${member.uid}/role`), "student"));
+            databasePromises.push(set(ref(db, `users/${member.uid}/hackerrankScore`), member.hackerrankScore));
+            databasePromises.push(set(ref(db, `users/${member.uid}/teamName`), isLeader ? `${teamName} (Leader)` : teamName));
+            databasePromises.push(set(ref(db, `users/${member.uid}/teamLeader`), leader.uid));
           }
 
-          // క్లౌడ్ ఫంక్షన్ ట్రిగ్గర్
+          // Cloud Function execution call
           try {
             console.log(`Sending ${teamName} to Cloud Function...`);
             await createHackerRankTeamFn({
@@ -855,6 +849,9 @@
             console.error(`⚠️ Cloud function failed for ${teamName}:`, cloudError);
           }
         }
+
+        // Complete all Realtime DB writes simultaneously
+        await Promise.all(databasePromises);
 
         alert(`🎯 సక్సెస్! వెబ్‌సైట్ యూజర్స్ మరియు హాకర్‌రాంక్ ఎగ్జామ్ రాసిన వాళ్ళను కలిపి మొత్తం ${totalTeams} బ్యాలెన్స్‌డ్ టీమ్స్ క్రియేట్ అయ్యాయి!`);
         loadDashboardData();
@@ -878,6 +875,7 @@
       const name = document.getElementById("studentName").value.trim();
       const studentId = document.getElementById("studentId").value.trim();
       const email = document.getElementById("studentEmail").value.trim();
+      const password = document.getElementById("studentPassword").value; // Added password field mapping
       const generationKey = "user_" + Date.now();
 
       try {
@@ -885,6 +883,7 @@
           name,
           studentId,
           email,
+          password, // Added password to object schema matching HTML form
           role: "student",
           score: 0,
           hackerrankScore: 0
