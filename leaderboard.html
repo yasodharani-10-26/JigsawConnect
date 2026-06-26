@@ -136,16 +136,23 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
+    // పక్కాగా కేవలం Slug ని మాత్రమే ఫిల్టర్ చేసే సరికొత్త హెల్పర్ ఫంక్షన్
     function extractSlug(input) {
       let cleanInput = input.trim();
-      if (cleanInput.includes("hackerrank.com/")) {
-        const parts = cleanInput.split('/');
-        const contestIndex = parts.indexOf("contests");
-        if (contestIndex !== -1 && parts[contestIndex + 1]) {
-          return parts[contestIndex + 1].split('?')[0];
-        }
+      
+      // URL ని క్లీన్ చేస్తుంది (http://, https://, trailing slashes తీసేస్తుంది)
+      cleanInput = cleanInput.replace(/^(https?:\/\/)?(www\.)?hackerrank\.com\//, "");
+      
+      const parts = cleanInput.split('/');
+      
+      // ఒకవేళ 'contests' పదం ఉంటే దాని పక్కదానిని తీసుకుంటుంది
+      const contestIndex = parts.indexOf("contests");
+      if (contestIndex !== -1 && parts[contestIndex + 1]) {
+        return parts[contestIndex + 1].split('?')[0];
       }
-      return cleanInput; 
+      
+      // 'contests' లేకపోతే మొదటి భాగాన్నే (slug) తీసుకుంటుంది
+      return parts[0].split('?')[0]; 
     }
 
     // MULTI-PROXY ROBUST AUTO-SYNC ENGINE
@@ -154,13 +161,13 @@
       const statusText = document.getElementById("syncStatusText");
       if (statusText) statusText.innerHTML = "⏳ Background Sync Running... Fetching live updates.";
 
+      // ఇప్పడు కరెక్ట్ URL జెనరేట్ అవుతుంది
       const targetUrl = `https://www.hackerrank.com/rest/contests/${slug}/leaderboard?offset=0&limit=100`;
       
-      // 3 వేర్వేరు ప్రాక్సీల లింకులు - ఒకటి ఫెయిల్ అయినా ఇంకొకటి పనిచేస్తుంది
+      // వర్కింగ్ ప్రాక్సీలు
       const proxies = [
         `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`,
-        `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`,
-        `https://thingproxy.freeboard.io/fetch/${targetUrl}`
+        `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`
       ];
 
       for (let i = 0; i < proxies.length; i++) {
@@ -191,9 +198,9 @@
               };
             });
 
-            // డేటాను నేరుగా ఫైర్‌బేస్‌కు పంపి సేవ్ చేస్తుంది
+            // ఫైర్‌బేస్ రియల్‌టైమ్ క్లౌడ్‌లోకి ఆటోమేటిక్ సేవ్
             await set(ref(db, "hackerRankLive"), syncUpdates);
-            console.log("Auto-Sync Complete. Firebase Updated.");
+            console.log("Auto-Sync Complete. Firebase Updated Successfully.");
             if (statusText) statusText.innerHTML = "✅ Live Sync Successful! Scores updated in Firebase.";
             return true;
           }
@@ -202,7 +209,7 @@
         }
       }
 
-      if (statusText) statusText.innerHTML = "⚠️ Live Sync could not bypass restriction automatically. Showing cached data.";
+      if (statusText) statusText.innerHTML = "⚠️ Live Sync restriction detected. Double check if contest is public.";
       return false;
     }
 
@@ -216,7 +223,6 @@
       if (configSnap.exists()) {
         slug = configSnap.val();
         document.getElementById("contestSlugInput").value = slug;
-        // మొదట బ్యాక్‌గ్రౌండ్ ఆటో-సింక్ రన్ అవుతుంది
         await syncHackerRankData(slug);
       }
 
