@@ -305,10 +305,15 @@
 
             const tr = document.createElement("tr");
             tr.className = rankClass;
+            
+            const quizTitle = user.quizTitle || "Assessment";
+            const isHackerRank = quizTitle.toLowerCase().includes('hackerrank');
+            const titleColor = isHackerRank ? '#2ec866' : '#06b6d4';
+
             tr.innerHTML = `
               <td><span class="rank-badge">${rank}</span></td>
               <td style="font-weight: 700;">${user.username || 'Anonymous'}</td>
-              <td><span style="color: ${user.quizTitle.includes('HackerRank') ? '#2ec866' : '#06b6d4'}; font-weight:600;">${user.quizTitle}</span></td>
+              <td><span style="color: ${titleColor}; font-weight:600;">${quizTitle}</span></td>
               <td>${user.score} / ${user.totalQuestions}</td>
               <td style="color: var(--accent-cyan); font-weight: 700;">${user.percentage}%</td>
             `;
@@ -324,7 +329,7 @@
     }
 
     // PROCESS HACKERRANK DATA INJECTION
-    document.getElementById("importBtn").addEventListener("click", async () => {
+    async function handleImport() {
       const textData = document.getElementById("csvPasteArea").value.trim();
       if (!textData) {
         alert("⚠️ Please paste valid row data first!");
@@ -338,6 +343,9 @@
         const scoreRef = ref(db, "quizScores");
 
         for (let line of lines) {
+          line = line.trim();
+          if (!line) continue; // Skip empty lines to prevent crashes
+
           const parts = line.split(",");
           if (parts.length >= 3) {
             const name = parts[0].trim();
@@ -360,7 +368,7 @@
           }
         }
 
-        alert(`🎉 successfully synchronized ${count} student nodes from HackerRank!`);
+        alert(`🎉 Successfully synchronized ${count} student nodes from HackerRank!`);
         document.getElementById("csvPasteArea").value = "";
         loadLeaderboard(); // Automatically refresh UI
 
@@ -368,9 +376,16 @@
         console.error("Data injection layer failure:", err);
         alert("❌ Error synchronizing with Firebase.");
       }
-    });
+    }
 
-    document.addEventListener("DOMContentLoaded", loadLeaderboard);
+    // INITIALIZE & ATTACH EVENTS IMMEDATELY (Safe for type="module")
+    const importBtn = document.getElementById("importBtn");
+    if (importBtn) {
+      importBtn.addEventListener("click", handleImport);
+    }
+
+    // Call directly instead of listening to DOMContentLoaded since modules run deferred
+    loadLeaderboard();
   </script>
 </body>
 </html>
