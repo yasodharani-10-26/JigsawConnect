@@ -627,7 +627,6 @@
             if (profile.role === "student" || !profile.role) {
               studentCount++;
               if (profile.teamName) {
-                // Remove (Leader) suffix if present to evaluate true unique team count
                 const cleanTeamName = profile.teamName.replace(" (Leader)", "").trim();
                 uniqueTeams.add(cleanTeamName);
               }
@@ -743,7 +742,7 @@
           return;
         }
 
-        // Sort primarily by hackerrankScore; fallback to quiz score or 0 if unassigned
+        // 1. HackerRank స్కోర్ల ఆధారంగా Descending Order లో సార్ట్ చేయడం (ఎక్కువ నుండి తక్కువకి)
         users.sort((a, b) => {
           const scoreA = a.hackerrankScore !== undefined ? a.hackerrankScore : (a.score || 0);
           const scoreB = b.hackerrankScore !== undefined ? b.hackerrankScore : (b.score || 0);
@@ -754,9 +753,11 @@
         const totalTeams = Math.ceil(users.length / TEAM_SIZE);
         const teams = Array.from({ length: totalTeams }, () => []);
 
-        // Distribute balanced distribution using a serpentine (S-Curve) matrix model
-        let forward = true;
+        // 2. Serpentine/Zig-zag అల్గారిథమ్ ఉపయోగించి సమానంగా పంచడం
+        // దీని ద్వారా టాప్ స్టూడెంట్స్ విడివిడిగా ప్రతి టీమ్ కి మొదటి మెంబర్ (లీడర్) అవుతారు.
+        // డల్ గా ఉన్న స్టూడెంట్స్ అందరూ ఒకే టీమ్ లో పడకుండా ప్రతి టీమ్ కీ సమానంగా డిస్ట్రిబ్యూట్ అవుతారు.
         let teamIndex = 0;
+        let forward = true;
 
         for (let i = 0; i < users.length; i++) {
           teams[teamIndex].push(users[i]);
@@ -775,22 +776,22 @@
           }
         }
 
-        // Write team metrics back into Realtime Sync Database Engine
+        // 3. ప్రతి టీమ్‌లో మొదటి ప్లేస్ లో ఉన్న వ్యక్తినే లీడర్ గా పెట్టి డేటాబేస్ లో సేవ్ చేయడం
         for (let t = 0; t < teams.length; t++) {
           const currentTeam = teams[t];
           const teamName = `Team ${t + 1}`;
-          const leader = currentTeam[0]; // Top score in that specific dynamic cluster
+          const leader = currentTeam[0]; // ప్రతి గ్రూపులో ఉన్న హ్యాకర్‌రాంక్ టాపర్ ఇతనే!
 
           for (let m = 0; m < currentTeam.length; m++) {
             const member = currentTeam[m];
-            const isLeader = m === 0;
+            const isLeader = m === 0; // ఫస్ట్ ఇండెక్స్ వాడికి మాత్రమే లీడర్ స్టేటస్
 
             await set(ref(db, `users/${member.uid}/teamName`), isLeader ? `${teamName} (Leader)` : teamName);
             await set(ref(db, `users/${member.uid}/teamLeader`), leader.uid);
           }
         }
 
-        alert(`🎯 Balanced HackerRank Teams (Max 5 members each) generated successfully! Total Teams: ${totalTeams}`);
+        alert(`🎯 లీడర్‌బోర్డ్ టాపర్స్ లీడర్లుగా, మిగిలిన వారితో కలిసి మొత్తం ${totalTeams} పక్కా బ్యాలెన్స్‌డ్ టీమ్స్ (గరిష్టంగా 5 గురు) విజయవంతంగా క్రియేట్ అయ్యాయి!`);
         loadDashboardData();
       } catch (error) {
         console.error("Execution error building team assignments:", error);
