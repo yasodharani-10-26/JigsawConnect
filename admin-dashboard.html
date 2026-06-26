@@ -587,6 +587,9 @@
   <script type="module" src="app.js"></script>
   
   <script type="module">
+    // 💡 సరిచేసిన చోటు: Firebase Functions ఇంపోర్ట్స్ యాడ్ చేసాము మరియు SDK ని కనెక్ట్ చేసాము
+    import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-functions.js";
+
     document.addEventListener("DOMContentLoaded", () => {
       setTimeout(() => {
         loadDashboardData();
@@ -742,7 +745,7 @@
           return;
         }
 
-        // 1. HackerRank స్కోర్ల ఆధారంగా Descending Order లో సార్ట్ చేయడం (ఎక్కువ నుండి తక్కువకి)
+        // 1. HackerRank స్కోర్ల ఆధారంగా Descending Order లో సార్ట్ చేయడం
         users.sort((a, b) => {
           const scoreA = a.hackerrankScore !== undefined ? a.hackerrankScore : (a.score || 0);
           const scoreB = b.hackerrankScore !== undefined ? b.hackerrankScore : (b.score || 0);
@@ -753,9 +756,7 @@
         const totalTeams = Math.ceil(users.length / TEAM_SIZE);
         const teams = Array.from({ length: totalTeams }, () => []);
 
-        // 2. Serpentine/Zig-zag అల్గారిథమ్ ఉపయోగించి సమానంగా పంచడం
-        // దీని ద్వారా టాప్ స్టూడెంట్స్ విడివిడిగా ప్రతి టీమ్ కి మొదటి మెంబర్ (లీడర్) అవుతారు.
-        // డల్ గా ఉన్న స్టూడెంట్స్ అందరూ ఒకే టీమ్ లో పడకుండా ప్రతి టీమ్ కీ సమానంగా డిస్ట్రిబ్యూట్ అవుతారు.
+        // 2. Serpentine/Zig-zag అల్గారిథమ్
         let teamIndex = 0;
         let forward = true;
 
@@ -776,22 +777,43 @@
           }
         }
 
+        // 💡 సరిచేసిన చోటు: ఇక్కడ క్లౌడ్ ఫంక్షన్‌ను సరిగ్గా డిక్లేర్ చేశాము
+        const functions = getFunctions();
+        const createHackerRankTeamFn = httpsCallable(functions, 'createHackerRankTeam');
+
         // 3. ప్రతి టీమ్‌లో మొదటి ప్లేస్ లో ఉన్న వ్యక్తినే లీడర్ గా పెట్టి డేటాబేస్ లో సేవ్ చేయడం
         for (let t = 0; t < teams.length; t++) {
           const currentTeam = teams[t];
           const teamName = `Team ${t + 1}`;
-          const leader = currentTeam[0]; // ప్రతి గ్రూపులో ఉన్న హ్యాకర్‌రాంక్ టాపర్ ఇతనే!
+          const leader = currentTeam[0];
 
+          // టీమ్ మెంబర్స్ అందరి ఈమెయిల్స్ లిస్ట్ సిద్ధం చేయడం
+          const memberEmails = currentTeam.map(member => member.email || "");
+
+          // A. ఫైర్‌బేస్ రియల్ టైమ్ డేటాబేస్ అప్‌డేట్ లాజిక్
           for (let m = 0; m < currentTeam.length; m++) {
             const member = currentTeam[m];
-            const isLeader = m === 0; // ఫస్ట్ ఇండెక్స్ వాడికి మాత్రమే లీడర్ స్టేటస్
+            const isLeader = m === 0;
 
             await set(ref(db, `users/${member.uid}/teamName`), isLeader ? `${teamName} (Leader)` : teamName);
             await set(ref(db, `users/${member.uid}/teamLeader`), leader.uid);
           }
+
+          // B. క్లౌడ్ ఫంక్షన్ లాజిక్ (HackerRank కోసం)
+          try {
+            console.log(`Sending ${teamName} to Cloud Function...`);
+            const result = await createHackerRankTeamFn({
+              teamName: teamName,
+              leaderEmail: leader.email || "",
+              memberEmails: memberEmails
+            });
+            console.log(`🎯 Backend Response:`, result.data);
+          } catch (cloudError) {
+            console.error(`⚠️ HackerRank లో ${teamName} క్రియేట్ చేయడం విఫలమైంది:`, cloudError);
+          }
         }
 
-        alert(`🎯 లీడర్‌బోర్డ్ టాపర్స్ లీడర్లుగా, మిగిలిన వారితో కలిసి మొత్తం ${totalTeams} పక్కా బ్యాలెన్స్‌డ్ టీమ్స్ (గరిష్టంగా 5 గురు) విజయవంతంగా క్రియేట్ అయ్యాయి!`);
+        alert(`🎯 లీడర్‌బోర్డ్ టాపర్స్ లీడర్లుగా మొత్తం ${totalTeams} బ్యాలెన్స్‌డ్ టీమ్స్ Firebase మరియు HackerRank లలలో విజయవంతంగా క్రియేట్ అయ్యాయి!`);
         loadDashboardData();
       } catch (error) {
         console.error("Execution error building team assignments:", error);
