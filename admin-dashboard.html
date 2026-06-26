@@ -499,11 +499,10 @@
 
       <section class="admin-panel">
         <h2 class="admin-section-title">🔮 Dynamic Operations</h2>
-        
         <div class="admin-upload-form" style="height: 100%; justify-content: center; gap: 24px;">
           <div>
-            <label>Algorithmic Team Formations</label>
-            <p style="color: var(--muted); font-size: 13px; margin-bottom: 12px;">Auto-balances teams based on active point leaderboard scoring parameters.</p>
+            <label>Algorithmic HackerRank Team Formations</label>
+            <p style="color: var(--muted); font-size: 13px; margin-bottom: 12px;">Auto-balances teams up to 5 members based on live HackerRank Leaderboard points.</p>
             <button id="autoCreateTeamsBtn" class="btn btn-primary" style="width: 100%;">
               <span>🤖</span> Initialize Auto-Balancing Engine
             </button>
@@ -598,7 +597,6 @@
         const studentForm = document.getElementById("studentForm");
         if (studentForm) studentForm.addEventListener("submit", onboardStudent);
 
-        // Bindings for new Seminar and JAM submissions
         const seminarForm = document.getElementById("seminarForm");
         if (seminarForm) seminarForm.addEventListener("submit", scheduleSeminar);
 
@@ -618,7 +616,6 @@
       }
 
       try {
-        // 1. Fetch Users Node & Compile Student Ledger Profiles
         const usersSnap = await get(ref(db, "users"));
         let studentCount = 0;
         let uniqueTeams = new Set();
@@ -629,7 +626,11 @@
           Object.entries(data).forEach(([uid, profile]) => {
             if (profile.role === "student" || !profile.role) {
               studentCount++;
-              if (profile.teamName) uniqueTeams.add(profile.teamName);
+              if (profile.teamName) {
+                // Remove (Leader) suffix if present to evaluate true unique team count
+                const cleanTeamName = profile.teamName.replace(" (Leader)", "").trim();
+                uniqueTeams.add(cleanTeamName);
+              }
 
               rosterHTML += `
                 <tr>
@@ -651,19 +652,15 @@
         document.getElementById("teamCount").innerText = uniqueTeams.size;
         document.getElementById("studentsTable").innerHTML = rosterHTML || `<tr><td colspan="4" style="text-align:center; color: var(--muted);">No student records found inside data layer.</td></tr>`;
 
-        // 2. Fetch Educational Resource Nodes Count
         const resSnap = await get(ref(db, "resources"));
         document.getElementById("resourceCount").innerText = resSnap.exists() ? Object.keys(resSnap.val()).length : 0;
 
-        // 3. Fetch Historical Performance Evaluation Trace Scores Count
         const scoresSnap = await get(ref(db, "quizScores"));
         document.getElementById("scoreCount").innerText = scoresSnap.exists() ? Object.keys(scoresSnap.val()).length : 0;
 
-        // 4. Fetch Seminars Real-time Telemetry Count
         const seminarSnap = await get(ref(db, "seminars"));
         document.getElementById("seminarCount").innerText = seminarSnap.exists() ? Object.keys(seminarSnap.val()).length : 0;
 
-        // 5. Fetch JAM Sessions Real-time Telemetry Count
         const jamSnap = await get(ref(db, "jamSessions"));
         document.getElementById("jamCount").innerText = jamSnap.exists() ? Object.keys(jamSnap.val()).length : 0;
 
@@ -721,7 +718,7 @@
     }
 
     /* ==========================================================================
-       ALGORITHMIC AUTOMATED BALANCE TEAM SYSTEM
+       ALGORITHMIC AUTOMATED BALANCE TEAM SYSTEM (HACKERRANK - MAX 5 MEMBERS)
        ========================================================================== */
     async function autoCreateTeams() {
       const { db, ref, get, set } = window;
@@ -732,7 +729,10 @@
 
       try {
         const snap = await get(ref(db, "users"));
-        if (!snap.exists()) return;
+        if (!snap.exists()) {
+          alert("⚠️ Request Deferred: Roster ledger contains no registered components.");
+          return;
+        }
 
         const users = Object.entries(snap.val())
           .map(([uid, data]) => ({ uid, ...data }))
@@ -743,28 +743,58 @@
           return;
         }
 
-        users.sort((a, b) => (b.score || 0) - (a.score || 0));
-        const leaderCount = Math.max(1, Math.min(10, Math.ceil(users.length / 4)));
-        const leaders = users.slice(0, leaderCount);
-        const members = users.slice(leaderCount);
+        // Sort primarily by hackerrankScore; fallback to quiz score or 0 if unassigned
+        users.sort((a, b) => {
+          const scoreA = a.hackerrankScore !== undefined ? a.hackerrankScore : (a.score || 0);
+          const scoreB = b.hackerrankScore !== undefined ? b.hackerrankScore : (b.score || 0);
+          return scoreB - scoreA;
+        });
 
-        let leaderIndex = 0;
-        for (const member of members) {
-          const leader = leaders[leaderIndex];
-          await set(ref(db, `users/${member.uid}/teamLeader`), leader.uid);
-          await set(ref(db, `users/${member.uid}/teamName`), `Team ${leader.name || 'Alpha'}`);
-          leaderIndex++;
-          if (leaderIndex >= leaders.length) leaderIndex = 0;
+        const TEAM_SIZE = 5;
+        const totalTeams = Math.ceil(users.length / TEAM_SIZE);
+        const teams = Array.from({ length: totalTeams }, () => []);
+
+        // Distribute balanced distribution using a serpentine (S-Curve) matrix model
+        let forward = true;
+        let teamIndex = 0;
+
+        for (let i = 0; i < users.length; i++) {
+          teams[teamIndex].push(users[i]);
+          if (forward) {
+            if (teamIndex < totalTeams - 1) {
+              teamIndex++;
+            } else {
+              forward = false;
+            }
+          } else {
+            if (teamIndex > 0) {
+              teamIndex--;
+            } else {
+              forward = true;
+            }
+          }
         }
 
-        for (const leader of leaders) {
-          await set(ref(db, `users/${leader.uid}/teamName`), `Team ${leader.name || 'Alpha'} (Leader)`);
+        // Write team metrics back into Realtime Sync Database Engine
+        for (let t = 0; t < teams.length; t++) {
+          const currentTeam = teams[t];
+          const teamName = `Team ${t + 1}`;
+          const leader = currentTeam[0]; // Top score in that specific dynamic cluster
+
+          for (let m = 0; m < currentTeam.length; m++) {
+            const member = currentTeam[m];
+            const isLeader = m === 0;
+
+            await set(ref(db, `users/${member.uid}/teamName`), isLeader ? `${teamName} (Leader)` : teamName);
+            await set(ref(db, `users/${member.uid}/teamLeader`), leader.uid);
+          }
         }
 
-        alert("🎯 Balanced Dynamic Teams Generated & Synced Successfully!");
+        alert(`🎯 Balanced HackerRank Teams (Max 5 members each) generated successfully! Total Teams: ${totalTeams}`);
         loadDashboardData();
       } catch (error) {
         console.error("Execution error building team assignments:", error);
+        alert("⚠️ Failed to write dynamically balanced teams matrix to cloud environment.");
       }
     }
 
@@ -790,7 +820,8 @@
           studentId,
           email,
           role: "student",
-          score: 0
+          score: 0,
+          hackerrankScore: 0
         });
 
         alert(`🎉 Profile records for ${name} compiled into server architectures successfully!`);
