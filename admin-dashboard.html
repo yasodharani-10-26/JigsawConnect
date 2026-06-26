@@ -590,6 +590,7 @@
     // 💡 సరిచేసిన చోటు: Firebase Functions ఇంపోర్ట్స్ యాడ్ చేసాము మరియు SDK ని కనెక్ట్ చేసాము
     import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-functions.js";
 
+import { getApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     document.addEventListener("DOMContentLoaded", () => {
       setTimeout(() => {
         loadDashboardData();
@@ -776,10 +777,24 @@
             }
           }
         }
+// ✅ సరిచేసిన కొత్త కోడ్:
+let functions;
+try {
+  // app.js లో ఇప్పటికే ఇనిషియలైజ్ అయిన DEFAULT App ని తీసుకుంటుంది
+  const defaultApp = getApp(); 
+  functions = getFunctions(defaultApp);
+} catch (e) {
+  console.warn("Default app not initialized yet, trying window context...", e);
+  // ఒకవేళ window object లో ఉంటే అక్కడ నుండి తీసుకుంటుంది
+  if (window.app) {
+    functions = getFunctions(window.app);
+  } else {
+    // ఒకవేళ ఎక్కడా లేకపోతే నేరుగా default గా ట్రై చేస్తుంది
+    functions = getFunctions(); 
+  }
+}
 
-        // 💡 సరిచేసిన చోటు: ఇక్కడ క్లౌడ్ ఫంక్షన్‌ను సరిగ్గా డిక్లేర్ చేశాము
-        const functions = getFunctions();
-        const createHackerRankTeamFn = httpsCallable(functions, 'createHackerRankTeam');
+const createHackerRankTeamFn = httpsCallable(functions, 'createHackerRankTeam');
 
         // 3. ప్రతి టీమ్‌లో మొదటి ప్లేస్ లో ఉన్న వ్యక్తినే లీడర్ గా పెట్టి డేటాబేస్ లో సేవ్ చేయడం
         for (let t = 0; t < teams.length; t++) {
