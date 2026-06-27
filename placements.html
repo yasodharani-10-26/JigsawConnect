@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Branch-wise Placement Portal | StudyConnect</title>
+  <title>Branch & Role Wise Placement Portal | StudyConnect</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,7 +12,7 @@
   <style>
     /* ==========================================================================
        GLOBAL MATRIX & GLASSMORPHISM THEME
-       ========================================================================== */
+       ========================================================================= */
     :root {
       --bg: #070a13;
       --card-bg: rgba(16, 24, 42, 0.45);
@@ -63,15 +63,8 @@
       z-index: 1000;
     }
 
-    .logo {
-      text-decoration: none;
-      color: #fff;
-      font-size: 22px;
-      font-weight: 800;
-    }
-
+    .logo { text-decoration: none; color: #fff; font-size: 22px; font-weight: 800; }
     .logo span { color: var(--accent); }
-
     .nav-links { display: flex; gap: 28px; align-items: center; }
     .nav-links a { text-decoration: none; color: var(--text-muted); font-size: 14px; font-weight: 600; }
     .nav-links a.active { color: var(--accent); }
@@ -79,148 +72,78 @@
     /* ==========================================================================
        HERO CONTROL STATION
        ========================================================================== */
-    .page-header {
-      padding: 140px 20px 30px;
-      text-align: center;
-    }
-
+    .page-header { padding: 140px 20px 30px; text-align: center; }
     .page-header h1 {
-      font-size: 2.5rem;
-      font-weight: 800;
-      margin-bottom: 10px;
+      font-size: 2.5rem; font-weight: 800; margin-bottom: 10px;
       background: linear-gradient(135deg, #fff, #94a3b8);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
-
     .page-header p { color: var(--text-muted); font-size: 1rem; }
 
     /* ==========================================================================
-       BRANCH CONTROLLER GRID (11 BRANCHES)
+       BRANCH & ROLE SELECTION CONTROLS
        ========================================================================== */
-    .main-container {
-      max-width: 1200px;
-      margin: auto;
-      padding: 20px;
-    }
-
-    .branch-selector-title {
-      font-size: 14px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--accent);
-      margin-bottom: 16px;
-      text-align: center;
-      font-weight: 700;
-    }
-
-    .branch-grid {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 12px;
-      margin-bottom: 40px;
-    }
-
+    .main-container { max-width: 1200px; margin: auto; padding: 20px; }
+    .selector-title { font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); margin-bottom: 14px; text-align: center; font-weight: 700; }
+    
+    .branch-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 25px; }
     .branch-btn {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      color: var(--text-muted);
-      padding: 10px 20px;
-      border-radius: 12px;
-      font-weight: 700;
-      font-size: 13px;
-      cursor: pointer;
-      transition: all 0.25s ease;
+      background: var(--card-bg); border: 1px solid var(--border); color: var(--text-muted);
+      padding: 10px 18px; border-radius: 12px; font-weight: 700; font-size: 13px; cursor: pointer; transition: all 0.25s ease;
+    }
+    .branch-btn:hover, .branch-btn.active {
+      border-color: var(--accent); color: #fff; background: rgba(6, 182, 212, 0.12);
+      box-shadow: 0 0 15px var(--accent-glow); transform: translateY(-2px);
     }
 
-    .branch-btn:hover, .branch-btn.active {
-      border-color: var(--accent);
-      color: #fff;
-      background: rgba(6, 182, 212, 0.12);
-      box-shadow: 0 0 15px var(--accent-glow);
-      transform: translateY(-2px);
+    /* ROLE SELECTOR BOX STYLE */
+    .role-selector-container {
+      max-width: 500px; margin: 0 auto 40px auto; text-align: center;
+      background: rgba(255,255,255,0.02); border: 1px solid var(--border); padding: 16px; border-radius: 16px;
     }
+    .role-select {
+      width: 100%; padding: 12px; background: #0f172a; color: #fff; border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 10px; font-size: 14px; font-weight: 600; outline: none; cursor: pointer; transition: border 0.2s;
+    }
+    .role-select:focus { border-color: var(--accent); }
 
     /* ==========================================================================
        DYNAMIC ARCHITECTURE GRID LAYOUT
        ========================================================================== */
-    .portal-layout {
-      display: grid;
-      grid-template-columns: 1.2fr 1fr;
-      gap: 24px;
-    }
-
-    @media (max-width: 968px) {
-      .portal-layout { grid-template-columns: 1fr; }
-    }
+    .portal-layout { display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px; }
+    @media (max-width: 968px) { .portal-layout { grid-template-columns: 1fr; } }
 
     .section-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 32px;
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
-      animation: fadeInUp 0.4s ease forwards;
+      background: var(--card-bg); border: 1px solid var(--border); border-radius: 24px; padding: 32px;
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5); animation: fadeInUp 0.4s ease forwards;
     }
-
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(15px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
     .section-card h2 { font-size: 24px; font-weight: 800; margin-bottom: 6px; color: #fff; }
-    .role-title { font-size: 18px; color: var(--accent); font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 8px;}
-
-    .list-title { font-size: 14px; font-weight: 700; text-transform: uppercase; color: #cbd5e1; margin-bottom: 12px; letter-spacing: 0.5px; }
+    .role-title { font-size: 16px; color: var(--accent); font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 8px;}
+    .list-title { font-size: 13px; font-weight: 700; text-transform: uppercase; color: #cbd5e1; margin-bottom: 12px; letter-spacing: 0.5px; }
     
     .data-list { list-style: none; margin-bottom: 24px; }
     .data-list li { font-size: 14px; color: #94a3b8; margin-bottom: 10px; display: flex; align-items: flex-start; gap: 8px; }
     .data-list li::before { content: "▹"; color: var(--accent); font-weight: bold; }
     .data-list strong { color: #f1f5f9; }
 
-    /* ==========================================================================
-       INTERACTIVE LABS (TEST & INTERVIEW BOXES)
-       ========================================================================== */
-    .lab-box {
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(255, 255, 255, 0.04);
-      border-radius: 16px;
-      padding: 20px;
-      margin-bottom: 16px;
-    }
-
+    /* INTERACTIVE LABS (TEST & INTERVIEW BOXES) */
+    .lab-box { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.04); border-radius: 16px; padding: 20px; margin-bottom: 16px; }
     .lab-box h4 { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 6px; }
     .lab-box p { font-size: 13px; color: var(--text-muted); margin-bottom: 14px; }
-
     .meta-tags { display: flex; gap: 12px; margin-bottom: 14px; font-size: 12px; font-weight: 600; }
     .tag { padding: 4px 10px; border-radius: 6px; background: rgba(255, 255, 255, 0.05); color: #cbd5e1; }
     .tag-accent { background: rgba(6, 182, 212, 0.1); color: var(--accent); }
 
-    /* ==========================================================================
-       BUTTON INFRASTRUCTURE
-       ========================================================================== */
+    /* BUTTON INFRASTRUCTURE */
     .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 12px 20px;
-      border-radius: 10px;
-      font-size: 13px;
-      font-weight: 700;
-      text-decoration: none;
-      cursor: pointer;
-      border: none;
-      transition: all 0.2s ease;
-      width: 100%;
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 16px;
+      border-radius: 10px; font-size: 12px; font-weight: 700; text-decoration: none; cursor: pointer; border: none; transition: all 0.2s ease;
     }
-
     .btn-primary { background: linear-gradient(135deg, var(--primary), #6366f1); color: #fff; }
     .btn-primary:hover { box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4); transform: translateY(-1px); }
-    
     .btn-outline { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); color: #fff; }
     .btn-outline:hover { background: #fff; color: #000; }
 
@@ -243,381 +166,382 @@
 
   <header class="page-header">
     <h1>🎯 Academic Branch Hub</h1>
-    <p>Select your specialized branch to fetch curated roadmaps, jobs, and assessment sandboxes.</p>
+    <p>Select your branch and chosen role path to generate curated skills, multiple testing sandboxes, and interview pipelines.</p>
   </header>
 
   <main class="main-container">
     
-    <p class="branch-selector-title">Select Core Academic Branch</p>
-    
-    <div class="branch-grid">
-      <button class="branch-btn active" onclick="loadBranchData(this, 'cse')">💻 Core CSE</button>
-      <button class="branch-btn" onclick="loadBranchData(this, 'csd')">🎨 CSD (Design)</button>
-      <button class="branch-btn" onclick="loadBranchData(this, 'csm')">🤖 CSM (AI & ML)</button>
-      <button class="branch-btn" onclick="loadBranchData(this, 'cai')">🧠 CAI (AI & Data Science)</button>
-      <button class="branch-btn" onclick="loadBranchData(this, 'cyber')">🔒 Cyber Security</button>
-      <button class="branch-btn" onclick="loadBranchData(this, 'it')">🌐 IT</button>
-      <button class="branch-btn" onclick="loadBranchData(this, 'ece')">🎛️ ECE</button>
-      <button class="branch-btn" onclick="loadBranchData(this, 'eee')">⚡ EEE</button>
-      <button class="branch-btn" onclick="loadBranchData(this, 'mech')">⚙️ Mechanical</button>
-      <button class="branch-btn" onclick="loadBranchData(this, 'mca')">📊 MCA</button>
-      <button class="branch-btn" onclick="loadBranchData(this, 'mba')">📈 MBA</button>
+    <p class="selector-title">1. Select Academic Branch</p>
+    <div class="branch-grid" id="branch-container">
+      <!-- Generated via JS -->
+    </div>
+
+    <div class="role-selector-container">
+      <p class="selector-title" style="margin-bottom: 8px;">2. Select Targeted Role Path</p>
+      <select id="role-dropdown" class="role-select" onchange="renderRoleData()">
+        <!-- Dynamic Options via JS -->
+      </select>
     </div>
 
     <div class="portal-layout" id="portal-content">
-      </div>
+      <!-- Main dynamic cards go here -->
+    </div>
 
   </main>
 
   <footer class="footer">
-    &copy; 2026 StudyConnect | Dynamic Multi-Branch Placement Pipeline Module
+    &copy; 2026 StudyConnect | Adaptive Multi-Role Placement Infrastructure Matrix
   </footer>
 
   <script>
-    const branchDatabase = {
+    // Fully granular multi-role matrix data structure
+    const masterDatabase = {
       cse: {
-        title: "Software Development Engineer (SDE)",
-        roleDesc: "Core Computer Science Engine focuses on scalable system design, core algorithmic parsing, and backend architecture pipelines.",
-        roadmap: ["Advanced Data Structures & Algorithms (DSA)", "System Design (LLD & HLD)", "DBMS (SQL, NoSQL Architecture)", "Operating Systems & Networking Layers"],
-        resources: [
-          "<strong>LeetCode / GeeksforGeeks:</strong> Practice structural algorithmic loops.",
-          "<strong>Striver's SDE Sheet:</strong> Top placement checklist blueprint.",
-          "<strong>System Design Primer:</strong> GitHub repository for architectural data handling."
-        ],
-        internships: [
-          { name: "Unstop Jobs", url: "https://unstop.com/job/internships" },
-          { name: "Wellfound (AngelList)", url: "https://wellfound.com/jobs" },
-          { name: "Internshala CSE", url: "https://internshala.com/internships/matching-computer-science-internship/" }
-        ],
-        testTitle: "Full-Stack System Coding Challenge",
-        testMeta: ["60 Mins", "3 Challenges", "Hard Difficulty"],
-        testPlatforms: [
-          { name: "HackerRank Lab", url: "https://www.hackerrank.com/dashboard" },
-          { name: "LeetCode Contest", url: "https://leetcode.com/contest/" },
-          { name: "Unstop Assess", url: "https://unstop.com/practice" }
-        ],
-        interviewTitle: "Technical Interview Loop: DSA & OOPs",
-        interviewDesc: "Simulate core code optimizations, algorithmic complexity analysis, and object-oriented memory mappings.",
-        mockPlatforms: [
-          { name: "Pramp Peer Loop", url: "https://www.pramp.com" },
-          { name: "GeeksforGeeks Mock", url: "https://practice.geeksforgeeks.org/" },
-          { name: "InterviewBit Sandbox", url: "https://www.interviewbit.com/mock-interview/" }
-        ]
+        name: "💻 Core CSE",
+        roles: {
+          sde: {
+            title: "Software Development Engineer (SDE)",
+            desc: "Focuses on scalable backends, microservices design, and optimal data structure parsing loops.",
+            skills: ["Data Structures & Algorithms (Advanced DSA)", "System Design (HLD/LLD)", "Java/Go/C++ & Multithreading", "DBMS & SQL Indexing Optimization"],
+            internships: [
+              { name: "Unstop Tech", url: "https://unstop.com/job/internships" },
+              { name: "Wellfound Dev", url: "https://wellfound.com/jobs" },
+              { name: "Internshala SDE", url: "https://internshala.com/internships/matching-computer-science-internship/" }
+            ],
+            tests: [
+              { name: "LeetCode Contest", url: "https://leetcode.com/contest/" },
+              { name: "HackerRank Problem Solving", url: "https://www.hackerrank.com/dashboard" },
+              { name: "CodeChef Platform", url: "https://www.codechef.com" }
+            ],
+            mocks: [
+              { name: "Pramp Peer Code Loop", url: "https://www.pramp.com" },
+              { name: "InterviewBit Sandbox", url: "https://www.interviewbit.com/mock-interview/" },
+              { name: "GeeksforGeeks Mock", url: "https://practice.geeksforgeeks.org/" }
+            ]
+          },
+          webdev: {
+            title: "Full Stack Web Developer",
+            desc: "Architects client-facing dynamic DOM UI flows and robust RESTful API pipeline servers.",
+            skills: ["JavaScript (ES6+) & TypeScript", "React.js / Next.js Frameworks", "Node.js & Express API Engines", "MongoDB / PostgreSQL Warehousing"],
+            internships: [
+              { name: "LinkedIn Web Jobs", url: "https://www.linkedin.com/jobs/" },
+              { name: "AngelList Web Track", url: "https://wellfound.com/jobs" },
+              { name: "Internshala Web", url: "https://internshala.com/internships/web-development-internships/" }
+            ],
+            tests: [
+              { name: "Frontendeval Playground", url: "https://www.frontendeval.com" },
+              { name: "Frontend Mentor Cases", url: "https://www.frontendmentor.io" }
+            ],
+            mocks: [
+              { name: "InterviewBit Engine", url: "https://www.interviewbit.com/mock-interview/" },
+              { name: "Adplist Mentor Node", url: "https://adplist.org" }
+            ]
+          }
+        }
       },
       csd: {
-        title: "UI/UX Engineer & Product Designer",
-        roleDesc: "Computer Science & Design blends core frontend architectural nodes with creative user psychology layout structures.",
-        roadmap: ["Design Thinking & Component Wireframing", "Figma Design Tokens & Prototyping", "Advanced HTML5, CSS3, Tailwind CSS", "React JS component optimization frameworks"],
-        resources: [
-          "<strong>Figma Learning Portal:</strong> UI design system guidelines.",
-          "<strong>Refactoring UI:</strong> Practical design patterns for software engineers.",
-          "<strong>Don't Make Me Think:</strong> Product Usability metrics handbook."
-        ],
-        internships: [
-          { name: "LinkedIn UI Jobs", url: "https://www.linkedin.com/jobs/" },
-          { name: "Behance Jobs", url: "https://www.behance.net/joblist" },
-          { name: "Internshala Design", url: "https://internshala.com/internships/ui-ux-design-internships/" }
-        ],
-        testTitle: "UI Component Architecture Test",
-        testMeta: ["45 Mins", "1 UX Case + 1 Coding", "Medium"],
-        testPlatforms: [
-          { name: "Frontendeval Lab", url: "https://www.frontendeval.com" },
-          { name: "Frontend Mentor", url: "https://www.frontendmentor.io" }
-        ],
-        interviewTitle: "Design Portfolio & Frontend Review",
-        interviewDesc: "Validate user interaction journeys, responsive DOM manipulation, and visual consistency benchmarks.",
-        mockPlatforms: [
-          { name: "Designercize Lab", url: "https://designercize.com" },
-          { name: "InterviewBit Prep", url: "https://www.interviewbit.com/mock-interview/" },
-          { name: "Adplist Mentor", url: "https://adplist.org" }
-        ]
+        name: "🎨 CSD (Design)",
+        roles: {
+          uiux: {
+            title: "UI/UX & Product Designer",
+            desc: "Bends core interaction archetypes, human psychology maps, and components wireframes.",
+            skills: ["Figma Design Tokens & Prototyping", "Information Architecture & User Journeys", "Heuristic Evaluation Protocols", "Wireframing & Typography Hierarchies"],
+            internships: [
+              { name: "Behance Joblist", url: "https://www.behance.net/joblist" },
+              { name: "Dribbble Positions", url: "https://dribbble.com/jobs" },
+              { name: "Internshala UI/UX", url: "https://internshala.com/internships/ui-ux-design-internships/" }
+            ],
+            tests: [
+              { name: "Designercize Challenge", url: "https://designercize.com" },
+              { name: "UX Tools Challenges", url: "https://uxtools.co/challenges/" }
+            ],
+            mocks: [
+              { name: "ADPList UX Loop", url: "https://adplist.org" },
+              { name: "Growth.design Cases", url: "https://growth.design/case-studies" }
+            ]
+          }
+        }
       },
       csm: {
-        title: "Machine Learning Engineer",
-        roleDesc: "CS & Machine Learning engineering structures analytical statistical pipelines and neural network processing graph arrays.",
-        roadmap: ["Advanced Applied Python Scripting", "Linear Algebra, Calculus & Statistical Matrices", "Supervised & Unsupervised Scikit-Learn Frameworks", "Deep Learning Architectures (TensorFlow / PyTorch)"],
-        resources: [
-          "<strong>Kaggle Datasets:</strong> Model validation sandboxes.",
-          "<strong>Andrew Ng's ML Specialization:</strong> Theoretical core structure.",
-          "<strong>Fast.ai:</strong> Deep Learning engineering protocols."
-        ],
-        internships: [
-          { name: "Wellfound ML Track", url: "https://wellfound.com/jobs" },
-          { name: "LinkedIn Jobs Portal", url: "https://www.linkedin.com/jobs/" },
-          { name: "Internshala ML", url: "https://internshala.com/internships/machine-learning-internships/" }
-        ],
-        testTitle: "Data Modeling & Vector Optimization Test",
-        testMeta: ["50 Mins", "20 MCQs + 1 Python Node", "Hard"],
-        testPlatforms: [
-          { name: "Kaggle Compete", url: "https://www.kaggle.com/competitions" },
-          { name: "HackerEarth ML", url: "https://www.hackerearth.com/challenges/" }
-        ],
-        interviewTitle: "ML Pipeline & Model Deployment Review",
-        interviewDesc: "Practice model drift evaluations, hyperparameters fine-tuning, and matrix transformation logic.",
-        mockPlatforms: [
-          { name: "Pramp AI Sandbox", url: "https://www.pramp.com" },
-          { name: "DeepLearning AI", url: "https://www.deeplearning.ai" },
-          { name: "StellarPeers Prep", url: "https://stellarpeers.com" }
-        ]
+        name: "🤖 CSM (AI & ML)",
+        roles: {
+          mle: {
+            title: "Machine Learning Engineer",
+            desc: "Constructs deep mathematical tensors, predictive data modeling matrices, and custom neural loops.",
+            skills: ["Python (NumPy, Pandas, Scikit-Learn)", "Deep Learning (TensorFlow / PyTorch)", "Linear Algebra & Advanced Calculus", "MLOps & Model Deployment (Docker, AWS)"],
+            internships: [
+              { name: "Wellfound ML Openings", url: "https://wellfound.com/jobs" },
+              { name: "LinkedIn AI Hub", url: "https://www.linkedin.com/jobs/" },
+              { name: "Internshala ML Tracks", url: "https://internshala.com/internships/machine-learning-internships/" }
+            ],
+            tests: [
+              { name: "Kaggle Competitions Hub", url: "https://www.kaggle.com/competitions" },
+              { name: "HackerEarth ML Arena", url: "https://www.hackerearth.com/challenges/" }
+            ],
+            mocks: [
+              { name: "Pramp AI System Loop", url: "https://www.pramp.com" },
+              { name: "DeepLearning AI Sandbox", url: "https://www.deeplearning.ai" }
+            ]
+          }
+        }
       },
       cai: {
-        title: "AI Data Scientist",
-        roleDesc: "CS & Artificial Intelligence analyzes big data vectors, engineers LLM prompt patterns, and processes core neural metrics.",
-        roadmap: ["Data Wrangling with Pandas & NumPy", "NLP & Large Language Model Fine-Tuning", "Data Visualizations & Feature Engineering", "SQL Analytics & Big Data Warehousing (Snowflake)"],
-        resources: [
-          "<strong>Hugging Face Space:</strong> Pre-trained vector models framework.",
-          "<strong>StatQuest YouTube Channel:</strong> Complex algorithm simplification.",
-          "<strong>Python Data Science Handbook:</strong> Code execution methodologies."
-        ],
-        internships: [
-          { name: "Unstop Analytics", url: "https://unstop.com/job/internships" },
-          { name: "Glassdoor Openings", url: "https://www.glassdoor.co.in/Job/" },
-          { name: "Internshala AI", url: "https://internshala.com/internships/data-science-internships/" }
-        ],
-        testTitle: "SQL Matrix & Predictive Analytics Sandbox",
-        testMeta: ["40 Mins", "25 Structural Queries", "Medium"],
-        testPlatforms: [
-          { name: "SQLZoo Tracks", url: "https://sqlzoo.net/" },
-          { name: "Stratascratch SQL", url: "https://www.stratascratch.com" },
-          { name: "LeetCode SQL Database", url: "https://leetcode.com/studyplan/top-sql-50/" }
-        ],
-        interviewTitle: "Statistical Validation & Data Strategy Panel",
-        interviewDesc: "Test hypothetical A/B processing, predictive analytics algorithms, and business data optimization logic.",
-        mockPlatforms: [
-          { name: "InterviewQuery Node", url: "https://www.interviewquery.com" },
-          { name: "InterviewBit Prep", url: "https://www.interviewbit.com/mock-interview/" }
-        ]
+        name: "🧠 CAI (AI & Data Science)",
+        roles: {
+          datascientist: {
+            title: "Data Scientist / AI Specialist",
+            desc: "Extracts statistical intelligence, configures LLM prompt parameters, and engineers feature sets.",
+            skills: ["Statistical Modeling & Hypothesis Testing", "SQL Analytics & Big Data Warehousing", "NLP & LLM Fine-Tuning Pipelines", "Data Visualization (Tableau / PowerBI)"],
+            internships: [
+              { name: "Unstop Analytics", url: "https://unstop.com/job/internships" },
+              { name: "Glassdoor Data Paths", url: "https://www.glassdoor.co.in/Job/" },
+              { name: "Internshala Data Science", url: "https://internshala.com/internships/data-science-internships/" }
+            ],
+            tests: [
+              { name: "Stratascratch SQL Engine", url: "https://www.stratascratch.com" },
+              { name: "SQLZoo Interactive Lab", url: "https://sqlzoo.net/" },
+              { name: "LeetCode Database Top 50", url: "https://leetcode.com/studyplan/top-sql-50/" }
+            ],
+            mocks: [
+              { name: "InterviewQuery Sandbox", url: "https://www.interviewquery.com" },
+              { name: "InterviewBit Analytics", url: "https://www.interviewbit.com/mock-interview/" }
+            ]
+          }
+        }
       },
       cyber: {
-        title: "Cyber Security Analyst & PenTester",
-        roleDesc: "Cyber Security handles zero-trust networks, active threat vectors mitigation, cryptographic logic, and vulnerability assessments.",
-        roadmap: ["Linux Systems Architecture & Bash Scripting", "Network Protocol Layers Security (Wireshark)", "Ethical Hacking & Penetration Testing (OWASP Top 10)", "Cryptography & Access Token Control Systems"],
-        resources: [
-          "<strong>TryHackMe / HackTheBox:</strong> Gamified server infiltration environments.",
-          "<strong>PortSwigger Web Security Academy:</strong> Core web vulnerability ledger.",
-          "<strong>NIST Cyber Framework:</strong> Standard global compliance rules."
-        ],
-        internships: [
-          { name: "LinkedIn Security", url: "https://www.linkedin.com/jobs/" },
-          { name: "Naukri Security Hub", url: "https://www.naukri.com/" },
-          { name: "Internshala Cyber", url: "https://internshala.com/internships/cyber-security-internships/" }
-        ],
-        testTitle: "Network Packet Analysis & Capture The Flag (CTF)",
-        testMeta: ["90 Mins", "5 Vulnerability Nodes", "Hard"],
-        testPlatforms: [
-          { name: "OverTheWire Wargames", url: "https://overthewire.org/wargames/" },
-          { name: "PicoCTF Sandbox", url: "https://picoctf.org" }
-        ],
-        interviewTitle: "Incident Response Protocol Mock Simulation",
-        interviewDesc: "Defend against simulated buffer overflows, DDoS packet configurations, and privilege escalation attacks.",
-        mockPlatforms: [
-          { name: "Cybrary Practice Lab", url: "https://www.cybrary.it" },
-          { name: "Pramp Security Tech", url: "https://www.pramp.com" }
-        ]
+        name: "🔒 Cyber Security",
+        roles: {
+          pentester: {
+            title: "Penetration Tester / Security Analyst",
+            desc: "Audits server threat mechanics, enforces zero-trust architectures, and patches system vulnerabilities.",
+            skills: ["Linux Systems Architecture & Bash", "Network Protocol Exploitations (Wireshark)", "OWASP Top 10 Web Sec Parameters", "Ethical Hacking & Cryptography Logic"],
+            internships: [
+              { name: "LinkedIn Cyber Jobs", url: "https://www.linkedin.com/jobs/" },
+              { name: "Naukri Security Panel", url: "https://www.naukri.com/" },
+              { name: "Internshala Security", url: "https://internshala.com/internships/cyber-security-internships/" }
+            ],
+            tests: [
+              { name: "TryHackMe Security Sandbox", url: "https://tryhackme.com" },
+              { name: "HackTheBox Active Labs", url: "https://www.hackthebox.com" },
+              { name: "OverTheWire CTF Matrix", url: "https://overthewire.org/wargames/" }
+            ],
+            mocks: [
+              { name: "Cybrary Security Simulator", url: "https://www.cybrary.it" },
+              { name: "Pramp Technical System", url: "https://www.pramp.com" }
+          ]
+          }
+        }
       },
       it: {
-        title: "DevOps & Cloud Engineer",
-        roleDesc: "Information Technology optimizes horizontal pipeline deployments, automated CI/CD infrastructure loops, and global server management.",
-        roadmap: ["Cloud Architecture Platforms (AWS / Azure)", "Container Deployment Systems (Docker & Kubernetes)", "Infrastructure as Code (IaC via Terraform)", "CI/CD Pipeline Automation (Jenkins / GitHub Actions)"],
-        resources: [
-          "<strong>AWS Skill Builder:</strong> Authorized cloud module training.",
-          "<strong>DevOps Roadmap Guide:</strong> Comprehensive pipeline blueprints.",
-          "<strong>The Phoenix Project:</strong> IT operations scaling strategy book."
-        ],
-        internships: [
-          { name: "Wellfound Cloud Tracks", url: "https://wellfound.com/jobs" },
-          { name: "Unstop Tech Jobs", url: "https://unstop.com/job/internships" },
-          { name: "Internshala DevOps", url: "https://internshala.com/internships/devops-internships/" }
-        ],
-        testTitle: "Docker Containerization & Server Setup Scripting",
-        testMeta: ["60 Mins", "1 YAML Fix + 10 MCQs", "Medium"],
-        testPlatforms: [
-          { name: "Killercoda K8s Lab", url: "https://killercoda.com" },
-          { name: "Play with Docker", url: "https://labs.play-with-docker.com/" }
-        ],
-        interviewTitle: "Disaster Recovery & High-Availability Architecture Loop",
-        interviewDesc: "Demonstrate microservice load balancing, VPC network separation, and live server failure fallbacks.",
-        mockPlatforms: [
-          { name: "CloudAcademy Loop", url: "https://cloudacademy.com" },
-          { name: "InterviewBit Architecture", url: "https://www.interviewbit.com/mock-interview/" }
-        ]
+        name: "🌐 IT",
+        roles: {
+          devops: {
+            title: "DevOps & Cloud Engineer",
+            desc: "Automates orchestration loops, handles cluster states, and balances traffic throughput infrastructure.",
+            skills: ["Cloud Framework Systems (AWS / Azure)", "Container Management (Docker / Kubernetes)", "Infrastructure as Code (Terraform IaC)", "CI/CD Orchestration (GitHub Actions)"],
+            internships: [
+              { name: "Wellfound Cloud Channels", url: "https://wellfound.com/jobs" },
+              { name: "Unstop Infrastructure Paths", url: "https://unstop.com/job/internships" },
+              { name: "Internshala DevOps Portal", url: "https://internshala.com/internships/devops-internships/" }
+            ],
+            tests: [
+              { name: "Killercoda Cloud Sandbox", url: "https://killercoda.com" },
+              { name: "Play with Docker Lab", url: "https://labs.play-with-docker.com/" }
+            ],
+            mocks: [
+              { name: "CloudAcademy Lab Systems", url: "https://cloudacademy.com" },
+              { name: "InterviewBit SysAdmin", url: "https://www.interviewbit.com/mock-interview/" }
+            ]
+          }
+        }
       },
       ece: {
-        title: "Embedded Systems & VLSI Engineer",
-        roleDesc: "Electronics & Communication Engineering covers physical microchip architecture, circuit matrix boards, and low-level software engines.",
-        roadmap: ["Digital Electronics & Circuit Synthesis Matrix", "Microcontrollers & RTOS (8051, ARM Cortex)", "Hardware Description Languages (Verilog / VHDL)", "C/C++ Low-level Embedded Firmware Development"],
-        resources: [
-          "<strong>Ben Eater's Computer Architecture Series:</strong> Deep hardware understanding.",
-          "<strong>VLSI Expert Portal:</strong> Semiconductor physical synthesis documentation.",
-          "<strong>Embedded.com:</strong> Firmware coding logic and guidelines."
-        ],
-        internships: [
-          { name: "Naukri VLSI Tracker", url: "https://www.naukri.com/" },
-          { name: "LinkedIn Core Embedded", url: "https://www.linkedin.com/jobs/" },
-          { name: "Internshala Hardware", url: "https://internshala.com/internships/electronics-internships/" }
-        ],
-        testTitle: "Digital Circuit Verification & Verilog Compiler",
-        testMeta: ["45 Mins", "15 Hardware Logic Gates Tests", "Hard"],
-        testPlatforms: [
-          { name: "EDA Playground Core", url: "https://eda-playground.com" },
-          { name: "IndiaBIX Electronics", url: "https://www.indiabix.com/" }
-        ],
-        interviewTitle: "Microchip Timing Diagram & Embedded Firmware Review",
-        interviewDesc: "Simulate edge-triggered clock distribution, I2C/SPI hardware protocols, and memory register configurations.",
-        mockPlatforms: [
-          { name: "GFG Core Tech Review", url: "https://practice.geeksforgeeks.org/" },
-          { name: "Pramp Board Mock", url: "https://www.pramp.com" }
-        ]
+        name: "🎛️ ECE",
+        roles: {
+          embedded: {
+            title: "Embedded Systems & VLSI Engineer",
+            desc: "Fuses machine instructions with integrated circuits, physical logic boards, and firmware.",
+            skills: ["Digital Systems & Verilog/VHDL Compiler", "Microcontrollers Architecture (ARM Cortex)", "C/C++ Low Level Hardware Scripting", "Real-Time Operating Systems (RTOS) Protocols"],
+            internships: [
+              { name: "Naukri Hardware Panels", url: "https://www.naukri.com/" },
+              { name: "LinkedIn Core Circuits", url: "https://www.linkedin.com/jobs/" },
+              { name: "Internshala Electronics Hub", url: "https://internshala.com/internships/electronics-internships/" }
+            ],
+            tests: [
+              { name: "EDA Playground Logic Studio", url: "https://eda-playground.com" },
+              { name: "IndiaBIX Core Electronics", url: "https://www.indiabix.com/" }
+            ],
+            mocks: [
+              { name: "GeeksforGeeks Core Review", url: "https://practice.geeksforgeeks.org/" },
+              { name: "Pramp Board Engineering", url: "https://www.pramp.com" }
+            ]
+          }
+        }
       },
       eee: {
-        title: "Power Systems & Automation Control Engineer",
-        roleDesc: "Electrical & Electronics focuses on smart electrical grids, IoT micro-grids, automated industrial SCADA, and power controllers.",
-        roadmap: ["Power Electronics & Converters Topology", "Control Systems Automation & MATLAB Modeling", "PLC & SCADA Architecture Systems", "EV Powertrain & Battery Management Systems (BMS)"],
-        resources: [
-          "<strong>MATLAB Central Open Modules:</strong> Control loops simulations.",
-          "<strong>All About Circuits:</strong> Power operational amplifiers guides.",
-          "<strong>NPTEL Electrical Lectures:</strong> Grid power transmission analysis."
-        ],
-        internships: [
-          { name: "LinkedIn Core Electrical", url: "https://www.linkedin.com/jobs/" },
-          { name: "Unstop Infrastructure", url: "https://unstop.com/job/internships" },
-          { name: "Internshala Electrical", url: "https://internshala.com/internships/electrical-internships/" }
-        ],
-        testTitle: "Electrical Power Grid Stability Simulation",
-        testMeta: ["45 Mins", "20 Network Theorem Tests", "Medium"],
-        testPlatforms: [
-          { name: "CircuitLab Simulation", url: "https://www.circuitlab.com" },
-          { name: "IndiaBIX Electrical", url: "https://www.indiabix.com/" }
-        ],
-        interviewTitle: "Industrial Automation Scheme & PLC Scripting Loop",
-        interviewDesc: "Validate loop stability criteria, heavy load balancing logic, and sensor telemetry parsing.",
-        mockPlatforms: [
-          { name: "TechPrep Engineering", url: "https://practice.geeksforgeeks.org/" },
-          { name: "InterviewBit Portal", url: "https://www.interviewbit.com/mock-interview/" }
-        ]
+        name: "⚡ EEE",
+        roles: {
+          powereng: {
+            title: "Power Systems & PLC Automation Engineer",
+            desc: "Manages grid load dynamics, EV thermal modules, and automated telemetry controllers.",
+            skills: ["Power Electronics & Conversions Topology", "MATLAB System Modeling Loops", "PLC & SCADA Industry Configurations", "EV Powertrain & Battery Management Systems"],
+            internships: [
+              { name: "LinkedIn Power Openings", url: "https://www.linkedin.com/jobs/" },
+              { name: "Unstop Core Infrastructure", url: "https://unstop.com/job/internships" },
+              { name: "Internshala Electrical Path", url: "https://internshala.com/internships/electrical-internships/" }
+            ],
+            tests: [
+              { name: "CircuitLab Electrical Studio", url: "https://www.circuitlab.com" },
+              { name: "IndiaBIX Electrical Testing", url: "https://www.indiabix.com/" }
+            ],
+            mocks: [
+              { name: "GeeksforGeeks Engineering", url: "https://practice.geeksforgeeks.org/" },
+              { name: "InterviewBit Core Loop", url: "https://www.interviewbit.com/mock-interview/" }
+            ]
+          }
+        }
       },
       mech: {
-        title: "Robotics & CAD Design Engineer",
-        roleDesc: "Mechanical Engineering structures finite element mesh distributions, automated CNC robotics, and physical thermal structures.",
-        roadmap: ["3D Parametric Solid Modeling (SolidWorks / CATIA)", "Finite Element Analysis (FEA via ANSYS)", "Thermodynamics & Computational Fluid Dynamics (CFD)", "Robotics Kinematics & CNC Micro-Machining Control"],
-        resources: [
-          "<strong>GrabCAD Tutorials:</strong> Community mechanical parts portfolio.",
-          "<strong>ANSYS Innovation Courses:</strong> Physics simulation training modules.",
-          "<strong>MIT OpenCourseWare Mechanics:</strong> Fundamental physics analysis."
-        ],
-        internships: [
-          { name: "Naukri CAD Openings", url: "https://www.naukri.com/" },
-          { name: "LinkedIn Mechanical Hub", url: "https://www.linkedin.com/jobs/" },
-          { name: "Internshala Core Mech", url: "https://internshala.com/internships/mechanical-internships/" }
-        ],
-        testTitle: "Structural Stress Analysis & Geometry Mesh Challenge",
-        testMeta: ["60 Mins", "1 CAD Design + 5 Structural Tests", "Medium"],
-        testPlatforms: [
-          { name: "Onshape Cloud Studio", url: "https://www.onshape.com" },
-          { name: "IndiaBIX Mechanical", url: "https://www.indiabix.com/" }
-        ],
-        interviewTitle: "Material Selection Matrix & Manufacturing Tolerance Panel",
-        interviewDesc: "Test failure fatigue points analysis, geometric scaling limits, and kinematic joint stress loops.",
-        mockPlatforms: [
-          { name: "MechDesign Review Node", url: "https://practice.geeksforgeeks.org/" },
-          { name: "Pramp Dynamic Session", url: "https://www.pramp.com" }
-        ]
+        name: "⚙️ Mechanical",
+        roles: {
+          caddesign: {
+            title: "Robotics & CAD Design Engineer",
+            desc: "Drives structural load modeling, finite element micro-meshes, and fluid dynamics testing.",
+            skills: ["3D Parametric CAD (SolidWorks / CATIA)", "Finite Element Analysis (ANSYS FEA)", "Computational Fluid Dynamics (CFD)", "Robotics Kinematics Control Blocks"],
+            internships: [
+              { name: "Naukri CAD Systems Tracker", url: "https://www.naukri.com/" },
+              { name: "LinkedIn Mechanical Openings", url: "https://www.linkedin.com/jobs/" },
+              { name: "Internshala Mechanical Path", url: "https://internshala.com/internships/mechanical-internships/" }
+            ],
+            tests: [
+              { name: "Onshape Cloud Engine Studio", url: "https://www.onshape.com" },
+              { name: "IndiaBIX Mechanical Testing", url: "https://www.indiabix.com/" }
+            ],
+            mocks: [
+              { name: "Pramp Structure Evaluation", url: "https://www.pramp.com" },
+              { name: "GeeksforGeeks Core Panel", url: "https://practice.geeksforgeeks.org/" }
+            ]
+          }
+        }
       },
       mca: {
-        title: "Enterprise Application Developer",
-        roleDesc: "Master of Computer Applications scales distributed database schemas, cross-platform apps, and automated server testing systems.",
-        roadmap: ["Enterprise Java Stack (Spring Boot / Hibernate)", "Advanced Database Optimization & Indexing Schemes", "Cloud Integration Foundations (Docker Containers)", "System Validation & QA Automation Tools"],
-        resources: [
-          "<strong>Baeldung Spring Guides:</strong> Enterprise API structure templates.",
-          "<strong>Java Brains:</strong> Microservices interaction modules.",
-          "<strong>SQLZoo Database Track:</strong> Live interactive query testing."
-        ],
-        internships: [
-          { name: "Unstop MCA Track", url: "https://unstop.com/job/internships" },
-          { name: "Wellfound Software Engineers", url: "https://wellfound.com/jobs" },
-          { name: "Internshala Web Dev", url: "https://internshala.com/internships/web-development-internships/" }
-        ],
-        testTitle: "Relational Database Indexing & REST API Build Test",
-        testMeta: ["50 Mins", "1 Java Module Setup", "Medium"],
-        testPlatforms: [
-          { name: "HackerRank Java Core", url: "https://www.hackerrank.com" },
-          { name: "LeetCode Practice Studio", url: "https://leetcode.com" }
-        ],
-        interviewTitle: "Multithreaded Processing & Database Deadlock Resolution",
-        interviewDesc: "Simulate race conditions mitigation, server memory leaks mapping, and connection pool scaling parameters.",
-        mockPlatforms: [
-          { name: "PrepBytes Lab Loop", url: "https://www.prepbytes.com" },
-          { name: "InterviewBit Sandbox", url: "https://www.interviewbit.com/mock-interview/" }
-        ]
+        name: "📊 MCA",
+        roles: {
+          enterprise: {
+            title: "Enterprise Application Developer",
+            desc: "Optimizes massive schema configurations, multi-threaded worker pools, and automated testing rigs.",
+            skills: ["Enterprise Java Stack (Spring Boot / Hibernate)", "Advanced RDBMS Indexes & Query Tuning", "Cloud Integration Foundations (Docker Containerization)", "QA Validation Tools & Automation Libraries"],
+            internships: [
+              { name: "Unstop Enterprise Track", url: "https://unstop.com/job/internships" },
+              { name: "Wellfound Engineering Base", url: "https://wellfound.com/jobs" },
+              { name: "Internshala Software Tracks", url: "https://internshala.com/internships/web-development-internships/" }
+            ],
+            tests: [
+              { name: "HackerRank Java Matrix", url: "https://www.hackerrank.com" },
+              { name: "LeetCode Practice Pipeline", url: "https://leetcode.com" }
+            ],
+            mocks: [
+              { name: "PrepBytes Assessment Loop", url: "https://www.prepbytes.com" },
+              { name: "InterviewBit Structural Sandbox", url: "https://www.interviewbit.com/mock-interview/" }
+            ]
+          }
+        }
       },
       mba: {
-        title: "Business & Management Consultant",
-        roleDesc: "Master of Business Administration analyzes financial data streams, optimizes logistics operational pipelines, and builds marketing structures.",
-        roadmap: ["Financial Modeling & Valuation Metrics", "Data-Driven Market Strategy Tools", "Operations Management & Scrum Agile Frameworks", "Corporate Communication & Strategic Decision Matrices"],
-        resources: [
-          "<strong>Harvard Business Review:</strong> Strategy and structural model studies.",
-          "<strong>Investopedia Academic Network:</strong> Asset evaluation formulas ledger.",
-          "<strong>Product Management Exercises:</strong> Case studies for technical product managers."
-        ],
-        internships: [
-          { name: "Unstop Corporate", url: "https://unstop.com/job/internships" },
-          { name: "Glassdoor Consulting", url: "https://www.glassdoor.co.in/Job/" },
-          { name: "Internshala MBA Track", url: "https://internshala.com/internships/mba-internships/" }
-        ],
-        testTitle: "Corporate Valuation & Market Entry Case Study",
-        testMeta: ["30 Mins", "1 Business Scenario Solution", "Medium"],
-        testPlatforms: [
-          { name: "CaseInterview Engine", url: "https://www.caseinterview.com" },
-          { name: "MetroBusiness Assess", url: "https://unstop.com/practice" }
-        ],
-        interviewTitle: "Strategic Operational Scale & Guesstimate Mock Panel",
-        interviewDesc: "Evaluate pricing logic, market sizing frameworks, resource allocation decisions, and investment risks analysis.",
-        mockPlatforms: [
-          { name: "PM Exercises Hub", url: "https://www.productmanagementexercises.com" },
-          { name: "Resume Worded AI Review", url: "https://resumeworded.com" },
-          { name: "InterviewBit Panel Loop", url: "https://www.interviewbit.com/mock-interview/" }
-        ]
+        name: "📈 MBA",
+        roles: {
+          consultant: {
+            title: "Management Consultant / Analyst",
+            desc: "Triggers growth strategies, evaluates market entry models, and streamlines operational logistics.",
+            skills: ["Corporate Valuation & Financial Modeling", "Data-Driven Market Strategy Tools", "Agile Operational Metrics (Scrum Frameworks)", "Strategic Risk Allocation Matrices"],
+            internships: [
+              { name: "Unstop Corporate Challenges", url: "https://unstop.com/job/internships" },
+              { name: "Glassdoor Business Openings", url: "https://www.glassdoor.co.in/Job/" },
+              { name: "Internshala Management Paths", url: "https://internshala.com/internships/mba-internships/" }
+            ],
+            tests: [
+              { name: "CaseInterview Strategy Hub", url: "https://www.caseinterview.com" },
+              { name: "Unstop Business Case Engine", url: "https://unstop.com/practice" }
+            ],
+            mocks: [
+              { name: "PM Exercises Strategy Node", url: "https://www.productmanagementexercises.com" },
+              { name: "Resume Worded AI Reviewer", url: "https://resumeworded.com" },
+              { name: "InterviewBit Leadership Panel", url: "https://www.interviewbit.com/mock-interview/" }
+            ]
+          }
+        }
       }
     };
 
-    function loadBranchData(buttonElement, branchKey) {
-      if (!branchDatabase[branchKey]) return;
+    let activeBranch = 'cse';
 
-      document.querySelectorAll('.branch-btn').forEach(btn => {
-        btn.classList.remove('active');
+    // Renders the top branch buttons dynamically
+    function initializePortal() {
+      const branchGrid = document.getElementById('branch-container');
+      branchGrid.innerHTML = '';
+      
+      Object.keys(masterDatabase).forEach((key, index) => {
+        const btn = document.createElement('button');
+        btn.className = `branch-btn ${key === activeBranch ? 'active' : ''}`;
+        btn.innerText = masterDatabase[key].name;
+        btn.onclick = (e) => switchBranch(e.target, key);
+        branchGrid.appendChild(btn);
       });
 
-      if (buttonElement) {
-        buttonElement.classList.add('active');
+      switchBranch(null, activeBranch);
+    }
+
+    // Handles switching branches and populates the role dropdown selection box
+    function switchBranch(btnElement, branchKey) {
+      activeBranch = branchKey;
+      
+      if(btnElement) {
+        document.querySelectorAll('.branch-btn').forEach(b => b.classList.remove('active'));
+        btnElement.classList.add('active');
       }
 
-      const data = branchDatabase[branchKey];
-      const targetDiv = document.getElementById('portal-content');
+      const roleDropdown = document.getElementById('role-dropdown');
+      roleDropdown.innerHTML = '';
+
+      const roles = masterDatabase[branchKey].roles;
+      Object.keys(roles).forEach(roleKey => {
+        const option = document.createElement('option');
+        option.value = roleKey;
+        option.innerText = roles[roleKey].title;
+        roleDropdown.appendChild(option);
+      });
+
+      renderRoleData();
+    }
+
+    // Renders custom roadmap, multi-source tests, and multi-source interviews based on the chosen role path checkbox/dropdown
+    function renderRoleData() {
+      const roleDropdown = document.getElementById('role-dropdown');
+      const selectedRoleKey = roleDropdown.value;
       
-      if (!targetDiv) return;
+      if(!selectedRoleKey) return;
+
+      const roleData = masterDatabase[activeBranch].roles[selectedRoleKey];
+      const targetDiv = document.getElementById('portal-content');
 
       targetDiv.innerHTML = `
         <div class="section-card">
-          <h2>${data.title}</h2>
-          <p class="role-title">💼 Core Specialization Target</p>
-          <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 24px;">${data.roleDesc}</p>
+          <h2>${roleData.title}</h2>
+          <p class="role-title">🎯 Core Specialization Roadmap</p>
+          <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 24px;">${roleData.desc}</p>
           
-          <p class="list-title">🗺️ Recommended Placement Roadmap</p>
+          <p class="list-title">🗺️ Required Skills Blueprint</p>
           <ul class="data-list">
-            ${data.roadmap.map(step => `<li>${step}</li>`).join('')}
+            ${roleData.skills.map(skill => `<li><strong>${skill}</strong></li>`).join('')}
           </ul>
 
-          <p class="list-title">📚 Vetted Study Resources</p>
-          <ul class="data-list">
-            ${data.resources.map(res => `<li>${res}</li>`).join('')}
-          </ul>
-
-          <p class="list-title">🔥 Live Internship Portals</p>
+          <p class="list-title">🔥 Live Multi-Platform Internship Portals</p>
           <div class="lab-box" style="border-left: 3px solid var(--success); background: rgba(16, 185, 129, 0.02);">
-            <p style="margin-bottom: 12px; font-size: 14px; color: #f1f5f9;">Explore multi-source live career pipelines with zero cost application tags:</p>
+            <p style="margin-bottom: 12px; font-size: 13px; color: #cbd5e1;">Apply via specialized alternative hubs with zero cost channels:</p>
             <div class="btn-group">
-              ${data.internships.map(intern => `
-                <button class="btn btn-primary" style="width: auto; padding: 8px 14px; font-size: 12px;" onclick="window.open('${intern.url}', '_blank')">${intern.name}</button>
+              ${roleData.internships.map(intern => `
+                <button class="btn btn-primary" onclick="window.open('${intern.url}', '_blank')">${intern.name}</button>
               `).join('')}
             </div>
           </div>
@@ -625,36 +549,35 @@
 
         <div class="section-card" style="display: flex; flex-direction: column; gap: 20px;">
           <div>
-            <h2>📝 Technical Assessment Lab</h2>
-            <p class="role-title">🤖 Placement Sandbox Simulator</p>
+            <h2>📝 Technical Assessment & Simulation Lab</h2>
+            <p class="role-title">⚡ Multi-Source Evaluation Sandbox</p>
           </div>
 
           <div class="lab-box">
-            <h4>${data.testTitle}</h4>
-            <p>Evaluate your architectural competence and core knowledge metrics under real-time simulated parameters.</p>
+            <h4>Practice Tests & Challenges</h4>
+            <p>Evaluate your structural runtime logic, problem solving capacity, and theory metrics across different cloud systems:</p>
             <div class="meta-tags">
-              <span class="tag tag-accent">⏱ ${data.testMeta[0]}</span>
-              <span class="tag">${data.testMeta[1]}</span>
-              <span class="tag" style="color: var(--warning);">${data.testMeta[2]}</span>
+              <span class="tag tag-accent">⏱ Timed Mode</span>
+              <span class="tag">Multiple Difficulty Node Options</span>
             </div>
             <div class="btn-group">
-              <button class="btn btn-primary" style="width: auto; padding: 8px 14px; font-size: 12px;" onclick="window.location.href='quiz.html'">StudyConnect Test</button>
-              ${data.testPlatforms.map(platform => `
-                <button class="btn btn-outline" style="width: auto; font-size: 12px; padding: 8px 12px;" onclick="window.open('${platform.url}', '_blank')">${platform.name}</button>
+              <button class="btn btn-primary" onclick="window.location.href='quiz.html'">StudyConnect Engine</button>
+              ${roleData.tests.map(testSource => `
+                <button class="btn btn-outline" onclick="window.open('${testSource.url}', '_blank')">${testSource.name}</button>
               `).join('')}
             </div>
           </div>
 
           <div class="lab-box">
-            <h4>${data.interviewTitle}</h4>
-            <p>${data.interviewDesc}</p>
+            <h4>Mock Interviews Engines</h4>
+            <p>Simulate production peer review, structural coding logic mapping, and live voice panel simulations:</p>
             <div class="meta-tags">
-              <span class="tag tag-accent">⏱ 30 Minutes</span>
-              <span class="tag">AI Voice + Code Sandbox Enabled</span>
+              <span class="tag tag-accent">🎤 Peer-to-Peer / AI Loop</span>
+              <span class="tag">Live Code Sync Sandbox Enabled</span>
             </div>
             <div class="btn-group">
-              ${data.mockPlatforms.map(platform => `
-                <button class="btn btn-outline" style="border-color: var(--accent); color: var(--accent); font-size: 12px; padding: 8px 12px;" onclick="window.open('${platform.url}', '_blank')">${platform.name}</button>
+              ${roleData.mocks.map(mockSource => `
+                <button class="btn btn-outline" style="border-color: var(--accent); color: var(--accent);" onclick="window.open('${mockSource.url}', '_blank')">${mockSource.name}</button>
               `).join('')}
             </div>
           </div>
@@ -662,10 +585,8 @@
       `;
     }
 
-    document.addEventListener("DOMContentLoaded", function() {
-      const firstBtn = document.querySelector('.branch-btn');
-      loadBranchData(firstBtn, 'cse');
-    });
+    // Run loader logic on layout load
+    document.addEventListener("DOMContentLoaded", initializePortal);
   </script>
 </body>
 </html>
