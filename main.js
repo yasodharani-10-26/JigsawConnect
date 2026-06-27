@@ -609,11 +609,9 @@ function setupStudyGroups() {
     });
   }
 }
-
 /* ==========================================================================
-   AI HELP & MULTIMODAL DOUBT SOLVER FEATURE
+   AI HELP & MULTIMODAL DOUBT SOLVER FEATURE (UPDATED)
    ========================================================================== */
-// Initialize global audio tracking safely
 window.latestRecordedAudioBlob = null;
 
 function setupDoubtSolver() {
@@ -635,7 +633,7 @@ function setupDoubtSolver() {
     }
 
     solutionDisplay.innerHTML = `
-      <div style="color: var(--accent); font-weight:600; text-align:center; padding:20px;">
+      <div style="color: var(--accent-cyan); font-weight:600; text-align:center; padding:20px;">
         🧠 AI Engine analyzing your query and preparing solution... Please wait...
       </div>
     `;
@@ -648,17 +646,20 @@ function setupDoubtSolver() {
 
       const response = await fetch("/api/solve-doubt", {
         method: "POST",
-        body: formData
+        body: formData // Note: Content-Type header పెట్టకూడదు, FormData నే స్వయంగా సెట్ చేసుకుంటుంది
       });
 
-      const data = await response.json();
-
+      // సర్వర్ నుండి రెస్పాన్స్ సక్సెస్ కాకపోతే ఇక్కడే పట్టుకోవాలి
       if (!response.ok) {
-        throw new Error(data.error || `Server responded with status ${response.status}`);
+        const errorText = await response.text(); // json() కి బదులు text() గా చదవాలి
+        throw new Error(errorText || `Server responded with status ${response.status}`);
       }
 
+      // సక్సెస్ అయితేనే JSON కింద మార్చాలి
+      const data = await response.json();
+
       solutionDisplay.innerHTML = `
-        <div style="background: rgba(16, 185, 129, 0.05); border: 1px solid #10b981; padding: 20px; border-radius: var(--radius-md); margin-top: 20px;">
+        <div style="background: rgba(16, 185, 129, 0.05); border: 1px solid #10b981; padding: 20px; border-radius: 14px; margin-top: 20px;">
           <h3 style="color: #10b981; margin-bottom: 10px; font-size: 16px;">💡 AI Generated Solution:</h3>
           <div style="color: #fff; line-height: 1.6; font-size: 14px; white-space: pre-line;">
             ${escapeHTML(data.solution)}
@@ -668,10 +669,13 @@ function setupDoubtSolver() {
 
     } catch (error) {
       console.error("Doubt Solver Exception:", error);
+      
+      // అసలు సర్వర్ లో ఏం ఎర్రర్ ఉందో ఇక్కడ డిస్‌ప్లే అవుతుంది
       solutionDisplay.innerHTML = `
-        <div style="border: 1px solid rgba(239, 68, 68, 0.2); background: rgba(239, 68, 68, 0.05); padding: 16px; border-radius: 8px; color: var(--danger); font-size: 14px;">
-          <strong>Error Resolving Doubt:</strong> ${escapeHTML(error.message)}<br>
-          <span style="font-size:12px; color:var(--muted);">Check backend endpoints or Gemini API Multi-modal configuration.</span>
+        <div style="border: 1px solid rgba(239, 68, 68, 0.3); background: rgba(239, 68, 68, 0.05); padding: 16px; border-radius: 8px; color: #ef4444; font-size: 14px;">
+          <strong>🚨 Server Error Detected:</strong><br>
+          <pre style="background: #000; padding: 10px; border-radius: 6px; margin-top: 8px; white-space: pre-wrap; font-family: monospace; font-size: 12px; color: #fca5a5;">${escapeHTML(error.message)}</pre>
+          <span style="font-size:12px; color:var(--text-muted); display:block; margin-top:8px;">💡 Hint: Check if your backend handles 'FormData' using Multer and Gemini API is integrated properly.</span>
         </div>
       `;
     }
@@ -679,7 +683,6 @@ function setupDoubtSolver() {
 
   setupAudioRecorder();
 }
-
 /**
  * Handle Voice Recording functionality natively in browser
  */
