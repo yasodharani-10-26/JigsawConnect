@@ -717,8 +717,8 @@
         alert("⚠️ Failed to initialize JAM workflow data pipeline.");
       }
     }
-/* ==========================================================================
-   AUTO TEAM CREATION ENGINE (FULLY FIXED & RE-ARCHITECTED)
+    /* ==========================================================================
+   AUTO TEAM CREATION ENGINE (FULLY OPTIMIZED & FIXED)
    ========================================================================== */
 async function autoCreateTeams() {
   const { db, ref, get, set, app } = window;
@@ -733,7 +733,7 @@ async function autoCreateTeams() {
   }
 
   try {
-    // 1. Fetch both Website Users and Leaderboard Logs
+    // 1. Fetch both Website Users and Leaderboard Logs simultaneously
     const [usersSnap, leaderboardSnap] = await Promise.all([
       get(ref(db, "users")),
       get(ref(db, "leaderboard"))
@@ -748,7 +748,7 @@ async function autoCreateTeams() {
         const studentEmail = (student.email || student.studentEmail || "").trim();
         if (studentEmail) {
           const emailKey = studentEmail.toLowerCase();
-          // generate a stable predictable fake UID if not present to avoid collisions
+          // Generate a stable predictable fake UID if not present to avoid collisions
           const stableHRUid = student.uid || `hr_${btoa(emailKey).replace(/=/g, "").substr(0, 10)}`;
           
           allStudentsMap.set(emailKey, {
@@ -772,7 +772,7 @@ async function autoCreateTeams() {
           if (userEmail) {
             if (allStudentsMap.has(userEmail)) {
               let existing = allStudentsMap.get(userEmail);
-              existing.uid = uid; // Merge and upgrade with actual authentic authenticated user UID
+              existing.uid = uid; // Merge and upgrade with actual authentic website authenticated user UID
               if (profile.name) existing.name = profile.name;
               if (profile.studentId) existing.studentId = profile.studentId;
               allStudentsMap.set(userEmail, existing);
@@ -838,14 +838,18 @@ async function autoCreateTeams() {
         const member = currentTeam[m];
         const isLeader = m === 0;
 
-        // Push updates into structural transaction batch array
-        databasePromises.push(set(ref(db, `users/${member.uid}/name`), member.name));
-        databasePromises.push(set(ref(db, `users/${member.uid}/email`), member.email));
-        databasePromises.push(set(ref(db, `users/${member.uid}/studentId`), member.studentId));
-        databasePromises.push(set(ref(db, `users/${member.uid}/role`), "student"));
-        databasePromises.push(set(ref(db, `users/${member.uid}/hackerrankScore`), member.hackerrankScore));
-        databasePromises.push(set(ref(db, `users/${member.uid}/teamName`), isLeader ? `${teamName} (Leader)` : teamName));
-        databasePromises.push(set(ref(db, `users/${member.uid}/teamLeader`), leader.uid));
+        // FIXED: Force writing full profile objects. 
+        // This ensures HackerRank-only students are successfully registered into the 'users' node 
+        // and safely visible inside the live roster dashboard tables.
+        databasePromises.push(set(ref(db, `users/${member.uid}`), {
+          name: member.name,
+          email: member.email,
+          studentId: member.studentId,
+          role: "student",
+          hackerrankScore: member.hackerrankScore,
+          teamName: isLeader ? `${teamName} (Leader)` : teamName,
+          teamLeader: leader.uid
+        }));
       }
 
       // Execute Cloud Function asynchronously to prevent locking execution thread loops
@@ -861,7 +865,7 @@ async function autoCreateTeams() {
       );
     }
 
-    // 7. Fire all promises in parallel context simultaneously
+    // 7. Fire all database and function promises concurrently
     console.log("Synchronizing data nodes across systems...");
     await Promise.all([...databasePromises, ...cloudFunctionPromises]);
 
@@ -872,7 +876,6 @@ async function autoCreateTeams() {
     alert("⚠️ Failed to write dynamically balanced teams matrix to cloud environment. Console logs check చేయండి.");
   }
 }
-    
     /* ==========================================================================
        ONBOARD NEW STUDENT HANDLER ENGINE
        ========================================================================== */
