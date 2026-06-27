@@ -14,7 +14,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method Not Allowed" });
   }
 
-  // 1. Grab the API key inside the handler function execution context
+  // 1. Grab the API key safely
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
     return res.status(500).json({ 
@@ -22,12 +22,13 @@ export default async function handler(req, res) {
     });
   }
 
-  // 2. Initialize the client safely here
+  // 2. Initialize the client
   const ai = new GoogleGenerativeAI(apiKey);
 
-  // Wrap the formidable parsing logic in a Promise so Vercel waits for it to execute completely
+  // Wrap formidable in a Promise to ensure Vercel waits for parsing
   return new Promise((resolve) => {
-    const form = formidable({ extremes: false });
+    // Formidable 3.x+ setup
+    const form = formidable({});
 
     form.parse(req, async (err, fields, files) => {
       if (err) {
@@ -37,34 +38,39 @@ export default async function handler(req, res) {
       }
 
       try {
-        const promptText = fields.text ? fields.text[0] : "";
+        // formidable arrays ని రిటర్న్ చేస్తుంది, కాబట్టి [0] ఇండెక్స్ వాడాలి
+        const promptText = fields.text ? (Array.isArray(fields.text) ? fields.text[0] : fields.text) : "";
         const parts = [];
 
         // Add image if it exists
-        if (files.image && files.image[0]) {
-          const imageFile = files.image[0];
-          const imageBuffer = fs.readFileSync(imageFile.filepath);
-          parts.push({
-            inlineData: {
-              data: imageBuffer.toString("base64"),
-              mimeType: imageFile.mimetype,
-            },
-          });
+        if (files.image) {
+          const imageFile = Array.isArray(files.image) ? files.image[0] : files.image;
+          if (imageFile && imageFile.filepath) {
+            const imageBuffer = fs.readFileSync(imageFile.filepath);
+            parts.push({
+              inlineData: {
+                data: imageBuffer.toString("base64"),
+                mimeType: imageFile.mimetype,
+              },
+            });
+          }
         }
 
         // Add voice recording if it exists
-        if (files.voice && files.voice[0]) {
-          const voiceFile = files.voice[0];
-          const voiceBuffer = fs.readFileSync(voiceFile.filepath);
-          parts.push({
-            inlineData: {
-              data: voiceBuffer.toString("base64"),
-              mimeType: voiceFile.mimetype || "audio/mp3",
-            },
-          });
+        if (files.voice) {
+          const voiceFile = Array.isArray(files.voice) ? files.voice[0] : files.voice;
+          if (voiceFile && voiceFile.filepath) {
+            const voiceBuffer = fs.readFileSync(voiceFile.filepath);
+            parts.push({
+              inlineData: {
+                data: voiceBuffer.toString("base64"),
+                mimeType: voiceFile.mimetype || "audio/mp3",
+              },
+            });
+          }
         }
 
-        // Add text prompt structure carefully as an object part
+        // Add text prompt structure carefully
         const finalPrompt = promptText 
           ? `${promptText}\n\nPlease solve the doubt attached in the multimodal inputs above.` 
           : "Please analyze the attached image/audio doubt and provide a detailed solution.";
@@ -85,7 +91,7 @@ export default async function handler(req, res) {
 
         // Execute request to Gemini API
         const result = await model.generateContent({
-          contents: [{ parts: parts }],
+          contents: [{ role: "user", parts: parts }], // 'role' parameter కచ్చితంగా ఉండాలి
           generationConfig: {
             temperature: 0.4,
           }
