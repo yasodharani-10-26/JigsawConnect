@@ -87,7 +87,7 @@
     }
     .platform-card:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: 0 10px 20px var(--accent-glow); }
     .platform-card h3 { font-size: 16px; color: #fff; margin-bottom: 6px; }
-    .platform-card p { font-size: 13px; color: var(--text-muted); line-net: 1.4; }
+    .platform-card p { font-size: 13px; color: var(--text-muted); line-height: 1.4; }
     
     /* RIGHT SIDEBAR (STREAK & TOOLS) */
     .sidebar { display: flex; flex-direction: column; gap: 30px; }
@@ -108,7 +108,7 @@
       text-decoration: none; color: #fff; background: var(--primary); transition: background 0.2s;
     }
     .btn:hover { background: #4338ca; }
-    .btn-outline { background: transparent; border: 1px solid var(--accent); color: var(--accent); }
+    .btn-outline { background: transparent; border: 1px solid var(--accent); color: var(--accent); margin-top: 2px; }
     .btn-outline:hover { background: var(--accent); color: #000; }
 
     .footer { text-align: center; margin-top: 60px; padding: 30px; color: var(--text-muted); font-size: 13px; border-top: 1px solid var(--border); }
@@ -131,7 +131,7 @@
   <!-- HEADER -->
   <header class="header">
     <h1>🚀 CodeHub Station</h1>
-    <p>మీ వీక్లీ కోడింగ్ కాంటెస్ట్ షెడ్యూల్స్, బెస్ట్ లెర్నింగ్ ప్లాట్‌ఫార్మ్స్ మరియు డైలీ స్ట్రీక్ ట్రాకర్ అన్నీ ఒకే చోట.</p>
+    <p>Your ultimate weekly coding contest schedules, premier learning platforms, and daily target tracker all in one unified dashboard.</p>
   </header>
 
   <!-- MAIN STRUCTURE -->
@@ -205,7 +205,7 @@
             <div class="contest-badge">
               <div class="contest-info">
                 <h4>AtCoder Beginner Contest</h4>
-                <p>⏰ Every Sunday 5:30 PM IST | Best for Logic Building</p>
+                <p>⏰ Every Sunday 5:30 PM IST | Ideal for Logic & Speed Building</p>
               </div>
               <a href="https://atcoder.jp" target="_blank" class="btn">Join</a>
             </div>
@@ -219,45 +219,66 @@
       <div class="platforms-grid">
         <a href="https://leetcode.com" target="_blank" class="platform-card">
           <h3>👨‍💻 LeetCode</h3>
-          <p>FAANG మరియు టాప్ ప్రొడక్ట్ బేస్డ్ కంపెనీల ఇంటర్వ్యూల ప్రిపరేషన్‌కి బెస్ట్ చాయిస్.</p>
+          <p>The premium platform for mastering DSA and preparing for tier-1 product company interviews.</p>
         </a>
         <a href="https://www.codechef.com" target="_blank" class="platform-card">
           <h3>🌶️ CodeChef</h3>
-          <p>బిగినర్స్ నుండి అడ్వాన్స్డ్ లెవెల్ వరకు CP ర్యాంకింగ్స్ పెంచుకోవడానికి సూపర్.</p>
+          <p>Excellent division-based rating tracks for absolute beginners to expert competitive coders.</p>
         </a>
         <a href="https://codeforces.com" target="_blank" class="platform-card">
           <h3>🏆 Codeforces</h3>
-          <p>గ్లోబల్ లెవెల్ కోడర్స్‌తో పోటీపడి మీ అల్గారిథమిక్ థింకింగ్ టెస్ట్ చేసుకోవచ్చు.</p>
+          <p>Test your algorithmic limits by competing against the best global minds in short, intense rounds.</p>
         </a>
         <a href="https://www.hackerrank.com" target="_blank" class="platform-card">
           <h3>🎯 HackerRank</h3>
-          <p>బేసిక్ కోడింగ్ లాంగ్వేజెస్ నేర్చుకోవడానికి, సర్టిఫికేషన్స్ సంపాదించడానికి బెస్ట్.</p>
+          <p>Perfect for learning language basics, solving modular logic paths, and earning core skill badges.</p>
         </a>
       </div>
     </div>
 
-    <!-- RIGHT SIDEBAR: TRACKER & UTILITIES -->
+    <!-- RIGHT SIDEBAR: TRACKER, SCHOLARSHIPS & UTILITIES -->
     <div class="sidebar">
       
       <!-- STREAK TRACKER PANEL -->
       <div class="sidebar-panel">
         <h3 style="color: #fff; font-size: 16px; margin-bottom: 4px;">🔥 Daily Problem Streak</h3>
-        <p style="color: var(--text-muted); font-size: 13px;">ఈరోజు మీ టార్గెట్స్ పూర్తి చేసారా?</p>
+        <p style="color: var(--text-muted); font-size: 13px;">Have you crushed your milestones today?</p>
         
         <ul class="streak-list">
           <li class="streak-item">
             <input type="checkbox" id="task1" onchange="saveStreak()">
-            <label for="task1">LeetCode Daily Challenge పూర్తి చేయడం</label>
+            <label for="task1">Solve the LeetCode Daily Challenge</label>
           </li>
           <li class="streak-item">
             <input type="checkbox" id="task2" onchange="saveStreak()">
-            <label for="task2">ఒక కొత్త DSA కాన్సెప్ట్ చదవడం</label>
+            <label for="task2">Master one complex DSA structural concept</label>
           </li>
           <li class="streak-item">
             <input type="checkbox" id="task3" onchange="saveStreak()">
-            <label for="task3">పాత కాంటెస్ట్ తాలూకు తప్పులను సరిదిద్దడం (Upsolving)</label>
+            <label for="task3">Upsolve missed problems from previous contests</label>
           </li>
         </ul>
+      </div>
+
+      <!-- SCHOLARSHIPS PANEL -->
+      <div class="sidebar-panel">
+        <h3 style="color: #fff; font-size: 16px; margin-bottom: 4px;">🎓 Student Scholarships</h3>
+        <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 12px;">Top tracking links for B.Tech (1st-4th Yr) & PG:</p>
+        
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <a href="https://scholarships.gov.in" target="_blank" class="btn btn-outline" style="text-align: left; display: flex; justify-content: space-between;">
+            <span>🏛️ National Scholarship (NSP)</span> <span>→</span>
+          </a>
+          <a href="https://www.reliancefoundation.org" target="_blank" class="btn btn-outline" style="text-align: left; display: flex; justify-content: space-between;">
+            <span>💎 Reliance Foundation</span> <span>→</span>
+          </a>
+          <a href="https://ffe.org" target="_blank" class="btn btn-outline" style="text-align: left; display: flex; justify-content: space-between;">
+            <span>🚀 FFE (For 1st Year B.Tech)</span> <span>→</span>
+          </a>
+          <a href="https://www.buddy4study.com" target="_blank" class="btn btn-outline" style="text-align: left; display: flex; justify-content: space-between;">
+            <span>🎯 Buddy4Study Corporate Tracks</span> <span>→</span>
+          </a>
+        </div>
       </div>
 
       <!-- CHEAT SHEETS PANEL -->
@@ -279,7 +300,7 @@
   </footer>
 
   <script>
-    // LocalStorage తో స్ట్రీక్ డేటా సేవ్ అవ్వడానికి స్క్రిప్ట్
+    // LocalStorage Script for persistent streak state
     function saveStreak() {
       const checkedStates = {
         task1: document.getElementById('task1').checked,
