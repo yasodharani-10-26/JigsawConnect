@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CodeHub | Interactive Coding Matrix</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #070a13;
+      --card-bg: rgba(16, 24, 42, 0.45);
+      --border: rgba(255, 255, 255, 0.06);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --primary: #4f46e5;
+      --accent: #06b6d4;
+      --accent-glow: rgba(6, 182, 212, 0.15);
+      --success: #10b981;
+      --warning: #f59e0b;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+
+    body {
+      min-height: 100vh;
+      color: var(--text-main);
+      background: 
+        radial-gradient(circle at 10% 10%, rgba(79, 70, 229, 0.12), transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.08), transparent 40%),
+        var(--bg);
+      background-attachment: fixed;
+      padding-bottom: 80px;
+    }
+
+    /* NAVBAR */
+    .navbar {
+      position: fixed; top: 0; width: 100%; padding: 18px 5%;
+      display: flex; justify-content: space-between; align-items: center;
+      background: rgba(7, 10, 19, 0.75); backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--border); z-index: 1000;
+    }
+    .logo { text-decoration: none; color: #fff; font-size: 22px; font-weight: 800; }
+    .logo span { color: var(--accent); }
+    .nav-links { display: flex; gap: 28px; }
+    .nav-links a { text-decoration: none; color: var(--text-muted); font-size: 14px; font-weight: 600; transition: color 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--accent); }
+
+    /* HEADER */
+    .header { padding: 140px 20px 40px; text-align: center; }
+    .header h1 {
+      font-size: 2.8rem; font-weight: 800; margin-bottom: 12px;
+      background: linear-gradient(135deg, #fff, #94a3b8);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .header p { color: var(--text-muted); font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
+
+    /* CONTAINER LAYOUT */
+    .container { max-width: 1200px; margin: 0 auto; padding: 20px; display: grid; grid-template-columns: 2fr 1.1fr; gap: 30px; }
+    @media (max-width: 968px) { .container { grid-template-columns: 1fr; } }
+
+    .section-title { font-size: 20px; font-weight: 700; margin-bottom: 20px; color: #fff; display: flex; align-items: center; gap: 10px; }
+    .section-title span { color: var(--accent); }
+
+    /* WEEKLY CALENDAR STYLES */
+    .calendar-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 24px; backdrop-filter: blur(20px); }
+    .day-row { display: flex; padding: 16px; border-bottom: 1px solid var(--border); transition: background 0.2s; border-radius: 10px; }
+    .day-row:hover { background: rgba(255, 255, 255, 0.02); }
+    .day-name { width: 140px; font-weight: 700; color: var(--accent); font-size: 15px; display: flex; align-items: center; }
+    .day-contests { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+    
+    .contest-badge {
+      background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border);
+      padding: 10px 14px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center;
+    }
+    .contest-info h4 { font-size: 14px; color: #fff; font-weight: 600; }
+    .contest-info p { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+    
+    /* PLATFORMS GRID */
+    .platforms-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 30px; }
+    .platform-card {
+      background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 20px;
+      transition: all 0.3s ease; text-decoration: none; display: block;
+    }
+    .platform-card:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: 0 10px 20px var(--accent-glow); }
+    .platform-card h3 { font-size: 16px; color: #fff; margin-bottom: 6px; }
+    .platform-card p { font-size: 13px; color: var(--text-muted); line-net: 1.4; }
+    
+    /* RIGHT SIDEBAR (STREAK & TOOLS) */
+    .sidebar { display: flex; flex-direction: column; gap: 30px; }
+    .sidebar-panel { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 24px; backdrop-filter: blur(20px); }
+    
+    /* STREAK TRACKER */
+    .streak-list { list-style: none; margin-top: 15px; }
+    .streak-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.03); }
+    .streak-item input[type="checkbox"] {
+      width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer;
+    }
+    .streak-item label { font-size: 14px; color: #cbd5e1; cursor: pointer; width: 100%; }
+    .streak-item input:checked + label { color: var(--text-muted); text-decoration: line-through; }
+
+    /* BUTTONS & LINKS */
+    .btn {
+      padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 600;
+      text-decoration: none; color: #fff; background: var(--primary); transition: background 0.2s;
+    }
+    .btn:hover { background: #4338ca; }
+    .btn-outline { background: transparent; border: 1px solid var(--accent); color: var(--accent); }
+    .btn-outline:hover { background: var(--accent); color: #000; }
+
+    .footer { text-align: center; margin-top: 60px; padding: 30px; color: var(--text-muted); font-size: 13px; border-top: 1px solid var(--border); }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <a href="index.html" class="logo">📚 Study<span>Connect</span></a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="discussions.html">Discussions</a>
+      <a href="quiz.html">Quiz</a>
+      <a href="placements.html">Placements Hub</a>
+      <a href="codehub.html" class="active">CodeHub</a>
+    </div>
+  </nav>
+
+  <!-- HEADER -->
+  <header class="header">
+    <h1>🚀 CodeHub Station</h1>
+    <p>మీ వీక్లీ కోడింగ్ కాంటెస్ట్ షెడ్యూల్స్, బెస్ట్ లెర్నింగ్ ప్లాట్‌ఫార్మ్స్ మరియు డైలీ స్ట్రీక్ ట్రాకర్ అన్నీ ఒకే చోట.</p>
+  </header>
+
+  <!-- MAIN STRUCTURE -->
+  <main class="container">
+    
+    <!-- LEFT SIDE: CALENDAR & PLATFORMS -->
+    <div>
+      <h2 class="section-title">📅 Weekly Contest <span>Matrix</span></h2>
+      <div class="calendar-card">
+        
+        <!-- WEDNESDAY -->
+        <div class="day-row">
+          <div class="day-name">Wednesday</div>
+          <div class="day-contests">
+            <div class="contest-badge">
+              <div class="contest-info">
+                <h4>CodeChef Rated Contest</h4>
+                <p>⏰ Every Wednesday 8:00 PM - 10:00 PM IST | Short CP Challenge</p>
+              </div>
+              <a href="https://www.codechef.com" target="_blank" class="btn">Compete</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- THURSDAY -->
+        <div class="day-row">
+          <div class="day-name">Thursday</div>
+          <div class="day-contests">
+            <div class="contest-badge">
+              <div class="contest-info">
+                <h4>LeetCode Biweekly (Alternating)</h4>
+                <p>⏰ Evening Slot | Focused on Interview DSA Speed</p>
+              </div>
+              <a href="https://leetcode.com/contest/" target="_blank" class="btn">Solve</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- SATURDAY -->
+        <div class="day-row">
+          <div class="day-name">Saturday</div>
+          <div class="day-contests">
+            <div class="contest-badge">
+              <div class="contest-info">
+                <h4>Codeforces Rounds</h4>
+                <p>⏰ Dynamic Timing | World-Class Competitive Programming</p>
+              </div>
+              <a href="https://codeforces.com" target="_blank" class="btn">Rank Up</a>
+            </div>
+            <div class="contest-badge">
+              <div class="contest-info">
+                <h4>HackerEarth Circuits</h4>
+                <p>⏰ Monthly/Weekly Tracks | Conceptual Long Challenges</p>
+              </div>
+              <a href="https://www.hackerearth.com" target="_blank" class="btn">Explore</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUNDAY -->
+        <div class="day-row" style="border-bottom: none;">
+          <div class="day-name">Sunday</div>
+          <div class="day-contests">
+            <div class="contest-badge">
+              <div class="contest-info">
+                <h4>LeetCode Weekly Contest</h4>
+                <p>⏰ Every Sunday 8:00 AM - 9:30 AM IST | 4 Coding Problems</p>
+              </div>
+              <a href="https://leetcode.com/contest/" target="_blank" class="btn">Compete</a>
+            </div>
+            <div class="contest-badge">
+              <div class="contest-info">
+                <h4>AtCoder Beginner Contest</h4>
+                <p>⏰ Every Sunday 5:30 PM IST | Best for Logic Building</p>
+              </div>
+              <a href="https://atcoder.jp" target="_blank" class="btn">Join</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- TOP LEARNING PLATFORMS -->
+      <h2 class="section-title" style="margin-top: 40px;">💡 Top Coding <span>Environments</span></h2>
+      <div class="platforms-grid">
+        <a href="https://leetcode.com" target="_blank" class="platform-card">
+          <h3>👨‍💻 LeetCode</h3>
+          <p>FAANG మరియు టాప్ ప్రొడక్ట్ బేస్డ్ కంపెనీల ఇంటర్వ్యూల ప్రిపరేషన్‌కి బెస్ట్ చాయిస్.</p>
+        </a>
+        <a href="https://www.codechef.com" target="_blank" class="platform-card">
+          <h3>🌶️ CodeChef</h3>
+          <p>బిగినర్స్ నుండి అడ్వాన్స్డ్ లెవెల్ వరకు CP ర్యాంకింగ్స్ పెంచుకోవడానికి సూపర్.</p>
+        </a>
+        <a href="https://codeforces.com" target="_blank" class="platform-card">
+          <h3>🏆 Codeforces</h3>
+          <p>గ్లోబల్ లెవెల్ కోడర్స్‌తో పోటీపడి మీ అల్గారిథమిక్ థింకింగ్ టెస్ట్ చేసుకోవచ్చు.</p>
+        </a>
+        <a href="https://www.hackerrank.com" target="_blank" class="platform-card">
+          <h3>🎯 HackerRank</h3>
+          <p>బేసిక్ కోడింగ్ లాంగ్వేజెస్ నేర్చుకోవడానికి, సర్టిఫికేషన్స్ సంపాదించడానికి బెస్ట్.</p>
+        </a>
+      </div>
+    </div>
+
+    <!-- RIGHT SIDEBAR: TRACKER & UTILITIES -->
+    <div class="sidebar">
+      
+      <!-- STREAK TRACKER PANEL -->
+      <div class="sidebar-panel">
+        <h3 style="color: #fff; font-size: 16px; margin-bottom: 4px;">🔥 Daily Problem Streak</h3>
+        <p style="color: var(--text-muted); font-size: 13px;">ఈరోజు మీ టార్గెట్స్ పూర్తి చేసారా?</p>
+        
+        <ul class="streak-list">
+          <li class="streak-item">
+            <input type="checkbox" id="task1" onchange="saveStreak()">
+            <label for="task1">LeetCode Daily Challenge పూర్తి చేయడం</label>
+          </li>
+          <li class="streak-item">
+            <input type="checkbox" id="task2" onchange="saveStreak()">
+            <label for="task2">ఒక కొత్త DSA కాన్సెప్ట్ చదవడం</label>
+          </li>
+          <li class="streak-item">
+            <input type="checkbox" id="task3" onchange="saveStreak()">
+            <label for="task3">పాత కాంటెస్ట్ తాలూకు తప్పులను సరిదిద్దడం (Upsolving)</label>
+          </li>
+        </ul>
+      </div>
+
+      <!-- CHEAT SHEETS PANEL -->
+      <div class="sidebar-panel">
+        <h3 style="color: #fff; font-size: 16px; margin-bottom: 12px;">📚 Quick Resources</h3>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <a href="https://takeuforward.org/strivers-a2z-dsa-course" target="_blank" class="btn btn-outline" style="text-align: center;">Striver's A2Z DSA Sheet</a>
+          <a href="https://www.geeksforgeeks.org" target="_blank" class="btn btn-outline" style="text-align: center;">GeeksforGeeks Library</a>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    &copy; 2026 StudyConnect | Automated CodeHub Hub
+  </footer>
+
+  <script>
+    // LocalStorage తో స్ట్రీక్ డేటా సేవ్ అవ్వడానికి స్క్రిప్ట్
+    function saveStreak() {
+      const checkedStates = {
+        task1: document.getElementById('task1').checked,
+        task2: document.getElementById('task2').checked,
+        task3: document.getElementById('task3').checked
+      };
+      localStorage.setItem('codehub_streak', JSON.stringify(checkedStates));
+    }
+
+    function loadStreak() {
+      const data = localStorage.getItem('codehub_streak');
+      if (data) {
+        const checkedStates = JSON.parse(data);
+        if(document.getElementById('task1')) document.getElementById('task1').checked = checkedStates.task1 || false;
+        if(document.getElementById('task2')) document.getElementById('task2').checked = checkedStates.task2 || false;
+        if(document.getElementById('task3')) document.getElementById('task3').checked = checkedStates.task3 || false;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadStreak);
+  </script>
+</body>
+</html>
