@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin Dashboard – StudyConnect</title>
 
+  <!-- Excel read/write library (used by the exam leaderboard upload/download) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
   <style>
     /* =========================
         ROOT & THEME VARIABLES
@@ -436,6 +439,34 @@
       border-top: 1px solid var(--border);
       margin-top: 40px;
     }
+
+    /* ==========================================================================
+        NEW: HACKERRANK EXAM POSTING + ADMIN-ONLY PER-EXAM LEADERBOARD
+       ========================================================================== */
+    .exam-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      flex-wrap: wrap;
+    }
+    .exam-row-title { font-weight: 700; font-size: 14px; }
+    .exam-row-link { font-size: 12px; color: var(--muted); word-break: break-all; }
+    .exam-row-deadline { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .exam-status-pill { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; }
+    .exam-status-active { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+    .exam-status-past { background: rgba(100, 116, 139, 0.15); color: #94a3b8; }
+    .exam-toggle-btn { background: rgba(255,255,255,0.06); color: #fff; padding: 6px 12px; font-size: 12px; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; }
+    .exam-toggle-btn:hover { border-color: var(--accent); }
+
+    .admin-lb-table { width: 100%; border-collapse: collapse; }
+    .admin-lb-table th, .admin-lb-table td { padding: 10px; border-bottom: 1px solid var(--border); text-align: left; font-size: 13px; }
+    .admin-lb-table th { color: var(--muted); text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
+    .admin-only-tag { font-size: 11px; font-weight: 700; color: #eab308; background: rgba(234,179,8,0.1); border: 1px solid rgba(234,179,8,0.2); padding: 3px 10px; border-radius: 20px; margin-left: 8px; }
   </style>
 </head>
 
@@ -580,6 +611,71 @@
       </section>
 
     </div>
+
+    <!-- ============================================================
+         NEW: POST A HACKERRANK EXAM LINK
+         Submitting this pushes the exam straight into quiz.html's
+         "🟢 Active HackerRank Exams" card. Once the optional deadline
+         passes (or the admin manually marks it), quiz.html moves it
+         to "🕓 Past HackerRank Exams" automatically.
+    ============================================================= -->
+    <section class="admin-panel" style="margin-bottom: 30px;">
+      <h2 class="admin-section-title">📌 Post HackerRank Exam Link</h2>
+      <form id="examPostForm" class="admin-upload-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Exam Title</label>
+            <input type="text" id="examTitleInput" placeholder="Weekly DSA Contest" required>
+          </div>
+          <div class="form-group">
+            <label>HackerRank Link</label>
+            <input type="url" id="examLinkInput" placeholder="https://www.hackerrank.com/..." required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Deadline (optional — exam auto-moves to Past after this time)</label>
+          <input type="datetime-local" id="examDeadlineInput">
+        </div>
+        <button type="submit" class="btn btn-primary">📌 Post Exam to quiz.html</button>
+      </form>
+
+      <div id="postedExamsList" style="margin-top: 24px; display: flex; flex-direction: column; gap: 12px;"></div>
+    </section>
+
+    <!-- ============================================================
+         NEW: EXAM-WISE LEADERBOARD — ADMIN ONLY
+         Pick an exam, upload its result Excel (Roll Number,
+         HackerRank ID, Branch, Section, Score). Saved to Firebase
+         under "viewedLeaderboards/{examId}" — visible only here,
+         not on the student-facing quiz.html / leaderboard.html.
+    ============================================================= -->
+    <section class="admin-panel">
+      <h2 class="admin-section-title">🏆 Exam Leaderboard <span class="admin-only-tag">ADMIN ONLY</span></h2>
+      <div class="form-row" style="margin-bottom: 16px;">
+        <div class="form-group" style="grid-column: span 2;">
+          <label>HackerRank Leaderboard Link</label>
+          <input type="url" id="viewLbLinkInput" placeholder="https://www.hackerrank.com/contests/your-contest-slug/leaderboard">
+        </div>
+      </div>
+      <button class="btn btn-primary" id="viewLbBtn" style="margin-bottom: 12px; width: fit-content;">👁 View Leaderboard</button>
+      <p id="viewLbStatus" style="font-size: 12px; color: var(--muted); margin-bottom: 16px;"></p>
+      <button class="btn btn-primary" id="downloadExamLbBtn" style="margin-bottom: 16px; width: fit-content;">📥 Download This Exam's Leaderboard (.xlsx)</button>
+      <div style="overflow-x: auto;">
+        <table class="admin-lb-table">
+          <thead>
+            <tr>
+              <th style="width: 60px;">Rank</th>
+              <th>HackerRank ID</th>
+              <th>Marks</th>
+            </tr>
+          </thead>
+          <tbody id="examLbTableBody">
+            <tr><td colspan="3" style="text-align:center; color:var(--muted); padding:20px;">Paste a HackerRank leaderboard link above and click "View Leaderboard".</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
   </main>
 
   <footer class="footer">
@@ -588,7 +684,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
-    import { getDatabase, ref, onValue, set, push } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
+    import { getDatabase, ref, onValue, set, push, update } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCaCkliRZk8HmNtOsJpoA084YhNY7MeMWM",
@@ -738,6 +834,7 @@
         formatSelected: formatType,
         totalQuestions: finalQuestions.length,
         questions: finalQuestions,
+        status: 'active', // shows up under quiz.html's "🟢 Active Quizzes" card
         timestamp: new Date().toLocaleString()
       };
 
@@ -786,6 +883,202 @@
       } catch (err) {
         console.error(err);
       }
+    });
+
+    // ================================================================
+    //  NEW: POST HACKERRANK EXAM LINK
+    //  Pushes into "hackerrankExams" — the exact same node quiz.html
+    //  listens to for its "🟢 Active HackerRank Exams" card.
+    // ================================================================
+    document.getElementById('examPostForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const title = document.getElementById('examTitleInput').value.trim();
+      const link = document.getElementById('examLinkInput').value.trim();
+      const deadline = document.getElementById('examDeadlineInput').value; // datetime-local value or ""
+
+      if (!title || !link) return;
+
+      try {
+        const newExamRef = push(ref(db, "hackerrankExams"));
+        await set(newExamRef, {
+          title: title,
+          link: link,
+          status: 'active',
+          endTime: deadline || null,
+          createdAt: new Date().toLocaleString()
+        });
+        alert(`📌 "${title}" exam post అయ్యింది! ఇది నేరుగా quiz.html లో "Active HackerRank Exams" లో కనిపిస్తుంది.`);
+        document.getElementById('examPostForm').reset();
+      } catch (err) {
+        console.error(err);
+        alert("Exam post చేయడంలో ఎర్రర్ వచ్చింది.");
+      }
+    });
+
+    let latestExamsForAdmin = {};
+
+    onValue(ref(db, "hackerrankExams"), (snapshot) => {
+      latestExamsForAdmin = snapshot.exists() ? snapshot.val() : {};
+      renderPostedExamsList();
+    });
+
+    // Mirrors the same rule quiz.html uses: past if manually marked,
+    // or if the optional deadline has already elapsed.
+    function isExamPast(exam) {
+      if (!exam) return false;
+      if (exam.status === 'past') return true;
+      if (exam.endTime) {
+        const end = new Date(exam.endTime);
+        if (!isNaN(end.getTime()) && end.getTime() < Date.now()) return true;
+      }
+      return false;
+    }
+
+    function renderPostedExamsList() {
+      const container = document.getElementById('postedExamsList');
+      container.innerHTML = "";
+      const keys = Object.keys(latestExamsForAdmin);
+
+      if (keys.length === 0) {
+        container.innerHTML = `<p style="color:var(--muted); font-size:13px;">No exams posted yet.</p>`;
+        return;
+      }
+
+      keys.forEach(key => {
+        const exam = latestExamsForAdmin[key];
+        const past = isExamPast(exam);
+
+        const row = document.createElement('div');
+        row.className = 'exam-row';
+        row.innerHTML = `
+          <div>
+            <div class="exam-row-title">${exam.title || 'HackerRank Exam'}</div>
+            <div class="exam-row-link">${exam.link || ''}</div>
+            ${exam.endTime ? `<div class="exam-row-deadline">Deadline: ${new Date(exam.endTime).toLocaleString()}</div>` : ''}
+          </div>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span class="exam-status-pill ${past ? 'exam-status-past' : 'exam-status-active'}">${past ? 'PAST' : 'ACTIVE'}</span>
+            <button class="exam-toggle-btn" data-key="${key}" data-action="${past ? 'reactivate' : 'archive'}">${past ? '↺ Reactivate' : '🕓 Mark Past'}</button>
+          </div>
+        `;
+        container.appendChild(row);
+      });
+
+      container.querySelectorAll('.exam-toggle-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const key = btn.getAttribute('data-key');
+          const action = btn.getAttribute('data-action');
+          try {
+            await update(ref(db, `hackerrankExams/${key}`), { status: action === 'archive' ? 'past' : 'active' });
+          } catch (err) {
+            console.error(err);
+            alert('Status update failed.');
+          }
+        });
+      });
+    }
+
+    // ================================================================
+    //  NEW: VIEW LEADERBOARD BY PASTED LINK (ADMIN ONLY)
+    //  Admin pastes a HackerRank leaderboard URL. We extract the
+    //  contest slug from it, remember the link in Firebase under
+    //  "viewLeaderboard/current", and read the live scores that are
+    //  already synced into "hackerRankLeaderboards/{slug}" (the same
+    //  node used by the "Onboard New Student" panel above).
+    // ================================================================
+    function extractContestSlug(link) {
+      try {
+        const url = new URL(link.trim());
+        const parts = url.pathname.split('/').filter(Boolean); // e.g. ["contests","weekly-dsa","leaderboard"]
+        const contestsIdx = parts.indexOf('contests');
+        if (contestsIdx !== -1 && parts[contestsIdx + 1]) {
+          return parts[contestsIdx + 1];
+        }
+        // fallback: last path segment that isn't "leaderboard"
+        const fallback = parts.filter(p => p.toLowerCase() !== 'leaderboard').pop();
+        return fallback || null;
+      } catch (err) {
+        // not a valid URL — treat the raw text as the slug itself
+        return link.trim() || null;
+      }
+    }
+
+    let currentExamLbData = [];
+    let currentViewedSlug = null;
+
+    document.getElementById('viewLbBtn').addEventListener('click', async () => {
+      const link = document.getElementById('viewLbLinkInput').value.trim();
+      const statusEl = document.getElementById('viewLbStatus');
+      if (!link) {
+        alert("దయచేసి ఒక HackerRank leaderboard లింక్ పేస్ట్ చేయండి.");
+        return;
+      }
+
+      const slug = extractContestSlug(link);
+      if (!slug) {
+        alert("ఈ లింక్ నుండి contest ని గుర్తించలేకపోయాం. దయచేసి సరైన లింక్ పేస్ట్ చేయండి.");
+        return;
+      }
+
+      currentViewedSlug = slug;
+      statusEl.textContent = `Viewing leaderboard for: ${slug}`;
+
+      // Remember what the admin last viewed
+      try {
+        await set(ref(db, "viewLeaderboard/current"), {
+          link: link,
+          slug: slug,
+          viewedAt: new Date().toLocaleString()
+        });
+      } catch (err) {
+        console.error("Could not save viewLeaderboard record:", err);
+      }
+
+      // Live-read the scores for this contest slug
+      onValue(ref(db, `hackerRankLeaderboards/${slug}`), (snapshot) => {
+        const data = snapshot.exists() ? snapshot.val() : {};
+        currentExamLbData = Object.values(data);
+        currentExamLbData.sort((a, b) => parseFloat(b.score || 0) - parseFloat(a.score || 0));
+        renderExamLbTable();
+
+        if (currentExamLbData.length === 0) {
+          statusEl.textContent = `Viewing leaderboard for: ${slug} — no scores synced yet.`;
+        }
+      });
+    });
+
+    function renderExamLbTable() {
+      const tbody = document.getElementById('examLbTableBody');
+      tbody.innerHTML = "";
+      if (currentExamLbData.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--muted); padding:20px;">Paste a HackerRank leaderboard link above and click "View Leaderboard".</td></tr>`;
+        return;
+      }
+      currentExamLbData.forEach((u, idx) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td style="font-weight:700;">#${idx + 1}</td>
+          <td style="font-weight:700;">${u.hackerRankId || u.hrId || 'N/A'}</td>
+          <td style="color:var(--accent); font-weight:800;">${parseFloat(u.score || 0).toFixed(2)}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    document.getElementById('downloadExamLbBtn').addEventListener('click', () => {
+      if (!currentViewedSlug || currentExamLbData.length === 0) {
+        alert("డౌన్‌లోడ్ చేయడానికి డేటా లేదు. ముందు ఒక లింక్ పేస్ట్ చేసి 'View Leaderboard' నొక్కండి.");
+        return;
+      }
+      const outputData = currentExamLbData.map((u, idx) => ({
+        "Rank": idx + 1,
+        "HackerRank ID": u.hackerRankId || u.hrId || 'N/A',
+        "Marks": u.score || 0
+      }));
+      const worksheet = XLSX.utils.json_to_sheet(outputData);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, worksheet, "Leaderboard");
+      XLSX.writeFile(wb, `${currentViewedSlug.replace(/[^a-z0-9]/gi, '_')}_Leaderboard.xlsx`);
     });
   </script>
 </body>
