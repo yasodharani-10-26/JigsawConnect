@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Study Resources | JigsawConnect</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       GLOBAL ARCHITECTURAL DESIGN SYSTEM
+       ========================================================================== */
+    :root {
+      --bg: #070a13;
+      --sidebar-bg: #0f1422;
+      --card-bg: rgba(20, 30, 54, 0.45);
+      --border: rgba(255, 255, 255, 0.06);
+      --text-main: #f8fafc;
+      --text-muted: #64748b;
+      --accent-cyan: #06b6d4;
+      --accent-blue: #3b82f6;
+      --accent-purple: #a855f7;
+      --accent-orange: #f97316;
+      --success: #10b981;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* ==========================================================================
+       SIDEBAR NAVIGATION SYSTEM
+       ========================================================================== */
+    .app-container {
+      display: flex;
+      width: 100%;
+    }
+
+    .sidebar {
+      width: 280px;
+      background: var(--sidebar-bg);
+      border-right: 1px solid var(--border);
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      display: flex;
+      flex-direction: column;
+      padding: 24px;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .sidebar-brand {
+      font-size: 22px;
+      font-weight: 800;
+      color: #fff;
+      text-decoration: none;
+      letter-spacing: -0.5px;
+      margin-bottom: 32px;
+      display: block;
+    }
+    .sidebar-brand span { color: var(--accent-cyan); }
+
+    .sidebar-menu {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .sidebar-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      color: #94a3b8;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+      border-radius: 12px;
+      transition: all 0.2s ease;
+    }
+
+    .sidebar-item:hover, .sidebar-item.active {
+      background: rgba(6, 182, 212, 0.08);
+      color: var(--accent-cyan);
+    }
+
+    .sidebar-vault-card {
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.15), rgba(6, 182, 212, 0.15));
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      padding: 16px;
+      border-radius: 16px;
+      margin-top: auto;
+      text-align: center;
+    }
+
+    .sidebar-vault-card h4 {
+      font-size: 14px;
+      color: #c084fc;
+      margin-bottom: 6px;
+    }
+
+    .sidebar-vault-card p {
+      font-size: 11px;
+      color: #94a3b8;
+      margin-bottom: 12px;
+    }
+
+    .vault-side-btn {
+      display: block;
+      background: var(--accent-purple);
+      color: white;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 8px;
+      border-radius: 8px;
+      transition: background 0.2s;
+    }
+    .vault-side-btn:hover { background: #9333ea; }
+
+    .sidebar-logout {
+      margin-top: 16px;
+      background: rgba(239, 68, 68, 0.08);
+      color: #ef4444;
+      text-align: center;
+    }
+    .sidebar-logout:hover {
+      background: #ef4444;
+      color: #fff;
+    }
+
+    /* ==========================================================================
+       MAIN WORKSPACE CONTENT
+       ========================================================================== */
+    .workspace {
+      flex-grow: 1;
+      padding: 40px;
+      max-width: 1300px;
+      overflow-y: auto;
+    }
+
+    .workspace-header {
+      margin-bottom: 32px;
+    }
+
+    .workspace-header h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 6px;
+    }
+
+    .workspace-header p {
+      color: #94a3b8;
+      font-size: 15px;
+    }
+
+    /* SEARCH & FILTER CONTROLS */
+    .search-filter-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .search-wrapper {
+      position: relative;
+    }
+
+    .search-bar {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(15, 23, 42, 0.4);
+      color: white;
+      font-size: 15px;
+      outline: none;
+    }
+    .search-bar:focus {
+      border-color: var(--accent-cyan);
+    }
+
+    .category-filter {
+      padding: 14px;
+      background: rgba(15, 23, 42, 0.4);
+      border: 1px solid var(--border);
+      color: white;
+      border-radius: 14px;
+      outline: none;
+      font-size: 14px;
+    }
+
+    /* RESOURCE CARD DECK */
+    .card-deck {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    .resource-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 250px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .resource-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(6, 182, 212, 0.3);
+      box-shadow: 0 10px 30px rgba(6, 182, 212, 0.05);
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .resource-badge {
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .badge-cyan { background: rgba(6, 182, 212, 0.1); color: var(--accent-cyan); }
+    .badge-blue { background: rgba(59, 130, 246, 0.1); color: #60a5fa; }
+    .badge-orange { background: rgba(249, 115, 22, 0.1); color: #fb923c; }
+    .badge-purple { background: rgba(168, 85, 247, 0.1); color: #c084fc; }
+
+    .file-type {
+      font-size: 11px;
+      color: #94a3b8;
+      background: rgba(255,255,255,0.03);
+      padding: 4px 8px;
+      border-radius: 6px;
+    }
+
+    .card-mid h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .card-mid p {
+      font-size: 13px;
+      color: #94a3b8;
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+
+    .card-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255,255,255,0.03);
+    }
+
+    .meta-size { font-size: 12px; color: #64748b; }
+
+    .download-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: #fff;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .download-btn:hover {
+      background: var(--accent-cyan);
+      color: #000;
+      border-color: var(--accent-cyan);
+    }
+
+    /* ADMIN PANEL CONTROLS */
+    .admin-upload-panel {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px dashed var(--accent-cyan);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 32px;
+    }
+
+    .admin-upload-panel h3 {
+      font-size: 14px;
+      color: var(--accent-cyan);
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+
+    .upload-form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .upload-form-grid input, .upload-form-grid select {
+      padding: 10px;
+      background: #070a13;
+      border: 1px solid var(--border);
+      color: white;
+      border-radius: 8px;
+      font-size: 13px;
+      outline: none;
+    }
+
+    .upload-btn {
+      grid-column: 1 / -1;
+      padding: 12px;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+      border: none;
+      color: white;
+      font-weight: 700;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .empty-state {
+      display: none;
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 40px;
+      border: 1px dashed var(--border);
+      border-radius: 16px;
+      color: #64748b;
+    }
+
+    @media (max-width: 900px) {
+      .app-container { flex-direction: column; }
+      .sidebar { width: 100%; height: auto; position: relative; }
+      .search-filter-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- LEFT SIDEBAR NAVIGATION COMPONENT -->
+    <aside class="sidebar">
+      <div>
+        <a href="index.html" class="sidebar-brand">📚 Study<span>Connect</span></a>
+        <nav class="sidebar-menu">
+          <a href="student-dashboard.html" class="sidebar-item">📊 Dashboard</a>
+          <a href="resources.html" class="sidebar-item active">📂 Resources Workspace</a>
+          <a href="leaderboard.html" class="sidebar-item">🏆 Leaderboard Deck</a>
+          <a href="discussions.html" class="sidebar-item">💬 Discussions</a>
+          <a href="quiz.html" class="sidebar-item">🎯 Assessment Portal</a>
+          <a href="placements.html" class="sidebar-item">💼 Placement Drive</a>
+        </nav>
+      </div>
+
+      <!-- PREMIUM B.TECH VAULT COMPONENT CARD -->
+      <div class="sidebar-vault-card">
+        <h4>⚡ B.Tech Premium Vault</h4>
+        <p>Access structured semester-wise study material & labs repository blueprints.</p>
+        <a href="https://share.google/bhRpi8GfQ6DJWmTZD" target="_blank" class="vault-side-btn">Launch Cloud Vault</a>
+      </div>
+
+      <a href="index.html" class="sidebar-item sidebar-logout">🚪 System Logout</a>
+    </aside>
+
+    <!-- MAIN INTERACTIVE HUB WORKSPACE -->
+    <main class="workspace">
+      
+      <header class="workspace-header">
+        <h1>Architecture Curriculum Library</h1>
+        <p>Explore target system documentation, notes framework, and peer metrics deployment keys.</p>
+      </header>
+
+      <!-- ADMIN UPLOAD PORTAL LAYER -->
+      <div class="admin-upload-panel" id="adminUploadPanel" style="display: none;">
+        <h3>⚡ Admin Control Matrix</h3>
+        <form id="uploadForm" class="upload-form-grid">
+          <input type="text" id="assetTitle" placeholder="Asset Title" required>
+          <input type="text" id="assetSize" placeholder="File Size (e.g., 2.4 MB)" required>
+          <select id="assetCategory" required>
+            <option value="cyan">C Programming</option>
+            <option value="blue">Python Pipeline</option>
+            <option value="orange">Computer Networks</option>
+            <option value="purple">Other Mathematics</option>
+          </select>
+          <select id="fileType" required>
+            <option value="Cheat Sheet">Cheat Sheet</option>
+            <option value="Reference Manual">Reference Manual</option>
+            <option value="Core Syllabus">Core Syllabus</option>
+          </select>
+          <button type="submit" class="upload-btn">Deploy Matrix Asset</button>
+        </form>
+      </div>
+
+      <!-- DYNAMIC CONFIG SEARCH GRID BAR -->
+      <div class="search-filter-grid">
+        <input type="text" id="resourceSearch" class="search-bar" placeholder="Search parameters by engineering discipline, tags or asset title...">
+        <select id="categorySelector" class="category-filter">
+          <option value="all">Filter Entire Category</option>
+          <option value="cyan">C Programming</option>
+          <option value="blue">Python Pipeline</option>
+          <option value="orange">Computer Networks</option>
+          <option value="purple">Mathematics</option>
+        </select>
+      </div>
+
+      <!-- CARDS DECK GRID VIEW -->
+      <section class="card-deck" id="resourcesDeck">
+        
+        <!-- HARDCODED RESOURCE NODE 1 -->
+        <div class="resource-card" data-category="cyan" data-tags="c language pointers memory allocation pointers">
+          <div class="card-top">
+            <span class="resource-badge badge-cyan">C Programming</span>
+            <span class="file-type">Cheat Sheet</span>
+          </div>
+          <div class="card-mid">
+            <h3>Pointers & Dynamic Memory Architecture in C</h3>
+            <p>Detailed technical guide detailing malloc, calloc, realloc pipelines, and memory leaks isolation arrays.</p>
+          </div>
+          <div class="card-bottom">
+            <span class="meta-size">2.4 MB</span>
+            <button class="download-btn trigger-dl">Download Node</button>
+          </div>
+        </div>
+
+        <!-- HARDCODED RESOURCE NODE 2 -->
+        <div class="resource-card" data-category="blue" data-tags="python backend structures syntax advanced lambda">
+          <div class="card-top">
+            <span class="resource-badge badge-blue">Python Pipeline</span>
+            <span class="file-type">Reference Manual</span>
+          </div>
+          <div class="card-mid">
+            <h3>Advanced Data Structures & Python Decorators</h3>
+            <p>Deep-dive architecture exploring generators expressions, custom decorators initialization, and compilation.</p>
+          </div>
+          <div class="card-bottom">
+            <span class="meta-size">3.8 MB</span>
+            <button class="download-btn trigger-dl">Download Node</button>
+          </div>
+        </div>
+
+        <!-- HARDCODED RESOURCE NODE 3 -->
+        <div class="resource-card" data-category="orange" data-tags="computer networks layers osi protocol tcp ip dns">
+          <div class="card-top">
+            <span class="resource-badge badge-orange">Computer Networks</span>
+            <span class="file-type">Core Syllabus</span>
+          </div>
+          <div class="card-mid">
+            <h3>TCP/IP Three-Way Handshake Protocols</h3>
+            <p>Non-technical logic overview explaining state packet control mapping, synchronization sequencing logs.</p>
+          </div>
+          <div class="card-bottom">
+            <span class="meta-size">4.5 MB</span>
+            <button class="download-btn trigger-dl">Download Node</button>
+          </div>
+        </div>
+
+        <div id="searchFailureBlock" class="empty-state">
+          <h3>No Matching Assets Found</h3>
+          <p>Try resetting the text syntax or select a different drop-down category system loop filter.</p>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- FIREBASE INTEGRATION & ARCHITECTURE SCRIPT CONTROL -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+    import { getDatabase, ref, push, set, onValue } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCaCkliRZk8HmNtOsJpoA084YhNY7MeMWM",
+      authDomain: "jigsawconnect-677da.firebaseapp.com",
+      databaseURL: "https://jigsawconnect-677da-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "jigsawconnect-677da",
+      storageBucket: "jigsawconnect-677da.firebasestorage.app",
+      messagingSenderId: "200774226361",
+      appId: "1:200774226361:web:266cb216968403793f6668"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    const uploadForm = document.getElementById("uploadForm");
+    const resourcesDeck = document.getElementById("resourcesDeck");
+    const searchFailureBlock = document.getElementById("searchFailureBlock");
+    const adminUploadPanel = document.getElementById("adminUploadPanel");
+    
+    const userRole = localStorage.getItem("userRole") || "student";
+    if (userRole === "admin") adminUploadPanel.style.display = "block";
+
+    // ADMIN UPLOAD CAPTURE SUBMIT
+    uploadForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const title = document.getElementById("assetTitle").value;
+      const size = document.getElementById("assetSize").value;
+      const category = document.getElementById("assetCategory").value;
+      const fType = document.getElementById("fileType").value;
+
+      try {
+        const dbRef = ref(db, "resources");
+        const newNode = push(dbRef);
+        await set(newNode, { title, size, category, fileType: fType, timestamp: Date.now() });
+        alert("🎉 Success: Asset metadata deployed into your live database system cloud deck ledger!");
+        uploadForm.reset();
+      } catch (err) { console.error(err); }
+    });
+
+    // DYNAMIC RETRIEVAL ENGINE 
+    onValue(ref(db, "resources"), (snapshot) => {
+      document.querySelectorAll(".dynamic-resource-card").forEach(c => c.remove());
+      if (snapshot.exists()) {
+        Object.values(snapshot.val()).forEach(data => {
+          const card = document.createElement("div");
+          card.className = "resource-card dynamic-resource-card";
+          card.setAttribute("data-category", data.category);
+          card.setAttribute("data-tags", `${data.title} ${data.fileType}`.toLowerCase());
+
+          let label = data.category === "cyan" ? "C Programming" : data.category === "blue" ? "Python Pipeline" : "Theory Segment";
+
+          card.innerHTML = `
+            <div class="card-top">
+              <span class="resource-badge badge-${data.category}">${label}</span>
+              <span class="file-type">${data.fileType}</span>
+            </div>
+            <div class="card-mid">
+              <h3>${data.title}</h3>
+              <p>Dynamic cloud data stream loaded directly from live data nodes storage metrics architecture.</p>
+            </div>
+            <div class="card-bottom">
+              <span class="meta-size">${data.size}</span>
+              <button class="download-btn trigger-dl">Download Node</button>
+            </div>
+          `;
+          resourcesDeck.insertBefore(card, searchFailureBlock);
+        });
+      }
+      attachHandlers();
+    });
+
+    // HYBRID SEARCH AND EXTRA FILTER FUNCTIONALITY
+    const searchInput = document.getElementById("resourceSearch");
+    const catSelector = document.getElementById("categorySelector");
+
+    function filterSystem() {
+      const query = searchInput.value.toLowerCase().trim();
+      const selectedCat = catSelector.value;
+      const cards = document.querySelectorAll(".resource-card");
+      let visible = 0;
+
+      cards.forEach(card => {
+        const title = card.querySelector("h3").innerText.toLowerCase();
+        const cat = card.getAttribute("data-category");
+        const matchSearch = title.includes(query);
+        const matchCat = (selectedCat === "all" || cat === selectedCat);
+
+        if(matchSearch && matchCat) {
+          card.style.display = "flex";
+          visible++;
+        } else {
+          card.style.display = "none";
+        }
+      });
+      searchFailureBlock.style.display = visible === 0 ? "block" : "none";
+    }
+
+    searchInput.addEventListener("input", filterSystem);
+    catSelector.addEventListener("change", filterSystem);
+
+    function attachHandlers() {
+      document.querySelectorAll(".trigger-dl").forEach(btn => {
+        btn.onclick = (e) => {
+          const t = e.target.closest(".resource-card").querySelector("h3").innerText;
+          alert(`📥 Download Initialized: Data packets for "${t}" compiled successfully!`);
+        };
+      });
+    }
+    attachHandlers();
+  </script>
+</body>
+</html>
