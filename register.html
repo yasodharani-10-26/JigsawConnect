@@ -150,6 +150,37 @@
 
     .password-toggle:hover { color: var(--text-main); }
 
+    /* STUDENT-ONLY FIELD BLOCK */
+    #studentFields {
+      display: none;
+      flex-direction: column;
+      gap: 0;
+      margin-top: 4px;
+      margin-bottom: 4px;
+      padding-top: 6px;
+      border-top: 1px dashed var(--input-border);
+    }
+
+    #studentFields.visible {
+      display: flex;
+    }
+
+    .student-fields-label {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin: 14px 0 12px;
+    }
+
+    .field-row {
+      display: flex;
+      gap: 12px;
+    }
+
+    .field-row .form-group { flex: 1; }
+
     /* BUTTONS */
     button[type="submit"] {
       width: 100%;
@@ -203,10 +234,6 @@
 
   <form id="registerForm" novalidate>
     <div class="form-group">
-      <input type="text" id="name" placeholder="Full Name" autocomplete="name" required>
-    </div>
-
-    <div class="form-group">
       <input type="email" id="email" placeholder="Email Address" autocomplete="email" required>
     </div>
 
@@ -230,6 +257,38 @@
         <option value="student">Student</option>
         <option value="admin">Administrator</option>
       </select>
+    </div>
+
+    <!-- STUDENT-ONLY FIELDS: shown only when role = Student -->
+    <div id="studentFields">
+      <p class="student-fields-label">Student Details</p>
+
+      <div class="form-group">
+        <input type="text" id="rollNumber" placeholder="Roll Number" autocomplete="off">
+      </div>
+
+      <div class="field-row">
+        <div class="form-group">
+          <input type="text" id="branch" placeholder="Branch" autocomplete="off">
+        </div>
+        <div class="form-group">
+          <input type="text" id="section" placeholder="Section" autocomplete="off">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <select id="year" aria-label="Year of Study">
+          <option value="" disabled selected>Select Year</option>
+          <option value="1">1st Year</option>
+          <option value="2">2nd Year</option>
+          <option value="3">3rd Year</option>
+          <option value="4">4th Year</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <input type="email" id="instituteEmail" placeholder="Institute Email Address" autocomplete="off">
+      </div>
     </div>
 
     <button type="submit">Register Account</button>
@@ -262,6 +321,8 @@
 
   const form = document.getElementById("registerForm");
   const msgBanner = document.getElementById("msg");
+  const roleSelect = document.getElementById("role");
+  const studentFields = document.getElementById("studentFields");
 
   function showBanner(text, state) {
     msgBanner.textContent = text;
@@ -277,6 +338,20 @@
       msgBanner.style.color = "var(--status-success)";
     }
   }
+
+  /* ----- Role-based Field Visibility Engine ----- */
+  function toggleStudentFields() {
+    const isStudent = roleSelect.value === "student";
+    studentFields.classList.toggle("visible", isStudent);
+
+    // Only require these inputs when they are actually visible (role = student)
+    ["rollNumber", "branch", "section", "year", "instituteEmail"].forEach(id => {
+      document.getElementById(id).required = isStudent;
+    });
+  }
+
+  roleSelect.addEventListener("change", toggleStudentFields);
+  toggleStudentFields(); // set correct initial state on load
 
   /* ----- Inline Password Visibility Toggle Engine ----- */
   document.querySelectorAll(".password-toggle").forEach(button => {
@@ -301,13 +376,12 @@
     e.preventDefault();
     msgBanner.style.display = "none";
 
-    const name = document.getElementById("name").value.trim();
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("pass").value;
     const confirmPassword = document.getElementById("cpass").value;
     const role = document.getElementById("role").value;
 
-    if (!name || !email || !password || !confirmPassword || !role) {
+    if (!email || !password || !confirmPassword || !role) {
       showBanner("All fields are mandatory.", "error");
       return;
     }
@@ -322,6 +396,23 @@
       return;
     }
 
+    // Collect + validate student-only fields
+    let studentData = {};
+    if (role === "student") {
+      const rollNumber = document.getElementById("rollNumber").value.trim();
+      const branch = document.getElementById("branch").value.trim();
+      const section = document.getElementById("section").value.trim();
+      const year = document.getElementById("year").value;
+      const instituteEmail = document.getElementById("instituteEmail").value.trim();
+
+      if (!rollNumber || !branch || !section || !year || !instituteEmail) {
+        showBanner("Please fill all student details.", "error");
+        return;
+      }
+
+      studentData = { rollNumber, branch, section, year, instituteEmail };
+    }
+
     try {
       // 1. Create user node inside Firebase Authentication Dashboard
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -329,10 +420,10 @@
 
       // 2. Map profile structural nodes to Realtime Database
       await set(ref(db, "users/" + user.uid), {
-        fullName: name,
         email: email,
         role: role,
-        createdOn: Date.now()
+        createdOn: Date.now(),
+        ...studentData
       });
 
       showBanner(`Registration Successful! Provisioning ${role} workspace...`, "success");
