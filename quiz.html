@@ -47,7 +47,7 @@
     .action-btn:hover { background: #1d4ed8; }
     .status-badge { padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; background: var(--warning); color: #000; }
 
-    .header-actions-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; } 
+    .header-actions-wrapper { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; } 
     .quizzes-grid { display: flex; flex-direction: column; gap: 16px; }
 
     .panel-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 24px; backdrop-filter: blur(12px); }
@@ -67,6 +67,23 @@
     .profile-item span { color: var(--accent-cyan); font-weight: 700; }
 
     .btn-submit { background: var(--accent-blue); color: white; border: none; padding: 14px; border-radius: 12px; font-weight: 700; cursor: pointer; width: 100%; transition: all 0.2s; }
+
+    /* ---- 4-card quadrant layout (Active/Past Exams + Quizzes) ---- */
+    .quiz-quadrant-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .quadrant-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 18px; backdrop-filter: blur(12px); }
+    .quadrant-title { font-size: 15px; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .mini-add-btn { background: rgba(37, 99, 235, 0.15); color: var(--accent-blue); border: 1px solid var(--accent-blue); padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; }
+    .mini-add-btn:hover { background: var(--accent-blue); color: #fff; }
+    .empty-note { color: var(--text-muted); font-size: 12px; padding: 12px 4px; }
+    .status-toggle-btn { background: transparent; border: 1px solid var(--border); color: var(--text-muted); font-size: 11px; padding: 4px 8px; border-radius: 6px; cursor: pointer; margin-top: 8px; width: 100%; }
+    .status-toggle-btn:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); }
+
+    @media (max-width: 1024px) {
+      .header-actions-wrapper { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 700px) {
+      .quiz-quadrant-grid { grid-template-columns: 1fr; }
+    }
   </style> 
 </head> 
 
@@ -89,61 +106,30 @@
         <h1>Ecosystem Quiz Matrix</h1> 
         <p>Participate in authorized evaluation slots or synchronize metrics with external coding environments.</p> 
         
-        <div class="admin-upload-section">
-          <div>
-            <h4 style="font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px;">
-              ⚙️ Admin Control Panel <span id="systemStatusBadge" class="status-badge">🟢 Live</span>
-            </h4>
-            <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">
-              ఎగ్జామ్ నడుస్తున్నంత సేపు స్టూడెంట్స్ మార్కులు ఆటోమేటిక్‌గా సింక్ అవుతాయి.
-            </p>
-          </div>
-          <div style="display: flex; gap: 10px;">
-            <div class="upload-btn-wrapper">
-              <button class="action-btn" style="background: var(--success);">📤 Upload Files & Lock</button>
-              <input type="file" id="adminExcelUpload" accept=".xlsx, .xls" multiple />
-            </div>
-            <button class="action-btn" id="resetLockBtn" style="background: var(--danger); font-size: 12px;">🔓 Reset Lock</button>
-          </div>
-        </div>
+        <div class="header-actions-wrapper" style="grid-template-columns: 1fr;">
 
-        <div class="header-actions-wrapper">
-          
-          <div style="display: flex; flex-direction: column; gap: 16px;">
-            <h3 style="font-size: 16px; font-weight: 700; color: var(--accent-cyan);">Active Challenges</h3>
-            <div id="dynamicQuizzesContainer" class="quizzes-grid">
-              </div>
-          </div>
+          <div class="quiz-quadrant-grid">
 
-          <div class="panel-card" style="align-self: start;">
-            <h3 class="panel-title"><span>🎯</span> Score Verification Engine</h3>
-            <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 12px;">
-              Enter your details below to manually sync or verify your rank.
-            </p>
-            <div class="input-group" style="margin-bottom: 10px;">
-              <input type="text" id="verifyRollNo" class="input-control" placeholder="Enter Roll Number">
+            <div class="quadrant-card">
+              <h3 class="quadrant-title">🟢 Active HackerRank Exams <button class="mini-add-btn" id="addExamBtn">+ Add Exam</button></h3>
+              <div id="activeExamsContainer" class="quizzes-grid"></div>
             </div>
-            <div class="input-group" style="margin-bottom: 10px;">
-              <input type="text" id="verifyHrId" class="input-control" placeholder="Enter HackerRank ID">
-            </div>
-            <div class="input-group" style="margin-bottom: 10px;">
-              <input type="number" step="0.01" id="verifyScore" class="input-control" placeholder="Enter Your Score">
-            </div>
-            <button class="btn-submit" id="actionVerifyScoreBtn">Verify Marks & Save</button>
-            
-            <div class="error-label" id="verificationErrorLabel"></div>
 
-            <div class="profile-display-box" id="successProfileBox">
-              <h4 id="successBoxTitle" style="color: var(--success); font-weight: 700;">✅ Score Saved Successfully!</h4>
-              <div class="profile-grid">
-                <div class="profile-item profile-grid-full">Roll No: <span id="resRollNo"></span></div>
-                <div class="profile-item">HackerRank ID: <span id="resId"></span></div>
-                <div class="profile-item">Score: <span id="resScore"></span></div>
-                <div class="profile-item">Branch: <span id="resBranch"></span></div>
-                <div class="profile-item">Section: <span id="resSection"></span></div>
-              </div>
-              <button class="btn-submit" onclick="window.location.href='leaderboard.html'" style="background: var(--success); margin-top:12px;">Go to Leaderboard ➡️</button>
+            <div class="quadrant-card">
+              <h3 class="quadrant-title">🟢 Active Quizzes</h3>
+              <div id="activeQuizzesContainer" class="quizzes-grid"></div>
             </div>
+
+            <div class="quadrant-card">
+              <h3 class="quadrant-title">🕓 Past Exams</h3>
+              <div id="pastExamsContainer" class="quizzes-grid"></div>
+            </div>
+
+            <div class="quadrant-card">
+              <h3 class="quadrant-title">🕓 Past Quizzes</h3>
+              <div id="pastQuizzesContainer" class="quizzes-grid"></div>
+            </div>
+
           </div>
 
         </div>
@@ -154,7 +140,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
-    import { getDatabase, ref, set, get, onValue, update } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
+    import { getDatabase, ref, set, get, onValue, update, push } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCaCkliRZk8HmNtOsJpoA084YhNY7MeMWM",
@@ -169,64 +155,170 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    const statusBadge = document.getElementById('systemStatusBadge');
-    const dynamicQuizzesContainer = document.getElementById('dynamicQuizzesContainer');
+    // ---------- ACTIVE / PAST QUIZZES + HACKERRANK EXAMS (4-card layout) ----------
 
-    // Active Quizzes ని ఫైర్‌బేస్ నుండి రియల్ టైమ్‌లో తెచ్చుకోవడం
+    function makeQuizCard(quiz, key, isPast) {
+      const testTitle = quiz.title || "Active Challenge";
+      const testFormat = quiz.formatSelected || "MIXED";
+      const testDifficulty = quiz.difficulty || "Medium";
+      const totalQ = quiz.totalQuestions || 0;
+
+      const card = document.createElement('div');
+      card.className = 'panel-card';
+      card.innerHTML = `
+        <h3 class="panel-title" style="font-size:15px;"><span>📝</span> ${testTitle}</h3>
+        <p style="color: var(--text-muted); font-size: 12px; margin-bottom: 6px;">
+          Format: <strong>${testFormat}</strong> | Difficulty: <strong>${testDifficulty}</strong>
+        </p>
+        <p style="color: var(--text-muted); font-size: 12px; margin-bottom: 14px;">Total Questions: ${totalQ}</p>
+        ${isPast
+          ? `<button class="status-toggle-btn" data-key="${key}" data-kind="quiz" data-action="reactivate">↺ Reactivate</button>`
+          : `<button class="hackerrank-btn" data-quizid="${quiz.quizId || key}" style="background: var(--accent-blue); color:#fff;">🚀 Start Quiz</button>
+             <button class="status-toggle-btn" data-key="${key}" data-kind="quiz" data-action="archive">🕓 Mark as Past</button>`
+        }
+      `;
+      return card;
+    }
+
+    function makeExamCard(exam, key, isPast) {
+      const card = document.createElement('div');
+      card.className = 'panel-card';
+      card.innerHTML = `
+        <h3 class="panel-title" style="font-size:15px;"><span>💻</span> ${exam.title || 'HackerRank Exam'}</h3>
+        <p style="color: var(--text-muted); font-size: 12px; margin-bottom: 14px; word-break: break-all;">
+          ${exam.link || ''}
+        </p>
+        ${isPast
+          ? `<button class="status-toggle-btn" data-key="${key}" data-kind="exam" data-action="reactivate">↺ Reactivate</button>`
+          : `<button class="hackerrank-btn" data-link="${exam.link}" data-examid="${key}" style="background:#2ec866;">🚀 Start Exam</button>
+             <button class="status-toggle-btn" data-key="${key}" data-kind="exam" data-action="archive">🕓 Mark as Past</button>`
+        }
+      `;
+      return card;
+    }
+
+    function bindCardButtons(container, kind) {
+      container.querySelectorAll('.hackerrank-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const target = e.currentTarget;
+          if (kind === 'exam') {
+            const link = target.getAttribute('data-link');
+            const examId = target.getAttribute('data-examid');
+            if (!link) { alert("⚠️ ఈ ఎగ్జామ్‌కి లింక్ లేదు!"); return; }
+            handleDirectExamEntry(link, examId);
+          } else {
+            const quizId = target.getAttribute('data-quizid');
+            // Internally-generated quizzes don't have an external link —
+            // hook this up to your take-quiz.html flow.
+            window.location.href = `take-quiz.html?quizId=${quizId}`;
+          }
+        });
+      });
+
+      container.querySelectorAll('.status-toggle-btn').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          const target = e.currentTarget;
+          const key = target.getAttribute('data-key');
+          const cardKind = target.getAttribute('data-kind');
+          const action = target.getAttribute('data-action');
+          const newStatus = action === 'archive' ? 'past' : 'active';
+          const path = cardKind === 'exam' ? `hackerrankExams/${key}` : `generatedQuizzes/${key}`;
+          try {
+            await update(ref(db, path), { status: newStatus });
+          } catch (err) {
+            console.error(err);
+            alert('Status update failed.');
+          }
+        });
+      });
+    }
+
+    function renderQuizzes(quizzesData) {
+      const activeContainer = document.getElementById('activeQuizzesContainer');
+      const pastContainer = document.getElementById('pastQuizzesContainer');
+      activeContainer.innerHTML = "";
+      pastContainer.innerHTML = "";
+
+      if (!quizzesData) {
+        activeContainer.innerHTML = `<p class="empty-note">No active quizzes right now.</p>`;
+        pastContainer.innerHTML = `<p class="empty-note">No past quizzes yet.</p>`;
+        return;
+      }
+
+      let hasActive = false, hasPast = false;
+      Object.keys(quizzesData).forEach(key => {
+        const quiz = quizzesData[key];
+        const isPast = quiz.status === 'past';
+        const card = makeQuizCard(quiz, key, isPast);
+        (isPast ? pastContainer : activeContainer).appendChild(card);
+        if (isPast) hasPast = true; else hasActive = true;
+      });
+
+      if (!hasActive) activeContainer.innerHTML = `<p class="empty-note">No active quizzes right now.</p>`;
+      if (!hasPast) pastContainer.innerHTML = `<p class="empty-note">No past quizzes yet.</p>`;
+
+      bindCardButtons(activeContainer, 'quiz');
+      bindCardButtons(pastContainer, 'quiz');
+    }
+
+    function renderExams(examsData) {
+      const activeContainer = document.getElementById('activeExamsContainer');
+      const pastContainer = document.getElementById('pastExamsContainer');
+      activeContainer.innerHTML = "";
+      pastContainer.innerHTML = "";
+
+      if (!examsData) {
+        activeContainer.innerHTML = `<p class="empty-note">No active HackerRank exams. Click "+ Add Exam" to create one.</p>`;
+        pastContainer.innerHTML = `<p class="empty-note">No past exams yet.</p>`;
+        return;
+      }
+
+      let hasActive = false, hasPast = false;
+      Object.keys(examsData).forEach(key => {
+        const exam = examsData[key];
+        const isPast = exam.status === 'past';
+        const card = makeExamCard(exam, key, isPast);
+        (isPast ? pastContainer : activeContainer).appendChild(card);
+        if (isPast) hasPast = true; else hasActive = true;
+      });
+
+      if (!hasActive) activeContainer.innerHTML = `<p class="empty-note">No active HackerRank exams. Click "+ Add Exam" to create one.</p>`;
+      if (!hasPast) pastContainer.innerHTML = `<p class="empty-note">No past exams yet.</p>`;
+
+      bindCardButtons(activeContainer, 'exam');
+      bindCardButtons(pastContainer, 'exam');
+    }
+
     onValue(ref(db, "generatedQuizzes"), (snapshot) => {
-      dynamicQuizzesContainer.innerHTML = ""; 
-      if (snapshot.exists()) {
-        const quizzesData = snapshot.val();
-        
-        Object.keys(quizzesData).forEach(key => {
-          const quiz = quizzesData[key];
-          
-          const testTitle = quiz.title || "Active Challenge";
-          const testFormat = quiz.formatSelected || "MIXED";
-          const testDifficulty = quiz.difficulty || "Medium";
-          const totalQ = quiz.totalQuestions || 0;
-          const quizId = quiz.quizId || key;
+      renderQuizzes(snapshot.exists() ? snapshot.val() : null);
+    });
 
-          // అడ్మిన్ ఇచ్చిన అసలైన HackerRank/Quiz లింక్
-          const testLink = quiz.quizLink || quiz.link || "#";
+    onValue(ref(db, "hackerrankExams"), (snapshot) => {
+      renderExams(snapshot.exists() ? snapshot.val() : null);
+    });
 
-          const quizCard = document.createElement('div');
-          quizCard.className = 'panel-card';
-          quizCard.innerHTML = `
-            <h3 class="panel-title"><span>📝</span> ${testTitle}</h3>
-            <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 8px; line-height: 1.5;">
-              Format: <strong>${testFormat}</strong> | Difficulty: <strong>${testDifficulty}</strong>
-            </p>
-            <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 20px;">
-              Total Questions: ${totalQ}
-            </p>
-            <button class="hackerrank-btn" data-link="${testLink}" data-id="${quizId}" style="background: var(--accent-blue); color: #fff;">
-              🚀 Start Quiz
-            </button>
-          `;
-          dynamicQuizzesContainer.appendChild(quizCard);
+    document.getElementById('addExamBtn').addEventListener('click', async () => {
+      const title = prompt("Exam title (e.g. Weekly DSA Contest):");
+      if (!title) return;
+      const link = prompt("Paste the HackerRank contest/exam link:");
+      if (!link) return;
+
+      try {
+        const newExamRef = push(ref(db, "hackerrankExams"));
+        await set(newExamRef, {
+          title: title.trim(),
+          link: link.trim(),
+          status: 'active',
+          createdAt: new Date().toLocaleString()
         });
-
-        // బటన్ క్లిక్ ఈవెంట్ లిజనర్
-        document.querySelectorAll('.hackerrank-btn').forEach(btn => {
-          btn.addEventListener('click', (e) => {
-            const targetUrl = e.currentTarget.getAttribute('data-link');
-            const quizId = e.currentTarget.getAttribute('data-id');
-            
-            if (targetUrl === "#" || targetUrl === "") {
-              alert("⚠️ ఈ క్విజ్ కి లింక్ ఇంకా అప్‌డేట్ అవ్వలేదు!");
-              return;
-            }
-            handleDirectExamEntry(targetUrl, quizId);
-          });
-        });
-      } else {
-        dynamicQuizzesContainer.innerHTML = `<div class="panel-card"><p style="color:var(--text-muted)">No active tests available right now.</p></div>`;
+      } catch (err) {
+        console.error(err);
+        alert("Could not add exam.");
       }
     });
 
     // యూజర్ వివరాలను రికార్డ్ చేసి ఎగ్జామ్‌కి పంపే ఫంక్షన్
-    async function handleDirectExamEntry(examUrl, quizId) {
+    async function handleDirectExamEntry(examUrl, examOrQuizId) {
       // LocalStorage నుండి లాగిన్ అయిన స్టూడెంట్ డేటా తెచ్చుకుంటుంది
       const loggedInUser = JSON.parse(localStorage.getItem('user')) || {
         rollNo: "22A31A0501", 
@@ -241,7 +333,7 @@
         await set(ref(db, `registeredStudents/${loggedInUser.hrId}`), loggedInUser);
         
         // 2. అడ్మిన్ లైవ్‌గా ట్రాక్ చేయడం కోసం "liveParticipants" లోకి పంపుతుంది
-        const liveStudentRef = ref(db, `liveParticipants/${quizId}/${loggedInUser.rollNo}`);
+        const liveStudentRef = ref(db, `liveParticipants/${examOrQuizId}/${loggedInUser.rollNo}`);
         await set(liveStudentRef, {
           ...loggedInUser,
           startTime: new Date().toLocaleTimeString()
@@ -255,154 +347,6 @@
       }
     }
 
-    // System Control Setup Lock
-    onValue(ref(db, "systemControl"), (snapshot) => {
-      const data = snapshot.val() || {};
-      const isLocked = data.leaderboardLocked === true;
-      localStorage.setItem('leaderboardLocked', isLocked);
-      if (isLocked) {
-        statusBadge.innerText = "🔒 Locked & Verified";
-        statusBadge.style.background = "var(--danger)";
-        statusBadge.style.color = "#fff";
-      } else {
-        statusBadge.innerText = "🟢 Live";
-        statusBadge.style.background = "var(--warning)";
-        statusBadge.style.color = "#000";
-      }
-    });
-
-    // Auto Score Synchronizer (Every 30 Seconds)
-    async function fetchLiveScoresFromServer() {
-      const isLocked = localStorage.getItem('leaderboardLocked') === 'true';
-      if (isLocked) return;
-      try {
-        const res = await fetch('http://localhost:3000/api/live-scores');
-        const result = await res.json();
-        if (result.success && result.data) {
-          for (const hrStudent of result.data) {
-            const studentSnap = await get(ref(db, `registeredStudents/${hrStudent.hrId}`));
-            if (studentSnap.exists()) {
-              const parsedUser = studentSnap.val();
-              const updatedRecord = {
-                rollNo: parsedUser.rollNo,
-                hrId: hrStudent.hrId,
-                score: hrStudent.score,
-                branch: parsedUser.branch,
-                section: parsedUser.section,
-                timestamp: new Date().toLocaleString()
-              };
-              await set(ref(db, `globalLeaderboard/${parsedUser.rollNo}`), updatedRecord);
-            }
-          }
-        }
-      } catch (err) {
-        console.error("Sync down.");
-      }
-    }
-    setInterval(fetchLiveScoresFromServer, 30000);
-
-    // Bulk Admin Excel Upload
-    document.getElementById('adminExcelUpload').addEventListener('change', async function(e) {
-      const files = e.target.files;
-      if (!files || files.length === 0) return;
-      let masterScoreDb = {};
-      for (let i = 0; i < files.length; i++) {
-        await new Promise((resolve) => {
-          const reader = new FileReader();
-          reader.onload = function(evt) {
-            const data = new Uint8Array(evt.target.result);
-            const workbook = XLSX.read(data, { type: 'array' });
-            const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-            const excelRows = XLSX.utils.sheet_to_json(worksheet);
-            excelRows.forEach(row => {
-              let rollNo = String(row["Roll Number"] || "").trim().toUpperCase();
-              let hrId = String(row["HackerRank ID"] || "").trim();
-              let branch = String(row["Branch"] || "").trim();
-              let section = String(row["Section"] || "").trim();
-              let score = parseFloat(row["Score"] || 0);
-              if (rollNo) masterScoreDb[rollNo] = { hrId, branch, section, score };
-            });
-            resolve();
-          };
-          reader.readAsArrayBuffer(files[i]);
-        });
-      }
-      try {
-        await set(ref(db, "masterExcelDatabase"), masterScoreDb);
-        await update(ref(db, "systemControl"), { leaderboardLocked: true });
-        alert(`🔒 ఫైనల్ ఎక్సెల్ ఫైల్స్ అప్‌లోడ్ అయ్యాయి! లీడర్‌బోర్డ్ లాక్ చేయబడింది.`);
-      } catch (err) { console.error(err); }
-    });
-
-    // Reset Lock
-    document.getElementById('resetLockBtn').addEventListener('click', async () => {
-      if(confirm("లీడర్‌బోర్డ్‌ను మరియు మాస్టర్ డేటాను పూర్తిగా డిలీట్ చేసి అన్‌లాక్ చేయాలా?")) {
-        try {
-          await set(ref(db, "systemControl/leaderboardLocked"), false);
-          await set(ref(db, "masterExcelDatabase"), null);
-          await set(ref(db, "globalLeaderboard"), null);
-          alert("🔓 లీడర్‌బోర్డ్ విజయవంతంగా రీసెట్ చేయబడింది!");
-        } catch (err) { alert("Error."); }
-      }
-    });
-
-    // Manual Score Verification
-    document.getElementById('actionVerifyScoreBtn').addEventListener('click', async () => {
-      const rollNoInput = document.getElementById('verifyRollNo').value.trim().toUpperCase();
-      const hrIdInput = document.getElementById('verifyHrId').value.trim();
-      const scoreInput = parseFloat(document.getElementById('verifyScore').value);
-      const errorLabel = document.getElementById('verificationErrorLabel');
-      const successBox = document.getElementById('successProfileBox');
-      const successBoxTitle = document.getElementById('successBoxTitle');
-
-      errorLabel.style.display = 'none';
-      successBox.style.display = 'none';
-
-      if (!rollNoInput || !hrIdInput || isNaN(scoreInput)) {
-        alert("దయచేసి అన్ని ఫీల్డ్స్ కరెక్ట్‌గా ఎంటర్ చేయండి.");
-        return;
-      }
-
-      try {
-        const systemSnap = await get(ref(db, "systemControl/leaderboardLocked"));
-        const isLocked = systemSnap.exists() ? systemSnap.val() : false;
-        let studentBranch = "CSE"; let studentSection = "A"; let finalValidatedScore = scoreInput;
-
-        if (isLocked) {
-          const masterSnap = await get(ref(db, `masterExcelDatabase/${rollNoInput}`));
-          if (!masterSnap.exists()) {
-            errorLabel.innerText = "⚠️ మీ రోల్ నెంబర్ అడ్మిన్ మాస్టర్ ఎక్సెల్ షీట్‌లో లేదు.";
-            errorLabel.style.display = 'block'; return;
-          }
-          const officialRecord = masterSnap.val();
-          if (Math.abs(officialRecord.score - scoreInput) > 0.01) {
-            errorLabel.innerText = "⚠️ తప్పుడు మార్కులు! లీడర్‌బోర్డ్ లాక్ చేయబడింది.";
-            errorLabel.style.display = 'block'; return;
-          }
-          studentBranch = officialRecord.branch || "CSE";
-          studentSection = officialRecord.section || "A";
-          finalValidatedScore = officialRecord.score;
-          successBoxTitle.innerText = "🔒 Score Verified & Locked!";
-        } else {
-          const studentSnap = await get(ref(db, `registeredStudents/${hrIdInput}`));
-          if (studentSnap.exists()) {
-            const parsed = studentSnap.val();
-            studentBranch = parsed.branch; studentSection = parsed.section;
-          }
-          successBoxTitle.innerText = "🔥 Score Updated Successfully!";
-        }
-
-        const studentRecord = { rollNo: rollNoInput, hrId: hrIdInput, score: finalValidatedScore, branch: studentBranch, section: studentSection, timestamp: new Date().toLocaleString() };
-        await set(ref(db, `globalLeaderboard/${rollNoInput}`), studentRecord);
-
-        document.getElementById('resRollNo').innerText = rollNoInput;
-        document.getElementById('resId').innerText = hrIdInput;
-        document.getElementById('resScore').innerText = finalValidatedScore.toFixed(2);
-        document.getElementById('resBranch').innerText = studentBranch;
-        document.getElementById('resSection').innerText = studentSection;
-        successBox.style.display = 'block';
-      } catch (err) { console.error(err); }
-    });
   </script>
 </body>
 </html>
