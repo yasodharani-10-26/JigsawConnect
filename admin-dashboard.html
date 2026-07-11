@@ -321,6 +321,12 @@
       box-shadow: 0 6px 20px rgba(79, 70, 229, 0.35);
     }
 
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
     /* ==========================================================================
         AI QUIZ GENERATOR EMBEDDED CARD STYLE
        ========================================================================== */
@@ -441,7 +447,7 @@
     }
 
     /* ==========================================================================
-        NEW: HACKERRANK EXAM POSTING + ADMIN-ONLY PER-EXAM LEADERBOARD
+        HACKERRANK EXAM POSTING + ADMIN-ONLY PER-EXAM LEADERBOARD
        ========================================================================== */
     .exam-row {
       display: flex;
@@ -467,6 +473,14 @@
     .admin-lb-table th, .admin-lb-table td { padding: 10px; border-bottom: 1px solid var(--border); text-align: left; font-size: 13px; }
     .admin-lb-table th { color: var(--muted); text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
     .admin-only-tag { font-size: 11px; font-weight: 700; color: #eab308; background: rgba(234,179,8,0.1); border: 1px solid rgba(234,179,8,0.2); padding: 3px 10px; border-radius: 20px; margin-left: 8px; }
+
+    /* ==========================================================================
+        MANUAL VERIFY QUEUE ROWS (reused .btn/.btn-primary from above)
+       ========================================================================== */
+    .verify-row {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+      padding: 12px 14px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 12px;
+    }
   </style>
 </head>
 
@@ -613,7 +627,51 @@
     </div>
 
     <!-- ============================================================
-         NEW: POST A HACKERRANK EXAM LINK
+         🔗 LOAD ANY HACKERRANK CONTEST
+         Paste any HackerRank link/slug -> our free /api/sync-hackerrank
+         Vercel route scrapes it server-side (no Blaze plan, no CORS
+         since it's same-origin) and writes into
+         hackerRankLeaderboards/{slug}, then marks it as the active
+         contest — everything else on this page and leaderboard.html
+         follows that slug automatically.
+    ============================================================= -->
+    <section class="admin-panel" style="margin-bottom: 30px;">
+      <h2 class="admin-section-title">🔗 Load Any HackerRank Contest</h2>
+      <p style="margin-bottom: 14px; font-size: 13px; color: #64748b; line-height:1.5;">
+        Paste a HackerRank contest link (or just the slug). This becomes the active contest —
+        the dashboard, Leaderboard page, and student onboarding above all sync to it automatically.
+        No code changes or redeploys needed to switch contests.
+      </p>
+      <div class="form-group">
+        <label>HackerRank Contest Link / Slug</label>
+        <input type="text" id="hackerrankLinkInput" placeholder="https://www.hackerrank.com/contests/your-slug/leaderboard">
+      </div>
+      <button type="button" class="btn btn-primary" id="fetchHrBtn" style="width: fit-content; margin-top: 8px;">🔍 Fetch &amp; Sync Leaderboard</button>
+      <p style="margin-top: 12px; font-size: 12px; color: #64748b;">
+        Active contest: <strong id="activeContestSlugText">none set</strong>
+      </p>
+    </section>
+
+    <!-- ============================================================
+         ✅ VERIFY MARKS (MANUAL)
+         Students self-report on submit-score.html. Admin cross-checks
+         against the real HackerRank leaderboard, then Verify publishes
+         the score into hackerRankLeaderboards/{slug} — the same node
+         leaderboard.html reads from live.
+    ============================================================= -->
+    <section class="admin-panel" style="margin-bottom: 30px;">
+      <h2 class="admin-section-title">✅ Verify Marks (Manual)</h2>
+      <p style="margin-bottom: 14px; font-size: 13px; color: #64748b; line-height:1.5;">
+        Students self-report their score on the <a href="submit-score.html" target="_blank" style="color:#60a5fa;">Submit Score</a> page.
+        Open the real leaderboard, compare, then Verify or Reject each one below.
+      </p>
+      <div id="pendingSubmissionsList" style="display:flex; flex-direction:column; gap:10px;">
+        <p style="font-size:13px; color:#64748b;">No pending submissions.</p>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         POST A HACKERRANK EXAM LINK
          Submitting this pushes the exam straight into quiz.html's
          "🟢 Active HackerRank Exams" card. Once the optional deadline
          passes (or the admin manually marks it), quiz.html moves it
@@ -643,11 +701,12 @@
     </section>
 
     <!-- ============================================================
-         NEW: EXAM-WISE LEADERBOARD — ADMIN ONLY
-         Pick an exam, upload its result Excel (Roll Number,
-         HackerRank ID, Branch, Section, Score). Saved to Firebase
-         under "viewedLeaderboards/{examId}" — visible only here,
-         not on the student-facing quiz.html / leaderboard.html.
+         EXAM-WISE LEADERBOARD VIEWER — ADMIN ONLY
+         Paste any HackerRank leaderboard link to peek at its already-
+         synced scores (from hackerRankLeaderboards/{slug}) without
+         switching the site's active contest. Read-only — use the
+         "Load Any HackerRank Contest" card above to actually sync a
+         new contest's data first.
     ============================================================= -->
     <section class="admin-panel">
       <h2 class="admin-section-title">🏆 Exam Leaderboard <span class="admin-only-tag">ADMIN ONLY</span></h2>
@@ -683,23 +742,12 @@
   </footer>
 
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
-    import { getDatabase, ref, onValue, set, push, update } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyCaCkliRZk8HmNtOsJpoA084YhNY7MeMWM",
-      authDomain: "jigsawconnect-677da.firebaseapp.com",
-      databaseURL: "https://jigsawconnect-677da-default-rtdb.asia-southeast1.firebasedatabase.app",
-      projectId: "jigsawconnect-677da",
-      storageBucket: "jigsawconnect-677da.firebasestorage.app",
-      messagingSenderId: "200774226361",
-      appId: "1:200774226361:web:266cb216968403793f6668"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
+    import { db, ref, onValue, set, get, push, update, auth } from "./firebase.js";
 
     let uploadedFileText = "";
+    let currentActiveSlug = null;
+    let scoreListenerUnsub = null;
+    let submissionsListenerUnsub = null;
 
     // Global Tab Switching Logic Fix
     window.toggleQuizTab = function(event, tabId) {
@@ -725,17 +773,98 @@
       reader.readAsText(file);
     });
 
+    // ప్రస్తుతం active గా ఉన్న కాంటెస్ట్ మారినప్పుడల్లా, "Scores Verified" కౌంటర్‌ని
+    // ఆ కొత్త కాంటెస్ట్ నోడ్ మీదకి రీ-పాయింట్ చేస్తుంది (పాత లిజనర్‌ని ముందు డిటాచ్ చేసి).
+    function attachScoreListener(slug) {
+      if (scoreListenerUnsub) scoreListenerUnsub();
+      scoreListenerUnsub = onValue(ref(db, `hackerRankLeaderboards/${slug}`), (snapshot) => {
+        document.getElementById('scoreCount').innerText = snapshot.exists() ? Object.keys(snapshot.val()).length : "0";
+      });
+    }
+
+    // ✅ MANUAL VERIFY QUEUE — listens to students-side submissions for the active contest
+    function attachSubmissionsListener(slug) {
+      if (submissionsListenerUnsub) submissionsListenerUnsub();
+      submissionsListenerUnsub = onValue(ref(db, `scoreSubmissions/${slug}`), (snapshot) => {
+        const all = snapshot.exists() ? snapshot.val() : {};
+        const pending = Object.entries(all).filter(([, v]) => v.status === 'pending');
+        renderPendingSubmissions(slug, pending);
+      });
+    }
+
+    function renderPendingSubmissions(slug, pending) {
+      const container = document.getElementById('pendingSubmissionsList');
+
+      if (pending.length === 0) {
+        container.innerHTML = `<p style="font-size:13px; color:#64748b;">No pending submissions.</p>`;
+        return;
+      }
+
+      container.innerHTML = pending.map(([key, s]) => `
+        <div class="verify-row">
+          <div style="min-width:200px;">
+            <div style="font-weight:700; color:#fff; font-size:14px;">${s.name || 'N/A'} <span style="color:#64748b; font-weight:500;">(${s.hrId})</span></div>
+            <div style="font-size:12px; color:#64748b; margin-top:2px;">${s.branch || '-'} • ${s.year || '-'} • Claimed score: <strong style="color:#06b6d4;">${s.claimedScore}</strong></div>
+          </div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <a href="https://www.hackerrank.com/contests/${slug}/leaderboard" target="_blank" rel="noopener" class="btn" style="padding:8px 12px; font-size:12px; text-decoration:none; display:inline-flex; align-items:center; background:rgba(255,255,255,0.06); color:#fff;">Open Leaderboard ↗</a>
+            <button type="button" class="btn btn-primary" style="padding:8px 12px; font-size:12px;" data-action="verify" data-key="${key}" data-slug="${slug}">✅ Verify</button>
+            <button type="button" class="btn" style="padding:8px 12px; font-size:12px; background:rgba(239,68,68,0.12); color:#ef4444; border:1px solid rgba(239,68,68,0.25);" data-action="reject" data-key="${key}" data-slug="${slug}">❌ Reject</button>
+          </div>
+        </div>
+      `).join('');
+
+      container.querySelectorAll('[data-action="verify"]').forEach(btn => {
+        btn.addEventListener('click', () => verifySubmission(btn.dataset.slug, btn.dataset.key));
+      });
+      container.querySelectorAll('[data-action="reject"]').forEach(btn => {
+        btn.addEventListener('click', () => rejectSubmission(btn.dataset.slug, btn.dataset.key));
+      });
+    }
+
+    async function verifySubmission(slug, key) {
+      try {
+        const snap = await get(ref(db, `scoreSubmissions/${slug}/${key}`));
+        if (!snap.exists()) return;
+        const s = snap.val();
+
+        await set(ref(db, `hackerRankLeaderboards/${slug}/${key}`), {
+          hrId: s.hrId,
+          hackerRankId: s.hrId,
+          name: s.name,
+          branch: s.branch,
+          year: s.year,
+          score: s.claimedScore,
+          verifiedAt: new Date().toISOString()
+        });
+
+        await set(ref(db, `scoreSubmissions/${slug}/${key}/status`), 'verified');
+      } catch (err) {
+        console.error(err);
+        alert('❌ Verify failed: ' + err.message);
+      }
+    }
+
+    async function rejectSubmission(slug, key) {
+      try {
+        await set(ref(db, `scoreSubmissions/${slug}/${key}/status`), 'rejected');
+      } catch (err) {
+        console.error(err);
+        alert('❌ Reject failed: ' + err.message);
+      }
+    }
+
     // Real-time Dashboard Counters Hook
     function listenToDashboardStats() {
-      const activeContestSlug = "view-batch-2023-exam-practice-cse-acse-it";
-      
-      // Scores Verified Counter Sync
-      onValue(ref(db, `hackerRankLeaderboards/${activeContestSlug}`), (snapshot) => {
-        if(snapshot.exists()) {
-          const count = Object.keys(snapshot.val()).length;
-          document.getElementById('scoreCount').innerText = count;
-        } else {
-          document.getElementById('scoreCount').innerText = "0";
+      // Active contest slug ఇక హార్డ్‌కోడ్ కాదు — Firebase లో కేంద్రీకృతంగా స్టోర్ అవుతుంది,
+      // కాబట్టి ఈ పేజీ, leaderboard.html రెండూ ఎప్పుడూ ఒకే కాంటెస్ట్‌ని చూస్తాయి.
+      onValue(ref(db, 'settings/activeContestSlug'), (snapshot) => {
+        const slug = snapshot.exists() ? snapshot.val() : null;
+        currentActiveSlug = slug;
+        document.getElementById('activeContestSlugText').innerText = slug || "none set";
+        if (slug) {
+          attachScoreListener(slug);
+          attachSubmissionsListener(slug);
         }
       });
 
@@ -744,7 +873,6 @@
         if(snapshot.exists()) {
           document.getElementById('studentCount').innerText = Object.keys(snapshot.val()).length;
         } else {
-          // Fallback to Leaderboard count if registered node doesn't exist yet
           const scoreVal = document.getElementById('scoreCount').innerText;
           document.getElementById('studentCount').innerText = scoreVal !== "0" ? scoreVal : "0";
         }
@@ -762,6 +890,50 @@
     
     // Fire up the real-time listeners
     listenToDashboardStats();
+
+    // 🔗 LOAD ANY HACKERRANK CONTEST
+    document.getElementById('fetchHrBtn').addEventListener('click', async () => {
+      const btn = document.getElementById('fetchHrBtn');
+      const input = document.getElementById('hackerrankLinkInput').value.trim();
+
+      if (!input) {
+        alert("దయచేసి HackerRank కాంటెస్ట్ లింక్ లేదా slug ఎంటర్ చేయండి.");
+        return;
+      }
+
+      if (!auth.currentUser) {
+        alert("⚠️ సెషన్ గడువు ముగిసింది. దయచేసి మళ్ళీ లాగిన్ అవ్వండి.");
+        return;
+      }
+
+      const originalText = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = "⏳ Fetching...";
+
+      try {
+        const idToken = await auth.currentUser.getIdToken();
+        const response = await fetch('/api/sync-hackerrank', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${idToken}`
+          },
+          body: JSON.stringify({ hackerrankUrl: input })
+        });
+
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || 'Sync failed.');
+
+        alert(`✅ Synced "${result.slug}"! ${result.count} entries pulled from HackerRank.`);
+        document.getElementById('hackerrankLinkInput').value = "";
+      } catch (error) {
+        console.error(error);
+        alert('❌ Sync failed: ' + (error.message || 'Check the link and try again.'));
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+      }
+    });
 
     // DYNAMIC MULTI-FORMAT QUIZ GENERATION ENGINE
     document.getElementById('actionGenQuizBtn').addEventListener('click', async () => {
@@ -857,7 +1029,7 @@
       }
     });
 
-    // ROSTER ONBOARD ENGINE
+    // ROSTER ONBOARD ENGINE — follows the currently active contest slug now
     document.getElementById('studentForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const name = document.getElementById('studentName').value.trim();
@@ -865,8 +1037,12 @@
       const branch = document.getElementById('studentBranchOnboard').value;
       const year = document.getElementById('studentYearOnboard').value;
 
+      if (!currentActiveSlug) {
+        alert("⚠️ ముందుగా పైన ఒక HackerRank కాంటెస్ట్ లింక్‌ని Fetch & Sync చేయండి — అప్పుడే స్టూడెంట్‌లను ఆ కాంటెస్ట్ కింద ఆన్‌బోర్డ్ చేయగలరు.");
+        return;
+      }
+
       try {
-        let activeContestSlug = "view-batch-2023-exam-practice-cse-acse-it";
         const newOnboardStudent = {
           hrId: hrId,
           hackerRankId: hrId,
@@ -877,7 +1053,8 @@
           timestamp: new Date().toLocaleString()
         };
 
-        await set(ref(db, `hackerRankLeaderboards/${activeContestSlug}/${hrId}`), newOnboardStudent);
+        const safeKey = hrId.replace(/[.#$\[\]\/]/g, '_');
+        await set(ref(db, `hackerRankLeaderboards/${currentActiveSlug}/${safeKey}`), newOnboardStudent);
         alert(`🎉 Student "${name}" successfully registered directly to database workspace matrix.`);
         document.getElementById('studentForm').reset();
       } catch (err) {
@@ -886,7 +1063,7 @@
     });
 
     // ================================================================
-    //  NEW: POST HACKERRANK EXAM LINK
+    //  POST HACKERRANK EXAM LINK
     //  Pushes into "hackerrankExams" — the exact same node quiz.html
     //  listens to for its "🟢 Active HackerRank Exams" card.
     // ================================================================
@@ -979,12 +1156,12 @@
     }
 
     // ================================================================
-    //  NEW: VIEW LEADERBOARD BY PASTED LINK (ADMIN ONLY)
+    //  VIEW LEADERBOARD BY PASTED LINK (ADMIN ONLY, READ-ONLY)
     //  Admin pastes a HackerRank leaderboard URL. We extract the
-    //  contest slug from it, remember the link in Firebase under
-    //  "viewLeaderboard/current", and read the live scores that are
-    //  already synced into "hackerRankLeaderboards/{slug}" (the same
-    //  node used by the "Onboard New Student" panel above).
+    //  contest slug from it and read the live scores that are already
+    //  synced into "hackerRankLeaderboards/{slug}" — this does NOT
+    //  scrape or change the active contest, it just peeks at any
+    //  already-synced contest's data.
     // ================================================================
     function extractContestSlug(link) {
       try {
@@ -1005,6 +1182,7 @@
 
     let currentExamLbData = [];
     let currentViewedSlug = null;
+    let viewLbListenerUnsub = null;
 
     document.getElementById('viewLbBtn').addEventListener('click', async () => {
       const link = document.getElementById('viewLbLinkInput').value.trim();
@@ -1034,8 +1212,10 @@
         console.error("Could not save viewLeaderboard record:", err);
       }
 
+      if (viewLbListenerUnsub) viewLbListenerUnsub();
+
       // Live-read the scores for this contest slug
-      onValue(ref(db, `hackerRankLeaderboards/${slug}`), (snapshot) => {
+      viewLbListenerUnsub = onValue(ref(db, `hackerRankLeaderboards/${slug}`), (snapshot) => {
         const data = snapshot.exists() ? snapshot.val() : {};
         currentExamLbData = Object.values(data);
         currentExamLbData.sort((a, b) => parseFloat(b.score || 0) - parseFloat(a.score || 0));
