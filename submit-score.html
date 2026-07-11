@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Submit Your Score | StudyConnect</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card-bg: rgba(20, 30, 54, 0.45);
+      --border: rgba(255, 255, 255, 0.08);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-cyan: #06b6d4;
+      --accent-blue: #2563eb;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+    body { background: var(--bg); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
+
+    .navbar { display: flex; justify-content: space-between; align-items: center; padding: 18px 6%; background: rgba(11, 15, 25, 0.85); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; }
+    .logo { font-size: 24px; font-weight: 800; color: #fff; text-decoration: none; }
+    .logo span { color: var(--accent-cyan); }
+    .nav-links { display: flex; gap: 24px; align-items: center; }
+    .nav-links a { text-decoration: none; color: var(--text-muted); font-size: 14px; font-weight: 600; }
+    .nav-links a.active { color: var(--accent-cyan); }
+
+    .container { width: 100%; max-width: 560px; margin: 60px auto; padding: 0 20px; flex: 1; }
+    .page-title { font-size: 1.8rem; font-weight: 800; margin-bottom: 10px; letter-spacing: -0.5px; }
+    .page-title span { color: var(--accent-cyan); }
+    .subtitle { color: var(--text-muted); font-size: 14px; margin-bottom: 28px; line-height: 1.5; }
+
+    .contest-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; padding: 6px 12px; border-radius: 20px; margin-bottom: 24px; }
+    .contest-badge.active { color: var(--success); background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); }
+    .contest-badge.inactive { color: var(--warning); background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.2); }
+
+    .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 28px; backdrop-filter: blur(12px); box-shadow: 0 20px 40px -15px rgba(0,0,0,0.3); }
+
+    .form-group { margin-bottom: 18px; }
+    .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; }
+    .form-group input, .form-group select { width: 100%; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--border); background: rgba(255,255,255,0.03); color: var(--text-main); font-size: 14px; font-family: inherit; }
+    .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--accent-cyan); }
+
+    .submit-btn { width: 100%; padding: 14px; border-radius: 10px; border: none; background: var(--accent-blue); color: #fff; font-weight: 700; font-size: 14px; cursor: pointer; transition: all 0.2s; margin-top: 6px; }
+    .submit-btn:hover { background: #1d4ed8; }
+    .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .status-msg { margin-top: 16px; padding: 12px 14px; border-radius: 10px; font-size: 13px; font-weight: 600; display: none; }
+    .status-msg.success { display: block; background: rgba(16, 185, 129, 0.1); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.2); }
+    .status-msg.error { display: block; background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.2); }
+
+    .hint { font-size: 12px; color: var(--text-muted); margin-top: 20px; line-height: 1.5; }
+  </style>
+</head>
+
+<body>
+
+  <nav class="navbar">
+    <a href="index.html" class="logo">📚 Study<span>Connect</span></a>
+    <div class="nav-links">
+      <a href="leaderboard.html">Leaderboard</a>
+      <a href="submit-score.html" class="active">Submit Score</a>
+      <a href="index.html">Logout</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h1 class="page-title">📝 Submit Your <span>HackerRank Score</span></h1>
+    <p class="subtitle">
+      Enter your details exactly as they appear on the HackerRank leaderboard. An admin will verify
+      your score against the official leaderboard before it's published.
+    </p>
+
+    <div id="contestBadge" class="contest-badge inactive">⏳ Checking active contest...</div>
+
+    <div class="card">
+      <form id="scoreForm">
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="studentName" required placeholder="e.g. Yasodha Rani">
+        </div>
+        <div class="form-group">
+          <label>HackerRank ID</label>
+          <input type="text" id="studentHrId" required placeholder="Exact username on HackerRank">
+        </div>
+        <div class="form-group">
+          <label>Branch</label>
+          <input type="text" id="studentBranch" required placeholder="e.g. CSE">
+        </div>
+        <div class="form-group">
+          <label>Year of Study</label>
+          <select id="studentYear" required>
+            <option value="">Select year</option>
+            <option>1st Year</option>
+            <option>2nd Year</option>
+            <option>3rd Year</option>
+            <option>4th Year</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Your Score (as shown on HackerRank)</label>
+          <input type="number" id="claimedScore" required step="0.01" placeholder="e.g. 85">
+        </div>
+        <button type="submit" class="submit-btn" id="submitBtn">Submit for Verification</button>
+        <div class="status-msg" id="statusMsg"></div>
+      </form>
+    </div>
+
+    <p class="hint">
+      ℹ️ Your score won't appear on the Leaderboard page until an admin cross-checks it against the
+      real HackerRank contest page and approves it.
+    </p>
+  </div>
+
+  <script type="module">
+    import { db, ref, get, set, onValue } from './firebase.js';
+
+    let activeSlug = null;
+
+    onValue(ref(db, 'settings/activeContestSlug'), (snapshot) => {
+      const badge = document.getElementById('contestBadge');
+      activeSlug = snapshot.exists() ? snapshot.val() : null;
+
+      if (activeSlug) {
+        badge.className = 'contest-badge active';
+        badge.textContent = `✅ Active contest: ${activeSlug}`;
+      } else {
+        badge.className = 'contest-badge inactive';
+        badge.textContent = '⚠️ No contest is active yet — check back once your admin sets one up.';
+      }
+    });
+
+    document.getElementById('scoreForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const statusMsg = document.getElementById('statusMsg');
+      const submitBtn = document.getElementById('submitBtn');
+      statusMsg.className = 'status-msg';
+      statusMsg.textContent = '';
+
+      if (!activeSlug) {
+        statusMsg.className = 'status-msg error';
+        statusMsg.textContent = '⚠️ No active contest right now. Please try again after your admin sets one up.';
+        return;
+      }
+
+      const name = document.getElementById('studentName').value.trim();
+      const hrId = document.getElementById('studentHrId').value.trim();
+      const branch = document.getElementById('studentBranch').value.trim().toUpperCase();
+      const year = document.getElementById('studentYear').value;
+      const claimedScore = parseFloat(document.getElementById('claimedScore').value);
+
+      if (!hrId) return;
+
+      const safeKey = hrId.replace(/[.#$\[\]\/]/g, '_');
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Submitting...';
+
+      try {
+        await set(ref(db, `scoreSubmissions/${activeSlug}/${safeKey}`), {
+          name,
+          hrId,
+          hackerRankId: hrId,
+          branch,
+          year,
+          claimedScore,
+          status: 'pending',
+          submittedAt: new Date().toISOString()
+        });
+
+        statusMsg.className = 'status-msg success';
+        statusMsg.textContent = '🎉 Submitted! An admin will verify it against the leaderboard shortly.';
+        document.getElementById('scoreForm').reset();
+      } catch (error) {
+        console.error(error);
+        statusMsg.className = 'status-msg error';
+        statusMsg.textContent = '❌ Something went wrong: ' + error.message;
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit for Verification';
+      }
+    });
+  </script>
+</body>
+</html>
