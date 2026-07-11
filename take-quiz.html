@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Take Quiz | StudyConnect</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card-bg: rgba(20, 30, 54, 0.45);
+      --border: rgba(255, 255, 255, 0.08);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-blue: #2563eb;
+      --success: #10b981;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+    body { background: var(--bg); color: var(--text-main); min-height: 100vh; padding: 40px 20px; display: flex; justify-content: center; align-items: center; }
+    .quiz-container { width: 100%; max-width: 700px; background: var(--card-bg); border: 1px solid var(--border); border-radius: 24px; padding: 35px; backdrop-filter: blur(12px); }
+    h1 { font-size: 24px; margin-bottom: 8px; color: #fff; }
+    .meta { font-size: 13px; color: var(--text-muted); margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid var(--border); }
+    .question-card { margin-bottom: 25px; display: none; }
+    .question-card.active { display: block; }
+    .q-text { font-size: 17px; font-weight: 600; margin-bottom: 18px; line-height: 1.5; }
+    .options-list { display: flex; flex-direction: column; gap: 12px; }
+    .option-item { background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 14px 18px; border-radius: 12px; cursor: pointer; transition: all 0.2s; font-size: 14px; display: flex; align-items: center; gap: 10px; }
+    .option-item:hover { background: rgba(37, 99, 235, 0.1); border-color: var(--accent-blue); }
+    .option-item.selected { background: var(--accent-blue); border-color: var(--accent-blue); color: #fff; font-weight: 600; }
+    .nav-btns { display: flex; justify-content: space-between; margin-top: 30px; }
+    .btn { padding: 12px 24px; border: none; border-radius: 10px; cursor: pointer; font-weight: 700; font-size: 14px; transition: all 0.2s; }
+    .btn-secondary { background: rgba(255,255,255,0.05); color: var(--text-main); border: 1px solid var(--border); }
+    .btn-primary { background: var(--accent-blue); color: #fff; }
+    .btn:disabled { opacity: 0.3; cursor: not-allowed; }
+    .result-screen { text-align: center; display: none; }
+    .score-big { font-size: 48px; font-weight: 800; color: var(--success); margin: 20px 0; }
+  </style>
+</head>
+<body>
+
+  <div class="quiz-container">
+    <!-- Quiz Interface -->
+    <div id="quizBox">
+      <h1 id="quizTitle">Loading Quiz...</h1>
+      <div class="meta" id="quizMeta">Please wait while we fetch the dynamic questions.</div>
+      
+      <div id="questionsContainer"></div>
+
+      <div class="nav-btns">
+        <button class="btn btn-secondary" id="prevBtn" disabled>Previous</button>
+        <button class="btn btn-primary" id="nextBtn">Next</button>
+      </div>
+    </div>
+
+    <!-- Result Interface -->
+    <div id="resultBox" class="result-screen">
+      <h1>🎉 Quiz Completed!</h1>
+      <p style="color: var(--text-muted); margin-top: 5px;">Your scores have been evaluated dynamically.</p>
+      <div class="score-big"><span id="userScore">0</span> / <span id="totalScore">0</span></div>
+      <p id="feedbackText" style="margin-bottom: 25px; font-weight: 500; color: var(--success);"></p>
+      <button class="btn btn-primary" onclick="window.location.href='quiz.html'">Back to Quizzes</button>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+    import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCaCkliRZk8HmNtOsJpoA084YhNY7MeMWM",
+      authDomain: "jigsawconnect-677da.firebaseapp.com",
+      databaseURL: "https://jigsawconnect-677da-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "jigsawconnect-677da",
+      storageBucket: "jigsawconnect-677da.firebasestorage.app",
+      messagingSenderId: "200774226361",
+      appId: "1:200774226361:web:266cb216968403793f6668"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const quizId = urlParams.get('id');
+
+    let questions = [];
+    let currentIdx = 0;
+    let userAnswers = {}; // Stores arrays for MSQ, numbers for MCQ/TF
+
+    async function loadQuizData() {
+      if (!quizId) {
+        document.getElementById('quizTitle').innerText = "Error: No Quiz ID provided";
+        return;
+      }
+
+      try {
+        const snap = await get(ref(db, `generatedQuizzes`));
+        if (snap.exists()) {
+          const allQuizzes = snap.val();
+          let activeQuiz = null;
+          
+          Object.keys(allQuizzes).forEach(k => {
+            if (allQuizzes[k].quizId === quizId || k === quizId) {
+              activeQuiz = allQuizzes[k];
+            }
+          });
+
+          if (activeQuiz) {
+            document.getElementById('quizTitle').innerText = activeQuiz.title;
+            document.getElementById('quizMeta').innerText = `Difficulty: ${activeQuiz.difficulty} | Format: ${activeQuiz.formatSelected}`;
+            questions = activeQuiz.questions || [];
+            
+            renderQuestions();
+          } else {
+            document.getElementById('quizTitle').innerText = "Quiz Not Found in Firebase";
+          }
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function renderQuestions() {
+      const container = document.getElementById('questionsContainer');
+      container.innerHTML = "";
+
+      questions.forEach((q, qIdx) => {
+        const qCard = document.createElement('div');
+        qCard.className = `question-card ${qIdx === 0 ? 'active' : ''}`;
+        qCard.id = `qCard_${qIdx}`;
+
+        const qText = document.createElement('div');
+        qText.className = 'q-text';
+        qText.innerText = q.questionText;
+        qCard.appendChild(qText);
+
+        const optsList = document.createElement('div');
+        optsList.className = 'options-list';
+
+        q.options.forEach((opt, oIdx) => {
+          const optItem = document.createElement('div');
+          optItem.className = 'option-item';
+          optItem.innerText = opt;
+          
+          // చెక్ బాక్స్ లాంటి ఫీలింగ్ కోసం MSQ కి హింట్ టెక్స్ట్
+          if(q.type === "MSQ") {
+            optItem.innerHTML = `<span>⬜</span> ${opt}`;
+          }
+
+          optItem.addEventListener('click', () => selectOption(qIdx, oIdx, optItem, q.type));
+          optsList.appendChild(optItem);
+        });
+
+        qCard.appendChild(optsList);
+        container.appendChild(qCard);
+      });
+
+      updateNavButtons();
+    }
+
+    function selectOption(qIdx, oIdx, element, qType) {
+      if (qType === "MSQ") {
+        // MSQ మల్టిపుల్ సెలెక్షన్ లాజిక్
+        if (!Array.isArray(userAnswers[qIdx])) {
+          userAnswers[qIdx] = [];
+        }
+        
+        const index = userAnswers[qIdx].indexOf(oIdx);
+        if (index > -1) {
+          userAnswers[qIdx].splice(index, 1); // ఆల్రెడీ ఉంటే తీసేయ్
+          element.classList.remove('selected');
+          element.querySelector('span').innerText = "⬜";
+        } else {
+          userAnswers[qIdx].push(oIdx); // లేకపోతే యాడ్ చెయ్
+          element.classList.add('selected');
+          element.querySelector('span').innerText = "⬛";
+        }
+      } else {
+        // MCQ & TF సింగిల్ సెలెక్షన్ లాజిక్
+        const siblings = element.parentElement.querySelectorAll('.option-item');
+        siblings.forEach(s => s.classList.remove('selected'));
+        
+        element.classList.add('selected');
+        userAnswers[qIdx] = oIdx;
+      }
+    }
+
+    // Previous/Next నావిగేషన్ లో ఆప్షన్స్ ని రీటెయిన్ చేయడం
+    function showQuestion(idx) {
+      document.querySelectorAll('.question-card').forEach(c => c.classList.remove('active'));
+      const nextCard = document.getElementById(`qCard_${idx}`);
+      nextCard.classList.add('active');
+      
+      // గతంలో సెలెక్ట్ చేసిన ఆప్షన్లను రీ-హైలైట్ చేయడం
+      const items = nextCard.querySelectorAll('.option-item');
+      const savedAns = userAnswers[idx];
+      
+      items.forEach((item, oIdx) => {
+        if (Array.isArray(savedAns)) {
+          if (savedAns.includes(oIdx)) {
+            item.classList.add('selected');
+            if(item.querySelector('span')) item.querySelector('span').innerText = "⬛";
+          } else {
+            item.classList.remove('selected');
+            if(item.querySelector('span')) item.querySelector('span').innerText = "⬜";
+          }
+        } else {
+          if (savedAns === oIdx) {
+            item.classList.add('selected');
+          } else {
+            item.classList.remove('selected');
+          }
+        }
+      });
+    }
+
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    prevBtn.addEventListener('click', () => {
+      if (currentIdx > 0) {
+        currentIdx--;
+        showQuestion(currentIdx);
+        updateNavButtons();
+      }
+    });
+
+    nextBtn.addEventListener('click', () => {
+      if (currentIdx < questions.length - 1) {
+        currentIdx++;
+        showQuestion(currentIdx);
+        updateNavButtons();
+      } else {
+        calculateAndSubmitScore();
+      }
+    });
+
+    function updateNavButtons() {
+      prevBtn.disabled = (currentIdx === 0);
+      if (currentIdx === questions.length - 1) {
+        nextBtn.innerText = "Submit Quiz";
+      } else {
+        nextBtn.innerText = "Next";
+      }
+    }
+
+    async function calculateAndSubmitScore() {
+      let score = 0;
+      
+      questions.forEach((q, idx) => {
+        if (q.type === "MSQ") {
+          // MSQ ఇండెక్స్ ఎవాల్యుయేషన్
+          const userAnsArr = userAnswers[idx] || [];
+          const targetAnsArr = q.correctAnswerIndices || [];
+          
+          if (userAnsArr.length === targetAnsArr.length && 
+              userAnsArr.every(v => targetAnsArr.includes(v))) {
+            score++;
+          }
+        } else {
+          // MCQ & TF ఇండెక్స్ ఎవాల్యుయేషన్
+          if (userAnswers[idx] !== undefined && userAnswers[idx] === q.correctAnswerIndex) {
+            score++;
+          }
+        }
+      });
+
+      document.getElementById('quizBox').style.display = 'none';
+      document.getElementById('resultBox').style.display = 'block';
+      document.getElementById('userScore').innerText = score;
+      document.getElementById('totalScore').innerText = questions.length;
+
+      const loggedInUser = JSON.parse(localStorage.getItem('user')) || {
+        rollNo: "STUDENT_GUEST",
+        hrId: "guest_user",
+        branch: "CSE",
+        section: "A"
+      };
+
+      try {
+        const contestSlug = "view-batch-2023-exam-practice-cse-acse-it";
+        const studentRecord = {
+          rollNo: loggedInUser.rollNo,
+          hrId: loggedInUser.hrId,
+          score: score,
+          branch: loggedInUser.branch,
+          section: loggedInUser.section,
+          timestamp: new Date().toLocaleString()
+        };
+        await set(ref(db, `hackerRankLeaderboards/${contestSlug}/${loggedInUser.hrId}`), studentRecord);
+        document.getElementById('feedbackText').innerText = "మీ మార్కులు లీడర్‌బోర్డ్‌కు విజయవంతంగా సింక్ చేయబడ్డాయి!";
+      } catch (err) {
+        console.error("Score sync failed", err);
+        document.getElementById('feedbackText').innerText = "మార్కులు సేవ్ చేయడంలో లోపం జరిగింది.";
+      }
+    }
+
+    loadQuizData();
+  </script>
+</body>
+</html>
