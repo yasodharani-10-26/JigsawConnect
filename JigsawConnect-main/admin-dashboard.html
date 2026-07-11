@@ -1,0 +1,792 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head> 
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard – StudyConnect</title>
+
+  <style>
+    /* =========================
+        ROOT & THEME VARIABLES
+    ========================== */
+    :root {
+      --bg: #090d16;
+      --card: #131c2e;
+      --panel: #0d1527;
+      --text: #f1f5f9;
+      --muted: #64748b;
+      --primary: #4f46e5;
+      --accent: #06b6d4;
+      --accent-glow: rgba(6, 182, 212, 0.15);
+      --danger: #ef4444;
+      --border: rgba(255, 255, 255, 0.05);
+      --radius-lg: 16px;
+      --radius-md: 12px;
+      --shadow: 0 20px 40px -15px rgba(0,0,0,0.5);
+      font-family: 'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif;
+      
+      /* AI Quiz Generator Specific Variables */
+      --q-surface: #ffffff;
+      --q-text: #0f172a;
+      --q-muted: #64748b;
+      --q-primary: #2563eb;
+      --q-border: #e2e8f0;
+      --q-bg: #f8fafc;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(79, 70, 229, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.05) 0%, transparent 40%);
+    }
+
+    /* =========================
+        NAVBAR
+    ========================== */
+    .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(13, 21, 39, 0.75);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 40px;
+      border-bottom: 1px solid var(--border);
+      z-index: 1000;
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: 800;
+      color: #fff;
+      text-decoration: none;
+      letter-spacing: -0.5px;
+    }
+
+    .logo span {
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a:hover, .nav-links a.active {
+      color: var(--text);
+    }
+
+    .logout-btn {
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      padding: 6px 14px;
+      border-radius: 8px;
+      color: var(--danger) !important;
+      background: rgba(239, 68, 68, 0.05);
+    }
+
+    .logout-btn:hover {
+      background: var(--danger) !important;
+      color: #fff !important;
+    }
+
+    /* =========================
+        HEADER
+    ========================== */
+    .page-header {
+      padding: 140px 20px 40px;
+      text-align: center;
+      position: relative;
+    }
+
+    .page-header h1 {
+      font-size: 2.75rem;
+      font-weight: 800;
+      letter-spacing: -1px;
+      background: linear-gradient(to right, #fff, var(--muted));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .page-header p {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    /* =========================
+        MAIN LAYOUT SETUP
+    ========================== */
+    .main-content {
+      padding: 20px 40px 60px;
+      max-width: 1400px;
+      margin: auto;
+    }
+
+    /* =========================
+        STATS CARDS
+    ========================== */
+    .admin-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+
+    .stat-card {
+      background: var(--card);
+      padding: 24px;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+
+    .stat-icon {
+      font-size: 1.75rem;
+      width: 54px;
+      height: 54px;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border);
+    }
+
+    .stat-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.2;
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 2px;
+    }
+
+    .stat-card:nth-child(1) .stat-icon { color: var(--primary); background: rgba(79, 70, 229, 0.1); }
+    .stat-card:nth-child(2) .stat-icon { color: var(--accent); background: rgba(6, 182, 212, 0.1); }
+    .stat-card:nth-child(3) .stat-icon { color: #eab308; background: rgba(234, 179, 8, 0.1); }
+
+    /* =========================
+        PANELS & UTILITIES
+    ========================== */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+
+    @media (max-width: 1024px) {
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .admin-panel {
+      background: var(--card);
+      padding: 30px;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .admin-section-title {
+      color: #fff;
+      font-size: 19px;
+      font-weight: 700;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* FORMS & INPUTS */
+    .admin-upload-form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      margin-bottom: 8px;
+      font-weight: 600;
+      font-size: 13px;
+      color: #94a3b8;
+    }
+
+    input, select, textarea {
+      padding: 12px 16px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.6);
+      color: white;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      background: rgba(15, 23, 42, 0.9);
+      box-shadow: 0 0 0 4px var(--accent-glow);
+    }
+
+    /* BUTTON SYSTEM */
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), #6366f1);
+      color: white;
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(79, 70, 229, 0.35);
+    }
+
+    /* ==========================================================================
+        AI QUIZ GENERATOR EMBEDDED CARD STYLE
+       ========================================================================== */
+    .quiz-gen-card {
+      background: var(--q-surface) !important;
+      color: var(--q-text) !important;
+      padding: 24px;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--q-border);
+    }
+    
+    .quiz-gen-card h2 {
+      color: var(--q-text);
+      font-size: 22px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+    
+    .quiz-gen-card p.subtitle {
+      color: var(--q-muted);
+      font-size: 13px;
+      margin-bottom: 20px;
+      line-height: 1.4;
+    }
+    
+    .quiz-tabs {
+      display: flex;
+      gap: 4px;
+      border-bottom: 1px solid var(--q-border);
+      margin-bottom: 16px;
+    }
+    
+    .quiz-tab-btn {
+      background: transparent;
+      border: none;
+      padding: 8px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--q-muted);
+      cursor: pointer;
+      position: relative;
+    }
+    
+    .quiz-tab-btn.active {
+      color: var(--q-primary);
+    }
+    
+    .quiz-tab-btn.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--q-primary);
+    }
+    
+    .quiz-tab-content {
+      display: none;
+      margin-bottom: 16px;
+    }
+    
+    .quiz-tab-content.active {
+      display: block;
+    }
+    
+    .quiz-textarea, .quiz-input {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--q-border);
+      background: #fff;
+      color: var(--q-text);
+      font-size: 13px;
+    }
+    
+    .quiz-select-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    
+    .quiz-gen-card select, .quiz-gen-card label {
+      color: var(--q-text) !important;
+    }
+    
+    .quiz-gen-card select {
+      background: #fff !important;
+      border: 1px solid var(--q-border) !important;
+      padding: 8px 10px !important;
+    }
+    
+    .quiz-toggle-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    
+    .quiz-btn-blue {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8) !important;
+      color: white !important;
+      width: 100%;
+      padding: 12px;
+      font-weight: 700;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 500;
+      border-top: 1px solid var(--border);
+      margin-top: 40px;
+    }
+  </style>
+</head>
+
+<body id="adminPage">
+
+  <nav class="navbar">
+    <a href="index.html" class="logo">📚 Study<span>Connect</span></a>
+    <div class="nav-links">
+      <a href="admin-dashboard.html" class="active">Dashboard</a>
+      <a href="leaderboard.html">Leaderboard</a>
+      <a href="quiz.html">Quizzes</a>
+      <a href="index.html" class="logout-btn">Logout</a>
+    </div>
+  </nav>
+
+  <header class="page-header">
+    <h1>Admin Command Center</h1>
+    <p>Calibrate system metrics, synchronize functional rosters, and manage adaptive evaluation structures.</p>
+  </header>
+
+  <main class="main-content">
+
+    <div class="admin-stats">
+      <div class="stat-card">
+        <div class="stat-icon">🎓</div>
+        <div class="stat-info">
+          <div class="stat-value" id="studentCount">0</div>
+          <div class="stat-label">Students</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🧩</div>
+        <div class="stat-info">
+          <div class="stat-value" id="activeQuizzesCount">0</div>
+          <div class="stat-label">Active Quizzes</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🏆</div>
+        <div class="stat-info">
+          <div class="stat-value" id="scoreCount">0</div>
+          <div class="stat-label">Scores Verified</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dashboard-grid">
+      
+      <section class="quiz-gen-card">
+        <h2>⚡ Smart AI Quiz Generator</h2>
+        <p class="subtitle">Enter a topic or upload a study file to generate instant multi-format questions for students.</p>
+        
+        <div class="quiz-tabs">
+          <button class="quiz-tab-btn active" onclick="toggleQuizTab(event, 'q-text')">Enter Topic / Context</button>
+          <button class="quiz-tab-btn" onclick="toggleQuizTab(event, 'q-file')">Upload Study File (.txt)</button>
+        </div>
+
+        <div id="q-text" class="quiz-tab-content active">
+          <textarea class="quiz-textarea" id="quizContextText" rows="4" placeholder="Enter Quiz Topic or paste context here... (e.g., Python OOPs Concepts, Java Threads, SQL Joins)"></textarea>
+        </div>
+
+        <div id="q-file" class="quiz-tab-content">
+          <label style="font-size: 12px; margin-bottom: 5px; display: block;">Select Text Document:</label>
+          <input type="file" id="quizFileObject" class="quiz-input" accept=".txt" style="background:#fff; color:#0f172a;">
+        </div>
+
+        <div class="quiz-select-grid">
+          <div class="form-group">
+            <label style="font-size:11px;">Topic/Title</label>
+            <input type="text" id="quizTopicTitle" placeholder="e.g. Java Basics" required style="padding:10px; font-size:13px; border:1px solid var(--q-border); color:var(--q-text); background:#fff; border-radius: var(--radius-md);">
+          </div>
+          <div class="form-group">
+            <label style="font-size:11px;">How many Questions?</label>
+            <select id="qCount">
+              <option value="3">3 Questions</option>
+              <option value="5">5 Questions</option>
+              <option value="10">10 Questions</option>
+              <option value="15">15 Questions</option>
+              <option value="20">20 Questions</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label style="font-size:11px;">Format Type</label>
+            <select id="qType">
+              <option value="MIXED">Mixed Formats (MCQ, MSQ, T/F)</option>
+              <option value="MCQ">Standard MCQ (Single Answer)</option>
+              <option value="MSQ">Multiple Correct Options</option>
+              <option value="TF">True / False Type</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label style="font-size:11px;">Difficulty Level</label>
+            <select id="qDiff"><option>Easy</option><option>Medium</option><option>Hard</option></select>
+          </div>
+        </div>
+
+        <div class="quiz-toggle-container">
+          <label style="font-size:12px; font-weight:600;">Publish Instantly to Student App (`quiz.html`)</label>
+          <input type="checkbox" id="publishDirectly" checked style="width:auto; cursor:pointer;">
+        </div>
+
+        <button class="btn quiz-btn-blue" id="actionGenQuizBtn">⚡ Build & Publish Quiz to Firebase</button>
+      </section>
+
+      <section class="admin-panel">
+        <h2 class="admin-section-title">⚡ Onboard New Student</h2>
+        <form id="studentForm" class="admin-upload-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Full Name</label>
+              <input type="text" id="studentName" placeholder="Alex Morgan" required>
+            </div>
+            <div class="form-group">
+              <label>HackerRank ID</label>
+              <input type="text" id="studentHrIdOnboard" placeholder="yashodarani20221" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Branch</label>
+              <select id="studentBranchOnboard">
+                <option>CSE</option>
+                <option>ECE</option>
+                <option>EEE</option>
+                <option>IT</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Year of Study</label>
+              <select id="studentYearOnboard">
+                <option>1st Year</option>
+                <option>2nd Year</option>
+                <option>3rd Year</option>
+                <option>4th Year</option>
+              </select>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary">
+            <span>➕</span> Register Student Roster
+          </button>
+        </form>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    &copy; 2026 StudyConnect Command Matrix. All rights reserved.
+  </footer>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+    import { getDatabase, ref, onValue, set, push } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCaCkliRZk8HmNtOsJpoA084YhNY7MeMWM",
+      authDomain: "jigsawconnect-677da.firebaseapp.com",
+      databaseURL: "https://jigsawconnect-677da-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "jigsawconnect-677da",
+      storageBucket: "jigsawconnect-677da.firebasestorage.app",
+      messagingSenderId: "200774226361",
+      appId: "1:200774226361:web:266cb216968403793f6668"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    let uploadedFileText = "";
+
+    // Global Tab Switching Logic Fix
+    window.toggleQuizTab = function(event, tabId) {
+      const contents = document.querySelectorAll('.quiz-tab-content');
+      contents.forEach(c => c.classList.remove('active'));
+      
+      const tabs = document.querySelectorAll('.quiz-tab-btn');
+      tabs.forEach(t => t.classList.remove('active'));
+      
+      document.getElementById(tabId).classList.add('active');
+      event.currentTarget.classList.add('active');
+    }
+
+    // Read TXT file content if uploaded
+    document.getElementById('quizFileObject').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        uploadedFileText = evt.target.result;
+        alert("📄 ఫైల్ విజయవంతంగా లోడ్ అయ్యింది!");
+      };
+      reader.readAsText(file);
+    });
+
+    // Real-time Dashboard Counters Hook
+    function listenToDashboardStats() {
+      const activeContestSlug = "view-batch-2023-exam-practice-cse-acse-it";
+      
+      // Scores Verified Counter Sync
+      onValue(ref(db, `hackerRankLeaderboards/${activeContestSlug}`), (snapshot) => {
+        if(snapshot.exists()) {
+          const count = Object.keys(snapshot.val()).length;
+          document.getElementById('scoreCount').innerText = count;
+        } else {
+          document.getElementById('scoreCount').innerText = "0";
+        }
+      });
+
+      // Registered Students Live Counter Sync
+      onValue(ref(db, "registeredStudents"), (snapshot) => {
+        if(snapshot.exists()) {
+          document.getElementById('studentCount').innerText = Object.keys(snapshot.val()).length;
+        } else {
+          // Fallback to Leaderboard count if registered node doesn't exist yet
+          const scoreVal = document.getElementById('scoreCount').innerText;
+          document.getElementById('studentCount').innerText = scoreVal !== "0" ? scoreVal : "0";
+        }
+      });
+
+      // Active Quizzes Counter Sync
+      onValue(ref(db, "generatedQuizzes"), (snapshot) => {
+        if(snapshot.exists()) {
+          document.getElementById('activeQuizzesCount').innerText = Object.keys(snapshot.val()).length;
+        } else {
+          document.getElementById('activeQuizzesCount').innerText = "0";
+        }
+      });
+    }
+    
+    // Fire up the real-time listeners
+    listenToDashboardStats();
+
+    // DYNAMIC MULTI-FORMAT QUIZ GENERATION ENGINE
+    document.getElementById('actionGenQuizBtn').addEventListener('click', async () => {
+      const title = document.getElementById('quizTopicTitle').value.trim();
+      const textContext = document.getElementById('quizContextText').value.trim();
+      const count = parseInt(document.getElementById('qCount').value);
+      const formatType = document.getElementById('qType').value;
+      const difficulty = document.getElementById('qDiff').value;
+
+      if (!title) {
+        alert("దయచేసి క్విజ్ Topic/Title ని ఎంటర్ చేయండి.");
+        return;
+      }
+
+      alert("✨ AI ఇంజన్ రన్ అవుతోంది... మీ ఫార్మాట్ ఎంపిక ప్రకారం " + count + " ప్రశ్నలను జనరేట్ చేస్తోంది!");
+
+      // Multi-Format Mock Questions Pool
+      const pool = [
+        {
+          type: "MCQ",
+          questionText: `What is the primary feature of ${title}?`,
+          options: ["Automatic Optimization", "Modular Architecture", "Linear Compiling", "Manual Resource Tracking"],
+          correctAnswerIndex: 1
+        },
+        {
+          type: "TF",
+          questionText: `State True or False: ${title} structures are completely unmodifiable during execution runtime.`,
+          options: ["True", "False"],
+          correctAnswerIndex: 1
+        },
+        {
+          type: "MSQ",
+          questionText: `Which of the following attributes are supported dynamically within ${title}? (Select all that apply)`,
+          options: ["Scalability", "Garbage Collection Tracker", "Low Memory Footprint", "Static Pointer Mapping"],
+          correctAnswerIndices: [0, 1]
+        },
+        {
+          type: "MCQ",
+          questionText: `Which keyword is fundamentally reserved when configuring standard components in ${title}?`,
+          options: ["verify", "import", "initiate", "compile"],
+          correctAnswerIndex: 1
+        },
+        {
+          type: "TF",
+          questionText: `Is ${title} highly utilized in modern modern system development frameworks?`,
+          options: ["True", "False"],
+          correctAnswerIndex: 0
+        }
+      ];
+
+      let finalQuestions = [];
+      let activePool = pool;
+
+      if (formatType !== "MIXED") {
+        activePool = pool.filter(q => q.type === formatType);
+        if (activePool.length === 0) activePool = pool; 
+      }
+
+      for (let i = 0; i < count; i++) {
+        let coreTemplate = activePool[i % activePool.length];
+        let clonedQuestion = JSON.parse(JSON.stringify(coreTemplate));
+        clonedQuestion.questionText = `[Q${i+1}] ` + clonedQuestion.questionText;
+        finalQuestions.push(clonedQuestion);
+      }
+
+      const quizRecord = {
+        quizId: "QUIZ_" + Date.now(),
+        title: title,
+        difficulty: difficulty,
+        formatSelected: formatType,
+        totalQuestions: finalQuestions.length,
+        questions: finalQuestions,
+        timestamp: new Date().toLocaleString()
+      };
+
+      try {
+        const quizRef = ref(db, "generatedQuizzes");
+        const newQuizNode = push(quizRef);
+        await set(newQuizNode, quizRecord);
+
+        alert(`🎉 అద్భుతం! "${title}" క్విజ్ సక్సెస్‌ఫుల్‌గా ఫైర్‌బేస్‌లోకి సేవ్ అయ్యింది. ఇది నేరుగా quiz.html లో స్టూడెంట్స్‌కి కనిపిస్తుంది.`);
+        
+        // Clear inputs
+        document.getElementById('quizTopicTitle').value = "";
+        document.getElementById('quizContextText').value = "";
+        document.getElementById('quizFileObject').value = "";
+        uploadedFileText = "";
+        
+      } catch (error) {
+        console.error("Firebase Sync Error:", error);
+        alert("డేటాబేస్ కనెక్షన్ ఎర్రర్ వచ్చింది.");
+      }
+    });
+
+    // ROSTER ONBOARD ENGINE
+    document.getElementById('studentForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('studentName').value.trim();
+      const hrId = document.getElementById('studentHrIdOnboard').value.trim().toLowerCase();
+      const branch = document.getElementById('studentBranchOnboard').value;
+      const year = document.getElementById('studentYearOnboard').value;
+
+      try {
+        let activeContestSlug = "view-batch-2023-exam-practice-cse-acse-it";
+        const newOnboardStudent = {
+          hrId: hrId,
+          hackerRankId: hrId,
+          name: name,
+          branch: branch,
+          year: year,
+          score: 0,
+          timestamp: new Date().toLocaleString()
+        };
+
+        await set(ref(db, `hackerRankLeaderboards/${activeContestSlug}/${hrId}`), newOnboardStudent);
+        alert(`🎉 Student "${name}" successfully registered directly to database workspace matrix.`);
+        document.getElementById('studentForm').reset();
+      } catch (err) {
+        console.error(err);
+      }
+    });
+  </script>
+</body>
+</html>
