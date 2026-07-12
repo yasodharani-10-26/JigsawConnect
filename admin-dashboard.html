@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin Dashboard – StudyConnect</title>
 
-  <!-- Excel read/write library (used by the exam leaderboard upload/download) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
   <style>
@@ -327,9 +326,7 @@
       transform: none !important;
     }
 
-    /* ==========================================================================
-        AI QUIZ GENERATOR EMBEDDED CARD STYLE
-       ========================================================================== */
+    /* AI QUIZ GENERATOR STYLE */
     .quiz-gen-card {
       background: var(--q-surface) !important;
       color: var(--q-text) !important;
@@ -339,148 +336,38 @@
       border: 1px solid var(--q-border);
     }
     
-    .quiz-gen-card h2 {
-      color: var(--q-text);
-      font-size: 22px;
-      font-weight: 800;
-      margin-bottom: 6px;
-    }
-    
-    .quiz-gen-card p.subtitle {
-      color: var(--q-muted);
-      font-size: 13px;
-      margin-bottom: 20px;
-      line-height: 1.4;
-    }
-    
-    .quiz-tabs {
-      display: flex;
-      gap: 4px;
-      border-bottom: 1px solid var(--q-border);
-      margin-bottom: 16px;
-    }
+    .quiz-gen-card h2 { color: var(--q-text); font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+    .quiz-gen-card p.subtitle { color: var(--q-muted); font-size: 13px; margin-bottom: 20px; line-height: 1.4; }
+    .quiz-tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--q-border); margin-bottom: 16px; }
     
     .quiz-tab-btn {
-      background: transparent;
-      border: none;
-      padding: 8px 12px;
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--q-muted);
-      cursor: pointer;
-      position: relative;
+      background: transparent; border: none; padding: 8px 12px; font-size: 12px; font-weight: 600; color: var(--q-muted); cursor: pointer; position: relative;
     }
-    
-    .quiz-tab-btn.active {
-      color: var(--q-primary);
-    }
-    
-    .quiz-tab-btn.active::after {
-      content: '';
-      position: absolute;
-      bottom: -1px;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: var(--q-primary);
-    }
-    
-    .quiz-tab-content {
-      display: none;
-      margin-bottom: 16px;
-    }
-    
-    .quiz-tab-content.active {
-      display: block;
-    }
+    .quiz-tab-btn.active { color: var(--q-primary); }
+    .quiz-tab-btn.active::after { content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 2px; background: var(--q-primary); }
+    .quiz-tab-content { display: none; margin-bottom: 16px; }
+    .quiz-tab-content.active { display: block; }
     
     .quiz-textarea, .quiz-input {
-      width: 100%;
-      padding: 10px 12px;
-      border-radius: var(--radius-md);
-      border: 1px solid var(--q-border);
-      background: #fff;
-      color: var(--q-text);
-      font-size: 13px;
+      width: 100%; padding: 10px 12px; border-radius: var(--radius-md); border: 1px solid var(--q-border); background: #fff; color: var(--q-text); font-size: 13px;
     }
+    .quiz-select-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+    .quiz-gen-card select, .quiz-gen-card label { color: var(--q-text) !important; }
     
-    .quiz-select-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-    
-    .quiz-gen-card select, .quiz-gen-card label {
-      color: var(--q-text) !important;
-    }
-    
-    .quiz-gen-card select {
-      background: #fff !important;
-      border: 1px solid var(--q-border) !important;
-      padding: 8px 10px !important;
-    }
-    
-    .quiz-toggle-container {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 16px;
-    }
+    .quiz-gen-card select { background: #fff !important; border: 1px solid var(--q-border) !important; padding: 8px 10px !important; }
+    .quiz-toggle-container { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
     
     .quiz-btn-blue {
-      background: linear-gradient(135deg, #2563eb, #1d4ed8) !important;
-      color: white !important;
-      width: 100%;
-      padding: 12px;
-      font-weight: 700;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8) !important; color: white !important; width: 100%; padding: 12px; font-weight: 700;
     }
 
-    .footer {
-      text-align: center;
-      padding: 40px 20px;
-      color: var(--muted);
-      font-size: 13px;
-      font-weight: 500;
-      border-top: 1px solid var(--border);
-      margin-top: 40px;
-    }
+    .footer { text-align: center; padding: 40px 20px; color: var(--muted); font-size: 13px; font-weight: 500; border-top: 1px solid var(--border); margin-top: 40px; }
 
-    /* ==========================================================================
-        HACKERRANK EXAM POSTING + ADMIN-ONLY PER-EXAM LEADERBOARD
-       ========================================================================== */
-    .exam-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      padding: 12px 16px;
-      background: rgba(15, 23, 42, 0.5);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      flex-wrap: wrap;
-    }
-    .exam-row-title { font-weight: 700; font-size: 14px; }
-    .exam-row-link { font-size: 12px; color: var(--muted); word-break: break-all; }
-    .exam-row-deadline { font-size: 11px; color: var(--muted); margin-top: 2px; }
-    .exam-status-pill { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; }
-    .exam-status-active { background: rgba(16, 185, 129, 0.15); color: #10b981; }
-    .exam-status-past { background: rgba(100, 116, 139, 0.15); color: #94a3b8; }
-    .exam-toggle-btn { background: rgba(255,255,255,0.06); color: #fff; padding: 6px 12px; font-size: 12px; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; }
-    .exam-toggle-btn:hover { border-color: var(--accent); }
-
-    .admin-lb-table { width: 100%; border-collapse: collapse; }
-    .admin-lb-table th, .admin-lb-table td { padding: 10px; border-bottom: 1px solid var(--border); text-align: left; font-size: 13px; }
+    /* HACKERRANK EXAM TABLE */
+    .admin-lb-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+    .admin-lb-table th, .admin-lb-table td { padding: 12px; border-bottom: 1px solid var(--border); text-align: left; font-size: 13px; }
     .admin-lb-table th { color: var(--muted); text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
     .admin-only-tag { font-size: 11px; font-weight: 700; color: #eab308; background: rgba(234,179,8,0.1); border: 1px solid rgba(234,179,8,0.2); padding: 3px 10px; border-radius: 20px; margin-left: 8px; }
-
-    /* ==========================================================================
-        MANUAL VERIFY QUEUE ROWS (reused .btn/.btn-primary from above)
-       ========================================================================== */
-    .verify-row {
-      display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
-      padding: 12px 14px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 12px;
-    }
   </style>
 </head>
 
@@ -522,7 +409,7 @@
         <div class="stat-icon">🏆</div>
         <div class="stat-info">
           <div class="stat-value" id="scoreCount">0</div>
-          <div class="stat-label">Scores Verified</div>
+          <div class="stat-label">Scores Sync Node</div>
         </div>
       </div>
     </div>
@@ -565,8 +452,8 @@
           <div class="form-group">
             <label style="font-size:11px;">Format Type</label>
             <select id="qType">
-              <option value="MIXED">Mixed Formats (MCQ, MSQ, T/F)</option>
-              <option value="MCQ">Standard MCQ (Single Answer)</option>
+              <option value="MIXED">Mixed Formats</option>
+              <option value="MCQ">Standard MCQ</option>
               <option value="MSQ">Multiple Correct Options</option>
               <option value="TF">True / False Type</option>
             </select>
@@ -626,110 +513,45 @@
 
     </div>
 
-    <!-- ============================================================
-         🔗 LOAD ANY HACKERRANK CONTEST
-         Paste any HackerRank link/slug -> our free /api/sync-hackerrank
-         Vercel route scrapes it server-side (no Blaze plan, no CORS
-         since it's same-origin) and writes into
-         hackerRankLeaderboards/{slug}, then marks it as the active
-         contest — everything else on this page and leaderboard.html
-         follows that slug automatically.
-    ============================================================= -->
     <section class="admin-panel" style="margin-bottom: 30px;">
-      <h2 class="admin-section-title">🔗 Load Any HackerRank Contest</h2>
+      <h2 class="admin-section-title">🔗 Load Any HackerRank Contest Link</h2>
       <p style="margin-bottom: 14px; font-size: 13px; color: #64748b; line-height:1.5;">
-        Paste a HackerRank contest link (or just the slug). This becomes the active contest —
-        the dashboard, Leaderboard page, and student onboarding above all sync to it automatically.
-        No code changes or redeploys needed to switch contests.
+        Paste a HackerRank contest link or slug. This module registers it directly to the real-time ecosystem database.
       </p>
-      <div class="form-group">
-        <label>HackerRank Contest Link / Slug</label>
-        <input type="text" id="hackerrankLinkInput" placeholder="https://www.hackerrank.com/contests/your-slug/leaderboard">
-      </div>
-      <button type="button" class="btn btn-primary" id="fetchHrBtn" style="width: fit-content; margin-top: 8px;">🔍 Fetch &amp; Sync Leaderboard</button>
-      <p style="margin-top: 12px; font-size: 12px; color: #64748b;">
-        Active contest: <strong id="activeContestSlugText">none set</strong>
-      </p>
-    </section>
-
-    <!-- ============================================================
-         ✅ VERIFY MARKS (MANUAL)
-         Students self-report on submit-score.html. Admin cross-checks
-         against the real HackerRank leaderboard, then Verify publishes
-         the score into hackerRankLeaderboards/{slug} — the same node
-         leaderboard.html reads from live.
-    ============================================================= -->
-    <section class="admin-panel" style="margin-bottom: 30px;">
-      <h2 class="admin-section-title">✅ Verify Marks (Manual)</h2>
-      <p style="margin-bottom: 14px; font-size: 13px; color: #64748b; line-height:1.5;">
-        Students self-report their score on the <a href="submit-score.html" target="_blank" style="color:#60a5fa;">Submit Score</a> page.
-        Open the real leaderboard, compare, then Verify or Reject each one below.
-      </p>
-      <div id="pendingSubmissionsList" style="display:flex; flex-direction:column; gap:10px;">
-        <p style="font-size:13px; color:#64748b;">No pending submissions.</p>
+      <div class="form-row" style="align-items: flex-end; gap: 15px;">
+        <div class="form-group" style="flex: 1;">
+          <label>HackerRank Contest Link / Slug</label>
+          <input type="text" id="hackerrankLinkInput" placeholder="https://www.hackerrank.com/contests/your-slug/leaderboard">
+        </div>
+        <button class="btn btn-primary" id="loadContestBtn" style="height: 45px;">🔗 Register Contest Node</button>
       </div>
     </section>
 
-    <!-- ============================================================
-         POST A HACKERRANK EXAM LINK
-         Submitting this pushes the exam straight into quiz.html's
-         "🟢 Active HackerRank Exams" card. Once the optional deadline
-         passes (or the admin manually marks it), quiz.html moves it
-         to "🕓 Past HackerRank Exams" automatically.
-    ============================================================= -->
-    <section class="admin-panel" style="margin-bottom: 30px;">
-      <h2 class="admin-section-title">📌 Post HackerRank Exam Link</h2>
-      <form id="examPostForm" class="admin-upload-form">
-        <div class="form-row">
-          <div class="form-group">
-            <label>Exam Title</label>
-            <input type="text" id="examTitleInput" placeholder="Weekly DSA Contest" required>
-          </div>
-          <div class="form-group">
-            <label>HackerRank Link</label>
-            <input type="url" id="examLinkInput" placeholder="https://www.hackerrank.com/..." required>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Deadline (optional — exam auto-moves to Past after this time)</label>
-          <input type="datetime-local" id="examDeadlineInput">
-        </div>
-        <button type="submit" class="btn btn-primary">📌 Post Exam to quiz.html</button>
-      </form>
-
-      <div id="postedExamsList" style="margin-top: 24px; display: flex; flex-direction: column; gap: 12px;"></div>
-    </section>
-
-    <!-- ============================================================
-         EXAM-WISE LEADERBOARD VIEWER — ADMIN ONLY
-         Paste any HackerRank leaderboard link to peek at its already-
-         synced scores (from hackerRankLeaderboards/{slug}) without
-         switching the site's active contest. Read-only — use the
-         "Load Any HackerRank Contest" card above to actually sync a
-         new contest's data first.
-    ============================================================= -->
     <section class="admin-panel">
-      <h2 class="admin-section-title">🏆 Exam Leaderboard <span class="admin-only-tag">ADMIN ONLY</span></h2>
+      <h2 class="admin-section-title">🏆 Exam Leaderboard Preview <span class="admin-only-tag">ADMIN ONLY</span></h2>
       <div class="form-row" style="margin-bottom: 16px;">
         <div class="form-group" style="grid-column: span 2;">
-          <label>HackerRank Leaderboard Link</label>
-          <input type="url" id="viewLbLinkInput" placeholder="https://www.hackerrank.com/contests/your-contest-slug/leaderboard">
+          <label>Paste Registered Contest Slug ID for Live Audit</label>
+          <input type="text" id="viewLbLinkInput" placeholder="Enter contest slug here...">
         </div>
       </div>
-      <button class="btn btn-primary" id="viewLbBtn" style="margin-bottom: 12px; width: fit-content;">👁 View Leaderboard</button>
+      <div style="display: flex; gap: 10px; margin-bottom: 16px;">
+        <button class="btn btn-primary" id="viewLbBtn">👁 View Matrix Scores</button>
+        <button class="btn btn-primary" id="downloadExamLbBtn" style="background: var(--accent);">📥 Download (.xlsx)</button>
+      </div>
       <p id="viewLbStatus" style="font-size: 12px; color: var(--muted); margin-bottom: 16px;"></p>
-      <button class="btn btn-primary" id="downloadExamLbBtn" style="margin-bottom: 16px; width: fit-content;">📥 Download This Exam's Leaderboard (.xlsx)</button>
+      
       <div style="overflow-x: auto;">
         <table class="admin-lb-table">
           <thead>
             <tr>
-              <th style="width: 60px;">Rank</th>
-              <th>HackerRank ID</th>
-              <th>Marks</th>
+              <th style="width: 80px;">Rank</th>
+              <th>HackerRank Username ID</th>
+              <th>Scored Marks</th>
             </tr>
           </thead>
           <tbody id="examLbTableBody">
-            <tr><td colspan="3" style="text-align:center; color:var(--muted); padding:20px;">Paste a HackerRank leaderboard link above and click "View Leaderboard".</td></tr>
+            <tr><td colspan="3" style="text-align:center; color:var(--muted); padding:20px;">Provide active context string mapping key to pull table arrays.</td></tr>
           </tbody>
         </table>
       </div>
@@ -742,523 +564,166 @@
   </footer>
 
   <script type="module">
-    import { db, ref, onValue, set, get, push, update, auth } from "./firebase.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+    import { getDatabase, ref, set, get, push, update, onValue } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCaCkliRZk8HmNtOsJpoA084YhNY7MeMWM",
+      authDomain: "jigsawconnect-677da.firebaseapp.com",
+      databaseURL: "https://jigsawconnect-677da-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "jigsawconnect-677da",
+      storageBucket: "jigsawconnect-677da.firebasestorage.app",
+      messagingSenderId: "200774226361",
+      appId: "1:200774226361:web:266cb216968403793f6668"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
 
     let uploadedFileText = "";
-    let currentActiveSlug = null;
-    let scoreListenerUnsub = null;
-    let submissionsListenerUnsub = null;
+    let localExamDataCached = [];
 
     // Global Tab Switching Logic Fix
     window.toggleQuizTab = function(event, tabId) {
-      const contents = document.querySelectorAll('.quiz-tab-content');
-      contents.forEach(c => c.classList.remove('active'));
-      
-      const tabs = document.querySelectorAll('.quiz-tab-btn');
-      tabs.forEach(t => t.classList.remove('active'));
-      
+      document.querySelectorAll('.quiz-tab-content').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('.quiz-tab-btn').forEach(t => t.classList.remove('active'));
       document.getElementById(tabId).classList.add('active');
       event.currentTarget.classList.add('active');
-    }
+    };
 
-    // Read TXT file content if uploaded
+    // Read Text File Data
     document.getElementById('quizFileObject').addEventListener('change', function(e) {
       const file = e.target.files[0];
       if (!file) return;
       const reader = new FileReader();
       reader.onload = function(evt) {
         uploadedFileText = evt.target.result;
-        alert("📄 ఫైల్ విజయవంతంగా లోడ్ అయ్యింది!");
+        alert("📄 System File loaded safely.");
       };
       reader.readAsText(file);
     });
 
-    // ప్రస్తుతం active గా ఉన్న కాంటెస్ట్ మారినప్పుడల్లా, "Scores Verified" కౌంటర్‌ని
-    // ఆ కొత్త కాంటెస్ట్ నోడ్ మీదకి రీ-పాయింట్ చేస్తుంది (పాత లిజనర్‌ని ముందు డిటాచ్ చేసి).
-    function attachScoreListener(slug) {
-      if (scoreListenerUnsub) scoreListenerUnsub();
-      scoreListenerUnsub = onValue(ref(db, `hackerRankLeaderboards/${slug}`), (snapshot) => {
-        document.getElementById('scoreCount').innerText = snapshot.exists() ? Object.keys(snapshot.val()).length : "0";
-      });
-    }
-
-    // ✅ MANUAL VERIFY QUEUE — listens to students-side submissions for the active contest
-    function attachSubmissionsListener(slug) {
-      if (submissionsListenerUnsub) submissionsListenerUnsub();
-      submissionsListenerUnsub = onValue(ref(db, `scoreSubmissions/${slug}`), (snapshot) => {
-        const all = snapshot.exists() ? snapshot.val() : {};
-        const pending = Object.entries(all).filter(([, v]) => v.status === 'pending');
-        renderPendingSubmissions(slug, pending);
-      });
-    }
-
-    function renderPendingSubmissions(slug, pending) {
-      const container = document.getElementById('pendingSubmissionsList');
-
-      if (pending.length === 0) {
-        container.innerHTML = `<p style="font-size:13px; color:#64748b;">No pending submissions.</p>`;
-        return;
-      }
-
-      container.innerHTML = pending.map(([key, s]) => `
-        <div class="verify-row">
-          <div style="min-width:200px;">
-            <div style="font-weight:700; color:#fff; font-size:14px;">${s.name || 'N/A'} <span style="color:#64748b; font-weight:500;">(${s.hrId})</span></div>
-            <div style="font-size:12px; color:#64748b; margin-top:2px;">${s.branch || '-'} • ${s.year || '-'} • Claimed score: <strong style="color:#06b6d4;">${s.claimedScore}</strong></div>
-          </div>
-          <div style="display:flex; gap:8px; flex-wrap:wrap;">
-            <a href="https://www.hackerrank.com/contests/${slug}/leaderboard" target="_blank" rel="noopener" class="btn" style="padding:8px 12px; font-size:12px; text-decoration:none; display:inline-flex; align-items:center; background:rgba(255,255,255,0.06); color:#fff;">Open Leaderboard ↗</a>
-            <button type="button" class="btn btn-primary" style="padding:8px 12px; font-size:12px;" data-action="verify" data-key="${key}" data-slug="${slug}">✅ Verify</button>
-            <button type="button" class="btn" style="padding:8px 12px; font-size:12px; background:rgba(239,68,68,0.12); color:#ef4444; border:1px solid rgba(239,68,68,0.25);" data-action="reject" data-key="${key}" data-slug="${slug}">❌ Reject</button>
-          </div>
-        </div>
-      `).join('');
-
-      container.querySelectorAll('[data-action="verify"]').forEach(btn => {
-        btn.addEventListener('click', () => verifySubmission(btn.dataset.slug, btn.dataset.key));
-      });
-      container.querySelectorAll('[data-action="reject"]').forEach(btn => {
-        btn.addEventListener('click', () => rejectSubmission(btn.dataset.slug, btn.dataset.key));
-      });
-    }
-
-    async function verifySubmission(slug, key) {
-      try {
-        const snap = await get(ref(db, `scoreSubmissions/${slug}/${key}`));
-        if (!snap.exists()) return;
-        const s = snap.val();
-
-        await set(ref(db, `hackerRankLeaderboards/${slug}/${key}`), {
-          hrId: s.hrId,
-          hackerRankId: s.hrId,
-          name: s.name,
-          branch: s.branch,
-          year: s.year,
-          score: s.claimedScore,
-          verifiedAt: new Date().toISOString()
+    // 1. Live Counters Monitoring
+    onValue(ref(db, 'students'), (snap) => {
+      document.getElementById('studentCount').innerText = snap.exists() ? Object.keys(snap.val()).length : "0";
+    });
+    onValue(ref(db, 'quizzes'), (snap) => {
+      document.getElementById('activeQuizzesCount').innerText = snap.exists() ? Object.keys(snap.val()).length : "0";
+    });
+    onValue(ref(db, 'settings/activeContestSlug'), (snap) => {
+      if(snap.exists()) {
+        const activeSlug = snap.val();
+        onValue(ref(db, `hackerRankLeaderboards/${activeSlug}`), (scoresSnap) => {
+          document.getElementById('scoreCount').innerText = scoresSnap.exists() ? Object.keys(scoresSnap.val()).length : "0";
         });
-
-        await set(ref(db, `scoreSubmissions/${slug}/${key}/status`), 'verified');
-      } catch (err) {
-        console.error(err);
-        alert('❌ Verify failed: ' + err.message);
-      }
-    }
-
-    async function rejectSubmission(slug, key) {
-      try {
-        await set(ref(db, `scoreSubmissions/${slug}/${key}/status`), 'rejected');
-      } catch (err) {
-        console.error(err);
-        alert('❌ Reject failed: ' + err.message);
-      }
-    }
-
-    // Real-time Dashboard Counters Hook
-    function listenToDashboardStats() {
-      // Active contest slug ఇక హార్డ్‌కోడ్ కాదు — Firebase లో కేంద్రీకృతంగా స్టోర్ అవుతుంది,
-      // కాబట్టి ఈ పేజీ, leaderboard.html రెండూ ఎప్పుడూ ఒకే కాంటెస్ట్‌ని చూస్తాయి.
-      onValue(ref(db, 'settings/activeContestSlug'), (snapshot) => {
-        const slug = snapshot.exists() ? snapshot.val() : null;
-        currentActiveSlug = slug;
-        document.getElementById('activeContestSlugText').innerText = slug || "none set";
-        if (slug) {
-          attachScoreListener(slug);
-          attachSubmissionsListener(slug);
-        }
-      });
-
-      // Registered Students Live Counter Sync
-      onValue(ref(db, "registeredStudents"), (snapshot) => {
-        if(snapshot.exists()) {
-          document.getElementById('studentCount').innerText = Object.keys(snapshot.val()).length;
-        } else {
-          const scoreVal = document.getElementById('scoreCount').innerText;
-          document.getElementById('studentCount').innerText = scoreVal !== "0" ? scoreVal : "0";
-        }
-      });
-
-      // Active Quizzes Counter Sync
-      onValue(ref(db, "generatedQuizzes"), (snapshot) => {
-        if(snapshot.exists()) {
-          document.getElementById('activeQuizzesCount').innerText = Object.keys(snapshot.val()).length;
-        } else {
-          document.getElementById('activeQuizzesCount').innerText = "0";
-        }
-      });
-    }
-    
-    // Fire up the real-time listeners
-    listenToDashboardStats();
-
-    // 🔗 LOAD ANY HACKERRANK CONTEST
-    document.getElementById('fetchHrBtn').addEventListener('click', async () => {
-      const btn = document.getElementById('fetchHrBtn');
-      const input = document.getElementById('hackerrankLinkInput').value.trim();
-
-      if (!input) {
-        alert("దయచేసి HackerRank కాంటెస్ట్ లింక్ లేదా slug ఎంటర్ చేయండి.");
-        return;
-      }
-
-      if (!auth.currentUser) {
-        alert("⚠️ సెషన్ గడువు ముగిసింది. దయచేసి మళ్ళీ లాగిన్ అవ్వండి.");
-        return;
-      }
-
-      const originalText = btn.innerHTML;
-      btn.disabled = true;
-      btn.innerHTML = "⏳ Fetching...";
-
-      try {
-        const idToken = await auth.currentUser.getIdToken();
-        const response = await fetch('/api/sync-hackerrank', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${idToken}`
-          },
-          body: JSON.stringify({ hackerrankUrl: input })
-        });
-
-        const result = await response.json();
-        if (!response.ok) throw new Error(result.error || 'Sync failed.');
-
-        alert(`✅ Synced "${result.slug}"! ${result.count} entries pulled from HackerRank.`);
-        document.getElementById('hackerrankLinkInput').value = "";
-      } catch (error) {
-        console.error(error);
-        alert('❌ Sync failed: ' + (error.message || 'Check the link and try again.'));
-      } finally {
-        btn.disabled = false;
-        btn.innerHTML = originalText;
       }
     });
 
-    // DYNAMIC MULTI-FORMAT QUIZ GENERATION ENGINE
-    document.getElementById('actionGenQuizBtn').addEventListener('click', async () => {
-      const title = document.getElementById('quizTopicTitle').value.trim();
-      const textContext = document.getElementById('quizContextText').value.trim();
-      const count = parseInt(document.getElementById('qCount').value);
-      const formatType = document.getElementById('qType').value;
-      const difficulty = document.getElementById('qDiff').value;
-
-      if (!title) {
-        alert("దయచేసి క్విజ్ Topic/Title ని ఎంటర్ చేయండి.");
-        return;
-      }
-
-      alert("✨ AI ఇంజన్ రన్ అవుతోంది... మీ ఫార్మాట్ ఎంపిక ప్రకారం " + count + " ప్రశ్నలను జనరేట్ చేస్తోంది!");
-
-      // Multi-Format Mock Questions Pool
-      const pool = [
-        {
-          type: "MCQ",
-          questionText: `What is the primary feature of ${title}?`,
-          options: ["Automatic Optimization", "Modular Architecture", "Linear Compiling", "Manual Resource Tracking"],
-          correctAnswerIndex: 1
-        },
-        {
-          type: "TF",
-          questionText: `State True or False: ${title} structures are completely unmodifiable during execution runtime.`,
-          options: ["True", "False"],
-          correctAnswerIndex: 1
-        },
-        {
-          type: "MSQ",
-          questionText: `Which of the following attributes are supported dynamically within ${title}? (Select all that apply)`,
-          options: ["Scalability", "Garbage Collection Tracker", "Low Memory Footprint", "Static Pointer Mapping"],
-          correctAnswerIndices: [0, 1]
-        },
-        {
-          type: "MCQ",
-          questionText: `Which keyword is fundamentally reserved when configuring standard components in ${title}?`,
-          options: ["verify", "import", "initiate", "compile"],
-          correctAnswerIndex: 1
-        },
-        {
-          type: "TF",
-          questionText: `Is ${title} highly utilized in modern modern system development frameworks?`,
-          options: ["True", "False"],
-          correctAnswerIndex: 0
-        }
-      ];
-
-      let finalQuestions = [];
-      let activePool = pool;
-
-      if (formatType !== "MIXED") {
-        activePool = pool.filter(q => q.type === formatType);
-        if (activePool.length === 0) activePool = pool; 
-      }
-
-      for (let i = 0; i < count; i++) {
-        let coreTemplate = activePool[i % activePool.length];
-        let clonedQuestion = JSON.parse(JSON.stringify(coreTemplate));
-        clonedQuestion.questionText = `[Q${i+1}] ` + clonedQuestion.questionText;
-        finalQuestions.push(clonedQuestion);
-      }
-
-      const quizRecord = {
-        quizId: "QUIZ_" + Date.now(),
-        title: title,
-        difficulty: difficulty,
-        formatSelected: formatType,
-        totalQuestions: finalQuestions.length,
-        questions: finalQuestions,
-        status: 'active', // shows up under quiz.html's "🟢 Active Quizzes" card
-        timestamp: new Date().toLocaleString()
-      };
-
-      try {
-        const quizRef = ref(db, "generatedQuizzes");
-        const newQuizNode = push(quizRef);
-        await set(newQuizNode, quizRecord);
-
-        alert(`🎉 అద్భుతం! "${title}" క్విజ్ సక్సెస్‌ఫుల్‌గా ఫైర్‌బేస్‌లోకి సేవ్ అయ్యింది. ఇది నేరుగా quiz.html లో స్టూడెంట్స్‌కి కనిపిస్తుంది.`);
-        
-        // Clear inputs
-        document.getElementById('quizTopicTitle').value = "";
-        document.getElementById('quizContextText').value = "";
-        document.getElementById('quizFileObject').value = "";
-        uploadedFileText = "";
-        
-      } catch (error) {
-        console.error("Firebase Sync Error:", error);
-        alert("డేటాబేస్ కనెక్షన్ ఎర్రర్ వచ్చింది.");
-      }
-    });
-
-    // ROSTER ONBOARD ENGINE — follows the currently active contest slug now
+    // 2. Onboard Student Submission Logic
     document.getElementById('studentForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const name = document.getElementById('studentName').value.trim();
-      const hrId = document.getElementById('studentHrIdOnboard').value.trim().toLowerCase();
+      const hrId = document.getElementById('studentHrIdOnboard').value.trim();
       const branch = document.getElementById('studentBranchOnboard').value;
       const year = document.getElementById('studentYearOnboard').value;
 
-      if (!currentActiveSlug) {
-        alert("⚠️ ముందుగా పైన ఒక HackerRank కాంటెస్ట్ లింక్‌ని Fetch & Sync చేయండి — అప్పుడే స్టూడెంట్‌లను ఆ కాంటెస్ట్ కింద ఆన్‌బోర్డ్ చేయగలరు.");
-        return;
-      }
+      if(!hrId) return;
+      const safeKey = hrId.replace(/[.#$\[\]\/]/g, '_');
 
       try {
-        const newOnboardStudent = {
-          hrId: hrId,
-          hackerRankId: hrId,
-          name: name,
-          branch: branch,
-          year: year,
-          score: 0,
-          timestamp: new Date().toLocaleString()
-        };
-
-        const safeKey = hrId.replace(/[.#$\[\]\/]/g, '_');
-        await set(ref(db, `hackerRankLeaderboards/${currentActiveSlug}/${safeKey}`), newOnboardStudent);
-        alert(`🎉 Student "${name}" successfully registered directly to database workspace matrix.`);
+        await set(ref(db, `students/${safeKey}`), { name, hrId, branch, year });
+        alert("✅ Student on-boarded successfully into registry.");
         document.getElementById('studentForm').reset();
-      } catch (err) {
-        console.error(err);
+      } catch(err) {
+        alert("❌ Operations Error: " + err.message);
       }
     });
 
-    // ================================================================
-    //  POST HACKERRANK EXAM LINK
-    //  Pushes into "hackerrankExams" — the exact same node quiz.html
-    //  listens to for its "🟢 Active HackerRank Exams" card.
-    // ================================================================
-    document.getElementById('examPostForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const title = document.getElementById('examTitleInput').value.trim();
-      const link = document.getElementById('examLinkInput').value.trim();
-      const deadline = document.getElementById('examDeadlineInput').value; // datetime-local value or ""
-
-      if (!title || !link) return;
-
-      try {
-        const newExamRef = push(ref(db, "hackerrankExams"));
-        await set(newExamRef, {
-          title: title,
-          link: link,
-          status: 'active',
-          endTime: deadline || null,
-          createdAt: new Date().toLocaleString()
-        });
-        alert(`📌 "${title}" exam post అయ్యింది! ఇది నేరుగా quiz.html లో "Active HackerRank Exams" లో కనిపిస్తుంది.`);
-        document.getElementById('examPostForm').reset();
-      } catch (err) {
-        console.error(err);
-        alert("Exam post చేయడంలో ఎర్రర్ వచ్చింది.");
-      }
-    });
-
-    let latestExamsForAdmin = {};
-
-    onValue(ref(db, "hackerrankExams"), (snapshot) => {
-      latestExamsForAdmin = snapshot.exists() ? snapshot.val() : {};
-      renderPostedExamsList();
-    });
-
-    // Mirrors the same rule quiz.html uses: past if manually marked,
-    // or if the optional deadline has already elapsed.
-    function isExamPast(exam) {
-      if (!exam) return false;
-      if (exam.status === 'past') return true;
-      if (exam.endTime) {
-        const end = new Date(exam.endTime);
-        if (!isNaN(end.getTime()) && end.getTime() < Date.now()) return true;
-      }
-      return false;
-    }
-
-    function renderPostedExamsList() {
-      const container = document.getElementById('postedExamsList');
-      container.innerHTML = "";
-      const keys = Object.keys(latestExamsForAdmin);
-
-      if (keys.length === 0) {
-        container.innerHTML = `<p style="color:var(--muted); font-size:13px;">No exams posted yet.</p>`;
+    // 3. Register HackerRank Contest Engine Configuration Link
+    document.getElementById('loadContestBtn').addEventListener('click', async () => {
+      const rawInput = document.getElementById('hackerrankLinkInput').value.trim();
+      if(!rawInput) {
+        alert("Please map a generic contextual string object URL template path.");
         return;
       }
 
-      keys.forEach(key => {
-        const exam = latestExamsForAdmin[key];
-        const past = isExamPast(exam);
+      let slug = rawInput;
+      if(rawInput.includes('/contests/')) {
+        const parts = rawInput.split('/contests/');
+        slug = parts[1].split('/')[0];
+      }
 
-        const row = document.createElement('div');
-        row.className = 'exam-row';
-        row.innerHTML = `
-          <div>
-            <div class="exam-row-title">${exam.title || 'HackerRank Exam'}</div>
-            <div class="exam-row-link">${exam.link || ''}</div>
-            ${exam.endTime ? `<div class="exam-row-deadline">Deadline: ${new Date(exam.endTime).toLocaleString()}</div>` : ''}
-          </div>
-          <div style="display:flex; align-items:center; gap:10px;">
-            <span class="exam-status-pill ${past ? 'exam-status-past' : 'exam-status-active'}">${past ? 'PAST' : 'ACTIVE'}</span>
-            <button class="exam-toggle-btn" data-key="${key}" data-action="${past ? 'reactivate' : 'archive'}">${past ? '↺ Reactivate' : '🕓 Mark Past'}</button>
-          </div>
-        `;
-        container.appendChild(row);
-      });
-
-      container.querySelectorAll('.exam-toggle-btn').forEach(btn => {
-        btn.addEventListener('click', async () => {
-          const key = btn.getAttribute('data-key');
-          const action = btn.getAttribute('data-action');
-          try {
-            await update(ref(db, `hackerrankExams/${key}`), { status: action === 'archive' ? 'past' : 'active' });
-          } catch (err) {
-            console.error(err);
-            alert('Status update failed.');
-          }
-        });
-      });
-    }
-
-    // ================================================================
-    //  VIEW LEADERBOARD BY PASTED LINK (ADMIN ONLY, READ-ONLY)
-    //  Admin pastes a HackerRank leaderboard URL. We extract the
-    //  contest slug from it and read the live scores that are already
-    //  synced into "hackerRankLeaderboards/{slug}" — this does NOT
-    //  scrape or change the active contest, it just peeks at any
-    //  already-synced contest's data.
-    // ================================================================
-    function extractContestSlug(link) {
       try {
-        const url = new URL(link.trim());
-        const parts = url.pathname.split('/').filter(Boolean); // e.g. ["contests","weekly-dsa","leaderboard"]
-        const contestsIdx = parts.indexOf('contests');
-        if (contestsIdx !== -1 && parts[contestsIdx + 1]) {
-          return parts[contestsIdx + 1];
+        // Post both active settings hook configurations & exam registry array nodes
+        await set(ref(db, 'settings/activeContestSlug'), slug);
+        await update(ref(db, `hackerrankExams/${slug}`), {
+          id: slug,
+          title: slug.toUpperCase().replace(/-/g, ' ') + " CONTEST",
+          timestamp: Date.now()
+        });
+        alert(`🎯 Contest mapped & loaded safely across ecosystem endpoints: [${slug}]`);
+        document.getElementById('hackerrankLinkInput').value = "";
+      } catch (err) {
+        alert("❌ Write verification error: " + err.message);
+      }
+    });
+
+    // 4. View Score Metrics Matrix Array Audit
+    document.getElementById('viewLbBtn').addEventListener('click', () => {
+      const targetSlug = document.getElementById('viewLbLinkInput').value.trim();
+      if(!targetSlug) {
+        alert("Enter context string structural variable parameter.");
+        return;
+      }
+
+      const statusLbl = document.getElementById('viewLbStatus');
+      const tableBody = document.getElementById('examLbTableBody');
+      statusLbl.innerText = "⏳ Gathering snapshot elements...";
+
+      onValue(ref(db, `hackerRankLeaderboards/${targetSlug}`), (snapshot) => {
+        tableBody.innerHTML = "";
+        localExamDataCached = [];
+
+        if(!snapshot.exists()) {
+          statusLbl.innerText = "⚠️ No matching active data arrays inside this key.";
+          tableBody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--muted); padding:20px;">Zero matches returned.</td></tr>`;
+          return;
         }
-        // fallback: last path segment that isn't "leaderboard"
-        const fallback = parts.filter(p => p.toLowerCase() !== 'leaderboard').pop();
-        return fallback || null;
-      } catch (err) {
-        // not a valid URL — treat the raw text as the slug itself
-        return link.trim() || null;
-      }
-    }
 
-    let currentExamLbData = [];
-    let currentViewedSlug = null;
-    let viewLbListenerUnsub = null;
+        const data = snapshot.val();
+        let listArr = Object.values(data);
+        listArr.sort((a,b) => parseFloat(b.score || 0) - parseFloat(a.score || 0));
+        localExamDataCached = listArr;
 
-    document.getElementById('viewLbBtn').addEventListener('click', async () => {
-      const link = document.getElementById('viewLbLinkInput').value.trim();
-      const statusEl = document.getElementById('viewLbStatus');
-      if (!link) {
-        alert("దయచేసి ఒక HackerRank leaderboard లింక్ పేస్ట్ చేయండి.");
-        return;
-      }
-
-      const slug = extractContestSlug(link);
-      if (!slug) {
-        alert("ఈ లింక్ నుండి contest ని గుర్తించలేకపోయాం. దయచేసి సరైన లింక్ పేస్ట్ చేయండి.");
-        return;
-      }
-
-      currentViewedSlug = slug;
-      statusEl.textContent = `Viewing leaderboard for: ${slug}`;
-
-      // Remember what the admin last viewed
-      try {
-        await set(ref(db, "viewLeaderboard/current"), {
-          link: link,
-          slug: slug,
-          viewedAt: new Date().toLocaleString()
+        listArr.forEach((user, idx) => {
+          let row = `<tr>
+            <td><strong>#${idx + 1}</strong></td>
+            <td><span style="color:#06b6d4; font-weight:600;">${user.hrId || user.hackerRankId}</span></td>
+            <td><span style="color:#10b981; font-weight:700;">${parseFloat(user.score || 0).toFixed(2)}</span></td>
+          </tr>`;
+          tableBody.innerHTML += row;
         });
-      } catch (err) {
-        console.error("Could not save viewLeaderboard record:", err);
-      }
-
-      if (viewLbListenerUnsub) viewLbListenerUnsub();
-
-      // Live-read the scores for this contest slug
-      viewLbListenerUnsub = onValue(ref(db, `hackerRankLeaderboards/${slug}`), (snapshot) => {
-        const data = snapshot.exists() ? snapshot.val() : {};
-        currentExamLbData = Object.values(data);
-        currentExamLbData.sort((a, b) => parseFloat(b.score || 0) - parseFloat(a.score || 0));
-        renderExamLbTable();
-
-        if (currentExamLbData.length === 0) {
-          statusEl.textContent = `Viewing leaderboard for: ${slug} — no scores synced yet.`;
-        }
+        statusLbl.innerText = `📊 Rendered ${listArr.length} dynamic row components successfully.`;
       });
     });
 
-    function renderExamLbTable() {
-      const tbody = document.getElementById('examLbTableBody');
-      tbody.innerHTML = "";
-      if (currentExamLbData.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--muted); padding:20px;">Paste a HackerRank leaderboard link above and click "View Leaderboard".</td></tr>`;
-        return;
-      }
-      currentExamLbData.forEach((u, idx) => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td style="font-weight:700;">#${idx + 1}</td>
-          <td style="font-weight:700;">${u.hackerRankId || u.hrId || 'N/A'}</td>
-          <td style="color:var(--accent); font-weight:800;">${parseFloat(u.score || 0).toFixed(2)}</td>
-        `;
-        tbody.appendChild(row);
-      });
-    }
-
+    // 5. Download Standalone Report Framework Array Sheet
     document.getElementById('downloadExamLbBtn').addEventListener('click', () => {
-      if (!currentViewedSlug || currentExamLbData.length === 0) {
-        alert("డౌన్‌లోడ్ చేయడానికి డేటా లేదు. ముందు ఒక లింక్ పేస్ట్ చేసి 'View Leaderboard' నొక్కండి.");
+      if(localExamDataCached.length === 0) {
+        alert("No active internal memory arrays structural records to commit execution.");
         return;
       }
-      const outputData = currentExamLbData.map((u, idx) => ({
-        "Rank": idx + 1,
-        "HackerRank ID": u.hackerRankId || u.hrId || 'N/A',
-        "Marks": u.score || 0
+
+      const reportMapped = localExamDataCached.map((item, index) => ({
+        "Rank": index + 1,
+        "HackerRank ID": item.hrId || item.hackerRankId,
+        "Score Metric": item.score
       }));
-      const worksheet = XLSX.utils.json_to_sheet(outputData);
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, worksheet, "Leaderboard");
-      XLSX.writeFile(wb, `${currentViewedSlug.replace(/[^a-z0-9]/gi, '_')}_Leaderboard.xlsx`);
+
+      const sheet = XLSX.utils.json_to_sheet(reportMapped);
+      const book = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(book, sheet, "Audit Logs");
+      XLSX.writeFile(book, "Admin_Contest_Audit_Metrics.xlsx");
     });
   </script>
 </body>
