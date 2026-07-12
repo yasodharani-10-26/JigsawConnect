@@ -42,10 +42,10 @@
     
     .quizzes-grid { display: flex; flex-direction: column; gap: 16px; }
 
-    .panel-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 24px; backdrop-filter: blur(12px); }
-    .panel-title { font-size: 18px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+    .panel-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 24px; backdrop-filter: blur(12px); margin-bottom: 12px;}
+    .panel-title { font-size: 16px; font-weight: 700; color: #fff; display: flex; justify-content: space-between; align-items: center; width: 100%;}
     
-    .hackerrank-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: #2ec866; color: #0e141e; text-decoration: none; padding: 14px 24px; border-radius: 12px; font-weight: 700; font-size: 15px; border: none; cursor: pointer; width: 100%; transition: all 0.2s; text-align: center;}
+    .hackerrank-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: #2ec866; color: #0e141e; text-decoration: none; padding: 12px 20px; border-radius: 12px; font-weight: 700; font-size: 14px; border: none; cursor: pointer; width: 100%; transition: all 0.2s; text-align: center; margin-top: 10px;}
     .hackerrank-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(46, 200, 102, 0.3); }
 
     .input-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
@@ -53,12 +53,10 @@
     
     .quiz-quadrant-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     .quadrant-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 18px; backdrop-filter: blur(12px); }
-    .quadrant-title { font-size: 15px; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .quadrant-title { font-size: 15px; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; gap: 8px; border-bottom: 1px solid var(--border); padding-bottom: 8px;}
     .empty-note { color: var(--text-muted); font-size: 12px; padding: 12px 4px; }
-    .status-toggle-btn { background: transparent; border: 1px solid var(--border); color: var(--text-muted); font-size: 11px; padding: 4px 8px; border-radius: 6px; cursor: pointer; margin-top: 8px; width: 100%; }
-    .status-toggle-btn:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); }
 
-    /* ---- Custom Modal (Popup) Styling ---- */
+    /* ---- Custom Modal Styling ---- */
     .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(11, 15, 25, 0.85); backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: center; z-index: 2000; visibility: hidden; opacity: 0; transition: all 0.3s ease; }
     .modal-overlay.active { visibility: visible; opacity: 1; }
     .modal-box { background: #141e36; border: 1px solid var(--border); border-radius: 24px; padding: 30px; width: 100%; max-width: 450px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); transform: translateY(-20px); transition: all 0.3s ease; }
@@ -94,7 +92,7 @@
         <h1>Ecosystem Quiz Matrix</h1> 
         <p>Participate in authorized evaluation slots or synchronize metrics with external coding environments.</p> 
         
-        <div class="header-actions-wrapper" style="grid-template-columns: 1fr; margin-top: 24px;">
+        <div class="header-actions-wrapper" style="margin-top: 24px;">
           <div class="quiz-quadrant-grid">
 
             <div class="quadrant-card">
@@ -129,28 +127,25 @@
       <div class="modal-header">Enter Your Details</div>
       <form id="participantForm">
         <div class="input-group">
-          <label style="font-size: 13px; color: var(--text-muted);">Roll Number</label>
+          <label style="font-size: 13px; color: var(--text-muted);">Full Name</label>
+          <input type="text" id="studentName" class="input-control" required placeholder="e.g. Rahul Kumar">
+        </div>
+        <div class="input-group">
+          <label style="font-size: 13px; color: var(--text-muted);">HackerRank Username ID</label>
+          <input type="text" id="studentHrId" class="input-control" required placeholder="e.g. rahul_cse22">
+        </div>
+        <div class="input-group">
+          <label style="font-size: 13px; color: var(--text-muted);">Roll Number / Reg No</label>
           <input type="text" id="studentRollNo" class="input-control" required placeholder="e.g. 22A31A0501">
         </div>
         <div class="input-group">
           <label style="font-size: 13px; color: var(--text-muted);">Branch</label>
-          <input type="text" id="studentBranch" class="input-control" required placeholder="e.g. CSE / ECE">
+          <input type="text" id="studentBranch" class="input-control" required placeholder="e.g. CSE / ECE / IT">
         </div>
-        <div class="input-group">
-          <label style="font-size: 13px; color: var(--text-muted);">Section</label>
-          <input type="text" id="studentSection" class="input-control" required placeholder="e.g. A / B / C">
-        </div>
-        <div class="input-group">
-          <label style="font-size: 13px; color: var(--text-muted);">Year</label>
-          <input type="text" id="studentYear" class="input-control" required placeholder="e.g. 3rd Year">
-        </div>
-        <div class="input-group">
-          <label style="font-size: 13px; color: var(--text-muted);">HackerRank ID</label>
-          <input type="text" id="studentHrId" class="input-control" required placeholder="e.g. hacker_user12">
-        </div>
+        
         <div class="modal-actions">
           <button type="button" class="btn-cancel" id="closeModalBtn">Cancel</button>
-          <button type="submit" class="btn-submit">Proceed to Exam</button>
+          <button type="submit" class="btn-submit">🚀 Enter & Sync Leaderboard</button>
         </div>
       </form>
     </div>
@@ -158,7 +153,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
-    import { getDatabase, ref, set, onValue, update } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
+    import { getDatabase, ref, set, get, update, onValue } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCaCkliRZk8HmNtOsJpoA084YhNY7MeMWM",
@@ -173,120 +168,101 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    let currentTargetLink = "";
-    let currentTargetExamId = "";
-
     const detailsModal = document.getElementById('detailsModal');
     const participantForm = document.getElementById('participantForm');
+    
+    let currentTargetLink = "";
+    let currentContestSlug = "";
 
-    // Make Quiz UI Card
+    // Helper functions to compile UI Cards safely
+    function makeExamCard(exam, slug, isPast) {
+      const card = document.createElement('div');
+      card.className = "panel-card";
+      
+      // Setup dynamic structural data 
+      const hrLink = `https://www.hackerrank.com/contests/${slug}/leaderboard`;
+      
+      card.innerHTML = `
+        <div class="panel-title">
+          <span>📝 ${exam.title || slug.toUpperCase()}</span>
+        </div>
+        <button class="hackerrank-btn" data-slug="${slug}" data-link="${hrLink}">
+          ${isPast ? '👁️ View Past Contest' : '🚀 Enter HackerRank Arena'}
+        </button>
+      `;
+      return card;
+    }
+
     function makeQuizCard(quiz, key, isPast) {
-      const testTitle = quiz.title || "Active Challenge";
-      const testFormat = quiz.formatSelected || "MIXED";
-      const testDifficulty = quiz.difficulty || "Medium";
-      const totalQ = quiz.totalQuestions || 0;
-
       const card = document.createElement('div');
-      card.className = 'panel-card';
+      card.className = "panel-card";
       card.innerHTML = `
-        <h3 class="panel-title" style="font-size:15px;"><span>📝</span> ${testTitle}</h3>
-        <p style="color: var(--text-muted); font-size: 12px; margin-bottom: 6px;">
-          Format: <strong>${testFormat}</strong> | Difficulty: <strong>${testDifficulty}</strong>
-        </p>
-        <p style="color: var(--text-muted); font-size: 12px; margin-bottom: 14px;">Total Questions: ${totalQ}</p>
-        ${isPast
-          ? `<button class="status-toggle-btn" data-key="${key}" data-kind="quiz" data-action="reactivate">↺ Reactivate</button>`
-          : `<button class="hackerrank-btn" data-quizid="${quiz.quizId || key}" style="background: var(--accent-blue); color:#fff;">🚀 Start Quiz</button>
-             <button class="status-toggle-btn" data-key="${key}" data-kind="quiz" data-action="archive">🕓 Mark as Past</button>`
-        }
+        <div class="panel-title">
+          <span>🧩 ${quiz.title || 'Untitled Quiz'}</span>
+          <span style="font-size:12px; color:var(--accent-cyan)">[${quiz.difficulty || 'Mixed'}]</span>
+        </div>
+        <p style="font-size:12px; color:var(--text-muted); margin: 6px 0 10px;">Questions: ${quiz.count || 10} | Type: ${quiz.type || 'MIXED'}</p>
+        <button class="hackerrank-btn" style="background:var(--accent-blue); color:#fff;" data-slug="${key}" data-link="take-quiz.html?id=${key}">
+          ${isPast ? '👁️ Review Quiz Scores' : '⚡ Start Attempt'}
+        </button>
       `;
       return card;
     }
 
-    // Make Exam UI Card (Admin Add features removed for strict security rules)
-    function makeExamCard(exam, key, isPast) {
-      const card = document.createElement('div');
-      card.className = 'panel-card';
-      card.innerHTML = `
-        <h3 class="panel-title" style="font-size:15px;"><span>💻</span> ${exam.title || 'HackerRank Exam'}</h3>
-        <p style="color: var(--text-muted); font-size: 12px; margin-bottom: 14px; word-break: break-all;">
-          Exam Node Reference Saved
-        </p>
-        ${isPast
-          ? `<button class="status-toggle-btn" data-key="${key}" data-kind="exam" data-action="reactivate">↺ Reactivate</button>`
-          : `<button class="hackerrank-btn" data-link="${exam.link}" data-examid="${key}" style="background:#2ec866;">🚀 Start Exam</button>
-             <button class="status-toggle-btn" data-key="${key}" data-kind="exam" data-action="archive">🕓 Mark as Past</button>`
-        }
-      `;
-      return card;
-    }
-
-    function bindCardButtons(container, kind) {
+    // Intercept click sequences to register student details matrix
+    function bindCardButtons(container) {
       container.querySelectorAll('.hackerrank-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
-          const target = e.currentTarget;
-          if (kind === 'exam') {
-            currentTargetLink = target.getAttribute('data-link');
-            currentTargetExamId = target.getAttribute('data-examid');
-            if (!currentTargetLink) { alert("⚠️ ఈ ఎగ్జామ్‌కి లింక్ లేదు!"); return; }
-            
-            // Open the information popup structure instead of proceeding directly
-            detailsModal.classList.add('active');
-          } else {
-            const quizId = target.getAttribute('data-quizid');
-            window.location.href = `take-quiz.html?quizId=${quizId}`;
-          }
-        });
-      });
-
-      container.querySelectorAll('.status-toggle-btn').forEach(btn => {
-        btn.addEventListener('click', async (e) => {
-          const target = e.currentTarget;
-          const key = target.getAttribute('data-key');
-          const cardKind = target.getAttribute('data-kind');
-          const action = target.getAttribute('data-action');
-          const newStatus = action === 'archive' ? 'past' : 'active';
-          const path = cardKind === 'exam' ? `hackerrankExams/${key}` : `generatedQuizzes/${key}`;
-          try {
-            await update(ref(db, path), { status: newStatus });
-          } catch (err) {
-            console.error(err);
-            alert('Status update failed.');
-          }
+          currentTargetLink = btn.getAttribute('data-link');
+          currentContestSlug = btn.getAttribute('data-slug');
+          
+          // Open Modal Profile form
+          detailsModal.classList.add('active');
         });
       });
     }
 
-    // Forms Form submission event handler
+    // Handle Form submission and save record safely inside Firebase Realtime Nodes
     participantForm.addEventListener('submit', async (e) => {
       e.preventDefault();
+      
+      const name = document.getElementById('studentName').value.trim();
+      const hrId = document.getElementById('studentHrId').value.trim();
+      const rollNo = document.getElementById('studentRollNo').value.trim();
+      const branch = document.getElementById('studentBranch').value.trim();
 
-      const studentData = {
-        rollNo: document.getElementById('studentRollNo').value.trim(),
-        branch: document.getElementById('studentBranch').value.trim(),
-        section: document.getElementById('studentSection').value.trim(),
-        year: document.getElementById('studentYear').value.trim(),
-        hrId: document.getElementById('studentHrId').value.trim(),
-        joinedAt: new Date().toLocaleString()
-      };
+      if(!hrId || !currentContestSlug) return;
+      const safeKey = hrId.replace(/[.#$\[\]\/]/g, '_');
 
       try {
-        // Save metadata directly inside the unified database platform structure under leaderboardParticipants
-        await set(ref(db, `leaderboardParticipants/${currentTargetExamId}/${studentData.rollNo}`), studentData);
-        
-        // Hide overlay and clean operations fields
+        // 1. Log participant data structure to global index
+        await set(ref(db, `students/${safeKey}`), { name, hrId, rollNo, branch });
+
+        // 2. Initialize or Update record structure directly inside Leaderboard tracking node
+        // Setting default structural parameters, actual metrics will be parsed by sync-engine
+        await set(ref(db, `hackerRankLeaderboards/${currentContestSlug}/${safeKey}`), {
+          hrId: hrId,
+          hackerRankId: hrId,
+          name: name,
+          rollNo: rollNo,
+          branch: branch,
+          score: 0,
+          timestamp: Date.now()
+        });
+
+        // Hide overlay elements safely
         detailsModal.classList.remove('active');
         participantForm.reset();
 
-        // Safe navigate redirection
+        // Redirect safely to target exam or quiz context mapping route
         window.open(currentTargetLink, '_blank');
       } catch(err) {
-        console.error("Leaderboard enrollment metrics fault:", err);
-        alert("Failed to sync leaderboard metrics. Process interrupted.");
+        console.error("Leaderboard metrics registration error:", err);
+        alert("Failed to sync leaderboard metrics. Check system parameters.");
       }
     });
 
-    // Close Modal Button Event
+    // Close Modal Button Control Action
     document.getElementById('closeModalBtn').addEventListener('click', () => {
       detailsModal.classList.remove('active');
     });
@@ -314,8 +290,8 @@
       if (!hasActive) activeContainer.innerHTML = `<p class="empty-note">No active quizzes right now.</p>`;
       if (!hasPast) pastContainer.innerHTML = `<p class="empty-note">No past quizzes yet.</p>`;
 
-      bindCardButtons(activeContainer, 'quiz');
-      bindCardButtons(pastContainer, 'quiz');
+      bindCardButtons(activeContainer);
+      bindCardButtons(pastContainer);
     }
 
     function renderExams(examsData) {
@@ -341,11 +317,12 @@
       if (!hasActive) activeContainer.innerHTML = `<p class="empty-note">No active HackerRank exams registered currently.</p>`;
       if (!hasPast) pastContainer.innerHTML = `<p class="empty-note">No past exams yet.</p>`;
 
-      bindCardButtons(activeContainer, 'exam');
-      bindCardButtons(pastContainer, 'exam');
+      bindCardButtons(activeContainer);
+      bindCardButtons(pastContainer);
     }
 
-    onValue(ref(db, "generatedQuizzes"), (snapshot) => {
+    // Realtime Streams Initialization
+    onValue(ref(db, "quizzes"), (snapshot) => {
       renderQuizzes(snapshot.exists() ? snapshot.val() : null);
     });
 
@@ -355,5 +332,3 @@
   </script>
 </body>
 </html>
-
-    
