@@ -40,14 +40,6 @@
     .page-header { padding: 32px; background: linear-gradient(135deg, rgba(37, 99, 235, 0.12), rgba(6, 182, 212, 0.04)); border: 1px solid var(--border); border-radius: 24px; } 
     .page-header h1 { font-size: 2.2rem; font-weight: 800; letter-spacing: -1px; margin-bottom: 6px; } 
     
-    .admin-upload-section { background: rgba(37, 99, 235, 0.05); border: 1px dashed var(--accent-blue); padding: 18px; border-radius: 16px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
-    .upload-btn-wrapper { position: relative; overflow: hidden; display: inline-block; }
-    .upload-btn-wrapper input[type=file] { font-size: 100px; position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer; }
-    .action-btn { background: var(--accent-blue); border: none; color: #fff; padding: 10px 20px; border-radius: 10px; font-weight: 600; font-size: 13px; cursor: pointer; transition: all 0.2s; }
-    .action-btn:hover { background: #1d4ed8; }
-    .status-badge { padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; background: var(--warning); color: #000; }
-
-    .header-actions-wrapper { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; } 
     .quizzes-grid { display: flex; flex-direction: column; gap: 16px; }
 
     .panel-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 24px; backdrop-filter: blur(12px); }
@@ -59,28 +51,24 @@
     .input-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
     .input-control { padding: 12px 16px; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border); border-radius: 10px; color: white; font-size: 14px; width: 100%; }
     
-    .error-label { color: var(--danger); font-size: 13px; font-weight: 700; margin-top: 8px; display: none; background: rgba(239, 68, 68, 0.1); padding: 10px; border-radius: 8px; border: 1px solid rgba(239, 68, 68, 0.2); }
-    .profile-display-box { margin-top: 20px; padding: 16px; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 12px; display: none; }
-    .profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px; font-size: 14px; }
-    .profile-grid-full { grid-column: span 2; }
-    .profile-item { background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px; border: 1px solid var(--border); }
-    .profile-item span { color: var(--accent-cyan); font-weight: 700; }
-
-    .btn-submit { background: var(--accent-blue); color: white; border: none; padding: 14px; border-radius: 12px; font-weight: 700; cursor: pointer; width: 100%; transition: all 0.2s; }
-
-    /* ---- 4-card quadrant layout (Active/Past Exams + Quizzes) ---- */
     .quiz-quadrant-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     .quadrant-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 18px; backdrop-filter: blur(12px); }
     .quadrant-title { font-size: 15px; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-    .mini-add-btn { background: rgba(37, 99, 235, 0.15); color: var(--accent-blue); border: 1px solid var(--accent-blue); padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; }
-    .mini-add-btn:hover { background: var(--accent-blue); color: #fff; }
     .empty-note { color: var(--text-muted); font-size: 12px; padding: 12px 4px; }
     .status-toggle-btn { background: transparent; border: 1px solid var(--border); color: var(--text-muted); font-size: 11px; padding: 4px 8px; border-radius: 6px; cursor: pointer; margin-top: 8px; width: 100%; }
     .status-toggle-btn:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); }
 
-    @media (max-width: 1024px) {
-      .header-actions-wrapper { grid-template-columns: 1fr; }
-    }
+    /* ---- Custom Modal (Popup) Styling ---- */
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(11, 15, 25, 0.85); backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: center; z-index: 2000; visibility: hidden; opacity: 0; transition: all 0.3s ease; }
+    .modal-overlay.active { visibility: visible; opacity: 1; }
+    .modal-box { background: #141e36; border: 1px solid var(--border); border-radius: 24px; padding: 30px; width: 100%; max-width: 450px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); transform: translateY(-20px); transition: all 0.3s ease; }
+    .modal-overlay.active .modal-box { transform: translateY(0); }
+    .modal-header { font-size: 20px; font-weight: 800; margin-bottom: 20px; color: #fff; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+    .modal-actions { display: flex; gap: 12px; margin-top: 20px; }
+    .btn-cancel { background: transparent; border: 1px solid var(--border); color: var(--text-muted); padding: 12px; border-radius: 12px; font-weight: 700; cursor: pointer; flex: 1; }
+    .btn-submit { background: var(--accent-blue); color: white; border: none; padding: 14px; border-radius: 12px; font-weight: 700; cursor: pointer; flex: 2; transition: all 0.2s; }
+    .btn-submit:hover { background: #1d4ed8; }
+
     @media (max-width: 700px) {
       .quiz-quadrant-grid { grid-template-columns: 1fr; }
     }
@@ -106,12 +94,11 @@
         <h1>Ecosystem Quiz Matrix</h1> 
         <p>Participate in authorized evaluation slots or synchronize metrics with external coding environments.</p> 
         
-        <div class="header-actions-wrapper" style="grid-template-columns: 1fr;">
-
+        <div class="header-actions-wrapper" style="grid-template-columns: 1fr; margin-top: 24px;">
           <div class="quiz-quadrant-grid">
 
             <div class="quadrant-card">
-              <h3 class="quadrant-title">🟢 Active HackerRank Exams <button class="mini-add-btn" id="addExamBtn">+ Add Exam</button></h3>
+              <h3 class="quadrant-title">🟢 Active HackerRank Exams</h3>
               <div id="activeExamsContainer" class="quizzes-grid"></div>
             </div>
 
@@ -131,16 +118,47 @@
             </div>
 
           </div>
-
         </div>
       </div> 
 
     </main> 
   </div> 
 
+  <div class="modal-overlay" id="detailsModal">
+    <div class="modal-box">
+      <div class="modal-header">Enter Your Details</div>
+      <form id="participantForm">
+        <div class="input-group">
+          <label style="font-size: 13px; color: var(--text-muted);">Roll Number</label>
+          <input type="text" id="studentRollNo" class="input-control" required placeholder="e.g. 22A31A0501">
+        </div>
+        <div class="input-group">
+          <label style="font-size: 13px; color: var(--text-muted);">Branch</label>
+          <input type="text" id="studentBranch" class="input-control" required placeholder="e.g. CSE / ECE">
+        </div>
+        <div class="input-group">
+          <label style="font-size: 13px; color: var(--text-muted);">Section</label>
+          <input type="text" id="studentSection" class="input-control" required placeholder="e.g. A / B / C">
+        </div>
+        <div class="input-group">
+          <label style="font-size: 13px; color: var(--text-muted);">Year</label>
+          <input type="text" id="studentYear" class="input-control" required placeholder="e.g. 3rd Year">
+        </div>
+        <div class="input-group">
+          <label style="font-size: 13px; color: var(--text-muted);">HackerRank ID</label>
+          <input type="text" id="studentHrId" class="input-control" required placeholder="e.g. hacker_user12">
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel" id="closeModalBtn">Cancel</button>
+          <button type="submit" class="btn-submit">Proceed to Exam</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
-    import { getDatabase, ref, set, get, onValue, update, push } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
+    import { getDatabase, ref, set, onValue, update } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCaCkliRZk8HmNtOsJpoA084YhNY7MeMWM",
@@ -155,8 +173,13 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    // ---------- ACTIVE / PAST QUIZZES + HACKERRANK EXAMS (4-card layout) ----------
+    let currentTargetLink = "";
+    let currentTargetExamId = "";
 
+    const detailsModal = document.getElementById('detailsModal');
+    const participantForm = document.getElementById('participantForm');
+
+    // Make Quiz UI Card
     function makeQuizCard(quiz, key, isPast) {
       const testTitle = quiz.title || "Active Challenge";
       const testFormat = quiz.formatSelected || "MIXED";
@@ -180,13 +203,14 @@
       return card;
     }
 
+    // Make Exam UI Card (Admin Add features removed for strict security rules)
     function makeExamCard(exam, key, isPast) {
       const card = document.createElement('div');
       card.className = 'panel-card';
       card.innerHTML = `
         <h3 class="panel-title" style="font-size:15px;"><span>💻</span> ${exam.title || 'HackerRank Exam'}</h3>
         <p style="color: var(--text-muted); font-size: 12px; margin-bottom: 14px; word-break: break-all;">
-          ${exam.link || ''}
+          Exam Node Reference Saved
         </p>
         ${isPast
           ? `<button class="status-toggle-btn" data-key="${key}" data-kind="exam" data-action="reactivate">↺ Reactivate</button>`
@@ -202,14 +226,14 @@
         btn.addEventListener('click', (e) => {
           const target = e.currentTarget;
           if (kind === 'exam') {
-            const link = target.getAttribute('data-link');
-            const examId = target.getAttribute('data-examid');
-            if (!link) { alert("⚠️ ఈ ఎగ్జామ్‌కి లింక్ లేదు!"); return; }
-            handleDirectExamEntry(link, examId);
+            currentTargetLink = target.getAttribute('data-link');
+            currentTargetExamId = target.getAttribute('data-examid');
+            if (!currentTargetLink) { alert("⚠️ ఈ ఎగ్జామ్‌కి లింక్ లేదు!"); return; }
+            
+            // Open the information popup structure instead of proceeding directly
+            detailsModal.classList.add('active');
           } else {
             const quizId = target.getAttribute('data-quizid');
-            // Internally-generated quizzes don't have an external link —
-            // hook this up to your take-quiz.html flow.
             window.location.href = `take-quiz.html?quizId=${quizId}`;
           }
         });
@@ -233,11 +257,44 @@
       });
     }
 
+    // Forms Form submission event handler
+    participantForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const studentData = {
+        rollNo: document.getElementById('studentRollNo').value.trim(),
+        branch: document.getElementById('studentBranch').value.trim(),
+        section: document.getElementById('studentSection').value.trim(),
+        year: document.getElementById('studentYear').value.trim(),
+        hrId: document.getElementById('studentHrId').value.trim(),
+        joinedAt: new Date().toLocaleString()
+      };
+
+      try {
+        // Save metadata directly inside the unified database platform structure under leaderboardParticipants
+        await set(ref(db, `leaderboardParticipants/${currentTargetExamId}/${studentData.rollNo}`), studentData);
+        
+        // Hide overlay and clean operations fields
+        detailsModal.classList.remove('active');
+        participantForm.reset();
+
+        // Safe navigate redirection
+        window.open(currentTargetLink, '_blank');
+      } catch(err) {
+        console.error("Leaderboard enrollment metrics fault:", err);
+        alert("Failed to sync leaderboard metrics. Process interrupted.");
+      }
+    });
+
+    // Close Modal Button Event
+    document.getElementById('closeModalBtn').addEventListener('click', () => {
+      detailsModal.classList.remove('active');
+    });
+
     function renderQuizzes(quizzesData) {
       const activeContainer = document.getElementById('activeQuizzesContainer');
       const pastContainer = document.getElementById('pastQuizzesContainer');
-      activeContainer.innerHTML = "";
-      pastContainer.innerHTML = "";
+      activeContainer.innerHTML = ""; pastContainer.innerHTML = "";
 
       if (!quizzesData) {
         activeContainer.innerHTML = `<p class="empty-note">No active quizzes right now.</p>`;
@@ -264,11 +321,10 @@
     function renderExams(examsData) {
       const activeContainer = document.getElementById('activeExamsContainer');
       const pastContainer = document.getElementById('pastExamsContainer');
-      activeContainer.innerHTML = "";
-      pastContainer.innerHTML = "";
+      activeContainer.innerHTML = ""; pastContainer.innerHTML = "";
 
       if (!examsData) {
-        activeContainer.innerHTML = `<p class="empty-note">No active HackerRank exams. Click "+ Add Exam" to create one.</p>`;
+        activeContainer.innerHTML = `<p class="empty-note">No active HackerRank exams registered currently.</p>`;
         pastContainer.innerHTML = `<p class="empty-note">No past exams yet.</p>`;
         return;
       }
@@ -282,7 +338,7 @@
         if (isPast) hasPast = true; else hasActive = true;
       });
 
-      if (!hasActive) activeContainer.innerHTML = `<p class="empty-note">No active HackerRank exams. Click "+ Add Exam" to create one.</p>`;
+      if (!hasActive) activeContainer.innerHTML = `<p class="empty-note">No active HackerRank exams registered currently.</p>`;
       if (!hasPast) pastContainer.innerHTML = `<p class="empty-note">No past exams yet.</p>`;
 
       bindCardButtons(activeContainer, 'exam');
@@ -296,57 +352,8 @@
     onValue(ref(db, "hackerrankExams"), (snapshot) => {
       renderExams(snapshot.exists() ? snapshot.val() : null);
     });
-
-    document.getElementById('addExamBtn').addEventListener('click', async () => {
-      const title = prompt("Exam title (e.g. Weekly DSA Contest):");
-      if (!title) return;
-      const link = prompt("Paste the HackerRank contest/exam link:");
-      if (!link) return;
-
-      try {
-        const newExamRef = push(ref(db, "hackerrankExams"));
-        await set(newExamRef, {
-          title: title.trim(),
-          link: link.trim(),
-          status: 'active',
-          createdAt: new Date().toLocaleString()
-        });
-      } catch (err) {
-        console.error(err);
-        alert("Could not add exam.");
-      }
-    });
-
-    // యూజర్ వివరాలను రికార్డ్ చేసి ఎగ్జామ్‌కి పంపే ఫంక్షన్
-    async function handleDirectExamEntry(examUrl, examOrQuizId) {
-      // LocalStorage నుండి లాగిన్ అయిన స్టూడెంట్ డేటా తెచ్చుకుంటుంది
-      const loggedInUser = JSON.parse(localStorage.getItem('user')) || {
-        rollNo: "22A31A0501", 
-        hrId: "student_user",
-        branch: "CSE",
-        section: "A",
-        year: "3rd Year"
-      };
-
-      try {
-        // 1. రిజిస్టర్డ్ స్టూడెంట్స్ లిస్ట్‌లో యాడ్ చేస్తుంది
-        await set(ref(db, `registeredStudents/${loggedInUser.hrId}`), loggedInUser);
-        
-        // 2. అడ్మిన్ లైవ్‌గా ట్రాక్ చేయడం కోసం "liveParticipants" లోకి పంపుతుంది
-        const liveStudentRef = ref(db, `liveParticipants/${examOrQuizId}/${loggedInUser.rollNo}`);
-        await set(liveStudentRef, {
-          ...loggedInUser,
-          startTime: new Date().toLocaleTimeString()
-        });
-
-        // నేరుగా అడ్మిన్ ఇచ్చిన ఒరిజినల్ యుఆర్ఎల్ ని కొత్త ట్యాబ్‌లో ఓపెన్ చేస్తుంది
-        window.open(examUrl, '_blank'); 
-      } catch (err) {
-        console.error("Session sync failed:", err);
-        window.open(examUrl, '_blank');
-      }
-    }
-
   </script>
 </body>
 </html>
+
+    
