@@ -174,46 +174,44 @@
     let currentTargetLink = "";
     let currentContestSlug = "";
 
-    // Helper functions to compile UI Cards safely
+    // 1. HackerRank కార్డ్స్ క్రియేట్ చేయడానికి హెల్పర్ ఫంక్షన్
     function makeExamCard(exam, slug, isPast) {
       const card = document.createElement('div');
       card.className = "panel-card";
       
-      // Setup dynamic structural data 
-      const hrLink = `https://www.hackerrank.com/contests/${slug}/leaderboard`;
-      
+      const hrLink = isPast 
+        ? `https://www.hackerrank.com/contests/${slug}/leaderboard` 
+        : `https://www.hackerrank.com/contests/${slug}`;
+
       card.innerHTML = `
         <div class="panel-title">
           <span>📝 ${exam.title || slug.toUpperCase()}</span>
         </div>
         <button class="hackerrank-btn" data-slug="${slug}" data-link="${hrLink}">
-          ${isPast ? '👁️ View Past Contest' : '🚀 Enter HackerRank Arena'}
+          ${isPast ? '👁️ View Past Contest Leaderboard' : '🚀 Enter HackerRank Arena & Start Exam'}
         </button>
       `;
       return card;
     }
 
-    function makeExamCard(exam, slug, isPast) {
-  const card = document.createElement('div');
-  card.className = "panel-card";
-  
-  // 🔥 ఫిక్స్: ఇక్కడ లింక్ చివరన ఉన్న '/leaderboard' ని తీసేసి డైరెక్ట్ కాంటెస్ట్ లింక్ ఇచ్చాం
-  // దీనివల్ల విద్యార్థి లీడర్‌బోర్డ్ కి కాకుండా నేరుగా ఎగ్జామ్ రాసే పేజీకి వెళ్తాడు.
-  const hrLink = isPast 
-    ? `https://www.hackerrank.com/contests/${slug}/leaderboard` // పాత ఎగ్జామ్స్ అయితే లీడర్‌బోర్డ్ చూపిస్తాం
-    : `https://www.hackerrank.com/contests/${slug}`;             // యాక్టివ్ ఎగ్జామ్ అయితే నేరుగా టెస్ట్ లింక్
+    // 2. మిస్ అయిన క్విజ్ కార్డ్స్ హెల్పర్ ఫంక్షన్‌ను ఇక్కడ యాడ్ చేసాం
+    function makeQuizCard(quiz, key, isPast) {
+      const card = document.createElement('div');
+      card.className = "panel-card";
+      
+      // ఒకవేళ మీ క్విజ్ లింక్ కస్టమ్ రూట్ అయితే దాన్ని ఇక్కడ మార్చుకోండి
+      const quizLink = `quiz-window.html?id=${key}`; 
 
-  card.innerHTML = `
-    <div class="panel-title">
-      <span>📝 ${exam.title || slug.toUpperCase()}</span>
-    </div>
-    <button class="hackerrank-btn" data-slug="${slug}" data-link="${hrLink}">
-      ${isPast ? '👁️ View Past Contest Leaderboard' : '🚀 Enter HackerRank Arena & Start Exam'}
-    </button>
-  `;
-  return card;
+      card.innerHTML = `
+        <div class="panel-title">
+          <span>🧠 ${quiz.title || 'Untitled Quiz'}</span>
+        </div>
+        <button class="hackerrank-btn" style="background: var(--accent-blue); color: white;" data-slug="${key}" data-link="${quizLink}">
+          ${isPast ? '👁️ View Results' : '🚀 Start Quiz'}
+        </button>
+      `;
+      return card;
     }
-    
 
     // Intercept click sequences to register student details matrix
     function bindCardButtons(container) {
@@ -245,7 +243,6 @@
         await set(ref(db, `students/${safeKey}`), { name, hrId, rollNo, branch });
 
         // 2. Initialize or Update record structure directly inside Leaderboard tracking node
-        // Setting default structural parameters, actual metrics will be parsed by sync-engine
         await set(ref(db, `hackerRankLeaderboards/${currentContestSlug}/${safeKey}`), {
           hrId: hrId,
           hackerRankId: hrId,
@@ -259,10 +256,10 @@
         // Hide overlay elements safely
         detailsModal.classList.remove('active');
         participantForm.reset();
-localStorage.setItem('studentName', name);
-localStorage.setItem('studentHrId', hrId);
-localStorage.setItem('studentRollNo', rollNo);
-localStorage.setItem('studentBranch', branch);
+        localStorage.setItem('studentName', name);
+        localStorage.setItem('studentHrId', hrId);
+        localStorage.setItem('studentRollNo', rollNo);
+        localStorage.setItem('studentBranch', branch);
         
         // Redirect safely to target exam or quiz context mapping route
         window.open(currentTargetLink, '_blank');
