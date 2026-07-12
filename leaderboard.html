@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700;800&display=swap" rel="stylesheet"> 
    
+  <!-- Excel Sheet JavaScript Library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
   <style> 
@@ -76,7 +77,6 @@
     .rank-other { color: var(--text-muted); font-weight: 700; }
 
     .hr-id-txt { font-weight: 700; color: #fff; }
-    .score-txt { font-weight: 800; color: var(--accent-cyan); font-size: 15px; }
     .badge-info { background: rgba(37, 99, 235, 0.1); color: #60a5fa; padding: 4px 10px; border-radius: 6px; font-weight: 600; font-size: 12px; border: 1px solid rgba(37, 99, 235, 0.15); }
 
     /* PAGINATION CONTROLS */
@@ -129,11 +129,10 @@
             <th>HackerRank ID</th>
             <th>Branch / Sec</th>
             <th>Year</th>
-            <th>Score Matrix</th>
           </tr>
         </thead>
         <tbody id="leaderboardTableBody">
-          <tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding:30px;">Please choose a specific exam node template folder above.</td></tr>
+          <tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding:30px;">Please choose a specific exam node template folder above.</td></tr>
         </tbody>
       </table>
     </div>
@@ -208,7 +207,6 @@
         const registeredSnapshot = await get(ref(db, `leaderboardParticipants/${selectedExamId}`));
         const participantsMap = registeredSnapshot.exists() ? registeredSnapshot.val() : {};
 
-        // Fallback check: Let's also check a global 'students' node if specific exam path fails
         const globalStudentsSnapshot = await get(ref(db, 'students'));
         const globalStudentsMap = globalStudentsSnapshot.exists() ? globalStudentsSnapshot.val() : {};
 
@@ -219,23 +217,33 @@
           const scoreNode = scoresObj[key];
           const hrUsername = (scoreNode.hrId || scoreNode.hackerRankId || key || "").trim();
 
-          // 1. Try to find match in exam participants map
+          // Try to find match in exam participants map or global students map
           let registrationMatch = Object.values(participantsMap).find(p => 
             p && p.hrId && p.hrId.trim().toLowerCase() === hrUsername.toLowerCase()
           );
 
-          // 2. Fallback: Try to find match in global students map if not found above
           if (!registrationMatch) {
             registrationMatch = Object.values(globalStudentsMap).find(p => 
               p && p.hrId && p.hrId.trim().toLowerCase() === hrUsername.toLowerCase()
             );
           }
 
-          // Safe Extraction with Multi-Key fallback properties
           let finalRollNo = registrationMatch ? (registrationMatch.rollNo || registrationMatch.rollNumber || "N/A") : (scoreNode.rollNo || scoreNode.rollNumber || "N/A");
           let finalName = registrationMatch ? (registrationMatch.name || "Unknown") : (scoreNode.name || "Unknown");
-          let finalYear = registrationMatch ? (registrationMatch.year || registrationMatch.yearOfStudy || "N/A") : (scoreNode.year || scoreNode.yearOfStudy || "N/A");
           
+          // DYNAMIC YEAR CALCULATION FROM ROLL NUMBER (Fallback Engine)
+          let finalYear = "N/A";
+          if (registrationMatch && (registrationMatch.year || registrationMatch.yearOfStudy)) {
+            finalYear = registrationMatch.year || registrationMatch.yearOfStudy;
+          } else if (finalRollNo !== "N/A" && finalRollNo.length >= 2) {
+            // Extracts first 2 characters of roll number (e.g., "24" from "24nm1a4413")
+            let startYear = finalRollNo.substring(0, 2);
+            if (startYear === "25") finalYear = "1st Year";
+            else if (startYear === "24") finalYear = "2nd Year";
+            else if (startYear === "23") finalYear = "3rd Year";
+            else if (startYear === "22") finalYear = "4th Year";
+          }
+
           let finalBranch = "CSE";
           if (registrationMatch) {
             let b = registrationMatch.branch || "";
@@ -245,21 +253,17 @@
             finalBranch = scoreNode.branch;
           }
 
-          // Extract score flexibly from multiple properties
-          let extractedScore = scoreNode.score !== undefined ? scoreNode.score : (scoreNode.totalScore || scoreNode.marks || 0);
-
           synchronizedRoster.push({
             rollNo: finalRollNo,
             name: finalName,
             hrId: hrUsername,
             branch: finalBranch || "CSE",
-            year: finalYear,
-            score: parseFloat(extractedScore || 0)
+            year: finalYear
           });
         });
 
-        // High to Low Sorting Logic
-        synchronizedRoster.sort((a, b) => b.score - a.score);
+        // Alphabetical sorting since scores are hidden now
+        synchronizedRoster.sort((a, b) => a.name.localeCompare(b.name));
         currentLeaderboardData = synchronizedRoster;
 
         renderTable(currentLeaderboardData, currentPage);
@@ -295,11 +299,10 @@
           let branch = String(row["Branch"] || "").trim().toUpperCase();
           let section = String(row["Section"] || "").trim().toUpperCase();
           let year = String(row["Year"] || "").trim();
-          let score = row["Score"] !== undefined ? parseFloat(row["Score"]) : (row["Marks"] !== undefined ? parseFloat(row["Marks"]) : 0);
 
           if (hrId) {
             const safeKey = hrId.replace(/[.#$\[\]\/]/g, '_');
-            scoreUpdates[safeKey] = { hrId: hrId, score: score, name: name, branch: branch, year: year, rollNo: roll };
+            scoreUpdates[safeKey] = { hrId: hrId, name: name, branch: branch, year: year, rollNo: roll };
 
             if (roll) {
               participantUpdates[roll] = {
@@ -319,7 +322,7 @@
           if (Object.keys(participantUpdates).length > 0) {
             await update(ref(db, `leaderboardParticipants/${selectedExamId}`), participantUpdates);
           }
-          alert('🎯 Matrix data imported successfully.');
+          alert('🎯 Data imported successfully.');
           currentPage = 1;
         } catch (error) {
           alert('❌ Save error encounter: ' + error.message);
@@ -368,7 +371,7 @@
       let paginatedItems = data.slice(start, end);
 
       if (paginatedItems.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding:30px;">No matching criteria data matrix records found.</td></tr>`;
+        tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding:30px;">No matching criteria data matrix records found.</td></tr>`;
         return;
       }
 
@@ -387,7 +390,6 @@
           <td><span class="text-muted">${user.hrId}</span></td>
           <td><span class="badge-info">${user.branch}</span></td>
           <td style="color: var(--text-main); font-weight: 500;">${user.year}</td>
-          <td><span class="score-txt">${user.score.toFixed(2)}</span></td>
         </tr>`;
         tableBody.innerHTML += row;
       });
@@ -434,8 +436,7 @@
         "Name": user.name,
         "HackerRank ID": user.hrId,
         "Branch/Sec": user.branch,
-        "Year": user.year,
-        "Score": user.score
+        "Year": user.year
       }));
 
       const worksheet = XLSX.utils.json_to_sheet(excelOutputData);
