@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700;800&display=swap" rel="stylesheet"> 
    
-  <!-- Excel Sheet చదవడానికి లైబ్రరీ -->
+  <!-- Excel Sheet JavaScript Library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
   <style> 
@@ -51,6 +51,10 @@
     .btn-download { background: var(--accent-blue); border-color: var(--accent-blue); }
     .btn-download:hover { background: #1d4ed8; }
     
+    /* INPUT SELECT CONTROL */
+    .select-control { padding: 10px 16px; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border); border-radius: 10px; color: white; font-size: 14px; outline: none; cursor: pointer; min-width: 220px; }
+    .select-control option { background: #141e36; color: #fff; }
+
     /* LIVE REFRESH INDICATOR */
     .live-indicator { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: var(--success); background: rgba(16, 185, 129, 0.1); padding: 6px 12px; border-radius: 20px; border: 1px solid rgba(16, 185, 129, 0.2); }
     .pulse-dot { width: 8px; height: 8px; background: var(--success); border-radius: 50%; animation: pulse 1.5s infinite; }
@@ -97,11 +101,13 @@
   </nav> 
 
   <div class="container">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 10px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 15px;">
       <h1 class="page-title" style="margin-bottom: 0;">🏆 Global <span>Leaderboard</span></h1>
-      <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-        <div class="live-indicator"><span class="pulse-dot"></span> Live Syncing Active</div>
-        <div class="badge-info" id="activeContestBadge" style="padding:6px 12px;">Contest: none set</div>
+      <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+        <select id="contestSelectDropdown" class="select-control">
+          <option value="">-- Select Exam Platform --</option>
+        </select>
+        <div class="live-indicator"><span class="pulse-dot"></span> Dynamic Tracking</div>
       </div>
     </div>
     
@@ -110,8 +116,8 @@
         <button class="action-btn">📤 Upload Exam Excel</button>
         <input type="file" id="excelUploadInput" accept=".xlsx, .xls" />
       </div>
-      <button class="action-btn btn-download" onclick="downloadLeaderboardExcel()">📥 Download Leaderboard (.xlsx)</button>
-      <button class="action-btn" id="syncHrBtn" onclick="syncHackerRankNow()">🔄 Refresh from HackerRank</button>
+      <button class="action-btn btn-download" id="downloadExcelBtn">📥 Download Leaderboard (.xlsx)</button>
+      <button class="action-btn" id="syncHrBtn">🔄 Refresh from HackerRank</button>
     </div>
     
     <div class="table-container">
@@ -119,14 +125,16 @@
         <thead>
           <tr>
             <th style="width: 80px;">Rank</th>
+            <th>Roll Number</th>
             <th>Name</th>
             <th>HackerRank ID</th>
-            <th>Branch</th>
+            <th>Branch / Sec</th>
             <th>Year</th>
             <th>Score Matrix</th>
           </tr>
         </thead>
         <tbody id="leaderboardTableBody">
+          <tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding:30px;">Please choose a specific exam node template folder above.</td></tr>
         </tbody>
       </table>
     </div>
@@ -135,104 +143,108 @@
   </div>
 
   <script type="module">
-    import { db, ref, get, update, onValue, auth } from './firebase.js';
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+    import { getDatabase, ref, set, get, onValue, update } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCaCkliRZk8HmNtOsJpoA084YhNY7MeMWM",
+      authDomain: "jigsawconnect-677da.firebaseapp.com",
+      databaseURL: "https://jigsawconnect-677da-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "jigsawconnect-677da",
+      storageBucket: "jigsawconnect-677da.firebasestorage.app",
+      messagingSenderId: "200774226361",
+      appId: "1:200774226361:web:266cb216968403793f6668"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
 
     let currentPage = 1;
-    const rowsPerPage = 20; // ఇక్కడ పేజీకి ఖచ్చితంగా 20 మెంబర్స్ వచ్చేలా మార్చాను.
+    const rowsPerPage = 20; 
     let currentLeaderboardData = [];
-    let currentActiveSlug = null;
+    let selectedExamId = "";
     let leaderboardListenerUnsub = null;
 
-    // 1. ముందుగా ఏ కాంటెస్ట్ ప్రస్తుతం "active"గా ఉందో వింటుంది (admin-dashboard.html లో
-    //    ఏదైనా HackerRank లింక్ Fetch & Sync చేసినప్పుడు ఇది సెట్ అవుతుంది).
-    // 2. ఆ slug మారినప్పుడల్లా, hackerRankLeaderboards/{slug} నోడ్ మీద రియల్-టైమ్ లిజనర్ మారుస్తుంది.
-    function loadLeaderboard() {
-      onValue(ref(db, 'settings/activeContestSlug'), (slugSnapshot) => {
-        const slug = slugSnapshot.exists() ? slugSnapshot.val() : null;
-        currentActiveSlug = slug;
+    const contestDropdown = document.getElementById('contestSelectDropdown');
 
-        const badge = document.getElementById('activeContestBadge');
-        badge.textContent = slug ? `Contest: ${slug}` : 'Contest: none set';
-
-        if (leaderboardListenerUnsub) leaderboardListenerUnsub(); // detach previous contest's listener
-
-        if (!slug) {
-          currentLeaderboardData = [];
-          renderTable(currentLeaderboardData, currentPage);
-          setupPagination(currentLeaderboardData);
-          return;
+    // 1. Load all available exams into Dropdown
+    function initContestDropdown() {
+      onValue(ref(db, 'hackerrankExams'), (snapshot) => {
+        contestDropdown.innerHTML = '<option value="">-- Select Exam Template --</option>';
+        if (snapshot.exists()) {
+          const exams = snapshot.val();
+          Object.keys(exams).forEach(key => {
+            const option = document.createElement('option');
+            option.value = key;
+            option.textContent = exams[key].title || 'Unnamed Exam';
+            contestDropdown.appendChild(option);
+          });
         }
-
-        leaderboardListenerUnsub = onValue(ref(db, `hackerRankLeaderboards/${slug}`), (snapshot) => {
-          const rosterObj = snapshot.exists() ? snapshot.val() : {};
-          let savedData = Object.values(rosterObj);
-
-          // మార్కుల బట్టి మాత్రమే (High to Low) సార్టింగ్ చేస్తుంది.
-          savedData.sort((a, b) => parseFloat(b.score || 0) - parseFloat(a.score || 0));
-          currentLeaderboardData = savedData;
-
-          renderTable(currentLeaderboardData, currentPage);
-          setupPagination(currentLeaderboardData);
-        }, (error) => {
-          console.error('Leaderboard sync error:', error);
-        });
       });
     }
 
-    // "🔄 Refresh from HackerRank" — ప్రస్తుతం active గా ఉన్న కాంటెస్ట్‌నే మళ్ళీ స్క్రేప్ చేస్తుంది.
-    // కొత్త కాంటెస్ట్ లింక్ పేస్ట్ చేయాలంటే admin-dashboard.html వాడండి.
-    window.syncHackerRankNow = async function () {
-      if (!currentActiveSlug) {
-        alert('⚠️ ఇంకా ఏ కాంటెస్ట్ కూడా active గా సెట్ చేయలేదు. దయచేసి admin-dashboard.html లో ఒక HackerRank లింక్‌ని Fetch & Sync చేయండి.');
+    // 2. Listen to dropdown change event
+    contestDropdown.addEventListener('change', (e) => {
+      selectedExamId = e.target.value;
+      currentPage = 1;
+      attachLeaderboardRealtimeSync();
+    });
+
+    // 3. Real-Time Dynamic Synchronization Engine
+    function attachLeaderboardRealtimeSync() {
+      if (leaderboardListenerUnsub) leaderboardListenerUnsub();
+
+      if (!selectedExamId) {
+        currentLeaderboardData = [];
+        renderTable(currentLeaderboardData, currentPage);
+        setupPagination(currentLeaderboardData);
         return;
       }
 
-      if (!auth.currentUser) {
-        alert('⚠️ సెషన్ గడువు ముగిసింది. దయచేసి admin గా మళ్ళీ లాగిన్ అవ్వండి.');
-        return;
-      }
+      // Read extracted scores data combined with registration profile maps
+      leaderboardListenerUnsub = onValue(ref(db, `hackerRankLeaderboards/${selectedExamId}`), async (snapshot) => {
+        const scoresObj = snapshot.exists() ? snapshot.val() : {};
+        
+        // Fetch matching registration info gathered from quiz details modal form
+        const registeredSnapshot = await get(ref(db, `leaderboardParticipants/${selectedExamId}`));
+        const participantsMap = registeredSnapshot.exists() ? registeredSnapshot.val() : {};
 
-      const btn = document.getElementById('syncHrBtn');
-      const originalText = btn.innerText;
-      btn.disabled = true;
-      btn.innerText = '⏳ Syncing...';
+        let synchronizedRoster = [];
 
-      try {
-        const idToken = await auth.currentUser.getIdToken();
-        const response = await fetch('/api/sync-hackerrank', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${idToken}`
-          },
-          body: JSON.stringify({ contestSlug: currentActiveSlug })
+        // Build records
+        Object.keys(scoresObj).forEach(key => {
+          const scoreNode = scoresObj[key];
+          const hrUsername = scoreNode.hrId || scoreNode.hackerRankId;
+
+          // Find if candidate exists inside registered profile map
+          let registrationMatch = Object.values(participantsMap).find(p => p.hrId === hrUsername);
+
+          synchronizedRoster.push({
+            rollNo: registrationMatch ? registrationMatch.rollNo : "N/A",
+            name: registrationMatch ? registrationMatch.name : (scoreNode.name || "Unknown"),
+            hrId: hrUsername,
+            branch: registrationMatch ? `${registrationMatch.branch} - ${registrationMatch.section}` : (scoreNode.branch || "CSE"),
+            year: registrationMatch ? registrationMatch.year : (scoreNode.year || "N/A"),
+            score: parseFloat(scoreNode.score || 0)
+          });
         });
 
-        const result = await response.json();
-        if (!response.ok) throw new Error(result.error || 'Sync failed.');
+        // High to Low Sorting Logic
+        synchronizedRoster.sort((a, b) => b.score - a.score);
+        currentLeaderboardData = synchronizedRoster;
 
-        alert(`✅ Synced! ${result.count} entries refreshed from HackerRank.`);
-        // onValue listener above auto-refreshes the table — no manual reload needed.
-      } catch (error) {
-        console.error(error);
-        alert('❌ Sync failed: ' + (error.message || 'Unknown error. Check Vercel function logs.'));
-      } finally {
-        btn.disabled = false;
-        btn.innerText = originalText;
-      }
-    };
+        renderTable(currentLeaderboardData, currentPage);
+        setupPagination(currentLeaderboardData);
+      });
+    }
 
-    // EXCEL FILE UPLOAD PROCESSING (పరిమితి లేకుండా అందరినీ యాడ్ చేస్తుంది)
-    // ఇప్పుడు localStorage బదులు ప్రస్తుతం active గా ఉన్న కాంటెస్ట్ కింద
-    // hackerRankLeaderboards/{slug} నోడ్‌లో, hrId ని కీగా ఉపయోగించి సేవ్ అవుతుంది —
-    // ఇదే key ని syncHackerRankLeaderboard ఫంక్షన్ కూడా వాడుతుంది కాబట్టి స్కోర్‌లు సరిగ్గా మ్యాచ్ అవుతాయి.
-    // Excel కాలమ్‌లు: Name, HackerRank ID, Branch, Year, Score (ఐచ్ఛికం)
+    // 4. Excel Manual Input Upload Processing
     document.getElementById('excelUploadInput').addEventListener('change', function(e) {
       const file = e.target.files[0];
       if (!file) return;
 
-      if (!currentActiveSlug) {
-        alert('⚠️ ముందుగా admin-dashboard.html లో ఒక HackerRank లింక్‌ని Fetch & Sync చేసి కాంటెస్ట్‌ను active చేయండి, తర్వాత ఎక్సెల్ అప్‌లోడ్ చేయండి.');
+      if (!selectedExamId) {
+        alert('⚠️ Please choose an active exam template dropdown directory first.');
         e.target.value = '';
         return;
       }
@@ -241,73 +253,82 @@
       reader.onload = async function(evt) {
         const data = new Uint8Array(evt.target.result);
         const workbook = XLSX.read(data, { type: 'array' });
-
-        const firstSheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[firstSheetName];
+        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
         const excelRows = XLSX.utils.sheet_to_json(worksheet);
 
-        const updates = {};
+        const scoreUpdates = {};
+        const participantUpdates = {};
 
         excelRows.forEach(row => {
+          let roll = String(row["Roll Number"] || row["RollNo"] || "").trim().toUpperCase();
           let name = String(row["Name"] || "").trim();
           let hrId = String(row["HackerRank ID"] || "").trim();
           let branch = String(row["Branch"] || "").trim().toUpperCase();
+          let section = String(row["Section"] || "A").trim().toUpperCase();
           let year = String(row["Year"] || "").trim();
-          let score = row["Score"] !== undefined ? parseFloat(row["Score"] || 0) : undefined;
+          let score = row["Score"] !== undefined ? parseFloat(row["Score"] || 0) : 0;
 
           if (hrId) {
-            // Firebase keys can't contain '.', '#', '$', '[', ']' or '/'
             const safeKey = hrId.replace(/[.#$\[\]\/]/g, '_');
-            const entry = {
-              hrId: hrId,
-              hackerRankId: hrId,
-              name: name || "N/A",
-              branch: branch || "CSE",
-              year: year || "1st Year"
-            };
-            if (score !== undefined) entry.score = score; // preserve existing score if column omitted
-            updates[safeKey] = entry;
+            scoreUpdates[safeKey] = { hrId: hrId, score: score };
+
+            if (roll) {
+              participantUpdates[roll] = {
+                rollNo: roll,
+                name: name || "N/A",
+                hrId: hrId,
+                branch: branch || "CSE",
+                section: section,
+                year: year || "3rd Year"
+              };
+            }
           }
         });
 
         try {
-          // Multi-path update: merges into existing roster, updates matching hrId, adds new ones
-          await update(ref(db, `hackerRankLeaderboards/${currentActiveSlug}`), updates);
-          alert('🎯 లీడర్‌బోర్డ్‌ అప్‌డేట్ అయ్యింది! మార్కుల ఆధారంగా ర్యాంకులు కేటాయించబడ్డాయి.');
+          await update(ref(db, `hackerRankLeaderboards/${selectedExamId}`), scoreUpdates);
+          if (Object.keys(participantUpdates).length > 0) {
+            await update(ref(db, `leaderboardParticipants/${selectedExamId}`), participantUpdates);
+          }
+          alert('🎯 Matrix data imported successfully.');
           currentPage = 1;
-          // onValue listener (set up in loadLeaderboard) will auto re-render.
         } catch (error) {
-          console.error(error);
-          alert('❌ Firebase కి రాయడంలో లోపం: ' + error.message);
+          alert('❌ Save error encounter: ' + error.message);
         }
       };
-
       reader.readAsArrayBuffer(file);
     });
 
-    // DOWNLOAD LEADERBOARD AS EXCEL
-    function downloadLeaderboardExcel() {
-      if (currentLeaderboardData.length === 0) {
-        alert("డౌన్‌లోడ్ చేయడానికి లీడర్‌బోర్డ్‌లో ఎటువంటి డేటా లేదు!");
+    // 5. Trigger Remote Trigger Extraction Workflow API
+    document.getElementById('syncHrBtn').addEventListener('click', async () => {
+      if (!selectedExamId) {
+        alert('⚠️ Select an exam context module from dropdown.');
         return;
       }
 
-      const excelOutputData = currentLeaderboardData.map((user, idx) => ({
-        "Rank": idx + 1,
-        "Name": user.name,
-        "HackerRank ID": user.hrId,
-        "Branch": user.branch,
-        "Year": user.year,
-        "Score": user.score
-      }));
+      const btn = document.getElementById('syncHrBtn');
+      btn.disabled = true;
+      btn.innerText = '⏳ Trigger Extraction Engine...';
 
-      const worksheet = XLSX.utils.json_to_sheet(excelOutputData);
-      const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, "Leaderboard");
-      XLSX.writeFile(workbook, "StudyConnect_Global_Leaderboard.xlsx");
-    }
+      try {
+        const response = await fetch('/api/sync-hackerrank', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ examId: selectedExamId })
+        });
 
-    // TABLE RENDERING LOGIC
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || 'Server error.');
+        alert(`✅ Refreshed records synced successfully.`);
+      } catch (error) {
+        alert('❌ Automated Extraction fault: ' + error.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerText = '🔄 Refresh from HackerRank';
+      }
+    });
+
+    // 6. Table Rendering Logic
     function renderTable(data, page) {
       const tableBody = document.getElementById('leaderboardTableBody');
       tableBody.innerHTML = "";
@@ -318,7 +339,7 @@
       let paginatedItems = data.slice(start, end);
 
       if (paginatedItems.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding: 30px;">డేటా లేదు. క్విజ్ సబ్మిట్ చేయండి లేదా ఎక్సెల్ అప్‌లోడ్ చేయండి.</td></tr>`;
+        tableBody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding:30px;">No matching criteria data matrix records found.</td></tr>`;
         return;
       }
 
@@ -332,17 +353,18 @@
 
         let row = `<tr>
           <td>${rankDisplay}</td>
-          <td><span class="hr-id-txt">${user.name || 'N/A'}</span></td>
+          <td><span class="badge-info" style="background:rgba(255,255,255,0.05); color:#fff;">${user.rollNo}</span></td>
+          <td><span class="hr-id-txt">${user.name}</span></td>
           <td><span class="text-muted">${user.hrId}</span></td>
-          <td><span class="badge-info">${user.branch || 'CSE'}</span></td>
-          <td style="color: var(--text-main); font-weight: 500;">${user.year || '1st Year'}</td>
-          <td><span class="score-txt">${parseFloat(user.score || 0).toFixed(2)}</span></td>
+          <td><span class="badge-info">${user.branch}</span></td>
+          <td style="color: var(--text-main); font-weight: 500;">${user.year}</td>
+          <td><span class="score-txt">${user.score.toFixed(2)}</span></td>
         </tr>`;
         tableBody.innerHTML += row;
       });
     }
 
-    // MULTI-PAGE BUTTONS GENERATION
+    // 7. Multi-Page Navigation Buttons
     function setupPagination(data) {
       const paginationWrapper = document.getElementById('pagination');
       paginationWrapper.innerHTML = "";
@@ -366,16 +388,38 @@
           
           window.scrollTo({ top: 0, behavior: 'smooth' });
         });
-
         paginationWrapper.appendChild(btn);
       }
     }
 
-    // ఇక ముందు 10-సెకన్ల పోలింగ్ అవసరం లేదు — Firebase onValue() రియల్-టైమ్‌లోనే
-    // ఏ యూజర్ డేటా మార్చినా అందరికీ ఆటోమేటిక్‌గా పుష్ చేస్తుంది.
+    // 8. Download Leaderboard Trigger Action Bind
+    document.getElementById('downloadExcelBtn').addEventListener('click', () => {
+      if (currentLeaderboardData.length === 0) {
+        alert("No active matrix data folder arrays to write format sheets.");
+        return;
+      }
+
+      const excelOutputData = currentLeaderboardData.map((user, idx) => ({
+        "Rank": idx + 1,
+        "Roll Number": user.rollNo,
+        "Name": user.name,
+        "HackerRank ID": user.hrId,
+        "Branch/Sec": user.branch,
+        "Year": user.year,
+        "Score": user.score
+      }));
+
+      const worksheet = XLSX.utils.json_to_sheet(excelOutputData);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Leaderboard");
+      XLSX.writeFile(workbook, "StudyConnect_Leaderboard_Metrics.xlsx");
+    });
+
     window.onload = () => {
-      loadLeaderboard();
+      initContestDropdown();
     };
   </script>
 </body> 
 </html>
+
+                
