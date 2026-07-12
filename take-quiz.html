@@ -66,7 +66,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
-    import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
+    import { getDatabase, ref, get, set, update } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCaCkliRZk8HmNtOsJpoA084YhNY7MeMWM",
@@ -86,7 +86,7 @@
 
     let questions = [];
     let currentIdx = 0;
-    let userAnswers = {}; // Stores arrays for MSQ, numbers for MCQ/TF
+    let userAnswers = {}; 
 
     async function loadQuizData() {
       if (!quizId) {
@@ -95,20 +95,22 @@
       }
 
       try {
-        const snap = await get(ref(db, `generatedQuizzes`));
+        const snap = await get(ref(db, `quizzes`)); // quiz.html లో 'quizzes' నోడ్ స్ట్రక్చర్ ని బట్టి మార్చబడింది
         if (snap.exists()) {
           const allQuizzes = snap.val();
-          let activeQuiz = null;
-          
-          Object.keys(allQuizzes).forEach(k => {
-            if (allQuizzes[k].quizId === quizId || k === quizId) {
-              activeQuiz = allQuizzes[k];
+          let activeQuiz = allQuizzes[quizId];
+
+          if (!activeQuiz) {
+            // ఒకవేళ పాత 'generatedQuizzes' లో ఉంటే వెతకడానికి ఫాల్‌బ్యాక్
+            const altSnap = await get(ref(db, `generatedQuizzes`));
+            if (altSnap.exists()) {
+              activeQuiz = altSnap.val()[quizId];
             }
-          });
+          }
 
           if (activeQuiz) {
-            document.getElementById('quizTitle').innerText = activeQuiz.title;
-            document.getElementById('quizMeta').innerText = `Difficulty: ${activeQuiz.difficulty} | Format: ${activeQuiz.formatSelected}`;
+            document.getElementById('quizTitle').innerText = activeQuiz.title || "Untitled Quiz";
+            document.getElementById('quizMeta').innerText = `Difficulty: ${activeQuiz.difficulty || 'Mixed'} | Format: ${activeQuiz.type || 'Standard'}`;
             questions = activeQuiz.questions || [];
             
             renderQuestions();
@@ -125,6 +127,11 @@
       const container = document.getElementById('questionsContainer');
       container.innerHTML = "";
 
+      if(questions.length === 0) {
+        container.innerHTML = `<p style="color:var(--text-muted)">No questions available in this quiz.</p>`;
+        return;
+      }
+
       questions.forEach((q, qIdx) => {
         const qCard = document.createElement('div');
         qCard.className = `question-card ${qIdx === 0 ? 'active' : ''}`;
@@ -132,25 +139,26 @@
 
         const qText = document.createElement('div');
         qText.className = 'q-text';
-        qText.innerText = q.questionText;
+        qText.innerText = `${qIdx + 1}. ${q.questionText}`;
         qCard.appendChild(qText);
 
         const optsList = document.createElement('div');
         optsList.className = 'options-list';
 
-        q.options.forEach((opt, oIdx) => {
-          const optItem = document.createElement('div');
-          optItem.className = 'option-item';
-          optItem.innerText = opt;
-          
-          // చెక్ బాక్స్ లాంటి ఫీలింగ్ కోసం MSQ కి హింట్ టెక్స్ట్
-          if(q.type === "MSQ") {
-            optItem.innerHTML = `<span>⬜</span> ${opt}`;
-          }
+        if (q.options && Array.isArray(q.options)) {
+          q.options.forEach((opt, oIdx) => {
+            const optItem = document.createElement('div');
+            optItem.className = 'option-item';
+            optItem.innerText = opt;
+            
+            if(q.type === "MSQ") {
+              optItem.innerHTML = `<span>⬜</span> ${opt}`;
+            }
 
-          optItem.addEventListener('click', () => selectOption(qIdx, oIdx, optItem, q.type));
-          optsList.appendChild(optItem);
-        });
+            optItem.addEventListener('click', () => selectOption(qIdx, oIdx, optItem, q.type));
+            optsList.appendChild(optItem);
+          });
+        }
 
         qCard.appendChild(optsList);
         container.appendChild(qCard);
@@ -161,23 +169,21 @@
 
     function selectOption(qIdx, oIdx, element, qType) {
       if (qType === "MSQ") {
-        // MSQ మల్టిపుల్ సెలెక్షన్ లాజిక్
         if (!Array.isArray(userAnswers[qIdx])) {
           userAnswers[qIdx] = [];
         }
         
         const index = userAnswers[qIdx].indexOf(oIdx);
         if (index > -1) {
-          userAnswers[qIdx].splice(index, 1); // ఆల్రెడీ ఉంటే తీసేయ్
+          userAnswers[qIdx].splice(index, 1); 
           element.classList.remove('selected');
           element.querySelector('span').innerText = "⬜";
         } else {
-          userAnswers[qIdx].push(oIdx); // లేకపోతే యాడ్ చెయ్
+          userAnswers[qIdx].push(oIdx); 
           element.classList.add('selected');
           element.querySelector('span').innerText = "⬛";
         }
       } else {
-        // MCQ & TF సింగిల్ సెలెక్షన్ లాజిక్
         const siblings = element.parentElement.querySelectorAll('.option-item');
         siblings.forEach(s => s.classList.remove('selected'));
         
@@ -186,33 +192,33 @@
       }
     }
 
-    // Previous/Next నావిగేషన్ లో ఆప్షన్స్ ని రీటెయిన్ చేయడం
     function showQuestion(idx) {
       document.querySelectorAll('.question-card').forEach(c => c.classList.remove('active'));
       const nextCard = document.getElementById(`qCard_${idx}`);
-      nextCard.classList.add('active');
-      
-      // గతంలో సెలెక్ట్ చేసిన ఆప్షన్లను రీ-హైలైట్ చేయడం
-      const items = nextCard.querySelectorAll('.option-item');
-      const savedAns = userAnswers[idx];
-      
-      items.forEach((item, oIdx) => {
-        if (Array.isArray(savedAns)) {
-          if (savedAns.includes(oIdx)) {
-            item.classList.add('selected');
-            if(item.querySelector('span')) item.querySelector('span').innerText = "⬛";
+      if(nextCard) {
+        nextCard.classList.add('active');
+        
+        const items = nextCard.querySelectorAll('.option-item');
+        const savedAns = userAnswers[idx];
+        
+        items.forEach((item, oIdx) => {
+          if (Array.isArray(savedAns)) {
+            if (savedAns.includes(oIdx)) {
+              item.classList.add('selected');
+              if(item.querySelector('span')) item.querySelector('span').innerText = "⬛";
+            } else {
+              item.classList.remove('selected');
+              if(item.querySelector('span')) item.querySelector('span').innerText = "⬜";
+            }
           } else {
-            item.classList.remove('selected');
-            if(item.querySelector('span')) item.querySelector('span').innerText = "⬜";
+            if (savedAns === oIdx) {
+              item.classList.add('selected');
+            } else {
+              item.classList.remove('selected');
+            }
           }
-        } else {
-          if (savedAns === oIdx) {
-            item.classList.add('selected');
-          } else {
-            item.classList.remove('selected');
-          }
-        }
-      });
+        });
+      }
     }
 
     const prevBtn = document.getElementById('prevBtn');
@@ -238,7 +244,7 @@
 
     function updateNavButtons() {
       prevBtn.disabled = (currentIdx === 0);
-      if (currentIdx === questions.length - 1) {
+      if (questions.length === 0 || currentIdx === questions.length - 1) {
         nextBtn.innerText = "Submit Quiz";
       } else {
         nextBtn.innerText = "Next";
@@ -250,16 +256,13 @@
       
       questions.forEach((q, idx) => {
         if (q.type === "MSQ") {
-          // MSQ ఇండెక్స్ ఎవాల్యుయేషన్
           const userAnsArr = userAnswers[idx] || [];
           const targetAnsArr = q.correctAnswerIndices || [];
-          
           if (userAnsArr.length === targetAnsArr.length && 
               userAnsArr.every(v => targetAnsArr.includes(v))) {
             score++;
           }
         } else {
-          // MCQ & TF ఇండెక్స్ ఎవాల్యుయేషన్
           if (userAnswers[idx] !== undefined && userAnswers[idx] === q.correctAnswerIndex) {
             score++;
           }
@@ -271,28 +274,47 @@
       document.getElementById('userScore').innerText = score;
       document.getElementById('totalScore').innerText = questions.length;
 
-      const loggedInUser = JSON.parse(localStorage.getItem('user')) || {
-        rollNo: "STUDENT_GUEST",
-        hrId: "guest_user",
-        branch: "CSE",
-        section: "A"
-      };
+      // URL లేదా డేటా సబ్‌మిషన్ రికార్డులను ట్రాక్ చేయడానికి పాత విండోస్‌ను బ్యాకప్ చేయడం
+      // ఒకవేళ నేరుగా ఆబ్జెక్ట్ లేకపోతే విడివిడిగా ప్రాపర్టీస్ చెక్ చేస్తుంది.
+      let name = localStorage.getItem('studentName') || "Anonymous";
+      let hrId = localStorage.getItem('studentHrId') || "guest_user";
+      let rollNo = localStorage.getItem('studentRollNo') || "N/A";
+      let branch = localStorage.getItem('studentBranch') || "N/A";
+
+      // ఒకవేళ పాత సిస్టమ్ లాగిన్ ఆబ్జెక్ట్ ఫార్మాట్ లో ఉంటే బ్యాకప్ రీడ్:
+      const rawUser = localStorage.getItem('user');
+      if (rawUser) {
+        try {
+          const parsed = JSON.parse(rawUser);
+          name = parsed.name || name;
+          hrId = parsed.hrId || parsed.studentHrId || hrId;
+          rollNo = parsed.rollNo || parsed.studentRollNo || rollNo;
+          branch = parsed.branch || parsed.studentBranch || branch;
+        } catch(e) {}
+      }
+
+      const safeKey = hrId.replace(/[.#$\[\]\/]/g, '_');
 
       try {
-        const contestSlug = "view-batch-2023-exam-practice-cse-acse-it";
+        // హార్డ్‌కోడెడ్ స్లగ్ కాకుండా ప్రస్తుతం ఏ క్విజ్ ఐడీ అయితే ఉందో దానికే స్కోర్ అప్‌డేట్ అవుతుంది!
+        const contestSlug = quizId || "general-quiz"; 
+        
         const studentRecord = {
-          rollNo: loggedInUser.rollNo,
-          hrId: loggedInUser.hrId,
+          hrId: hrId,
+          hackerRankId: hrId,
+          name: name,
+          rollNo: rollNo,
+          branch: branch,
           score: score,
-          branch: loggedInUser.branch,
-          section: loggedInUser.section,
-          timestamp: new Date().toLocaleString()
+          timestamp: Date.now()
         };
-        await set(ref(db, `hackerRankLeaderboards/${contestSlug}/${loggedInUser.hrId}`), studentRecord);
-        document.getElementById('feedbackText').innerText = "మీ మార్కులు లీడర్‌బోర్డ్‌కు విజయవంతంగా సింక్ చేయబడ్డాయి!";
+
+        // లీడర్‌బోర్డ్ నోడ్‌లోకి డేటాను పుష్ చేయడం
+        await set(ref(db, `hackerRankLeaderboards/${contestSlug}/${safeKey}`), studentRecord);
+        document.getElementById('feedbackText').innerText = "🎉 మీ మార్కులు లీడర్‌బోర్డ్‌కు విజయవంతంగా సింక్ చేయబడ్డాయి!";
       } catch (err) {
         console.error("Score sync failed", err);
-        document.getElementById('feedbackText').innerText = "మార్కులు సేవ్ చేయడంలో లోపం జరిగింది.";
+        document.getElementById('feedbackText').innerText = "మార్కులు సేవ్ చేయడంలో లోపం జరిగింది కానీ మీ స్కోరు పైన చూడవచ్చు.";
       }
     }
 
