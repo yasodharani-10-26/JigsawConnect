@@ -8,7 +8,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700;800&display=swap" rel="stylesheet"> 
    
-  <!-- Excel Sheet JavaScript Library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
   <style> 
@@ -214,17 +213,19 @@
         // Build records
         Object.keys(scoresObj).forEach(key => {
           const scoreNode = scoresObj[key];
-          const hrUsername = scoreNode.hrId || scoreNode.hackerRankId;
+          const hrUsername = (scoreNode.hrId || scoreNode.hackerRankId || "").trim();
 
-          // Find if candidate exists inside registered profile map
-          let registrationMatch = Object.values(participantsMap).find(p => p.hrId === hrUsername);
+          // FIX: Case-insensitive dynamic searching logic to match correctly
+          let registrationMatch = Object.values(participantsMap).find(p => 
+            p.hrId && p.hrId.trim().toLowerCase() === hrUsername.toLowerCase()
+          );
 
           synchronizedRoster.push({
-            rollNo: registrationMatch ? registrationMatch.rollNo : "N/A",
-            name: registrationMatch ? registrationMatch.name : (scoreNode.name || "Unknown"),
+            rollNo: registrationMatch ? (registrationMatch.rollNo || "N/A") : "N/A",
+            name: registrationMatch ? (registrationMatch.name || "N/A") : (scoreNode.name || "Unknown"),
             hrId: hrUsername,
             branch: registrationMatch ? `${registrationMatch.branch} - ${registrationMatch.section}` : (scoreNode.branch || "CSE"),
-            year: registrationMatch ? registrationMatch.year : (scoreNode.year || "N/A"),
+            year: registrationMatch ? (registrationMatch.year || "N/A") : (scoreNode.year || "N/A"),
             score: parseFloat(scoreNode.score || 0)
           });
         });
@@ -421,5 +422,3 @@
   </script>
 </body> 
 </html>
-
-                
