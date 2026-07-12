@@ -204,29 +204,57 @@
       leaderboardListenerUnsub = onValue(ref(db, `hackerRankLeaderboards/${selectedExamId}`), async (snapshot) => {
         const scoresObj = snapshot.exists() ? snapshot.val() : {};
         
-        // Fetch matching registration info gathered from quiz details modal form
+        // Fetch matching registration info gathered from multiple possible nodes
         const registeredSnapshot = await get(ref(db, `leaderboardParticipants/${selectedExamId}`));
         const participantsMap = registeredSnapshot.exists() ? registeredSnapshot.val() : {};
+
+        // Fallback check: Let's also check a global 'students' node if specific exam path fails
+        const globalStudentsSnapshot = await get(ref(db, 'students'));
+        const globalStudentsMap = globalStudentsSnapshot.exists() ? globalStudentsSnapshot.val() : {};
 
         let synchronizedRoster = [];
 
         // Build records
         Object.keys(scoresObj).forEach(key => {
           const scoreNode = scoresObj[key];
-          const hrUsername = (scoreNode.hrId || scoreNode.hackerRankId || "").trim();
+          const hrUsername = (scoreNode.hrId || scoreNode.hackerRankId || key || "").trim();
 
-          // FIX: Case-insensitive dynamic searching logic to match correctly
+          // 1. Try to find match in exam participants map
           let registrationMatch = Object.values(participantsMap).find(p => 
-            p.hrId && p.hrId.trim().toLowerCase() === hrUsername.toLowerCase()
+            p && p.hrId && p.hrId.trim().toLowerCase() === hrUsername.toLowerCase()
           );
 
+          // 2. Fallback: Try to find match in global students map if not found above
+          if (!registrationMatch) {
+            registrationMatch = Object.values(globalStudentsMap).find(p => 
+              p && p.hrId && p.hrId.trim().toLowerCase() === hrUsername.toLowerCase()
+            );
+          }
+
+          // Safe Extraction with Multi-Key fallback properties
+          let finalRollNo = registrationMatch ? (registrationMatch.rollNo || registrationMatch.rollNumber || "N/A") : (scoreNode.rollNo || scoreNode.rollNumber || "N/A");
+          let finalName = registrationMatch ? (registrationMatch.name || "Unknown") : (scoreNode.name || "Unknown");
+          let finalYear = registrationMatch ? (registrationMatch.year || registrationMatch.yearOfStudy || "N/A") : (scoreNode.year || scoreNode.yearOfStudy || "N/A");
+          
+          let finalBranch = "CSE";
+          if (registrationMatch) {
+            let b = registrationMatch.branch || "";
+            let s = registrationMatch.section || registrationMatch.sec || "";
+            finalBranch = s ? `${b} - ${s}` : b;
+          } else if (scoreNode.branch) {
+            finalBranch = scoreNode.branch;
+          }
+
+          // Extract score flexibly from multiple properties
+          let extractedScore = scoreNode.score !== undefined ? scoreNode.score : (scoreNode.totalScore || scoreNode.marks || 0);
+
           synchronizedRoster.push({
-            rollNo: registrationMatch ? (registrationMatch.rollNo || "N/A") : "N/A",
-            name: registrationMatch ? (registrationMatch.name || "N/A") : (scoreNode.name || "Unknown"),
+            rollNo: finalRollNo,
+            name: finalName,
             hrId: hrUsername,
-            branch: registrationMatch ? `${registrationMatch.branch} - ${registrationMatch.section}` : (scoreNode.branch || "CSE"),
-            year: registrationMatch ? (registrationMatch.year || "N/A") : (scoreNode.year || "N/A"),
-            score: parseFloat(scoreNode.score || 0)
+            branch: finalBranch || "CSE",
+            year: finalYear,
+            score: parseFloat(extractedScore || 0)
           });
         });
 
@@ -261,17 +289,17 @@
         const participantUpdates = {};
 
         excelRows.forEach(row => {
-          let roll = String(row["Roll Number"] || row["RollNo"] || "").trim().toUpperCase();
+          let roll = String(row["Roll Number"] || row["RollNo"] || row["Roll Number "] || "").trim().toUpperCase();
           let name = String(row["Name"] || "").trim();
-          let hrId = String(row["HackerRank ID"] || "").trim();
+          let hrId = String(row["HackerRank ID"] || row["HackerRankID"] || "").trim();
           let branch = String(row["Branch"] || "").trim().toUpperCase();
-          let section = String(row["Section"] || "A").trim().toUpperCase();
+          let section = String(row["Section"] || "").trim().toUpperCase();
           let year = String(row["Year"] || "").trim();
-          let score = row["Score"] !== undefined ? parseFloat(row["Score"] || 0) : 0;
+          let score = row["Score"] !== undefined ? parseFloat(row["Score"]) : (row["Marks"] !== undefined ? parseFloat(row["Marks"]) : 0);
 
           if (hrId) {
             const safeKey = hrId.replace(/[.#$\[\]\/]/g, '_');
-            scoreUpdates[safeKey] = { hrId: hrId, score: score };
+            scoreUpdates[safeKey] = { hrId: hrId, score: score, name: name, branch: branch, year: year, rollNo: roll };
 
             if (roll) {
               participantUpdates[roll] = {
@@ -280,7 +308,7 @@
                 hrId: hrId,
                 branch: branch || "CSE",
                 section: section,
-                year: year || "3rd Year"
+                year: year || "N/A"
               };
             }
           }
