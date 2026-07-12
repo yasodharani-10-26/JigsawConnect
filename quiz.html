@@ -193,21 +193,27 @@
       return card;
     }
 
-    function makeQuizCard(quiz, key, isPast) {
-      const card = document.createElement('div');
-      card.className = "panel-card";
-      card.innerHTML = `
-        <div class="panel-title">
-          <span>🧩 ${quiz.title || 'Untitled Quiz'}</span>
-          <span style="font-size:12px; color:var(--accent-cyan)">[${quiz.difficulty || 'Mixed'}]</span>
-        </div>
-        <p style="font-size:12px; color:var(--text-muted); margin: 6px 0 10px;">Questions: ${quiz.count || 10} | Type: ${quiz.type || 'MIXED'}</p>
-        <button class="hackerrank-btn" style="background:var(--accent-blue); color:#fff;" data-slug="${key}" data-link="take-quiz.html?id=${key}">
-          ${isPast ? '👁️ Review Quiz Scores' : '⚡ Start Attempt'}
-        </button>
-      `;
-      return card;
+    function makeExamCard(exam, slug, isPast) {
+  const card = document.createElement('div');
+  card.className = "panel-card";
+  
+  // 🔥 ఫిక్స్: ఇక్కడ లింక్ చివరన ఉన్న '/leaderboard' ని తీసేసి డైరెక్ట్ కాంటెస్ట్ లింక్ ఇచ్చాం
+  // దీనివల్ల విద్యార్థి లీడర్‌బోర్డ్ కి కాకుండా నేరుగా ఎగ్జామ్ రాసే పేజీకి వెళ్తాడు.
+  const hrLink = isPast 
+    ? `https://www.hackerrank.com/contests/${slug}/leaderboard` // పాత ఎగ్జామ్స్ అయితే లీడర్‌బోర్డ్ చూపిస్తాం
+    : `https://www.hackerrank.com/contests/${slug}`;             // యాక్టివ్ ఎగ్జామ్ అయితే నేరుగా టెస్ట్ లింక్
+
+  card.innerHTML = `
+    <div class="panel-title">
+      <span>📝 ${exam.title || slug.toUpperCase()}</span>
+    </div>
+    <button class="hackerrank-btn" data-slug="${slug}" data-link="${hrLink}">
+      ${isPast ? '👁️ View Past Contest Leaderboard' : '🚀 Enter HackerRank Arena & Start Exam'}
+    </button>
+  `;
+  return card;
     }
+    
 
     // Intercept click sequences to register student details matrix
     function bindCardButtons(container) {
