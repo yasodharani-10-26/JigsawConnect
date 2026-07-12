@@ -639,7 +639,46 @@
       }
     });
 
-    // 3. Register HackerRank Contest Engine Configuration Link
+    // 🔥 3. AI Quiz Generator Logic (బటన్ నొక్కినప్పుడు ఫైర్‌బేస్ క్విజ్ నోడ్‌లోకి వెళ్తుంది)
+    document.getElementById('actionGenQuizBtn').addEventListener('click', async () => {
+      const topicTitle = document.getElementById('quizTopicTitle').value.trim();
+      const count = document.getElementById('qCount').value;
+      const type = document.getElementById('qType').value;
+      const diff = document.getElementById('qDiff').value;
+      const publish = document.getElementById('publishDirectly').checked;
+      const contextText = document.getElementById('quizContextText').value.trim();
+
+      if (!topicTitle) {
+        alert("Please provide a Quiz Topic/Title.");
+        return;
+      }
+
+      // క్విజ్ కీ కోసం సేఫ్ ఐడి జనరేట్ చేయడం
+      const quizKey = 'quiz_' + Date.now();
+
+      // ఇక్కడ స్ట్రక్చర్ మీ 'quiz.html' లో చదివే విధంగా ఫార్మాట్ చేయబడింది
+      const quizData = {
+        title: topicTitle,
+        difficulty: diff,
+        questionsCount: count,
+        format: type,
+        context: contextText || uploadedFileText || "General Coding Assessment",
+        status: publish ? 'active' : 'draft',
+        timestamp: Date.now()
+      };
+
+      try {
+        await set(ref(db, `quizzes/${quizKey}`), quizData);
+        alert(`⚡ Quiz "${topicTitle}" built & published successfully to Firebase!`);
+        // రీసెట్ ఫీల్డ్స్
+        document.getElementById('quizTopicTitle').value = "";
+        document.getElementById('quizContextText').value = "";
+      } catch (err) {
+        alert("❌ Quiz creation failed: " + err.message);
+      }
+    });
+
+    // 4. Register HackerRank Contest Engine Configuration Link
     document.getElementById('loadContestBtn').addEventListener('click', async () => {
       const rawInput = document.getElementById('hackerrankLinkInput').value.trim();
       if(!rawInput) {
@@ -654,11 +693,12 @@
       }
 
       try {
-        // Post both active settings hook configurations & exam registry array nodes
         await set(ref(db, 'settings/activeContestSlug'), slug);
+        // 🔥 ఫిక్స్: ఇక్కడ status ని 'active' గా పంపిస్తున్నాం, తద్వారా quiz.html లో ఇది కనబడుతుంది
         await update(ref(db, `hackerrankExams/${slug}`), {
           id: slug,
           title: slug.toUpperCase().replace(/-/g, ' ') + " CONTEST",
+          status: "active",
           timestamp: Date.now()
         });
         alert(`🎯 Contest mapped & loaded safely across ecosystem endpoints: [${slug}]`);
@@ -668,7 +708,7 @@
       }
     });
 
-    // 4. View Score Metrics Matrix Array Audit
+    // 5. View Score Metrics Matrix Array Audit
     document.getElementById('viewLbBtn').addEventListener('click', () => {
       const targetSlug = document.getElementById('viewLbLinkInput').value.trim();
       if(!targetSlug) {
@@ -707,7 +747,7 @@
       });
     });
 
-    // 5. Download Standalone Report Framework Array Sheet
+    // 6. Download Standalone Report Framework Array Sheet
     document.getElementById('downloadExamLbBtn').addEventListener('click', () => {
       if(localExamDataCached.length === 0) {
         alert("No active internal memory arrays structural records to commit execution.");
