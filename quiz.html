@@ -253,7 +253,11 @@
         // Hide overlay elements safely
         detailsModal.classList.remove('active');
         participantForm.reset();
-
+localStorage.setItem('studentName', name);
+localStorage.setItem('studentHrId', hrId);
+localStorage.setItem('studentRollNo', rollNo);
+localStorage.setItem('studentBranch', branch);
+        
         // Redirect safely to target exam or quiz context mapping route
         window.open(currentTargetLink, '_blank');
       } catch(err) {
