@@ -8,7 +8,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700;800&display=swap" rel="stylesheet"> 
    
-  <!-- Excel Sheet JavaScript Library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
   <style> 
@@ -72,6 +71,7 @@
     .hr-id-txt { font-weight: 700; color: #fff; }
     .badge-info { background: rgba(37, 99, 235, 0.1); color: #60a5fa; padding: 4px 10px; border-radius: 6px; font-weight: 600; font-size: 12px; border: 1px solid rgba(37, 99, 235, 0.15); }
     .badge-sec { background: rgba(16, 185, 129, 0.1); color: #34d399; padding: 4px 10px; border-radius: 6px; font-weight: 600; font-size: 12px; border: 1px solid rgba(16, 185, 129, 0.15); }
+    .badge-score { background: rgba(245, 158, 11, 0.1); color: var(--warning); padding: 4px 12px; border-radius: 6px; font-weight: 700; font-size: 13px; border: 1px solid rgba(245, 158, 11, 0.2); }
 
     /* PAGINATION CONTROLS */
     .pagination-wrapper { display: flex; justify-content: center; align-items: center; gap: 6px; margin-top: 28px; flex-wrap: wrap; }
@@ -123,10 +123,11 @@
             <th>Branch</th>
             <th>Section</th>
             <th>Year</th>
+            <th>Score</th>
           </tr>
         </thead>
         <tbody id="leaderboardTableBody">
-          <tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding:30px;">Please choose a specific exam node template folder above.</td></tr>
+          <tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding:30px;">Please choose a specific exam node template folder above.</td></tr>
         </tbody>
       </table>
     </div>
@@ -204,6 +205,9 @@
         Object.keys(scoresObj).forEach(key => {
           const scoreNode = scoresObj[key];
           const hrUsername = (scoreNode.hrId || scoreNode.hackerRankId || key || "").trim();
+          
+          // Get the dynamic score parsed to float
+          let finalScore = parseFloat(scoreNode.score || scoreNode.data2 || 0);
 
           let registrationMatch = Object.values(participantsMap).find(p => 
             p && p.hrId && p.hrId.trim().toLowerCase() === hrUsername.toLowerCase()
@@ -242,7 +246,6 @@
             rawSection = scoreNode.section || scoreNode.sec || "A";
           }
 
-          // If branch contains space (like "csm a" or "csm b"), split them up cleanly
           rawBranch = String(rawBranch).trim().toUpperCase();
           rawSection = String(rawSection).trim().toUpperCase();
 
@@ -258,12 +261,13 @@
             hrId: hrUsername,
             branch: rawBranch,
             section: rawSection,
-            year: finalYear
+            year: finalYear,
+            score: finalScore
           });
         });
 
-        // Alphabetical sort by Roll Number or Name
-        synchronizedRoster.sort((a, b) => a.rollNo.localeCompare(b.rollNo));
+        // Sorted by Score in descending order (Highest first)
+        synchronizedRoster.sort((a, b) => b.score - a.score);
         currentLeaderboardData = synchronizedRoster;
 
         renderTable(currentLeaderboardData, currentPage);
@@ -271,7 +275,7 @@
       });
     }
 
-    // Excel Manual Input Upload Processing
+    // Excel Manual Input Upload Processing (Handles Scraped Formats)
     document.getElementById('excelUploadInput').addEventListener('change', function(e) {
       const file = e.target.files[0];
       if (!file) return;
@@ -293,24 +297,37 @@
         const participantUpdates = {};
 
         excelRows.forEach(row => {
-          let roll = String(row["Roll Number"] || row["RollNo"] || row["Roll Number "] || "").trim().toUpperCase();
-          let name = String(row["Name"] || "").trim();
-          let hrId = String(row["HackerRank ID"] || row["HackerRankID"] || "").trim();
-          let branch = String(row["Branch"] || "").trim().toUpperCase();
-          let section = String(row["Section"] || "").trim().toUpperCase();
+          // 'data' might be Roll No or Username from Scraper
+          let identifier = String(row["data"] || row["HackerRank ID"] || row["Roll Number"] || "").trim();
+          let scoreVal = parseFloat(row["data2"] || row["Score"] || 0);
+          
+          let name = String(row["Name"] || "Unknown").trim();
+          let branch = String(row["Branch"] || "CSE").trim().toUpperCase();
+          let section = String(row["Section"] || "A").trim().toUpperCase();
           let year = String(row["Year"] || "").trim();
 
-          if (hrId) {
-            const safeKey = hrId.replace(/[.#$\[\]\/]/g, '_');
-            scoreUpdates[safeKey] = { hrId: hrId, name: name, branch: branch, section: section, year: year, rollNo: roll };
+          if (identifier) {
+            const safeKey = identifier.replace(/[.#$\[\]\/]/g, '_');
+            
+            // Map properly for real-time listener retrieval
+            scoreUpdates[safeKey] = { 
+              hrId: identifier, 
+              name: name, 
+              branch: branch, 
+              section: section, 
+              year: year, 
+              rollNo: identifier.match(/^\d/) ? identifier.toUpperCase() : "N/A",
+              score: scoreVal 
+            };
 
-            if (roll) {
-              participantUpdates[roll] = {
-                rollNo: roll,
-                name: name || "N/A",
-                hrId: hrId,
-                branch: branch || "CSE",
-                section: section || "A",
+            if (identifier.match(/^\d/)) { // If it starts with a digit, it's a Roll Number
+              let rollUpper = identifier.toUpperCase();
+              participantUpdates[rollUpper] = {
+                rollNo: rollUpper,
+                name: name,
+                hrId: identifier.toLowerCase(),
+                branch: branch,
+                section: section,
                 year: year || "N/A"
               };
             }
@@ -322,7 +339,7 @@
           if (Object.keys(participantUpdates).length > 0) {
             await update(ref(db, `leaderboardParticipants/${selectedExamId}`), participantUpdates);
           }
-          alert('🎯 Data imported successfully.');
+          alert('🎯 Web-scraped scores imported and mapped successfully.');
           currentPage = 1;
         } catch (error) {
           alert('❌ Save error encounter: ' + error.message);
@@ -371,7 +388,7 @@
       let paginatedItems = data.slice(start, end);
 
       if (paginatedItems.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding:30px;">No records found.</td></tr>`;
+        tableBody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding:30px;">No records found.</td></tr>`;
         return;
       }
 
@@ -383,6 +400,7 @@
           <td><span class="badge-info">${user.branch}</span></td>
           <td><span class="badge-sec">${user.section}</span></td>
           <td style="color: var(--text-main); font-weight: 500;">${user.year}</td>
+          <td><span class="badge-score">${user.score.toFixed(2)}</span></td>
         </tr>`;
         tableBody.innerHTML += row;
       });
@@ -428,7 +446,8 @@
         "HackerRank ID": user.hrId,
         "Branch": user.branch,
         "Section": user.section,
-        "Year": user.year
+        "Year": user.year,
+        "Score": user.score
       }));
 
       const worksheet = XLSX.utils.json_to_sheet(excelOutputData);
