@@ -203,11 +203,18 @@
         Object.keys(scoresObj).forEach(key => {
           const scoreNode = scoresObj[key];
           
-          // Firebase Node Key లేదా లోపల సేవ్ అయిన ఐడి ని బేస్ చేసుకుంటుంది
           const dbIdentifier = String(scoreNode.hrId || scoreNode.hackerRankId || key || "").trim();
-          let finalScore = parseFloat(scoreNode.score !== undefined ? scoreNode.score : (scoreNode.data2 || 0));
+          
+          // డైనమిక్ స్కోర్ రీడింగ్ లాజిక్ (data2, data3, score లలో ఏది వాల్యూ ఉన్నా సరే తీసుకుంటుంది)
+          let finalScore = 0;
+          if (scoreNode.score !== undefined && scoreNode.score !== 0) {
+            finalScore = parseFloat(scoreNode.score);
+          } else if (scoreNode.data3 !== undefined && !String(scoreNode.data3).includes(':')) {
+            finalScore = parseFloat(scoreNode.data3 || 0);
+          } else if (scoreNode.data2 !== undefined && !String(scoreNode.data2).includes(':')) {
+            finalScore = parseFloat(scoreNode.data2 || 0);
+          }
 
-          // 3-Way Cross Verification to pull proper profiles
           let match = globalStudentsArray.find(s => 
             (s.hrId && s.hrId.trim().toLowerCase() === dbIdentifier.toLowerCase()) ||
             (s.rollNo && s.rollNo.trim().toLowerCase() === dbIdentifier.toLowerCase())
@@ -248,7 +255,6 @@
           });
         });
 
-        // Highest score first sorting
         synchronizedRoster.sort((a, b) => b.score - a.score);
         currentLeaderboardData = synchronizedRoster;
 
@@ -257,7 +263,7 @@
       });
     }
 
-    // Advanced Multi-Key Mapper for Excel Upload Process
+    // Smart Multi-Row Dynamic Excel Parser Engine
     document.getElementById('excelUploadInput').addEventListener('change', function(e) {
       const file = e.target.files[0];
       if (!file) return;
@@ -275,67 +281,55 @@
         const worksheet = workbook.Sheets[workbook.SheetNames[0]];
         const excelRows = XLSX.utils.sheet_to_json(worksheet);
 
-        // Fetch master directories
         const globalStudentsSnapshot = await get(ref(db, 'students'));
         const globalStudentsMap = globalStudentsSnapshot.exists() ? globalStudentsSnapshot.val() : {};
         const globalStudentsArray = Object.values(globalStudentsMap);
 
-        // Fetch existing snapshot array under the leaderboard database to prevent overwriting correct properties
-        const currentLbSnapshot = await get(ref(db, `hackerRankLeaderboards/${selectedExamId}`));
-        const currentLbMap = currentLbSnapshot.exists() ? currentLbSnapshot.val() : {};
-        const currentLbArray = Object.values(currentLbMap);
-
         const scoreUpdates = {};
 
         excelRows.forEach(row => {
-          let excelIdentifier = String(row["data"] || "").trim();
-          let parsedScore = parseFloat(row["data2"] !== undefined ? row["data2"] : (row["Score"] || 0));
+          let excelIdentifier = String(row["data"] || row["HackerRank ID"] || row["Roll Number"] || "").trim();
+          
+          // షీట్ లో ఏ కాలమ్ లో స్కోర్ ఉన్నా ఆటోమేటిక్‌గా పట్టుకునే లాజిక్
+          let parsedScore = 0;
+          if (row["Score"] !== undefined) parsedScore = parseFloat(row["Score"]);
+          else if (row["data2"] !== undefined && !String(row["data2"]).includes(':') && String(row["data2"]).length <= 4) parsedScore = parseFloat(row["data2"]);
+          else if (row["data3"] !== undefined && !String(row["data3"]).includes(':') && String(row["data3"]).length <= 4) parsedScore = parseFloat(row["data3"]);
 
           if (excelIdentifier) {
-            // Step 1 & 2: Match against global profile lists (HR Username or RollNo)
             let match = globalStudentsArray.find(s => 
               (s.hrId && s.hrId.trim().toLowerCase() === excelIdentifier.toLowerCase()) ||
               (s.rollNo && s.rollNo.trim().toLowerCase() === excelIdentifier.toLowerCase())
             );
 
-            // Step 3: Match against existing leaderboard structure if global list mapping falls short
-            if (!match) {
-              let lbMatch = currentLbArray.find(l => 
-                (l.hrId && l.hrId.trim().toLowerCase() === excelIdentifier.toLowerCase()) ||
-                (l.rollNo && l.rollNo.trim().toLowerCase() === excelIdentifier.toLowerCase())
-              );
-              if (lbMatch) {
-                match = globalStudentsArray.find(s => s.rollNo && s.rollNo.trim().toLowerCase() === lbMatch.rollNo.trim().toLowerCase());
-              }
-            }
-
-            // Determine safe storage key signature mapping 
             let finalTargetKey = match && match.hrId ? match.hrId : excelIdentifier;
             const safeDbKey = finalTargetKey.replace(/[.#$\[\]\/]/g, '_');
 
             scoreUpdates[safeDbKey] = {
               hrId: finalTargetKey,
-              name: match ? match.name : "Unknown",
+              name: match ? match.name : (row["Name"] || "Unknown"),
               rollNo: match ? match.rollNo : (excelIdentifier.match(/^\d/) ? excelIdentifier.toUpperCase() : "N/A"),
-              branch: match ? (match.branch || "CSE") : "CSE",
-              section: match ? (match.section || "A") : "A",
-              score: parsedScore
+              branch: match ? (match.branch || "CSE") : (row["Branch"] || "CSE"),
+              section: match ? (match.section || "A") : (row["Section"] || "A"),
+              score: parsedScore,
+              data2: row["data2"] || "",
+              data3: row["data3"] || ""
             };
           }
         });
 
         try {
           await update(ref(db, `hackerRankLeaderboards/${selectedExamId}`), scoreUpdates);
-          alert('🎯 Scores synced and aligned successfully via Multi-Key mapping engine!');
+          alert('🎯 Scores matched, parsed dynamically, and successfully saved!');
           currentPage = 1;
         } catch (error) {
-          alert('❌ Database Error: ' + error.message);
+          alert('❌ Database Sync Error: ' + error.message);
         }
       };
       reader.readAsArrayBuffer(file);
     });
 
-    // Sync Button
+    // Refresh Dynamic Pull
     document.getElementById('syncHrBtn').addEventListener('click', async () => {
       if (!selectedExamId) {
         alert('⚠️ Select an exam context module from dropdown.');
@@ -364,7 +358,7 @@
       }
     });
 
-    // Table Render
+    // Table Display Render
     function renderTable(data, page) {
       const tableBody = document.getElementById('leaderboardTableBody');
       tableBody.innerHTML = "";
@@ -420,10 +414,10 @@
       }
     }
 
-    // Excel Download
+    // Excel Writer
     document.getElementById('downloadExcelBtn').addEventListener('click', () => {
       if (currentLeaderboardData.length === 0) {
-        alert("No active matrix data folder arrays to write format sheets.");
+        alert("No active matrix data to download.");
         return;
       }
 
