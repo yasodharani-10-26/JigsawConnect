@@ -199,35 +199,33 @@
 
         const globalStudentsSnapshot = await get(ref(db, 'students'));
         const globalStudentsMap = globalStudentsSnapshot.exists() ? globalStudentsSnapshot.val() : {};
+        const globalStudentsArray = Object.values(globalStudentsMap);
 
         let synchronizedRoster = [];
 
         Object.keys(scoresObj).forEach(key => {
           const scoreNode = scoresObj[key];
-          const hrUsername = (scoreNode.hrId || scoreNode.hackerRankId || key || "").trim();
-          let finalScore = parseFloat(scoreNode.score || scoreNode.data2 || 0);
+          
+          // CRITICAL: Clean up and match key names appropriately
+          const rawExcelKey = String(scoreNode.hrId || scoreNode.hackerRankId || key || "").trim();
+          let finalScore = parseFloat(scoreNode.score !== undefined ? scoreNode.score : (scoreNode.data2 || 0));
 
-          // Find cross-reference profile matching HackerRank Username or Key reference
-          let registrationMatch = Object.values(participantsMap).find(p => 
-            p && p.hrId && p.hrId.trim().toLowerCase() === hrUsername.toLowerCase()
+          // 1. First attempt: Find student using the identifier string
+          let registrationMatch = globalStudentsArray.find(s => 
+            (s.hrId && s.hrId.trim().toLowerCase() === rawExcelKey.toLowerCase()) ||
+            (s.rollNo && s.rollNo.trim().toLowerCase() === rawExcelKey.toLowerCase())
           );
 
-          if (!registrationMatch) {
-            registrationMatch = Object.values(globalStudentsMap).find(p => 
-              p && p.hrId && p.hrId.trim().toLowerCase() === hrUsername.toLowerCase()
+          // 2. Second attempt: Check fallback node mapping from scoreNode properties if available
+          if (!registrationMatch && scoreNode.rollNo && scoreNode.rollNo !== "N/A") {
+            registrationMatch = globalStudentsArray.find(s => 
+              s.rollNo && s.rollNo.trim().toLowerCase() === scoreNode.rollNo.trim().toLowerCase()
             );
           }
 
-          // fallback to matching identifier by Roll Number if still not found
-          if (!registrationMatch) {
-            registrationMatch = Object.values(globalStudentsMap).find(p => 
-              p && p.rollNo && p.rollNo.trim().toLowerCase() === hrUsername.toLowerCase()
-            );
-          }
-
-          let finalRollNo = registrationMatch ? (registrationMatch.rollNo || registrationMatch.rollNumber || "N/A") : (scoreNode.rollNo || "N/A");
-          let finalName = registrationMatch ? (registrationMatch.name || "Unknown") : (scoreNode.name || "Unknown");
-          let finalHrId = registrationMatch ? (registrationMatch.hrId || hrUsername) : hrUsername;
+          let finalRollNo = registrationMatch ? (registrationMatch.rollNo || "N/A") : (scoreNode.rollNo && scoreNode.rollNo !== "N/A" ? scoreNode.rollNo : (rawExcelKey.match(/^\d/) ? rawExcelKey.toUpperCase() : "N/A"));
+          let finalName = registrationMatch ? (registrationMatch.name || "Unknown") : (scoreNode.name && scoreNode.name !== "Unknown" ? scoreNode.name : "Unknown");
+          let finalHrId = registrationMatch ? (registrationMatch.hrId || rawExcelKey) : rawExcelKey;
           
           let finalYear = "N/A";
           if (registrationMatch && (registrationMatch.year || registrationMatch.yearOfStudy)) {
@@ -280,7 +278,7 @@
       });
     }
 
-    // Excel Manual Input Upload Processing (Matches 'data' column against Firebase IDs/Roll Nos)
+    // Excel Manual Input Upload Processing
     document.getElementById('excelUploadInput').addEventListener('change', function(e) {
       const file = e.target.files[0];
       if (!file) return;
@@ -298,7 +296,6 @@
         const worksheet = workbook.Sheets[workbook.SheetNames[0]];
         const excelRows = XLSX.utils.sheet_to_json(worksheet);
 
-        // Fetch registered student directories first to compare excel row data identity mappings
         const globalStudentsSnapshot = await get(ref(db, 'students'));
         const globalStudentsMap = globalStudentsSnapshot.exists() ? globalStudentsSnapshot.val() : {};
         const globalStudentsArray = Object.values(globalStudentsMap);
@@ -306,18 +303,15 @@
         const scoreUpdates = {};
 
         excelRows.forEach(row => {
-          // 'data' column contains the scraped string identity (HackerRank ID or Roll No)
           let excelIdentifier = String(row["data"] || "").trim();
           let parsedScore = parseFloat(row["data2"] || row["Score"] || 0);
 
           if (excelIdentifier) {
-            // Check if excelIdentifier matches any student's hrId or rollNo inside Firebase
             let match = globalStudentsArray.find(s => 
               (s.hrId && s.hrId.trim().toLowerCase() === excelIdentifier.toLowerCase()) ||
               (s.rollNo && s.rollNo.trim().toLowerCase() === excelIdentifier.toLowerCase())
             );
 
-            // Determine target database save key (prefer hrId string clean mapping)
             let finalTargetKey = match && match.hrId ? match.hrId : excelIdentifier;
             const safeDbKey = finalTargetKey.replace(/[.#$\[\]\/]/g, '_');
 
@@ -334,7 +328,6 @@
         });
 
         try {
-          // Save and override exact score matrix updates straight to real-time sync nodes
           await update(ref(db, `hackerRankLeaderboards/${selectedExamId}`), scoreUpdates);
           alert('🎯 Excel HackerRank identities matched and scores saved successfully!');
           currentPage = 1;
