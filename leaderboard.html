@@ -205,10 +205,9 @@
         Object.keys(scoresObj).forEach(key => {
           const scoreNode = scoresObj[key];
           const hrUsername = (scoreNode.hrId || scoreNode.hackerRankId || key || "").trim();
-          
-          // Get the dynamic score parsed to float
           let finalScore = parseFloat(scoreNode.score || scoreNode.data2 || 0);
 
+          // Find cross-reference profile matching HackerRank Username or Key reference
           let registrationMatch = Object.values(participantsMap).find(p => 
             p && p.hrId && p.hrId.trim().toLowerCase() === hrUsername.toLowerCase()
           );
@@ -219,10 +218,17 @@
             );
           }
 
-          let finalRollNo = registrationMatch ? (registrationMatch.rollNo || registrationMatch.rollNumber || "N/A") : (scoreNode.rollNo || scoreNode.rollNumber || "N/A");
+          // fallback to matching identifier by Roll Number if still not found
+          if (!registrationMatch) {
+            registrationMatch = Object.values(globalStudentsMap).find(p => 
+              p && p.rollNo && p.rollNo.trim().toLowerCase() === hrUsername.toLowerCase()
+            );
+          }
+
+          let finalRollNo = registrationMatch ? (registrationMatch.rollNo || registrationMatch.rollNumber || "N/A") : (scoreNode.rollNo || "N/A");
           let finalName = registrationMatch ? (registrationMatch.name || "Unknown") : (scoreNode.name || "Unknown");
+          let finalHrId = registrationMatch ? (registrationMatch.hrId || hrUsername) : hrUsername;
           
-          // DYNAMIC YEAR CALCULATION
           let finalYear = "N/A";
           if (registrationMatch && (registrationMatch.year || registrationMatch.yearOfStudy)) {
             finalYear = registrationMatch.year || registrationMatch.yearOfStudy;
@@ -234,7 +240,6 @@
             else if (startYear === "22") finalYear = "4th Year";
           }
 
-          // SEPARATE BRANCH AND SECTION LOGIC
           let rawBranch = "CSE";
           let rawSection = "A";
 
@@ -258,7 +263,7 @@
           synchronizedRoster.push({
             rollNo: finalRollNo,
             name: finalName,
-            hrId: hrUsername,
+            hrId: finalHrId,
             branch: rawBranch,
             section: rawSection,
             year: finalYear,
@@ -266,7 +271,7 @@
           });
         });
 
-        // Sorted by Score in descending order (Highest first)
+        // Sorted by Score (Highest first)
         synchronizedRoster.sort((a, b) => b.score - a.score);
         currentLeaderboardData = synchronizedRoster;
 
@@ -275,7 +280,7 @@
       });
     }
 
-    // Excel Manual Input Upload Processing (Handles Scraped Formats)
+    // Excel Manual Input Upload Processing (Matches 'data' column against Firebase IDs/Roll Nos)
     document.getElementById('excelUploadInput').addEventListener('change', function(e) {
       const file = e.target.files[0];
       if (!file) return;
@@ -293,56 +298,48 @@
         const worksheet = workbook.Sheets[workbook.SheetNames[0]];
         const excelRows = XLSX.utils.sheet_to_json(worksheet);
 
+        // Fetch registered student directories first to compare excel row data identity mappings
+        const globalStudentsSnapshot = await get(ref(db, 'students'));
+        const globalStudentsMap = globalStudentsSnapshot.exists() ? globalStudentsSnapshot.val() : {};
+        const globalStudentsArray = Object.values(globalStudentsMap);
+
         const scoreUpdates = {};
-        const participantUpdates = {};
 
         excelRows.forEach(row => {
-          // 'data' might be Roll No or Username from Scraper
-          let identifier = String(row["data"] || row["HackerRank ID"] || row["Roll Number"] || "").trim();
-          let scoreVal = parseFloat(row["data2"] || row["Score"] || 0);
-          
-          let name = String(row["Name"] || "Unknown").trim();
-          let branch = String(row["Branch"] || "CSE").trim().toUpperCase();
-          let section = String(row["Section"] || "A").trim().toUpperCase();
-          let year = String(row["Year"] || "").trim();
+          // 'data' column contains the scraped string identity (HackerRank ID or Roll No)
+          let excelIdentifier = String(row["data"] || "").trim();
+          let parsedScore = parseFloat(row["data2"] || row["Score"] || 0);
 
-          if (identifier) {
-            const safeKey = identifier.replace(/[.#$\[\]\/]/g, '_');
-            
-            // Map properly for real-time listener retrieval
-            scoreUpdates[safeKey] = { 
-              hrId: identifier, 
-              name: name, 
-              branch: branch, 
-              section: section, 
-              year: year, 
-              rollNo: identifier.match(/^\d/) ? identifier.toUpperCase() : "N/A",
-              score: scoreVal 
+          if (excelIdentifier) {
+            // Check if excelIdentifier matches any student's hrId or rollNo inside Firebase
+            let match = globalStudentsArray.find(s => 
+              (s.hrId && s.hrId.trim().toLowerCase() === excelIdentifier.toLowerCase()) ||
+              (s.rollNo && s.rollNo.trim().toLowerCase() === excelIdentifier.toLowerCase())
+            );
+
+            // Determine target database save key (prefer hrId string clean mapping)
+            let finalTargetKey = match && match.hrId ? match.hrId : excelIdentifier;
+            const safeDbKey = finalTargetKey.replace(/[.#$\[\]\/]/g, '_');
+
+            scoreUpdates[safeDbKey] = {
+              hrId: finalTargetKey,
+              name: match ? match.name : "Unknown",
+              rollNo: match ? match.rollNo : (excelIdentifier.match(/^\d/) ? excelIdentifier.toUpperCase() : "N/A"),
+              branch: match ? match.branch : "CSE",
+              section: match ? match.section : "A",
+              year: match ? match.year : "N/A",
+              score: parsedScore
             };
-
-            if (identifier.match(/^\d/)) { // If it starts with a digit, it's a Roll Number
-              let rollUpper = identifier.toUpperCase();
-              participantUpdates[rollUpper] = {
-                rollNo: rollUpper,
-                name: name,
-                hrId: identifier.toLowerCase(),
-                branch: branch,
-                section: section,
-                year: year || "N/A"
-              };
-            }
           }
         });
 
         try {
+          // Save and override exact score matrix updates straight to real-time sync nodes
           await update(ref(db, `hackerRankLeaderboards/${selectedExamId}`), scoreUpdates);
-          if (Object.keys(participantUpdates).length > 0) {
-            await update(ref(db, `leaderboardParticipants/${selectedExamId}`), participantUpdates);
-          }
-          alert('🎯 Web-scraped scores imported and mapped successfully.');
+          alert('🎯 Excel HackerRank identities matched and scores saved successfully!');
           currentPage = 1;
         } catch (error) {
-          alert('❌ Save error encounter: ' + error.message);
+          alert('❌ Database Save Exception: ' + error.message);
         }
       };
       reader.readAsArrayBuffer(file);
