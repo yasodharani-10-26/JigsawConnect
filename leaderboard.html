@@ -193,9 +193,6 @@
 
       leaderboardListenerUnsub = onValue(ref(db, `hackerRankLeaderboards/${selectedExamId}`), async (snapshot) => {
         const scoresObj = snapshot.exists() ? snapshot.val() : {};
-        
-        const registeredSnapshot = await get(ref(db, `leaderboardParticipants/${selectedExamId}`));
-        const participantsMap = registeredSnapshot.exists() ? registeredSnapshot.val() : {};
 
         const globalStudentsSnapshot = await get(ref(db, 'students'));
         const globalStudentsMap = globalStudentsSnapshot.exists() ? globalStudentsSnapshot.val() : {};
@@ -206,30 +203,29 @@
         Object.keys(scoresObj).forEach(key => {
           const scoreNode = scoresObj[key];
           
-          // CRITICAL: Clean up and match key names appropriately
-          const rawExcelKey = String(scoreNode.hrId || scoreNode.hackerRankId || key || "").trim();
+          // Firebase Node Key లేదా లోపల సేవ్ అయిన ఐడి ని బేస్ చేసుకుంటుంది
+          const dbIdentifier = String(scoreNode.hrId || scoreNode.hackerRankId || key || "").trim();
           let finalScore = parseFloat(scoreNode.score !== undefined ? scoreNode.score : (scoreNode.data2 || 0));
 
-          // 1. First attempt: Find student using the identifier string
-          let registrationMatch = globalStudentsArray.find(s => 
-            (s.hrId && s.hrId.trim().toLowerCase() === rawExcelKey.toLowerCase()) ||
-            (s.rollNo && s.rollNo.trim().toLowerCase() === rawExcelKey.toLowerCase())
+          // 3-Way Cross Verification to pull proper profiles
+          let match = globalStudentsArray.find(s => 
+            (s.hrId && s.hrId.trim().toLowerCase() === dbIdentifier.toLowerCase()) ||
+            (s.rollNo && s.rollNo.trim().toLowerCase() === dbIdentifier.toLowerCase())
           );
 
-          // 2. Second attempt: Check fallback node mapping from scoreNode properties if available
-          if (!registrationMatch && scoreNode.rollNo && scoreNode.rollNo !== "N/A") {
-            registrationMatch = globalStudentsArray.find(s => 
+          if (!match && scoreNode.rollNo && scoreNode.rollNo !== "N/A") {
+            match = globalStudentsArray.find(s => 
               s.rollNo && s.rollNo.trim().toLowerCase() === scoreNode.rollNo.trim().toLowerCase()
             );
           }
 
-          let finalRollNo = registrationMatch ? (registrationMatch.rollNo || "N/A") : (scoreNode.rollNo && scoreNode.rollNo !== "N/A" ? scoreNode.rollNo : (rawExcelKey.match(/^\d/) ? rawExcelKey.toUpperCase() : "N/A"));
-          let finalName = registrationMatch ? (registrationMatch.name || "Unknown") : (scoreNode.name && scoreNode.name !== "Unknown" ? scoreNode.name : "Unknown");
-          let finalHrId = registrationMatch ? (registrationMatch.hrId || rawExcelKey) : rawExcelKey;
+          let finalRollNo = match ? (match.rollNo || "N/A") : (scoreNode.rollNo || "N/A");
+          let finalName = match ? (match.name || "Unknown") : (scoreNode.name || "Unknown");
+          let finalHrId = match ? (match.hrId || dbIdentifier) : dbIdentifier;
           
           let finalYear = "N/A";
-          if (registrationMatch && (registrationMatch.year || registrationMatch.yearOfStudy)) {
-            finalYear = registrationMatch.year || registrationMatch.yearOfStudy;
+          if (match && match.year) {
+            finalYear = match.year;
           } else if (finalRollNo !== "N/A" && finalRollNo.length >= 2) {
             let startYear = finalRollNo.substring(0, 2);
             if (startYear === "25") finalYear = "1st Year";
@@ -238,38 +234,21 @@
             else if (startYear === "22") finalYear = "4th Year";
           }
 
-          let rawBranch = "CSE";
-          let rawSection = "A";
-
-          if (registrationMatch) {
-            rawBranch = registrationMatch.branch || "CSE";
-            rawSection = registrationMatch.section || registrationMatch.sec || "A";
-          } else if (scoreNode.branch) {
-            rawBranch = scoreNode.branch;
-            rawSection = scoreNode.section || scoreNode.sec || "A";
-          }
-
-          rawBranch = String(rawBranch).trim().toUpperCase();
-          rawSection = String(rawSection).trim().toUpperCase();
-
-          if (rawBranch.includes(" ")) {
-            let parts = rawBranch.split(" ");
-            rawBranch = parts[0];
-            rawSection = parts[1];
-          }
+          let rawBranch = match ? (match.branch || "CSE") : (scoreNode.branch || "CSE");
+          let rawSection = match ? (match.section || "A") : (scoreNode.section || "A");
 
           synchronizedRoster.push({
             rollNo: finalRollNo,
             name: finalName,
             hrId: finalHrId,
-            branch: rawBranch,
-            section: rawSection,
+            branch: String(rawBranch).toUpperCase(),
+            section: String(rawSection).toUpperCase(),
             year: finalYear,
             score: finalScore
           });
         });
 
-        // Sorted by Score (Highest first)
+        // Highest score first sorting
         synchronizedRoster.sort((a, b) => b.score - a.score);
         currentLeaderboardData = synchronizedRoster;
 
@@ -278,7 +257,7 @@
       });
     }
 
-    // Excel Manual Input Upload Processing
+    // Advanced Multi-Key Mapper for Excel Upload Process
     document.getElementById('excelUploadInput').addEventListener('change', function(e) {
       const file = e.target.files[0];
       if (!file) return;
@@ -296,22 +275,41 @@
         const worksheet = workbook.Sheets[workbook.SheetNames[0]];
         const excelRows = XLSX.utils.sheet_to_json(worksheet);
 
+        // Fetch master directories
         const globalStudentsSnapshot = await get(ref(db, 'students'));
         const globalStudentsMap = globalStudentsSnapshot.exists() ? globalStudentsSnapshot.val() : {};
         const globalStudentsArray = Object.values(globalStudentsMap);
+
+        // Fetch existing snapshot array under the leaderboard database to prevent overwriting correct properties
+        const currentLbSnapshot = await get(ref(db, `hackerRankLeaderboards/${selectedExamId}`));
+        const currentLbMap = currentLbSnapshot.exists() ? currentLbSnapshot.val() : {};
+        const currentLbArray = Object.values(currentLbMap);
 
         const scoreUpdates = {};
 
         excelRows.forEach(row => {
           let excelIdentifier = String(row["data"] || "").trim();
-          let parsedScore = parseFloat(row["data2"] || row["Score"] || 0);
+          let parsedScore = parseFloat(row["data2"] !== undefined ? row["data2"] : (row["Score"] || 0));
 
           if (excelIdentifier) {
+            // Step 1 & 2: Match against global profile lists (HR Username or RollNo)
             let match = globalStudentsArray.find(s => 
               (s.hrId && s.hrId.trim().toLowerCase() === excelIdentifier.toLowerCase()) ||
               (s.rollNo && s.rollNo.trim().toLowerCase() === excelIdentifier.toLowerCase())
             );
 
+            // Step 3: Match against existing leaderboard structure if global list mapping falls short
+            if (!match) {
+              let lbMatch = currentLbArray.find(l => 
+                (l.hrId && l.hrId.trim().toLowerCase() === excelIdentifier.toLowerCase()) ||
+                (l.rollNo && l.rollNo.trim().toLowerCase() === excelIdentifier.toLowerCase())
+              );
+              if (lbMatch) {
+                match = globalStudentsArray.find(s => s.rollNo && s.rollNo.trim().toLowerCase() === lbMatch.rollNo.trim().toLowerCase());
+              }
+            }
+
+            // Determine safe storage key signature mapping 
             let finalTargetKey = match && match.hrId ? match.hrId : excelIdentifier;
             const safeDbKey = finalTargetKey.replace(/[.#$\[\]\/]/g, '_');
 
@@ -319,9 +317,8 @@
               hrId: finalTargetKey,
               name: match ? match.name : "Unknown",
               rollNo: match ? match.rollNo : (excelIdentifier.match(/^\d/) ? excelIdentifier.toUpperCase() : "N/A"),
-              branch: match ? match.branch : "CSE",
-              section: match ? match.section : "A",
-              year: match ? match.year : "N/A",
+              branch: match ? (match.branch || "CSE") : "CSE",
+              section: match ? (match.section || "A") : "A",
               score: parsedScore
             };
           }
@@ -329,10 +326,10 @@
 
         try {
           await update(ref(db, `hackerRankLeaderboards/${selectedExamId}`), scoreUpdates);
-          alert('🎯 Excel HackerRank identities matched and scores saved successfully!');
+          alert('🎯 Scores synced and aligned successfully via Multi-Key mapping engine!');
           currentPage = 1;
         } catch (error) {
-          alert('❌ Database Save Exception: ' + error.message);
+          alert('❌ Database Error: ' + error.message);
         }
       };
       reader.readAsArrayBuffer(file);
