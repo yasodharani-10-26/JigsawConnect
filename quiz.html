@@ -56,7 +56,7 @@
     .quadrant-title { font-size: 15px; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; gap: 8px; border-bottom: 1px solid var(--border); padding-bottom: 8px;}
     .empty-note { color: var(--text-muted); font-size: 12px; padding: 12px 4px; }
 
-    /* ---- Custom Modal Styling ---- */
+    /* ---- HackerRank Modal ---- */
     .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(11, 15, 25, 0.85); backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: center; z-index: 2000; visibility: hidden; opacity: 0; transition: all 0.3s ease; }
     .modal-overlay.active { visibility: visible; opacity: 1; }
     .modal-box { background: #141e36; border: 1px solid var(--border); border-radius: 24px; padding: 30px; width: 100%; max-width: 450px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); transform: translateY(-20px); transition: all 0.3s ease; }
@@ -80,6 +80,7 @@
     <div class="nav-links"> 
       <a href="admin-dashboard.html">Dashboard</a> 
       <a href="leaderboard.html">Leaderboard</a> 
+      <a href="profile.html">My Profile</a>
       <a href="quiz.html" class="active">Quizzes</a> 
       <a href="index.html">Logout</a> 
     </div> 
@@ -122,9 +123,10 @@
     </main> 
   </div> 
 
+  <!-- HackerRank కు మాత్రమే ఈ వివరాల మోడల్ ఓపెన్ అవుతుంది -->
   <div class="modal-overlay" id="detailsModal">
     <div class="modal-box">
-      <div class="modal-header">Enter Your Details</div>
+      <div class="modal-header">Enter Your Details for Exam</div>
       <form id="participantForm">
         <div class="input-group">
           <label style="font-size: 13px; color: var(--text-muted);">Full Name</label>
@@ -187,49 +189,61 @@
         <div class="panel-title">
           <span>📝 ${exam.title || slug.toUpperCase()}</span>
         </div>
-        <button class="hackerrank-btn" data-slug="${slug}" data-link="${hrLink}">
+        <button class="hackerrank-btn exam-btn" data-slug="${slug}" data-link="${hrLink}">
           ${isPast ? '👁️ View Past Contest Leaderboard' : '🚀 Enter HackerRank Arena & Start Exam'}
         </button>
       `;
       return card;
     }
 
-    // 2. మిస్ అయిన క్విజ్ కార్డ్స్ హెల్పర్ ఫంక్షన్‌ను ఇక్కడ యాడ్ చేసాం
+    // 2. క్విజ్ కార్డ్స్ హెల్పర్ ఫంక్షన్ (క్లాస్ మార్చాము)
     function makeQuizCard(quiz, key, isPast) {
       const card = document.createElement('div');
       card.className = "panel-card";
       
-      // ఒకవేళ మీ క్విజ్ లింక్ కస్టమ్ రూట్ అయితే దాన్ని ఇక్కడ మార్చుకోండి
       const quizLink = `quiz-window.html?id=${key}`; 
 
       card.innerHTML = `
         <div class="panel-title">
           <span>🧠 ${quiz.title || 'Untitled Quiz'}</span>
         </div>
-        <button class="hackerrank-btn" style="background: var(--accent-blue); color: white;" data-slug="${key}" data-link="${quizLink}">
+        <button class="hackerrank-btn quiz-btn" style="background: var(--accent-blue); color: white;" data-slug="${key}" data-link="${quizLink}">
           ${isPast ? '👁️ View Results' : '🚀 Start Quiz'}
         </button>
       `;
       return card;
     }
 
-    // Intercept click sequences to register student details matrix
+    // ఈ ఫంక్షన్ కేవలం బటన్ క్లిక్స్ బైండ్ చేస్తుంది
     function bindCardButtons(container) {
-      container.querySelectorAll('.hackerrank-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
+      // హ్యాకర్-ర్యాంక్ కార్డ్స్‌పై క్లిక్ చేస్తే మోడల్ ఓపెన్ అవుతుంది
+      container.querySelectorAll('.exam-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
           currentTargetLink = btn.getAttribute('data-link');
           currentContestSlug = btn.getAttribute('data-slug');
-          
-          // Open Modal Profile form
           detailsModal.classList.add('active');
+        });
+      });
+
+      // క్విజ్ కార్డ్స్‌పై క్లిక్ చేసినప్పుడు ఎలాంటి వివరాలు అడగదు, నేరుగా ఓపెన్ అవుతుంది!
+      container.querySelectorAll('.quiz-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const quizLink = btn.getAttribute('data-link');
+          // మీ సిస్టమ్ లో లాగిన్ చెక్ (ఆప్షనల్)
+          const currentStudent = localStorage.getItem('studentHrId');
+          if (!currentStudent) {
+            alert("Please login to attempt this quiz!");
+            window.location.href = "index.html";
+            return;
+          }
+          window.open(quizLink, '_blank');
         });
       });
     }
 
-    // Handle Form submission and save record safely inside Firebase Realtime Nodes
+    // HackerRank Form submission
     participantForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      
       const name = document.getElementById('studentName').value.trim();
       const hrId = document.getElementById('studentHrId').value.trim();
       const rollNo = document.getElementById('studentRollNo').value.trim();
@@ -239,10 +253,7 @@
       const safeKey = hrId.replace(/[.#$\[\]\/]/g, '_');
 
       try {
-        // 1. Log participant data structure to global index
         await set(ref(db, `students/${safeKey}`), { name, hrId, rollNo, branch });
-
-        // 2. Initialize or Update record structure directly inside Leaderboard tracking node
         await set(ref(db, `hackerRankLeaderboards/${currentContestSlug}/${safeKey}`), {
           hrId: hrId,
           hackerRankId: hrId,
@@ -253,7 +264,6 @@
           timestamp: Date.now()
         });
 
-        // Hide overlay elements safely
         detailsModal.classList.remove('active');
         participantForm.reset();
         localStorage.setItem('studentName', name);
@@ -261,15 +271,13 @@
         localStorage.setItem('studentRollNo', rollNo);
         localStorage.setItem('studentBranch', branch);
         
-        // Redirect safely to target exam or quiz context mapping route
         window.open(currentTargetLink, '_blank');
       } catch(err) {
-        console.error("Leaderboard metrics registration error:", err);
-        alert("Failed to sync leaderboard metrics. Check system parameters.");
+        console.error("Exam registration error:", err);
+        alert("Failed to sync metrics.");
       }
     });
 
-    // Close Modal Button Control Action
     document.getElementById('closeModalBtn').addEventListener('click', () => {
       detailsModal.classList.remove('active');
     });
@@ -328,7 +336,6 @@
       bindCardButtons(pastContainer);
     }
 
-    // Realtime Streams Initialization
     onValue(ref(db, "quizzes"), (snapshot) => {
       renderQuizzes(snapshot.exists() ? snapshot.val() : null);
     });
