@@ -160,6 +160,43 @@
 
     const contestDropdown = document.getElementById('contestSelectDropdown');
 
+    // Dynamic Score Extractor Helper
+    function extractScore(row) {
+      if (!row) return 0;
+      
+      // 1. Direct checks
+      if (row.score !== undefined && row.score !== null && row.score !== "") {
+        let val = parseFloat(row.score);
+        if (!isNaN(val)) return val;
+      }
+      if (row.Score !== undefined && row.Score !== null && row.Score !== "") {
+        let val = parseFloat(row.Score);
+        if (!isNaN(val)) return val;
+      }
+
+      // 2. Case-insensitive key match for any column with "score"
+      for (let key in row) {
+        if (key.toLowerCase().includes("score")) {
+          let val = parseFloat(row[key]);
+          if (!isNaN(val)) return val;
+        }
+      }
+
+      // 3. Check data fallbacks (excluding timestamps containing ':')
+      const fallbacks = ["data3", "data2", "data", "data1"];
+      for (let key of fallbacks) {
+        if (row[key] !== undefined && row[key] !== null && row[key] !== "") {
+          let strVal = String(row[key]).trim();
+          if (!strVal.includes(':')) {
+            let val = parseFloat(strVal);
+            if (!isNaN(val)) return val;
+          }
+        }
+      }
+
+      return 0;
+    }
+
     function initContestDropdown() {
       onValue(ref(db, 'hackerrankExams'), (snapshot) => {
         contestDropdown.innerHTML = '<option value="">-- Select Exam Template --</option>';
@@ -205,19 +242,10 @@
           
           const dbIdentifier = String(scoreNode.hrId || scoreNode.hackerRankId || key || "").trim();
           
-          // డైనమిక్ స్కోర్ రీడింగ్ లాజిక్
-          let finalScore = 0;
-          if (scoreNode.score !== undefined && scoreNode.score !== null) {
-            finalScore = parseFloat(scoreNode.score);
-          } else if (scoreNode.data3 !== undefined && !String(scoreNode.data3).includes(':')) {
-            finalScore = parseFloat(scoreNode.data3 || 0);
-          } else if (scoreNode.data2 !== undefined && !String(scoreNode.data2).includes(':')) {
-            finalScore = parseFloat(scoreNode.data2 || 0);
-          }
+          // dynamic score logic
+          let finalScore = extractScore(scoreNode);
 
-          if (isNaN(finalScore)) finalScore = 0;
-
-          // Multi-matching: Roll Number మరియు HackerRank ID రెండింటితో చెక్ చేస్తుంది
+          // Multi-matching
           let match = globalStudentsArray.find(s => 
             (s.hrId && s.hrId.trim().toLowerCase() === dbIdentifier.toLowerCase()) ||
             (s.rollNo && s.rollNo.trim().toLowerCase() === dbIdentifier.toLowerCase())
@@ -258,7 +286,7 @@
           });
         });
 
-        // స్కోరును బట్టి ర్యాంకులు సార్ట్ చేస్తుంది
+        // sort descending
         synchronizedRoster.sort((a, b) => b.score - a.score);
         currentLeaderboardData = synchronizedRoster;
 
@@ -292,34 +320,16 @@
         const scoreUpdates = {};
 
         excelRows.forEach(row => {
-          // 'data' కాలమ్ లో యూజర్‌నేమ్ లేదా రోల్ నెంబర్ ఉంటుంది
-          let excelIdentifier = String(row["data"] || row["HackerRank ID"] || row["Roll Number"] || "").trim();
+          let excelIdentifier = String(row["data"] || row["HackerRank ID"] || row["Roll Number"] || row["username"] || row["Username"] || "").trim();
           
           if (excelIdentifier) {
-            // ఆటోమేటిక్‌గా స్కోరు ఉన్న కాలమ్‌ని కనిపెట్టే లాజిక్
-            let parsedScore = 0;
-            
-            // data2, data3 కాలమ్స్ లోని వాల్యూ టైమ్ స్టాంప్ (:) కాకుండా ఉంటేనే స్కోర్ లాగా తీసుకుంటుంది
-            let val2Str = row["data2"] !== undefined ? String(row["data2"]).trim() : "";
-            let val3Str = row["data3"] !== undefined ? String(row["data3"]).trim() : "";
+            let parsedScore = extractScore(row);
 
-            if (row["Score"] !== undefined) {
-              parsedScore = parseFloat(row["Score"]);
-            } else if (val2Str && !val2Str.includes(':') && !isNaN(parseFloat(val2Str))) {
-              parsedScore = parseFloat(val2Str);
-            } else if (val3Str && !val3Str.includes(':') && !isNaN(parseFloat(val3Str))) {
-              parsedScore = parseFloat(val3Str);
-            }
-
-            if (isNaN(parsedScore)) parsedScore = 0;
-
-            // Database లోని విద్యార్థితో మ్యాచ్ చేయడం (Roll Number లేదా HackerRank ID ద్వారా)
             let match = globalStudentsArray.find(s => 
               (s.hrId && s.hrId.trim().toLowerCase() === excelIdentifier.toLowerCase()) ||
               (s.rollNo && s.rollNo.trim().toLowerCase() === excelIdentifier.toLowerCase())
             );
 
-            // మ్యాచ్ దొరికితే Database ప్రొఫైల్ లోని IDతో లేదంటే Excel Identifierతో సేవ్ అవుతుంది
             let finalTargetKey = match && match.hrId ? match.hrId : excelIdentifier;
             const safeDbKey = finalTargetKey.replace(/[.#$\[\]\/]/g, '_');
 
@@ -451,7 +461,7 @@
 
       const worksheet = XLSX.utils.json_to_sheet(excelOutputData);
       const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, "Leaderboard");
+      XXLSX.utils.book_append_sheet(workbook, worksheet, "Leaderboard");
       XLSX.writeFile(workbook, "StudyConnect_Leaderboard.xlsx");
     });
 
