@@ -160,23 +160,23 @@
 
     const contestDropdown = document.getElementById('contestSelectDropdown');
 
-    // Dynamic Score Extractor Helper
+    // 🚀 Improved Score Extractor Helper
     function extractScore(row) {
       if (!row) return 0;
       
-      // 1. Direct checks
-      if (row.score !== undefined && row.score !== null && row.score !== "") {
-        let val = parseFloat(row.score);
-        if (!isNaN(val)) return val;
-      }
-      if (row.Score !== undefined && row.Score !== null && row.Score !== "") {
-        let val = parseFloat(row.Score);
-        if (!isNaN(val)) return val;
+      // 1. Direct checks (case-insensitive)
+      const directKeys = ['score', 'Score', 'SCORE', 'marks', 'Marks', 'MARKS'];
+      for (let k of directKeys) {
+        if (row[k] !== undefined && row[k] !== null && row[k] !== "") {
+          let val = parseFloat(row[k]);
+          if (!isNaN(val)) return val;
+        }
       }
 
-      // 2. Case-insensitive key match for any column with "score"
+      // 2. Case-insensitive key match for any column containing "score" or "mark"
       for (let key in row) {
-        if (key.toLowerCase().includes("score")) {
+        let lowerKey = key.toLowerCase();
+        if (lowerKey.includes("score") || lowerKey.includes("mark")) {
           let val = parseFloat(row[key]);
           if (!isNaN(val)) return val;
         }
@@ -461,7 +461,7 @@
 
       const worksheet = XLSX.utils.json_to_sheet(excelOutputData);
       const workbook = XLSX.utils.book_new();
-      XXLSX.utils.book_append_sheet(workbook, worksheet, "Leaderboard");
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Leaderboard"); // Fix: XXLSX -> XLSX
       XLSX.writeFile(workbook, "StudyConnect_Leaderboard.xlsx");
     });
 
