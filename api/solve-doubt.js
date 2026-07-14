@@ -1,11 +1,21 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-// Vercel Default Body Parser ని డిసేబుల్ చేయాలి, ఎందుకంటే మనం Standard Web Request API వాడుతున్నాం
+// Vercel Default Body Parser ని డిసేబుల్ చేయాలి
 export const config = {
   api: {
     bodyParser: false,
   },
 };
+
+// Node.js Request Stream ని సింపుల్‌గా Buffer లోకి మార్చే హెల్పర్ ఫంక్షన్
+function parseRequestStream(req) {
+  return new Promise((resolve, reject) => {
+    let chunks = [];
+    req.on("data", (chunk) => chunks.push(chunk));
+    req.on("end", () => resolve(Buffer.concat(chunks)));
+    req.on("error", (err) => reject(err));
+  });
+}
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -22,12 +32,17 @@ export default async function handler(req, res) {
   try {
     const ai = new GoogleGenerativeAI(apiKey);
     
-    // Node 24 Native Web Request - duplex: 'half' యాడ్ చేసాము (క్రాష్ అవ్వకుండా ఉండటానికి)
+    // 1. రిక్వెస్ట్ బాడీ స్ట్రీమ్‌ను బఫర్‌గా మార్చడం
+    const bodyBuffer = await parseRequestStream(req);
+    
+    // 2. Standard Web Request కి మార్చడం (ఇది పక్కాగా వర్క్ అవుతుంది)
+    const contentType = req.headers["content-type"] || "";
     const webReq = new Request(`https://${req.headers.host}${req.url}`, {
-      method: req.method,
-      headers: req.headers,
-      body: req,
-      duplex: 'half' 
+      method: "POST",
+      headers: {
+        "content-type": contentType,
+      },
+      body: bodyBuffer,
     });
 
     const formData = await webReq.formData();
@@ -38,7 +53,7 @@ export default async function handler(req, res) {
 
     // 1. Image Check & Handle
     const imageFile = formData.get("image");
-    if (imageFile && imageFile.size > 0) {
+    if (imageFile && imageFile instanceof File && imageFile.size > 0) {
       const imageBuffer = Buffer.from(await imageFile.arrayBuffer());
       parts.push({
         inlineData: {
@@ -50,7 +65,7 @@ export default async function handler(req, res) {
 
     // 2. Voice Check & Handle
     const voiceFile = formData.get("voice");
-    if (voiceFile && voiceFile.size > 0) {
+    if (voiceFile && voiceFile instanceof File && voiceFile.size > 0) {
       const voiceBuffer = Buffer.from(await voiceFile.arrayBuffer());
       parts.push({
         inlineData: {
@@ -72,7 +87,7 @@ export default async function handler(req, res) {
       "Provide a clear, accurate, step-by-step educational solution. Use markdown for headings or bullet points if needed. " +
       "If the user asks in Telugu or English, respond in a clear, easy-to-understand language according to their tone.";
 
-    // 🚀 ఇక్కడ gemini-1.5-flash స్థానంలో పని చేసే కొత్త gemini-2.5-flash మోడల్‌ని పెట్టాము
+    // 🚀 gemini-2.5-flash మోడల్ యాక్టివేషన్
     const model = ai.getGenerativeModel({ 
       model: "gemini-2.5-flash", 
       systemInstruction: systemInstruction
