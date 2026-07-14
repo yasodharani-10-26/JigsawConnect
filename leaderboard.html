@@ -134,7 +134,8 @@
 
     <div class="pagination-wrapper" id="pagination"></div>
   </div>
-<script type="module">
+
+  <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
     import { getDatabase, ref, set, get, onValue, update } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
 
@@ -169,6 +170,7 @@
             const option = document.createElement('option');
             option.value = key;
             option.textContent = exams[key].title || 'Unnamed Exam';
+            option.appendChild(option);
             contestDropdown.appendChild(option);
           });
         }
@@ -194,12 +196,10 @@
       }
 
       try {
-        // Fetch global student profiles once upfront before opening the real-time listener
         const globalStudentsSnapshot = await get(ref(db, 'students'));
         const globalStudentsMap = globalStudentsSnapshot.exists() ? globalStudentsSnapshot.val() : {};
         const globalStudentsArray = Object.values(globalStudentsMap).filter(Boolean);
 
-        // Open the real-time scores stream safely without nested async awaits
         leaderboardListenerUnsub = onValue(ref(db, `hackerRankLeaderboards/${selectedExamId}`), (snapshot) => {
           try {
             const scoresObj = snapshot.exists() ? snapshot.val() : {};
@@ -207,12 +207,11 @@
 
             Object.keys(scoresObj).forEach(key => {
               const scoreNode = scoresObj[key];
-              if (!scoreNode) return; // Defensive skip if node is null
+              if (!scoreNode) return; 
               
               const dbIdentifier = String(scoreNode.hrId || scoreNode.hackerRankId || key || "").trim();
-              if (!dbIdentifier) return; // Skip invalid nodes
+              if (!dbIdentifier) return; 
 
-              // Parse scores safely
               let finalScore = 0;
               if (scoreNode.score !== undefined && scoreNode.score !== null) {
                 finalScore = parseFloat(scoreNode.score);
@@ -224,7 +223,6 @@
 
               if (isNaN(finalScore)) finalScore = 0;
 
-              // Safe profiling find logic (handles missing/null properties gracefully)
               let match = globalStudentsArray.find(s => {
                 const sHrId = s && s.hrId ? String(s.hrId).trim().toLowerCase() : "";
                 const sRollNo = s && s.rollNo ? String(s.rollNo).trim().toLowerCase() : "";
@@ -268,7 +266,6 @@
               });
             });
 
-            // Sort roster ranking descending
             synchronizedRoster.sort((a, b) => b.score - a.score);
             currentLeaderboardData = synchronizedRoster;
 
@@ -283,7 +280,7 @@
       }
     }
 
-    // 4. Excel Manual Input Upload Processing
+    // 4. MODIFIED EXCEL UPLOAD ENGINE (Cumulative Accumulator + Match logic)
     document.getElementById('excelUploadInput').addEventListener('change', function(e) {
       const file = e.target.files[0];
       if (!file) return;
@@ -306,51 +303,96 @@
           const globalStudentsMap = globalStudentsSnapshot.exists() ? globalStudentsSnapshot.val() : {};
           const globalStudentsArray = Object.values(globalStudentsMap).filter(Boolean);
 
-          const scoreUpdates = {};
+          // Temp object to hold added scores per distinct HackerRank ID from Excel
+          const excelScoresAggregation = {};
 
           excelRows.forEach(row => {
             let excelIdentifier = String(row["data"] || row["HackerRank ID"] || row["Roll Number"] || "").trim();
+            if (!excelIdentifier) return;
+
+            // Compute score out of data2, data3, or Score
+            let parsedScore = 0;
+            let val2Str = row["data2"] !== undefined ? String(row["data2"]).trim() : "";
+            let val3Str = row["data3"] !== undefined ? String(row["data3"]).trim() : "";
+
+            if (row["Score"] !== undefined) {
+              parsedScore = parseFloat(row["Score"]);
+            } else if (val2Str && !val2Str.includes(':') && !isNaN(parseFloat(val2Str))) {
+              parsedScore = parseFloat(val2Str);
+            } else if (val3Str && !val3Str.includes(':') && !isNaN(parseFloat(val3Str))) {
+              parsedScore = parseFloat(val3Str);
+            }
+            if (isNaN(parsedScore)) parsedScore = 0;
+
+            // Resolve actual ID from global students profile
+            let match = globalStudentsArray.find(s => {
+              const sHrId = s && s.hrId ? String(s.hrId).trim().toLowerCase() : "";
+              const sRollNo = s && s.rollNo ? String(s.rollNo).trim().toLowerCase() : "";
+              const lookupVal = excelIdentifier.toLowerCase();
+              return (sHrId && sHrId === lookupVal) || (sRollNo && sRollNo === lookupVal);
+            });
+
+            let finalTargetKey = match && match.hrId ? String(match.hrId).trim().toLowerCase() : excelIdentifier.toLowerCase();
             
-            if (excelIdentifier) {
-              let parsedScore = 0;
-              let val2Str = row["data2"] !== undefined ? String(row["data2"]).trim() : "";
-              let val3Str = row["data3"] !== undefined ? String(row["data3"]).trim() : "";
-
-              if (row["Score"] !== undefined) {
-                parsedScore = parseFloat(row["Score"]);
-              } else if (val2Str && !val2Str.includes(':') && !isNaN(parseFloat(val2Str))) {
-                parsedScore = parseFloat(val2Str);
-              } else if (val3Str && !val3Str.includes(':') && !isNaN(parseFloat(val3Str))) {
-                parsedScore = parseFloat(val3Str);
-              }
-
-              if (isNaN(parsedScore)) parsedScore = 0;
-
-              let match = globalStudentsArray.find(s => {
-                const sHrId = s && s.hrId ? String(s.hrId).trim().toLowerCase() : "";
-                const sRollNo = s && s.rollNo ? String(s.rollNo).trim().toLowerCase() : "";
-                const lookupVal = excelIdentifier.toLowerCase();
-                return (sHrId && sHrId === lookupVal) || (sRollNo && sRollNo === lookupVal);
-              });
-
-              let finalTargetKey = match && match.hrId ? match.hrId : excelIdentifier;
-              const safeDbKey = finalTargetKey.replace(/[.#$\[\]\/]/g, '_');
-
-              scoreUpdates[safeDbKey] = {
-                hrId: finalTargetKey,
+            // Add scores if duplicate ID exists in uploaded records
+            if (excelScoresAggregation[finalTargetKey]) {
+              excelScoresAggregation[finalTargetKey].score += parsedScore;
+            } else {
+              excelScoresAggregation[finalTargetKey] = {
+                hrId: match && match.hrId ? match.hrId : excelIdentifier,
                 name: match ? (match.name || "Unknown") : (row["Name"] || "Unknown"),
                 rollNo: match ? (match.rollNo || "N/A") : (excelIdentifier.match(/^\d/) ? excelIdentifier.toUpperCase() : "N/A"),
                 branch: match ? (match.branch || "CSE") : (row["Branch"] || "CSE"),
                 section: match ? (match.section || "A") : (row["Section"] || "A"),
-                score: parsedScore,
-                data2: row["data2"] || "",
-                data3: row["data3"] || ""
+                score: parsedScore
               };
             }
           });
 
+          // Update structure object for Firebase Realtime DB
+          const scoreUpdates = {};
+          
+          // Set every student structure from global students roster to 0 first if they don't exist in Excel upload
+          globalStudentsArray.forEach(student => {
+            if (student && student.hrId) {
+              const stdKeyLower = String(student.hrId).trim().toLowerCase();
+              const safeDbKey = String(student.hrId).replace(/[.#$\[\]\/]/g, '_');
+              
+              if (excelScoresAggregation[stdKeyLower]) {
+                // If matched, take compiled dynamic added score
+                scoreUpdates[safeDbKey] = {
+                  hrId: student.hrId,
+                  name: student.name || "Unknown",
+                  rollNo: student.rollNo || "N/A",
+                  branch: student.branch || "CSE",
+                  section: student.section || "A",
+                  score: excelScoresAggregation[stdKeyLower].score
+                };
+              } else {
+                // Not found in uploaded files -> Force set score to 0
+                scoreUpdates[safeDbKey] = {
+                  hrId: student.hrId,
+                  name: student.name || "Unknown",
+                  rollNo: student.rollNo || "N/A",
+                  branch: student.branch || "CSE",
+                  section: student.section || "A",
+                  score: 0
+                };
+              }
+            }
+          });
+
+          // Catch any extra non-profile matched entries present inside the excel sheets
+          Object.keys(excelScoresAggregation).forEach(keyLower => {
+            const dataNode = excelScoresAggregation[keyLower];
+            const safeDbKey = dataNode.hrId.replace(/[.#$\[\]\/]/g, '_');
+            if (!scoreUpdates[safeDbKey]) {
+              scoreUpdates[safeDbKey] = dataNode;
+            }
+          });
+
           await update(ref(db, `hackerRankLeaderboards/${selectedExamId}`), scoreUpdates);
-          alert('🎯 Scores matched, parsed dynamically, and successfully saved!');
+          alert('🎯 Scores matched, cumulative sums calculated, and leaderboard explicitly updated!');
           currentPage = 1;
         } catch (error) {
           alert('❌ Database Sync Error: ' + error.message);
