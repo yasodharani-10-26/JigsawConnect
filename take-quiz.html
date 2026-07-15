@@ -1,28 +1,382 @@
-import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+  <meta charset="UTF-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <title>Take Quizzes | StudyConnect</title> 
+  <link rel="preconnect" href="https://fonts.googleapis.com"> 
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700;800&display=swap" rel="stylesheet"> 
+   
+  <style> 
+    :root {
+      --bg: #0b0f19; 
+      --card-bg: rgba(20, 30, 54, 0.45); 
+      --border: rgba(255, 255, 255, 0.08); 
+      --text-main: #f8fafc; 
+      --text-muted: #94a3b8; 
+      --accent-cyan: #06b6d4; 
+      --accent-blue: #2563eb; 
+      --success: #10b981;
+      --danger: #ef4444;
+    } 
 
-function saveQuizScoreToProfile(quizId, quizTitle, finalScore, totalQuestions) {
-  const db = getDatabase();
-  
-  // 1. localStorage నుండి లాగిన్ ఐడెంటిటీ తెచ్చుకోవడం
-  const hrId = localStorage.getItem('studentHrId');
-  if (!hrId) {
-    console.error("Student not logged in. Score not saved on cloud.");
-    return;
-  }
-  const safeKey = hrId.replace(/[.#$\[\]\/]/g, '_');
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; } 
+    body { background: var(--bg); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; } 
 
-  // 2. Firebase లో సదరు స్టూడెంట్ ప్రొఫైల్ లో 'quizScores' నోడ్ కింద సేవ్ చేయడం
-  const studentQuizRef = ref(db, `students/${safeKey}/quizScores/${quizId}`);
-  
-  set(studentQuizRef, {
-    quizTitle: quizTitle || "Untitled Quiz",
-    score: finalScore,
-    total: totalQuestions,
-    percentage: ((finalScore / totalQuestions) * 100).toFixed(1) + "%",
-    timestamp: Date.now()
-  }).then(() => {
-    console.log("Score synced to student profile successfully!");
-  }).catch((err) => {
-    console.error("Error saving score:", err);
-  });
-}a
+    /* NAVBAR */
+    .navbar { display: flex; justify-content: space-between; align-items: center; padding: 18px 6%; background: rgba(11, 15, 25, 0.85); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; } 
+    .logo { font-size: 24px; font-weight: 800; color: #fff; text-decoration: none; } 
+    .logo span { color: var(--accent-cyan); } 
+    .nav-links { display: flex; gap: 24px; align-items: center; } 
+    .nav-links a { text-decoration: none; color: var(--text-muted); font-size: 14px; font-weight: 600; transition: color 0.2s; } 
+    .nav-links a:hover, .nav-links a.active { color: var(--accent-cyan); } 
+
+    /* MAIN CONTAINER */
+    .container { width: 100%; max-width: 1000px; margin: 40px auto; padding: 0 20px; flex: 1; }
+    .page-title { font-size: 2rem; font-weight: 800; margin-bottom: 24px; letter-spacing: -0.5px; }
+    .page-title span { color: var(--accent-cyan); }
+
+    /* QUIZ GRID */
+    .quiz-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+    .quiz-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 24px; backdrop-filter: blur(12px); display: flex; flex-direction: column; justify-content: space-between; transition: all 0.3s; }
+    .quiz-card:hover { transform: translateY(-4px); border-color: rgba(6, 182, 212, 0.3); box-shadow: 0 10px 30px -10px rgba(6, 182, 212, 0.15); }
+    
+    .quiz-header { margin-bottom: 15px; }
+    .quiz-badge { display: inline-block; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
+    .badge-assess { background: rgba(6, 182, 212, 0.1); color: var(--accent-cyan); border: 1px solid rgba(6, 182, 212, 0.15); }
+    .quiz-title-text { font-size: 18px; font-weight: 700; color: #fff; line-height: 1.4; }
+    
+    .quiz-stats { display: flex; gap: 15px; font-size: 13px; color: var(--text-muted); margin-bottom: 20px; font-weight: 500; }
+    .quiz-stats span { display: flex; align-items: center; gap: 5px; }
+
+    .btn-start { width: 100%; background: var(--accent-blue); color: #fff; border: none; padding: 12px; border-radius: 10px; font-weight: 700; font-size: 14px; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn-start:hover { background: #1d4ed8; box-shadow: 0 0 15px rgba(37, 99, 235, 0.4); }
+
+    /* ACTIVE QUIZ PLAYER WINDOW */
+    .quiz-player-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(11, 15, 25, 0.95); backdrop-filter: blur(20px); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; overflow-y: auto; }
+    .quiz-player-container { background: #111827; border: 1px solid var(--border); border-radius: 24px; width: 100%; max-width: 650px; padding: 35px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); position: relative; }
+    
+    .quiz-player-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
+    .player-title { font-size: 20px; font-weight: 800; color: #fff; }
+    .btn-close-quiz { background: none; border: none; color: var(--text-muted); font-size: 24px; cursor: pointer; font-weight: 700; transition: color 0.2s; }
+    .btn-close-quiz:hover { color: var(--danger); }
+
+    .progress-bar { width: 100%; height: 6px; background: rgba(255,255,255,0.05); border-radius: 10px; margin-bottom: 25px; overflow: hidden; }
+    .progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan)); transition: width 0.3s ease; }
+
+    .question-container { margin-bottom: 25px; }
+    .question-text { font-size: 18px; font-weight: 600; line-height: 1.5; color: #fff; margin-bottom: 20px; }
+    .options-list { display: flex; flex-direction: column; gap: 12px; }
+    
+    .option-item { background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border); border-radius: 12px; padding: 15px 20px; cursor: pointer; font-weight: 500; font-size: 14px; color: var(--text-main); display: flex; align-items: center; gap: 12px; transition: all 0.2s; }
+    .option-item:hover { background: rgba(255,255,255,0.04); border-color: rgba(6, 182, 212, 0.25); }
+    .option-item.selected { background: rgba(6, 182, 212, 0.1); border-color: var(--accent-cyan); color: #fff; font-weight: 600; }
+    .option-bullet { width: 20px; height: 20px; border: 2px solid var(--text-muted); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; transition: all 0.2s; }
+    .option-item.selected .option-bullet { border-color: var(--accent-cyan); background: var(--accent-cyan); color: #0b0f19; }
+
+    .player-footer { display: flex; justify-content: space-between; margin-top: 30px; }
+    .btn-nav { padding: 12px 24px; border-radius: 10px; font-weight: 700; cursor: pointer; border: 1px solid var(--border); transition: all 0.2s; font-size: 14px; }
+    .btn-prev { background: rgba(255,255,255,0.03); color: var(--text-main); }
+    .btn-prev:hover { background: rgba(255,255,255,0.06); }
+    .btn-next { background: var(--accent-cyan); color: #0b0f19; border: none; }
+    .btn-next:hover { background: #0891b2; }
+
+    /* RESULTS SCREEN inside player */
+    .results-screen { text-align: center; padding: 20px 0; }
+    .score-circle { width: 120px; height: 120px; border-radius: 50%; border: 6px solid var(--success); display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0 auto 20px; box-shadow: 0 0 20px rgba(16, 185, 129, 0.2); }
+    .score-circle .big-score { font-size: 32px; font-weight: 800; color: var(--success); }
+    .score-circle .total-q { font-size: 14px; color: var(--text-muted); font-weight: 600; border-top: 1px solid rgba(255,255,255,0.1); width: 60%; margin-top: 4px; padding-top: 2px; }
+    
+    .loading { text-align: center; color: var(--accent-cyan); padding: 50px; font-weight: 600; font-size: 16px; }
+    .no-data { text-align: center; color: var(--text-muted); padding: 50px; border: 1px dashed var(--border); border-radius: 16px; background: rgba(255,255,255,0.01); }
+  </style> 
+</head> 
+
+<body> 
+
+  <nav class="navbar"> 
+    <a href="index.html" class="logo">📚 Study<span>Connect</span></a> 
+    <div class="nav-links"> 
+      <a href="admin-dashboard.html">Dashboard</a> 
+      <a href="leaderboard.html">Leaderboard</a> 
+      <a href="quiz.html" class="active">Quizzes</a> 
+      <a href="profile.html">My Profile</a> 
+    </div> 
+  </nav> 
+
+  <div class="container">
+    <h1 class="page-title">📝 Available <span>Online Quizzes</span></h1>
+    
+    <div class="quiz-grid" id="quizGridList">
+      <div class="loading">⏳ Fetching academic assessments from node...</div>
+    </div>
+  </div>
+
+  <div class="quiz-player-overlay" id="quizPlayer">
+    <div class="quiz-player-container">
+      
+      <div class="quiz-player-header">
+        <div class="player-title" id="activeQuizTitle">Quiz Title</div>
+        <button class="btn-close-quiz" onclick="terminateQuizPlayer()">×</button>
+      </div>
+
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressBarFill"></div>
+      </div>
+
+      <div id="playerMainContent">
+        <div class="question-container">
+          <div class="question-text" id="activeQuestionText">Question text loading?</div>
+          <div class="options-list" id="activeOptionsContainer"></div>
+        </div>
+
+        <div class="player-footer">
+          <button class="btn-nav btn-prev" id="btnPrevQuestion" onclick="navigateQuestion(-1)">Previous</button>
+          <button class="btn-nav btn-next" id="btnNextQuestion" onclick="navigateQuestion(1)">Next</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+    import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
+
+    // Firebase Configurations
+    const firebaseConfig = {
+      apiKey: "AIzaSyCaCkliRZk8HmNtOsJpoA084YhNY7MeMWM",
+      authDomain: "jigsawconnect-677da.firebaseapp.com",
+      databaseURL: "https://jigsawconnect-677da-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "jigsawconnect-677da",
+      storageBucket: "jigsawconnect-677da.firebasestorage.app",
+      messagingSenderId: "200774226361",
+      appId: "1:200774226361:web:266cb216968403793f6668"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // Global Active State Holders
+    let allLoadedQuizzes = {};
+    let activeQuizData = null;
+    let activeQuizId = "";
+    let currentQuestionIndex = 0;
+    let studentAnswersMap = {}; // QuestionIndex => SelectedOptionIndex
+
+    // Page Initializer
+    document.addEventListener("DOMContentLoaded", () => {
+      fetchAdminQuizzes();
+    });
+
+    // 1. Fetch assessments posted by dashboard admins
+    async function fetchAdminQuizzes() {
+      const grid = document.getElementById('quizGridList');
+      try {
+        const snapshot = await get(ref(db, "quizzes"));
+        if (snapshot.exists()) {
+          allLoadedQuizzes = snapshot.val();
+          grid.innerHTML = "";
+
+          Object.keys(allLoadedQuizzes).forEach(id => {
+            const quiz = allLoadedQuizzes[id];
+            const qCount = quiz.questions ? Object.keys(quiz.questions).length : 0;
+
+            grid.innerHTML += `
+              <div class="quiz-card">
+                <div class="quiz-header">
+                  <span class="quiz-badge badge-assess">Active Assessment</span>
+                  <div class="quiz-title-text">${quiz.title || 'Untitled Assessment'}</div>
+                </div>
+                <div class="quiz-stats">
+                  <span>❓ ${qCount} Questions</span>
+                  <span>⏱️ ${quiz.timeLimit || 'No limit'}</span>
+                </div>
+                <button class="btn-start" onclick="launchQuizPlayer('${id}')">
+                  🚀 Start Quiz
+                </button>
+              </div>
+            `;
+          });
+        } else {
+          grid.innerHTML = `<div class="no-data"><h4>No active quizzes posted by administrators yet.</h4></div>`;
+        }
+      } catch (err) {
+        console.error("Retrieval Fault:", err);
+        grid.innerHTML = `<div class="no-data" style="color:var(--danger)">Failed to synchronize quiz catalog from database directory.</div>`;
+      }
+    }
+
+    // 2. Launch Quiz Player Frame
+    window.launchQuizPlayer = function(quizId) {
+      const hrId = localStorage.getItem('studentHrId');
+      if (!hrId) {
+        alert("⚠️ Authenticated session missing! Please log in as a student to participate in assessment modules.");
+        return;
+      }
+
+      activeQuizId = quizId;
+      activeQuizData = allLoadedQuizzes[quizId];
+      currentQuestionIndex = 0;
+      studentAnswersMap = {};
+
+      if (!activeQuizData || !activeQuizData.questions) {
+        alert("⚠️ Error: Selected quiz contains no structural question metadata.");
+        return;
+      }
+
+      // Display Player Overlay Frame
+      document.getElementById('activeQuizTitle').innerText = activeQuizData.title || "Assessment";
+      document.getElementById('playerMainContent').style.display = "block";
+      document.getElementById('quizPlayer').style.display = "flex";
+      
+      renderQuestion();
+    };
+
+    // 3. Close & Reset Active Player Frame
+    window.terminateQuizPlayer = function() {
+      if (confirm("Are you sure you want to exit? Your current progress in this quiz session will be discarded.")) {
+        document.getElementById('quizPlayer').style.display = "none";
+        activeQuizData = null;
+        activeQuizId = "";
+      }
+    };
+
+    // 4. Render Active Question Matrix
+    function renderQuestion() {
+      const qKeys = Object.keys(activeQuizData.questions);
+      const totalQs = qKeys.length;
+      const currentKey = qKeys[currentQuestionIndex];
+      const question = activeQuizData.questions[currentKey];
+
+      // Update Progress indicator
+      const progressPercent = ((currentQuestionIndex) / totalQs) * 100;
+      document.getElementById('progressBarFill').style.style = `width: ${progressPercent}%`;
+      document.getElementById('progressBarFill').style.width = `${progressPercent}%`;
+
+      // Inject Text
+      document.getElementById('activeQuestionText').innerText = `Q${currentQuestionIndex + 1}. ${question.text || question.question || ""}`;
+
+      // Render Multiple Choice Bullet Options
+      const optionsContainer = document.getElementById('activeOptionsContainer');
+      optionsContainer.innerHTML = "";
+
+      const optionsArray = question.options || [];
+      optionsArray.forEach((optionText, optIndex) => {
+        const isSelected = studentAnswersMap[currentQuestionIndex] === optIndex;
+        const alphabet = String.fromCharCode(65 + optIndex); // A, B, C, D...
+
+        const optionDiv = document.createElement('div');
+        optionDiv.className = `option-item ${isSelected ? 'selected' : ''}`;
+        optionDiv.innerHTML = `
+          <div class="option-bullet">${alphabet}</div>
+          <div>${optionText}</div>
+        `;
+        
+        optionDiv.onclick = () => selectOption(optIndex);
+        optionsContainer.appendChild(optionDiv);
+      });
+
+      // Handle Footer Nav State
+      document.getElementById('btnPrevQuestion').style.visibility = currentQuestionIndex === 0 ? "hidden" : "visible";
+      
+      const isLastQuestion = currentQuestionIndex === totalQs - 1;
+      document.getElementById('btnNextQuestion').innerText = isLastQuestion ? "Finish Quiz 🏁" : "Next Question →";
+    }
+
+    // 5. Select Option Engine
+    function selectOption(optIndex) {
+      studentAnswersMap[currentQuestionIndex] = optIndex;
+      renderQuestion();
+    }
+
+    // 6. Navigation Control
+    window.navigateQuestion = function(direction) {
+      const qKeys = Object.keys(activeQuizData.questions);
+      const totalQs = qKeys.length;
+
+      // Validate input answer before progressing
+      if (direction === 1 && studentAnswersMap[currentQuestionIndex] === undefined) {
+        alert("⚠️ Please choose an option before moving forward.");
+        return;
+      }
+
+      currentQuestionIndex += direction;
+
+      if (currentQuestionIndex >= totalQs) {
+        processAndSubmitFinalQuiz();
+      } else {
+        renderQuestion();
+      }
+    };
+
+    // 7. Calculate, Render, & Save Performance Data
+    function processAndSubmitFinalQuiz() {
+      const qKeys = Object.keys(activeQuizData.questions);
+      const totalQuestions = qKeys.length;
+      let finalScore = 0;
+
+      qKeys.forEach((key, qIndex) => {
+        const question = activeQuizData.questions[key];
+        const selectedOption = studentAnswersMap[qIndex];
+        const correctAnswerIndex = parseInt(question.correctAnswer || question.correct || 0);
+
+        if (selectedOption === correctAnswerIndex) {
+          finalScore++;
+        }
+      });
+
+      // Load Save score to profile engine
+      saveQuizScoreToProfile(activeQuizId, activeQuizData.title, finalScore, totalQuestions);
+
+      // Render Results inside Overlay Card
+      const percent = ((finalScore / totalQuestions) * 100).toFixed(1);
+      const playerMain = document.getElementById('playerMainContent');
+      
+      playerMain.innerHTML = `
+        <div class="results-screen">
+          <div class="score-circle">
+            <span class="big-score">${finalScore}</span>
+            <span class="total-q">of ${totalQuestions}</span>
+          </div>
+          <h3 style="color:#fff; margin-bottom:10px;">Evaluation Completed!</h3>
+          <p style="color:var(--text-muted); margin-bottom:25px;">You solved this test assessment with an overall rating of <strong>${percent}%</strong> accuracy.</p>
+          <button onclick="closeFinishedQuiz()" style="background:var(--accent-blue); color:#fff; padding:12px 30px; border:none; border-radius:10px; font-weight:700; cursor:pointer;">
+            Return to Dashboard
+          </button>
+        </div>
+      `;
+    }
+
+    // 8. Close Completed session
+    window.closeFinishedQuiz = function() {
+      document.getElementById('quizPlayer').style.display = "none";
+      window.location.reload(); // Refresh page to update grid / indicators
+    };
+
+    // Score Synchronizer Engine
+    function saveQuizScoreToProfile(quizId, quizTitle, finalScore, totalQuestions) {
+      const hrId = localStorage.getItem('studentHrId');
+      if (!hrId) {
+        console.error("Student session missing. Cloud sync halted.");
+        return;
+      }
+      const safeKey = hrId.replace(/[.#$\[\]\/]/g, '_');
+      const studentQuizRef = ref(db, `students/${safeKey}/quizScores/${quizId}`);
+      
+      set(studentQuizRef, {
+        quizTitle: quizTitle || "Untitled Quiz",
+        score: finalScore,
+        total: totalQuestions,
+        percentage: ((finalScore / totalQuestions) * 100).toFixed(1) + "%",
+        timestamp: Date.now()
+      }).then(() => {
+        console.log("Score synced to student profile successfully!");
+      }).catch((err) => {
+        console.error("Error saving score:", err);
+      });
+    }
+  </script>
+</body> 
+</html>
