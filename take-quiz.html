@@ -118,7 +118,7 @@
       
       <div class="quiz-player-header">
         <div class="player-title" id="activeQuizTitle">Quiz Title</div>
-        <button class="btn-close-quiz" onclick="terminateQuizPlayer()">×</button>
+        <button class="btn-close-quiz" id="btnCloseQuiz">×</button>
       </div>
 
       <div class="progress-bar">
@@ -132,8 +132,8 @@
         </div>
 
         <div class="player-footer">
-          <button class="btn-nav btn-prev" id="btnPrevQuestion" onclick="navigateQuestion(-1)">Previous</button>
-          <button class="btn-nav btn-next" id="btnNextQuestion" onclick="navigateQuestion(1)">Next</button>
+          <button class="btn-nav btn-prev" id="btnPrevQuestion">Previous</button>
+          <button class="btn-nav btn-next" id="btnNextQuestion">Next Question →</button>
         </div>
       </div>
 
@@ -165,8 +165,17 @@
     let currentQuestionIndex = 0;
     let studentAnswersMap = {}; // QuestionIndex => SelectedOptionIndex
 
-    // Page Initializer
+    // Page Initializer & Security Check
     document.addEventListener("DOMContentLoaded", () => {
+      const hrId = localStorage.getItem('studentHrId');
+      
+      // [సెషన్ ప్రొటెక్షన్] ఒకవేళ యూజర్ లాగిన్ అవ్వకుండా ఇక్కడికి వస్తే నేరుగా లాగిన్ పేజీకి రీడైరెక్ట్ చేస్తుంది
+      if (!hrId) {
+        alert("⚠️ Access Denied! Please log in to take assessments.");
+        window.location.href = "login.html";
+        return;
+      }
+      
       fetchAdminQuizzes();
     });
 
@@ -193,12 +202,21 @@
                   <span>❓ ${qCount} Questions</span>
                   <span>⏱️ ${quiz.timeLimit || 'No limit'}</span>
                 </div>
-                <button class="btn-start" onclick="launchQuizPlayer('${id}')">
+                <button class="btn-start" data-id="${id}">
                   🚀 Start Quiz
                 </button>
               </div>
             `;
           });
+
+          // బటన్స్ కి క్లిక్ ఈవెంట్స్ డైనమిక్‌గా యాడ్ చేయడం (లాగిన్ లూప్ రాకుండా ఆపుతుంది)
+          document.querySelectorAll('.btn-start').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+              const quizId = e.target.getAttribute('data-id');
+              launchQuizPlayer(quizId);
+            });
+          });
+
         } else {
           grid.innerHTML = `<div class="no-data"><h4>No active quizzes posted by administrators yet.</h4></div>`;
         }
@@ -209,10 +227,11 @@
     }
 
     // 2. Launch Quiz Player Frame
-    window.launchQuizPlayer = function(quizId) {
+    function launchQuizPlayer(quizId) {
       const hrId = localStorage.getItem('studentHrId');
       if (!hrId) {
-        alert("⚠️ Authenticated session missing! Please log in as a student to participate in assessment modules.");
+        alert("⚠️ Authenticated session missing! Please log in again.");
+        window.location.href = "login.html";
         return;
       }
 
@@ -232,16 +251,17 @@
       document.getElementById('quizPlayer').style.display = "flex";
       
       renderQuestion();
-    };
+    }
 
     // 3. Close & Reset Active Player Frame
-    window.terminateQuizPlayer = function() {
+    function terminateQuizPlayer() {
       if (confirm("Are you sure you want to exit? Your current progress in this quiz session will be discarded.")) {
         document.getElementById('quizPlayer').style.display = "none";
         activeQuizData = null;
         activeQuizId = "";
       }
-    };
+    }
+    document.getElementById('btnCloseQuiz').addEventListener('click', terminateQuizPlayer);
 
     // 4. Render Active Question Matrix
     function renderQuestion() {
@@ -252,7 +272,6 @@
 
       // Update Progress indicator
       const progressPercent = ((currentQuestionIndex) / totalQs) * 100;
-      document.getElementById('progressBarFill').style.style = `width: ${progressPercent}%`;
       document.getElementById('progressBarFill').style.width = `${progressPercent}%`;
 
       // Inject Text
@@ -292,11 +311,11 @@
     }
 
     // 6. Navigation Control
-    window.navigateQuestion = function(direction) {
+    function navigateQuestion(direction) {
       const qKeys = Object.keys(activeQuizData.questions);
       const totalQs = qKeys.length;
 
-      // Validate input answer before progressing
+      // Forward వెళ్ళేటప్పుడు ఆప్షన్ సెలెక్ట్ చేశారో లేదో వెరిఫై చేయడం
       if (direction === 1 && studentAnswersMap[currentQuestionIndex] === undefined) {
         alert("⚠️ Please choose an option before moving forward.");
         return;
@@ -309,7 +328,10 @@
       } else {
         renderQuestion();
       }
-    };
+    }
+    
+    document.getElementById('btnPrevQuestion').addEventListener('click', () => navigateQuestion(-1));
+    document.getElementById('btnNextQuestion').addEventListener('click', () => navigateQuestion(1));
 
     // 7. Calculate, Render, & Save Performance Data
     function processAndSubmitFinalQuiz() {
@@ -342,18 +364,17 @@
           </div>
           <h3 style="color:#fff; margin-bottom:10px;">Evaluation Completed!</h3>
           <p style="color:var(--text-muted); margin-bottom:25px;">You solved this test assessment with an overall rating of <strong>${percent}%</strong> accuracy.</p>
-          <button onclick="closeFinishedQuiz()" style="background:var(--accent-blue); color:#fff; padding:12px 30px; border:none; border-radius:10px; font-weight:700; cursor:pointer;">
+          <button id="btnReturnDashboard" style="background:var(--accent-blue); color:#fff; padding:12px 30px; border:none; border-radius:10px; font-weight:700; cursor:pointer;">
             Return to Dashboard
           </button>
         </div>
       `;
-    }
 
-    // 8. Close Completed session
-    window.closeFinishedQuiz = function() {
-      document.getElementById('quizPlayer').style.display = "none";
-      window.location.reload(); // Refresh page to update grid / indicators
-    };
+      document.getElementById('btnReturnDashboard').addEventListener('click', () => {
+        document.getElementById('quizPlayer').style.display = "none";
+        window.location.reload();
+      });
+    }
 
     // Score Synchronizer Engine
     function saveQuizScoreToProfile(quizId, quizTitle, finalScore, totalQuestions) {
