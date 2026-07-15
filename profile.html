@@ -30,6 +30,9 @@
     .nav-links { display: flex; gap: 24px; align-items: center; } 
     .nav-links a { text-decoration: none; color: var(--text-muted); font-size: 14px; font-weight: 600; transition: color 0.2s; } 
     .nav-links a:hover, .nav-links a.active { color: var(--accent-cyan); } 
+    
+    .btn-logout { background: rgba(239, 68, 68, 0.1); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.2); padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .btn-logout:hover { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
 
     /* MAIN CONTAINER */
     .container { width: 100%; max-width: 800px; margin: 40px auto; padding: 0 20px; flex: 1; }
@@ -69,6 +72,7 @@
       <a href="leaderboard.html">Leaderboard</a> 
       <a href="quiz.html">Quizzes</a> 
       <a href="#" class="active">My Profile</a> 
+      <button class="btn-logout" id="btnLogout">Logout</button>
     </div> 
   </nav> 
 
@@ -116,7 +120,11 @@
     const hrId = localStorage.getItem('studentHrId');
     const scoresContainer = document.getElementById('quizScoresList');
 
-    if (hrId) {
+    // [సెషన్ చెక్] ఒకవేళ localStorage లో డేటా లేకపోతే నేరుగా లాగిన్ పేజీకి పంపేలా అమరిక
+    if (!hrId) {
+      alert("⚠️ మీ లాగిన్ సెషన్ ముగిసింది లేదా మీరు లాగిన్ అవ్వలేదు. దయచేసి మళ్ళీ లాగిన్ అవ్వండి.");
+      window.location.href = "login.html"; // మీ లాగిన్ ఫైల్ పేరు మార్చుకోవచ్చు
+    } else {
       const safeKey = hrId.replace(/[.#$\[\]\/]/g, '_');
       
       get(ref(db, `students/${safeKey}`)).then((snapshot) => {
@@ -162,10 +170,15 @@
         console.error("Database Retrieval Fault:", error);
         scoresContainer.innerHTML = `<div class="no-data" style="color:#ef4444;">❌ Failed to load profile data due to database sync constraints.</div>`;
       });
-    } else {
-      scoresContainer.innerHTML = `<div class="no-data">⚠️ Active authentication session token missing. Please log in again.</div>`;
-      document.getElementById('profileName').innerText = "Session Missing";
     }
+
+    // లాగౌట్ బటన్ ఫంక్షనాలిటీ
+    document.getElementById('btnLogout').addEventListener('click', () => {
+      if(confirm("మీరు ప్రొఫైల్ నుండి లాగౌట్ అవ్వాలనుకుంటున్నారా?")) {
+        localStorage.removeItem('studentHrId');
+        window.location.href = "login.html";
+      }
+    });
   </script>
 </body> 
 </html>
