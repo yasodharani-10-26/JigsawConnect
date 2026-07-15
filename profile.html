@@ -1,35 +1,171 @@
-import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+  <meta charset="UTF-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <title>Student Profile | StudyConnect</title> 
+  <link rel="preconnect" href="https://fonts.googleapis.com"> 
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700;800&display=swap" rel="stylesheet"> 
+   
+  <style> 
+    :root {
+      --bg: #0b0f19; 
+      --card-bg: rgba(20, 30, 54, 0.45); 
+      --border: rgba(255, 255, 255, 0.08); 
+      --text-main: #f8fafc; 
+      --text-muted: #94a3b8; 
+      --accent-cyan: #06b6d4; 
+      --accent-blue: #2563eb; 
+      --success: #10b981;
+    } 
 
-const hrId = localStorage.getItem('studentHrId');
-if (hrId) {
-  const safeKey = hrId.replace(/[.#$\[\]\/]/g, '_');
-  const db = getDatabase();
-  
-  // ప్రొఫైల్ మరియు క్విజ్ స్కోర్ల డేటా పొందడం
-  get(ref(db, `students/${safeKey}`)).then((snapshot) => {
-    if (snapshot.exists()) {
-      const studentData = snapshot.val();
-      
-      // స్టూడెంట్ బేసిక్ డీటెయిల్స్ UI కి బైండ్ చేయండి
-      document.getElementById('profileName').innerText = studentData.name;
-      document.getElementById('profileRoll').innerText = studentData.rollNo;
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; } 
+    body { background: var(--bg); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; } 
 
-      // క్విజ్ హిస్టరీ/స్కోర్లను లూప్ లో డిస్‌ప్లే చేయడం
-      const scoresContainer = document.getElementById('quizScoresList');
-      scoresContainer.innerHTML = "";
+    /* NAVBAR */
+    .navbar { display: flex; justify-content: space-between; align-items: center; padding: 18px 6%; background: rgba(11, 15, 25, 0.85); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; } 
+    .logo { font-size: 24px; font-weight: 800; color: #fff; text-decoration: none; } 
+    .logo span { color: var(--accent-cyan); } 
+    .nav-links { display: flex; gap: 24px; align-items: center; } 
+    .nav-links a { text-decoration: none; color: var(--text-muted); font-size: 14px; font-weight: 600; transition: color 0.2s; } 
+    .nav-links a:hover, .nav-links a.active { color: var(--accent-cyan); } 
+
+    /* MAIN CONTAINER */
+    .container { width: 100%; max-width: 800px; margin: 40px auto; padding: 0 20px; flex: 1; }
+    
+    /* PROFILE CARD */
+    .profile-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 30px; backdrop-filter: blur(12px); box-shadow: 0 20px 40px -15px rgba(0,0,0,0.3); margin-bottom: 30px; display: flex; align-items: center; gap: 25px; }
+    .profile-avatar { width: 80px; height: 80px; background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 700; color: white; box-shadow: 0 0 20px rgba(6, 182, 212, 0.4); }
+    .profile-info h2 { font-size: 1.8rem; font-weight: 800; margin-bottom: 5px; }
+    .profile-info p { color: var(--text-muted); font-size: 14px; font-weight: 500; }
+    .profile-info span { color: var(--accent-cyan); font-weight: 600; }
+
+    /* SECTION TITLE */
+    .section-title { font-size: 1.3rem; font-weight: 700; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+    .section-title span { color: var(--accent-cyan); }
+
+    /* QUIZ SCORES LIST */
+    .scores-list { display: flex; flex-direction: column; gap: 12px; }
+    .score-item { background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s; }
+    .score-item:hover { background: rgba(255, 255, 255, 0.04); border-color: rgba(6, 182, 212, 0.3); }
+    .quiz-title { font-weight: 600; font-size: 15px; color: #fff; }
+    .quiz-details { display: flex; align-items: center; gap: 15px; }
+    .badge-score { background: rgba(16, 185, 129, 0.1); color: var(--success); padding: 6px 14px; border-radius: 8px; font-weight: 700; font-size: 14px; border: 1px solid rgba(16, 185, 129, 0.2); }
+    .badge-pct { background: rgba(37, 99, 235, 0.1); color: #60a5fa; padding: 6px 12px; border-radius: 8px; font-weight: 600; font-size: 13px; border: 1px solid rgba(37, 99, 235, 0.15); }
+
+    .no-data { text-align: center; color: var(--text-muted); padding: 30px; background: rgba(255, 255, 255, 0.01); border-radius: 12px; border: 1px dashed var(--border); font-size: 14px; }
+    .loading { text-align: center; color: var(--accent-cyan); padding: 40px; font-weight: 600; }
+  </style> 
+</head> 
+
+<body> 
+
+  <!-- NAVBAR -->
+  <nav class="navbar"> 
+    <a href="index.html" class="logo">📚 Study<span>Connect</span></a> 
+    <div class="nav-links"> 
+      <a href="admin-dashboard.html">Dashboard</a> 
+      <a href="leaderboard.html">Leaderboard</a> 
+      <a href="quiz.html">Quizzes</a> 
+      <a href="#" class="active">My Profile</a> 
+    </div> 
+  </nav> 
+
+  <!-- MAIN CONTENT -->
+  <div class="container">
+    
+    <!-- Profile Card Widget -->
+    <div class="profile-card">
+      <div class="profile-avatar" id="avatarInitial">S</div>
+      <div class="profile-info">
+        <h2 id="profileName">Loading Profile...</h2>
+        <p>Roll Number: <span id="profileRoll">--</span></p>
+      </div>
+    </div>
+
+    <!-- Quiz History Section -->
+    <h3 class="section-title">📊 Quiz <span>Performance History</span></h3>
+    <div class="scores-list" id="quizScoresList">
+      <div class="loading">⏳ Fetching your performance records...</div>
+    </div>
+
+  </div>
+
+  <!-- FIREBASE ENGINE SCRIPT -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+    import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
+
+    // Firebase Configurations
+    const firebaseConfig = {
+      apiKey: "AIzaSyCaCkliRZk8HmNtOsJpoA084YhNY7MeMWM",
+      authDomain: "jigsawconnect-677da.firebaseapp.com",
+      databaseURL: "https://jigsawconnect-677da-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "jigsawconnect-677da",
+      storageBucket: "jigsawconnect-677da.firebasestorage.app",
+      messagingSenderId: "200774226361",
+      appId: "1:200774226361:web:266cb216968403793f6668"
+    };
+
+    // Initialize Database Connections
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // Fetch Student Key from LocalStorage
+    const hrId = localStorage.getItem('studentHrId');
+    const scoresContainer = document.getElementById('quizScoresList');
+
+    if (hrId) {
+      const safeKey = hrId.replace(/[.#$\[\]\/]/g, '_');
       
-      if (studentData.quizScores) {
-        Object.keys(studentData.quizScores).forEach(qId => {
-          const record = studentData.quizScores[qId];
-          scoresContainer.innerHTML += `
-            <div class="score-row">
-              <strong>${record.quizTitle}</strong>: ${record.score}/${record.total} (${record.percentage})
-            </div>
-          `;
-        });
-      } else {
-        scoresContainer.innerHTML = "<p>No quizzes completed yet.</p>";
-      }
+      get(ref(db, `students/${safeKey}`)).then((snapshot) => {
+        if (snapshot.exists()) {
+          const studentData = snapshot.val();
+          
+          // Injecting Profile Data
+          const name = studentData.name || "Unknown Student";
+          document.getElementById('profileName').innerText = name;
+          document.getElementById('profileRoll').innerText = studentData.rollNo || "N/A";
+          
+          // Avatar Initial Letter Setup
+          document.getElementById('avatarInitial').innerText = name.charAt(0).toUpperCase();
+
+          // Render Quiz Performance Rows
+          scoresContainer.innerHTML = "";
+          if (studentData.quizScores && Object.keys(studentData.quizScores).length > 0) {
+            Object.keys(studentData.quizScores).forEach(qId => {
+              const record = studentData.quizScores[qId];
+              
+              // Handle Percentage Formatting Safely
+              const rawPct = record.percentage !== undefined ? record.percentage : 0;
+              const formattedPct = String(rawPct).includes('%') ? rawPct : `${parseFloat(rawPct).toFixed(1)}%`;
+
+              scoresContainer.innerHTML += `
+                <div class="score-item">
+                  <div class="quiz-title">📝 ${record.quizTitle || 'Assessment Quiz'}</div>
+                  <div class="quiz-details">
+                    <span class="badge-score">${record.score || 0} / ${record.total || 0}</span>
+                    <span class="badge-pct">${formattedPct}</span>
+                  </div>
+                </div>
+              `;
+            });
+          } else {
+            scoresContainer.innerHTML = `<div class="no-data">No quizzes completed yet. Start taking quizzes to build your profile track record!</div>`;
+          }
+        } else {
+          scoresContainer.innerHTML = `<div class="no-data">⚠️ Student profile record not registered in the active system directory.</div>`;
+          document.getElementById('profileName').innerText = "Profile Not Found";
+        }
+      }).catch((error) => {
+        console.error("Database Retrieval Fault:", error);
+        scoresContainer.innerHTML = `<div class="no-data" style="color:#ef4444;">❌ Failed to load profile data due to database sync constraints.</div>`;
+      });
+    } else {
+      scoresContainer.innerHTML = `<div class="no-data">⚠️ Active authentication session token missing. Please log in again.</div>`;
+      document.getElementById('profileName').innerText = "Session Missing";
     }
-  });
-}
+  </script>
+</body> 
+</html>
