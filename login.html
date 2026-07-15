@@ -7,7 +7,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
     /* ==========================================================================
@@ -200,7 +200,27 @@
       font-size: 14px;
       color: var(--text-muted);
       line-height: 1.6;
-      margin-bottom: 28px;
+      margin-bottom: 24px;
+    }
+
+    /* Input Field Styling */
+    .input-field {
+      width: 100%;
+      padding: 12px 16px;
+      background: rgba(11, 15, 25, 0.6);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 20px;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+
+    .input-field:focus {
+      border-color: var(--student-accent);
+      box-shadow: 0 0 10px rgba(6, 182, 212, 0.2);
     }
 
     /* Distinct Portal Hover Responses */
@@ -231,6 +251,8 @@
       font-size: 14px;
       font-weight: 700;
       text-align: center;
+      border: none;
+      cursor: pointer;
       transition: all 0.2s ease;
     }
 
@@ -339,6 +361,7 @@
 
       <div class="login-grid">
         
+        <!-- Administrative Node -->
         <div class="portal-card admin-node">
           <div class="portal-icon" style="color: var(--admin-accent);">🛡️</div>
           <h2>Administrative Node</h2>
@@ -346,11 +369,16 @@
           <a href="admin-dashboard.html" class="btn btn-admin">Authenticate Admin</a>
         </div>
 
+        <!-- Student Workspace -->
         <div class="portal-card student-node">
           <div class="portal-icon" style="color: var(--student-accent);">🎓</div>
           <h2>Student Workspace</h2>
           <p>Access high-fidelity curriculum resources, collaborate directly inside peer study clusters, configure backends, and monitor rank levels.</p>
-          <a href="student-dashboard.html" class="btn btn-student">Launch Workspace</a>
+          
+          <!-- HackerRank ID ఇన్‌పుట్ బాక్స్ -->
+          <input type="text" id="hrIdInput" class="input-field" placeholder="Enter HackerRank ID...">
+          
+          <button id="btnStudentLogin" class="btn btn-student">Launch Workspace</button>
         </div>
 
       </div>
@@ -368,5 +396,65 @@
     <p>&copy; 2026 StudyConnect | Connect &bull; Collaborate &bull; Succeed 🚀</p>
   </footer>
 
+  <!-- ఫైర్‌బేస్ డేటాబేస్ లింక్ మరియు లాగిన్ స్క్రిప్ట్ -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+    import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
+
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyCaCkliRZk8HmNtOsJpoA084YhNY7MeMWM",
+      authDomain: "jigsawconnect-677da.firebaseapp.com",
+      databaseURL: "https://jigsawconnect-677da-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "jigsawconnect-677da",
+      storageBucket: "jigsawconnect-677da.firebasestorage.app",
+      messagingSenderId: "200774226361",
+      appId: "1:200774226361:web:266cb216968403793f6668"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // స్టూడెంట్ లాగిన్ బటన్ క్లిక్ ఈవెంట్
+    document.getElementById('btnStudentLogin').addEventListener('click', () => {
+      const hrId = document.getElementById('hrIdInput').value.trim();
+
+      if (!hrId) {
+        alert("⚠️ Please enter your HackerRank ID to authenticate.");
+        return;
+      }
+
+      // ఫైర్‌బేస్ కీస్ కోసం స్పెషల్ క్యారెక్టర్స్ రీప్లేస్ చేయడం
+      const safeKey = hrId.replace(/[.#$\[\]\/]/g, '_');
+      const loginButton = document.getElementById('btnStudentLogin');
+      
+      loginButton.innerText = "Authenticating... ⏳";
+      loginButton.disabled = true;
+
+      // డేటాబేస్ లో సదరు స్టూడెంట్ రికార్డ్ ఉందో లేదో వెతకడం
+      get(ref(db, `students/${safeKey}`))
+        .then((snapshot) => {
+          if (snapshot.exists()) {
+            // ఐడీ మ్యాచ్ అయితే localStorage లో భద్రపరచడం
+            localStorage.setItem('studentHrId', hrId);
+            
+            alert(`🎉 Access Granted! Welcome back, ${snapshot.val().name || 'Student'}.`);
+            
+            // స్టూడెంట్ ప్రొఫైల్ లేదా డ్యాష్‌బోర్డ్ పేజీకి రీడైరెక్ట్ చేయడం
+            window.location.href = "profile.html"; 
+          } else {
+            alert("❌ Authentication Failed: HackerRank ID not registered in the network directory.");
+            loginButton.innerText = "Launch Workspace";
+            loginButton.disabled = false;
+          }
+        })
+        .catch((error) => {
+          console.error("Authentication Sync Fault:", error);
+          alert("❌ Server Connection Timeout. Please check network pipelines.");
+          loginButton.innerText = "Launch Workspace";
+          loginButton.disabled = false;
+        });
+    });
+  </script>
 </body>
 </html>
