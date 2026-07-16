@@ -109,7 +109,6 @@
       </div>
     </div>
     
-    <!-- SEARCH & FILTER BAR -->
     <div class="filter-section">
       <input type="text" id="searchInput" class="search-input" placeholder="Search by Name, Roll Number, or HackerRank ID...">
       <select id="branchFilter" class="select-control" style="min-width: 150px;">
@@ -358,7 +357,7 @@
       });
     }
 
-    // Smart Multi-Row Dynamic Excel Parser Engine
+    // 🎯 Smart Multi-Row Dynamic Excel Parser Engine (Fix for hackerRank data alignment)
     document.getElementById('excelUploadInput').addEventListener('change', function(e) {
       const file = e.target.files[0];
       if (!file) return;
@@ -383,12 +382,14 @@
         const scoreUpdates = {};
 
         excelRows.forEach(row => {
+          // HackerRank షీట్ లో యూజర్ నేమ్ "data" కాలమ్ లో ఉంటుంది కాబట్టి row["data"] ని కూడా ఫస్ట్ ప్రయారిటీగా చెక్ చేస్తున్నాం.
           let excelIdentifier = String(row["data"] || row["HackerRank ID"] || row["Roll Number"] || row["username"] || row["Username"] || "").trim();
           const cleanExcelId = cleanIdentifier(excelIdentifier);
 
           if (excelIdentifier) {
             let parsedScore = extractScore(row);
 
+            // ఇక్కడ "HackerRank ID" తో పాటు స్టూడెంట్ రోల్ నెంబర్ ని కూడా క్రాస్ మ్యాచ్ చేస్తుంది
             let match = globalStudentsArray.find(s => 
               (s.hrId && cleanIdentifier(s.hrId) === cleanExcelId) ||
               (s.rollNo && cleanIdentifier(s.rollNo) === cleanExcelId)
@@ -412,7 +413,7 @@
 
         try {
           await update(ref(db, `hackerRankLeaderboards/${selectedExamId}`), scoreUpdates);
-          alert('🎯 Scores matched, parsed dynamically, and successfully saved!');
+          alert('🎯 HackerRank Scores matched with Student IDs successfully and saved to Firebase!');
           currentPage = 1;
         } catch (error) {
           alert('❌ Database Sync Error: ' + error.message);
@@ -506,7 +507,7 @@
       }
     }
 
-    // Excel Writer (XLSX Typo is fixed here)
+    // Excel Writer
     document.getElementById('downloadExcelBtn').addEventListener('click', () => {
       const downloadData = filteredData.length > 0 ? filteredData : currentLeaderboardData;
       if (downloadData.length === 0) {
