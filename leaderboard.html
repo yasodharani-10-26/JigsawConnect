@@ -109,6 +109,7 @@
       </div>
     </div>
     
+    <!-- SEARCH & FILTER BAR -->
     <div class="filter-section">
       <input type="text" id="searchInput" class="search-input" placeholder="Search by Name, Roll Number, or HackerRank ID...">
       <select id="branchFilter" class="select-control" style="min-width: 150px;">
@@ -134,7 +135,6 @@
         <input type="file" id="excelUploadInput" accept=".xlsx, .xls" />
       </div>
       <button class="action-btn btn-download" id="downloadExcelBtn">📥 Download Leaderboard (.xlsx)</button>
-      <button class="action-btn" id="syncHrBtn">🔄 Refresh from HackerRank</button>
     </div>
     
     <div class="table-container">
@@ -151,7 +151,7 @@
           </tr>
         </thead>
         <tbody id="leaderboardTableBody">
-          <tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding:30px;">Please choose a specific exam node template folder above.</td></tr>
+          <tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding:30px;">Please choose an active exam template folder above.</td></tr>
         </tbody>
       </table>
     </div>
@@ -188,17 +188,16 @@
     const branchFilter = document.getElementById('branchFilter');
     const sectionFilter = document.getElementById('sectionFilter');
 
-    // Standardized Identifier cleaner for matching username strings perfectly
     function cleanIdentifier(id) {
       if (!id) return "";
       return String(id).trim().toLowerCase().replace(/[@\s]/g, '');
     }
 
-    // 🚀 Improved Score Extractor Helper
+    // 🏆 HackerRank ఎక్సెల్ షీట్ లో కాలమ్స్ నుండి స్కోర్ ఎక్స్ట్రాక్ట్ చేసే పవర్ఫుల్ హెల్పర్
     function extractScore(row) {
       if (!row) return 0;
       
-      // 1. Direct checks (case-insensitive)
+      // 1. Direct Field Checks
       const directKeys = ['score', 'Score', 'SCORE', 'marks', 'Marks', 'MARKS'];
       for (let k of directKeys) {
         if (row[k] !== undefined && row[k] !== null && row[k] !== "") {
@@ -207,24 +206,24 @@
         }
       }
 
-      // 2. Case-insensitive key match for any column containing "score" or "mark"
-      for (let key in row) {
-        let lowerKey = key.toLowerCase();
-        if (lowerKey.includes("score") || lowerKey.includes("mark")) {
-          let val = parseFloat(row[key]);
-          if (!isNaN(val)) return val;
-        }
-      }
-
-      // 3. Check data fallbacks (excluding timestamps containing ':')
-      const fallbacks = ["data3", "data2", "data", "data1"];
+      // 2. HackerRank స్క్రాప్డ్ డేటా ఫార్మాట్ కొరకు (data2 లేదా data3 లో స్కోర్ ఉంటుంది, టైం కాకుండా)
+      const fallbacks = ["data2", "data3", "data", "data1"];
       for (let key of fallbacks) {
         if (row[key] !== undefined && row[key] !== null && row[key] !== "") {
           let strVal = String(row[key]).trim();
+          // టైమ్‌స్టాంప్స్ (ఉదా: 01:23:45) కాకుండా కేవలం ప్యూర్ నెంబర్ ఉంటే స్కోర్ లా తీసుకుంటుంది
           if (!strVal.includes(':')) {
             let val = parseFloat(strVal);
             if (!isNaN(val)) return val;
           }
+        }
+      }
+
+      // 3. Regex Dynamic Search (ఏదైనా కాలమ్ పేరు లో score లేదా mark ఉంటే)
+      for (let key in row) {
+        if (key.toLowerCase().includes("score") || key.toLowerCase().includes("mark")) {
+          let val = parseFloat(row[key]);
+          if (!isNaN(val)) return val;
         }
       }
 
@@ -252,7 +251,6 @@
       attachLeaderboardRealtimeSync();
     });
 
-    // Handle instant live search & filtering
     function applyFilters() {
       const query = cleanIdentifier(searchInput.value);
       const selectedBranch = branchFilter.value.toUpperCase();
@@ -307,7 +305,7 @@
           
           let finalScore = extractScore(scoreNode);
 
-          // Advanced Multi-matching fallback for cleaner matching with student database
+          // HackerRank ID ని బట్టి స్టూడెంట్స్ డేటాబేస్ నుండి క్రాస్-మ్యాచ్ చేస్తుంది
           let match = globalStudentsArray.find(s => 
             (s.hrId && cleanIdentifier(s.hrId) === cleanDbId) ||
             (s.rollNo && cleanIdentifier(s.rollNo) === cleanDbId)
@@ -324,7 +322,7 @@
           let finalName = match ? (match.name || "Unknown") : (scoreNode.name || "Unknown");
           let finalHrId = match ? (match.hrId || dbIdentifier) : dbIdentifier;
           
-          let finalYear = "N/A";
+          let finalYear = "3rd Year"; // Default fallback
           if (match && match.year) {
             finalYear = match.year;
           } else if (finalRollNo !== "N/A" && finalRollNo.length >= 2) {
@@ -349,21 +347,21 @@
           });
         });
 
-        // sort descending
+        // స్కోర్ల ఆధారంగా Descending order లో సార్ట్ చేస్తుంది
         synchronizedRoster.sort((a, b) => b.score - a.score);
         currentLeaderboardData = synchronizedRoster;
         
-        applyFilters(); // apply search filters to live updated dataset
+        applyFilters(); 
       });
     }
 
-    // 🎯 Smart Multi-Row Dynamic Excel Parser Engine (Fix for hackerRank data alignment)
+    // 🎯 EXCEL UPLOAD PARSER UPDATE
     document.getElementById('excelUploadInput').addEventListener('change', function(e) {
       const file = e.target.files[0];
       if (!file) return;
 
       if (!selectedExamId) {
-        alert('⚠️ Please choose an active exam template dropdown directory first.');
+        alert('⚠️ Please select an active Exam Template from dropdown first.');
         e.target.value = '';
         return;
       }
@@ -382,14 +380,13 @@
         const scoreUpdates = {};
 
         excelRows.forEach(row => {
-          // HackerRank షీట్ లో యూజర్ నేమ్ "data" కాలమ్ లో ఉంటుంది కాబట్టి row["data"] ని కూడా ఫస్ట్ ప్రయారిటీగా చెక్ చేస్తున్నాం.
+          // 'data' కాలమ్ ని మెయిన్ HackerRank Username ఐడెంటిఫైయర్ గా తీసుకుంటుంది
           let excelIdentifier = String(row["data"] || row["HackerRank ID"] || row["Roll Number"] || row["username"] || row["Username"] || "").trim();
           const cleanExcelId = cleanIdentifier(excelIdentifier);
 
           if (excelIdentifier) {
             let parsedScore = extractScore(row);
 
-            // ఇక్కడ "HackerRank ID" తో పాటు స్టూడెంట్ రోల్ నెంబర్ ని కూడా క్రాస్ మ్యాచ్ చేస్తుంది
             let match = globalStudentsArray.find(s => 
               (s.hrId && cleanIdentifier(s.hrId) === cleanExcelId) ||
               (s.rollNo && cleanIdentifier(s.rollNo) === cleanExcelId)
@@ -398,6 +395,7 @@
             let finalTargetKey = match && match.hrId ? match.hrId : excelIdentifier;
             const safeDbKey = finalTargetKey.replace(/[.#$\[\]\/]/g, '_');
 
+            // Firebase లోకి స్కోర్ తో పాటు మిగతా మెటాడేటాను కూడా పంపిస్తున్నాం
             scoreUpdates[safeDbKey] = {
               hrId: finalTargetKey,
               name: match ? match.name : (row["Name"] || "Unknown"),
@@ -413,45 +411,15 @@
 
         try {
           await update(ref(db, `hackerRankLeaderboards/${selectedExamId}`), scoreUpdates);
-          alert('🎯 HackerRank Scores matched with Student IDs successfully and saved to Firebase!');
+          alert('🎯 HackerRank Scores extracted and saved successfully!');
           currentPage = 1;
         } catch (error) {
-          alert('❌ Database Sync Error: ' + error.message);
+          alert('❌ Firebase Sync Error: ' + error.message);
         }
       };
       reader.readAsArrayBuffer(file);
     });
 
-    // Refresh Dynamic Pull
-    document.getElementById('syncHrBtn').addEventListener('click', async () => {
-      if (!selectedExamId) {
-        alert('⚠️ Select an exam context module from dropdown.');
-        return;
-      }
-
-      const btn = document.getElementById('syncHrBtn');
-      btn.disabled = true;
-      btn.innerText = '⏳ Syncing Engine...';
-
-      try {
-        const response = await fetch('/api/sync-hackerrank', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ examId: selectedExamId })
-        });
-
-        const result = await response.json();
-        if (!response.ok) throw new Error(result.error || 'Server error.');
-        alert(`✅ Refreshed records synced successfully.`);
-      } catch (error) {
-        alert('❌ Automated Extraction fault: ' + error.message);
-      } finally {
-        btn.disabled = false;
-        btn.innerText = '🔄 Refresh from HackerRank';
-      }
-    });
-
-    // Table Display Render
     function renderTable(data, page) {
       const tableBody = document.getElementById('leaderboardTableBody');
       tableBody.innerHTML = "";
@@ -462,7 +430,7 @@
       let paginatedItems = data.slice(start, end);
 
       if (paginatedItems.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding:30px;">No records found.</td></tr>`;
+        tableBody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding:30px;">No records found matching criteria.</td></tr>`;
         return;
       }
 
@@ -507,11 +475,10 @@
       }
     }
 
-    // Excel Writer
     document.getElementById('downloadExcelBtn').addEventListener('click', () => {
       const downloadData = filteredData.length > 0 ? filteredData : currentLeaderboardData;
       if (downloadData.length === 0) {
-        alert("No active matrix data to download.");
+        alert("No data available to download.");
         return;
       }
 
