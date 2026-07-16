@@ -193,10 +193,14 @@
       return String(id).trim().toLowerCase().replace(/[@\s]/g, '');
     }
 
-    // 🏆 HackerRank ఎక్సెల్ షీట్ లో కాలమ్స్ నుండి స్కోర్ ఎక్స్ట్రాక్ట్ చేసే పవర్ఫుల్ హెల్పర్
+    // 🏆 HackerRank ఎక్సెల్ షీట్ మరియు బ్యాకెండ్ నుండి వచ్చే స్కోర్లను సేఫ్‌గా మార్చే అప్‌డేటెడ్ హెల్పర్
     function extractScore(row) {
       if (!row) return 0;
       
+      // ఒకవేళ వాల్యూ ఆల్రెడీ నంబర్ ఐతే డైరెక్ట్ రిటర్న్ చేస్తాం
+      if (typeof row === 'number') return row;
+      if (row.score !== undefined && typeof row.score === 'number') return row.score;
+
       // 1. Direct Field Checks
       const directKeys = ['score', 'Score', 'SCORE', 'marks', 'Marks', 'MARKS'];
       for (let k of directKeys) {
@@ -206,12 +210,11 @@
         }
       }
 
-      // 2. HackerRank స్క్రాప్డ్ డేటా ఫార్మాట్ కొరకు (data2 లేదా data3 లో స్కోర్ ఉంటుంది, టైం కాకుండా)
+      // 2. Fallbacks
       const fallbacks = ["data2", "data3", "data", "data1"];
       for (let key of fallbacks) {
         if (row[key] !== undefined && row[key] !== null && row[key] !== "") {
           let strVal = String(row[key]).trim();
-          // టైమ్‌స్టాంప్స్ (ఉదా: 01:23:45) కాకుండా కేవలం ప్యూర్ నెంబర్ ఉంటే స్కోర్ లా తీసుకుంటుంది
           if (!strVal.includes(':')) {
             let val = parseFloat(strVal);
             if (!isNaN(val)) return val;
@@ -219,7 +222,7 @@
         }
       }
 
-      // 3. Regex Dynamic Search (ఏదైనా కాలమ్ పేరు లో score లేదా mark ఉంటే)
+      // 3. Regex Dynamic Search
       for (let key in row) {
         if (key.toLowerCase().includes("score") || key.toLowerCase().includes("mark")) {
           let val = parseFloat(row[key]);
@@ -355,7 +358,7 @@
       });
     }
 
-    // 🎯 EXCEL UPLOAD PARSER UPDATE
+    // 🎯 EXCEL UPLOAD PARSER
     document.getElementById('excelUploadInput').addEventListener('change', function(e) {
       const file = e.target.files[0];
       if (!file) return;
@@ -380,7 +383,6 @@
         const scoreUpdates = {};
 
         excelRows.forEach(row => {
-          // 'data' కాలమ్ ని మెయిన్ HackerRank Username ఐడెంటిఫైయర్ గా తీసుకుంటుంది
           let excelIdentifier = String(row["data"] || row["HackerRank ID"] || row["Roll Number"] || row["username"] || row["Username"] || "").trim();
           const cleanExcelId = cleanIdentifier(excelIdentifier);
 
@@ -395,7 +397,6 @@
             let finalTargetKey = match && match.hrId ? match.hrId : excelIdentifier;
             const safeDbKey = finalTargetKey.replace(/[.#$\[\]\/]/g, '_');
 
-            // Firebase లోకి స్కోర్ తో పాటు మిగతా మెటాడేటాను కూడా పంపిస్తున్నాం
             scoreUpdates[safeDbKey] = {
               hrId: finalTargetKey,
               name: match ? match.name : (row["Name"] || "Unknown"),
