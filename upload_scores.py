@@ -24,7 +24,7 @@ Rank 2: 23A91A0402 - Rani - 175 Marks
 """
 
 # 4. OpenRouter AI ఎక్స్‌ట్రాక్షన్ (నీ API Key ఇక్కడ పెట్టు)
-api_key = "YOUR_OPENROUTER_API_KEY_HERE"
+api_key = "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"
 
 prompt = f"Extract student details as clean JSON array with keys: hrId, name, rollNo, branch, section, score from this text:\n{raw_text}"
 headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
