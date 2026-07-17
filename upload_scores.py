@@ -11,7 +11,7 @@ firebase_admin.initialize_app(cred, {
 })
 
 # 2. ఒక కొత్త ఎగ్జామ్ టెంప్లేట్ క్రియేట్ చేస్తున్నాం (వెబ్‌సైట్ డ్రాప్‌డౌన్ కోసం)
-EXAM_ID = "demo_exam_01"  # ఇది మన ఎగ్జామ్ ఐడీ
+EXAM_ID = "view-batch-2023-exam-practice-cse-acse-it"  # ఇది మన ఎగ్జామ్ ఐడీ
 print("⏳ Creating Exam Template in Firebase...")
 db.reference(f'hackerrankExams/{EXAM_ID}').set({
     "title": "AI Automated Python Exam"  # వెబ్‌సైట్ డ్రాప్‌డౌన్‌లో ఈ పేరు కనిపిస్తుంది
