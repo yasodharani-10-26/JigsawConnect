@@ -23,7 +23,7 @@ def extract_scores_via_openrouter(raw_text_data):
     """
     అన్‌స్ట్రక్చర్డ్ హాకర్‌రాంక్ డేటాను OpenRouter API ద్వారా క్లీన్ JSON ఫార్మాట్ లోకి మారుస్తుంది.
     """
-    openrouter_api_key = "YOUR_OPENROUTER_API_KEY_HERE" # మీ API Key ఇక్కడ ఇవ్వండి
+    openrouter_api_key = "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" # మీ API Key ఇక్కడ ఇవ్వండి
     
     prompt = f"""
     Analyze the following raw HackerRank leaderboard or exam results data.
