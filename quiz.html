@@ -196,23 +196,24 @@
       return card;
     }
 
-    // 2. క్విజ్ కార్డ్స్ హెల్పర్ ఫంక్షన్ (క్లాస్ మార్చాము)
-    function makeQuizCard(quiz, key, isPast) {
-      const card = document.createElement('div');
-      card.className = "panel-card";
-      
-      const quizLink = `quiz-window.html?id=${key}`; 
+    /// 2. క్విజ్ కార్డ్స్ హెల్పర్ ఫంక్షన్ (సరిచేయబడింది)
+function makeQuizCard(quiz, key, isPast) {
+  const card = document.createElement('div');
+  card.className = "panel-card";
+  
+  // quiz-window.html బదులు take-quiz.html కి మార్చాము
+  const quizLink = `take-quiz.html?id=${key}`; 
 
-      card.innerHTML = `
-        <div class="panel-title">
-          <span>🧠 ${quiz.title || 'Untitled Quiz'}</span>
-        </div>
-        <button class="hackerrank-btn quiz-btn" style="background: var(--accent-blue); color: white;" data-slug="${key}" data-link="${quizLink}">
-          ${isPast ? '👁️ View Results' : '🚀 Start Quiz'}
-        </button>
-      `;
-      return card;
-    }
+  card.innerHTML = `
+    <div class="panel-title">
+      <span>🧠 ${quiz.title || 'Untitled Quiz'}</span>
+    </div>
+    <button class="hackerrank-btn quiz-btn" style="background: var(--accent-blue); color: white;" data-slug="${key}" data-link="${quizLink}">
+      ${isPast ? '👁️ View Results' : '🚀 Start Quiz'}
+    </button>
+  `;
+  return card;
+}
 
     // ఈ ఫంక్షన్ కేవలం బటన్ క్లిక్స్ బైండ్ చేస్తుంది
     function bindCardButtons(container) {
