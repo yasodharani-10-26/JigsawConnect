@@ -35,7 +35,7 @@ export default async function handler(req, res) {
     // 1. రిక్వెస్ట్ బాడీ స్ట్రీమ్‌ను బఫర్‌గా మార్చడం
     const bodyBuffer = await parseRequestStream(req);
     
-    // 2. Standard Web Request కి మార్చడం (ఇది పక్కాగా వర్క్ అవుతుంది)
+    // 2. Standard Web Request కి మార్చడం (Vercel Serverless parsing కోసం)
     const contentType = req.headers["content-type"] || "";
     const webReq = new Request(`https://${req.headers.host}${req.url}`, {
       method: "POST",
@@ -53,7 +53,8 @@ export default async function handler(req, res) {
 
     // 1. Image Check & Handle
     const imageFile = formData.get("image");
-    if (imageFile && imageFile instanceof File && imageFile.size > 0) {
+    // Node.js లో `File` క్లాస్ లేకపోవచ్చు కాబట్టి 'instanceof' బదులు duck-typing వాడాలి
+    if (imageFile && typeof imageFile === "object" && imageFile.size > 0) {
       const imageBuffer = Buffer.from(await imageFile.arrayBuffer());
       parts.push({
         inlineData: {
@@ -65,7 +66,7 @@ export default async function handler(req, res) {
 
     // 2. Voice Check & Handle
     const voiceFile = formData.get("voice");
-    if (voiceFile && voiceFile instanceof File && voiceFile.size > 0) {
+    if (voiceFile && typeof voiceFile === "object" && voiceFile.size > 0) {
       const voiceBuffer = Buffer.from(await voiceFile.arrayBuffer());
       parts.push({
         inlineData: {
