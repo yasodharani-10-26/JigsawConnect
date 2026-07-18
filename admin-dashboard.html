@@ -595,22 +595,24 @@
   <script type="module" src="admin-dashboard.js"></script>
 
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
-    import { getDatabase, ref, set, get, push, update, onValue } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
+   import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+import { getDatabase, ref, set, get, onValue, update } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyCaCkliRZk8HmNtOsJpoA084YhNY7MeMWM",
-      authDomain: "jigsawconnect-677da.firebaseapp.com",
-      databaseURL: "https://jigsawconnect-677da-default-rtdb.asia-southeast1.firebasedatabase.app",
-      projectId: "jigsawconnect-677da",
-      storageBucket: "jigsawconnect-677da.firebasestorage.app",
-      messagingSenderId: "200774226361",
-      appId: "1:200774226361:web:266cb216968403793f6668"
-    };
+const firebaseConfig = {
+  apiKey: "AIzaSyCaCkliRZk8HmNtOsJpoA084YhNY7MeMWM",
+  authDomain: "jigsawconnect-677da.firebaseapp.com",
+  databaseURL: "https://jigsawconnect-677da-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "jigsawconnect-677da",
+  storageBucket: "jigsawconnect-677da.firebasestorage.app",
+  messagingSenderId: "200774226361",
+  appId: "1:200774226361:web:266cb216968403793f6668"
+};
 
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
+// 🔥 డూప్లికేట్ యాప్ ఎర్రర్ రాకుండా ఉండే సేఫ్ లాజిక్
+const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+const db = getDatabase(app);
 
+// మిగిలిన నీ కోడ్ (onValue, update మొదలైనవి) యథావిధిగా ఉంచు...
     // Global handles to share state across dynamic dynamic scripts if required
     window.db = db;
     window.ref = ref;
