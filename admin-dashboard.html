@@ -513,6 +513,34 @@
 
     </div>
 
+    <!-- 🔥 1. AUTOMATED AI BACKEND SYNC PANEL (NEW ADDITION TO LINK THE PYTHON GATEWAY) -->
+    <section class="admin-panel" style="margin-bottom: 30px; border-left: 4px solid var(--accent);">
+      <h2 class="admin-section-title">🤖 Automated AI HackerRank Sync</h2>
+      <p style="margin-bottom: 14px; font-size: 13px; color: #64748b; line-height:1.5;">
+        Select an active contest template target node and paste the leaderboard link to execute live cloud data extraction script hooks.
+      </p>
+      <div class="form-row" style="margin-bottom: 15px;">
+        <div class="form-group">
+          <label>Target Active Exam Template</label>
+          <select id="adminContestSelectDropdown">
+            <option value="">-- Select Loaded active Node Reference --</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Leaderboard Extraction Target Link / API Endpoint</label>
+          <input type="text" id="hackerRankUrlInput" placeholder="https://www.hackerrank.com/contests/.../leaderboard">
+        </div>
+      </div>
+      <div style="display: flex; gap: 10px;">
+        <button class="btn btn-primary" id="syncHackerRankBtn" style="background: linear-gradient(135deg, var(--accent), #0891b2);">
+          <span>⚙️</span> Trigger Background Pipeline Script
+        </button>
+        <button class="btn btn-primary" id="autoCreateTeamsBtn" style="background: #1e293b; border: 1px solid var(--border);">
+          <span>👥</span> Run Algorithmic Team Balancer
+        </button>
+      </div>
+    </section>
+
     <section class="admin-panel" style="margin-bottom: 30px;">
       <h2 class="admin-section-title">🔗 Load Any HackerRank Contest Link</h2>
       <p style="margin-bottom: 14px; font-size: 13px; color: #64748b; line-height:1.5;">
@@ -563,6 +591,9 @@
     &copy; 2026 StudyConnect Command Matrix. All rights reserved.
   </footer>
 
+  <!-- 🔥 2. INTEGRATED ES MODULE SCRIPT LINKED DIRECTLY TO YOUR INDEPENDENT JS CODE -->
+  <script type="module" src="admin-dashboard.js"></script>
+
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
     import { getDatabase, ref, set, get, push, update, onValue } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
@@ -579,6 +610,12 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
+
+    // Global handles to share state across dynamic dynamic scripts if required
+    window.db = db;
+    window.ref = ref;
+    window.get = get;
+    window.update = update;
 
     let uploadedFileText = "";
     let localExamDataCached = [];
@@ -619,7 +656,25 @@
       }
     });
 
-    // 2. Onboard Student Submission Logic
+    // 🔥 2. DYNAMICALLY GENERATE EXAM DROPDOWN OPTION LIST
+    onValue(ref(db, 'hackerrankExams'), (snap) => {
+      const dropdown = document.getElementById('adminContestSelectDropdown');
+      if (!dropdown) return;
+      
+      // Preserve first placeholder option element node
+      dropdown.innerHTML = '<option value="">-- Select Mapped Active Exam Template --</option>';
+      
+      if (snap.exists()) {
+        Object.keys(snap.val()).forEach(examSlug => {
+          const option = document.createElement('option');
+          option.value = examSlug;
+          option.textContent = examSlug.toUpperCase().replace(/-/g, ' ');
+          dropdown.appendChild(option);
+        });
+      }
+    });
+
+    // 3. Onboard Student Submission Logic
     document.getElementById('studentForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const name = document.getElementById('studentName').value.trim();
@@ -639,7 +694,7 @@
       }
     });
 
-    // 🔥 3. AI Quiz Generator Logic (బటన్ నొక్కినప్పుడు ఫైర్‌బేస్ క్విజ్ నోడ్‌లోకి వెళ్తుంది)
+    // 4. AI Quiz Generator Logic
     document.getElementById('actionGenQuizBtn').addEventListener('click', async () => {
       const topicTitle = document.getElementById('quizTopicTitle').value.trim();
       const count = document.getElementById('qCount').value;
@@ -653,10 +708,8 @@
         return;
       }
 
-      // క్విజ్ కీ కోసం సేఫ్ ఐడి జనరేట్ చేయడం
       const quizKey = 'quiz_' + Date.now();
 
-      // ఇక్కడ స్ట్రక్చర్ మీ 'quiz.html' లో చదివే విధంగా ఫార్మాట్ చేయబడింది
       const quizData = {
         title: topicTitle,
         difficulty: diff,
@@ -670,7 +723,6 @@
       try {
         await set(ref(db, `quizzes/${quizKey}`), quizData);
         alert(`⚡ Quiz "${topicTitle}" built & published successfully to Firebase!`);
-        // రీసెట్ ఫీల్డ్స్
         document.getElementById('quizTopicTitle').value = "";
         document.getElementById('quizContextText').value = "";
       } catch (err) {
@@ -678,7 +730,7 @@
       }
     });
 
-    // 4. Register HackerRank Contest Engine Configuration Link
+    // 5. Register HackerRank Contest Engine Configuration Link
     document.getElementById('loadContestBtn').addEventListener('click', async () => {
       const rawInput = document.getElementById('hackerrankLinkInput').value.trim();
       if(!rawInput) {
@@ -694,7 +746,6 @@
 
       try {
         await set(ref(db, 'settings/activeContestSlug'), slug);
-        // 🔥 ఫిక్స్: ఇక్కడ status ని 'active' గా పంపిస్తున్నాం, తద్వారా quiz.html లో ఇది కనబడుతుంది
         await update(ref(db, `hackerrankExams/${slug}`), {
           id: slug,
           title: slug.toUpperCase().replace(/-/g, ' ') + " CONTEST",
@@ -708,7 +759,7 @@
       }
     });
 
-    // 5. View Score Metrics Matrix Array Audit
+    // 6. View Score Metrics Matrix Array Audit
     document.getElementById('viewLbBtn').addEventListener('click', () => {
       const targetSlug = document.getElementById('viewLbLinkInput').value.trim();
       if(!targetSlug) {
@@ -747,7 +798,7 @@
       });
     });
 
-    // 6. Download Standalone Report Framework Array Sheet
+    // 7. Download Standalone Report Framework Array Sheet
     document.getElementById('downloadExamLbBtn').addEventListener('click', () => {
       if(localExamDataCached.length === 0) {
         alert("No active internal memory arrays structural records to commit execution.");
