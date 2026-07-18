@@ -193,15 +193,11 @@
       return String(id).trim().toLowerCase().replace(/[@\s]/g, '');
     }
 
-    // 🏆 HackerRank ఎక్సెల్ షీట్ మరియు బ్యాకెండ్ నుండి వచ్చే స్కోర్లను సేఫ్‌గా మార్చే అప్‌డేటెడ్ హెల్పర్
     function extractScore(row) {
       if (!row) return 0;
-      
-      // ఒకవేళ వాల్యూ ఆల్రెడీ నంబర్ ఐతే డైరెక్ట్ రిటర్న్ చేస్తాం
       if (typeof row === 'number') return row;
       if (row.score !== undefined && typeof row.score === 'number') return row.score;
 
-      // 1. Direct Field Checks
       const directKeys = ['score', 'Score', 'SCORE', 'marks', 'Marks', 'MARKS'];
       for (let k of directKeys) {
         if (row[k] !== undefined && row[k] !== null && row[k] !== "") {
@@ -210,7 +206,6 @@
         }
       }
 
-      // 2. Fallbacks
       const fallbacks = ["data2", "data3", "data", "data1"];
       for (let key of fallbacks) {
         if (row[key] !== undefined && row[key] !== null && row[key] !== "") {
@@ -222,7 +217,6 @@
         }
       }
 
-      // 3. Regex Dynamic Search
       for (let key in row) {
         if (key.toLowerCase().includes("score") || key.toLowerCase().includes("mark")) {
           let val = parseFloat(row[key]);
@@ -296,19 +290,23 @@
 
         const globalStudentsSnapshot = await get(ref(db, 'students'));
         const globalStudentsMap = globalStudentsSnapshot.exists() ? globalStudentsSnapshot.val() : {};
-        const globalStudentsArray = Object.values(globalStudentsMap);
+        
+        let globalStudentsArray = [];
+        if (globalStudentsMap) {
+          globalStudentsArray = Object.values(globalStudentsMap).filter(s => s !== null);
+        }
 
         let synchronizedRoster = [];
 
         Object.keys(scoresObj).forEach(key => {
           const scoreNode = scoresObj[key];
+          if (!scoreNode) return;
           
           const dbIdentifier = String(scoreNode.hrId || scoreNode.hackerRankId || key || "").trim();
           const cleanDbId = cleanIdentifier(dbIdentifier);
           
           let finalScore = extractScore(scoreNode);
 
-          // HackerRank ID ని బట్టి స్టూడెంట్స్ డేటాబేస్ నుండి క్రాస్-మ్యాచ్ చేస్తుంది
           let match = globalStudentsArray.find(s => 
             (s.hrId && cleanIdentifier(s.hrId) === cleanDbId) ||
             (s.rollNo && cleanIdentifier(s.rollNo) === cleanDbId)
@@ -321,11 +319,11 @@
             );
           }
 
-          let finalRollNo = match ? (match.rollNo || "N/A") : (scoreNode.rollNo || dbIdentifier);
+          let finalRollNo = match ? (match.rollNo || "N/A") : (scoreNode.rollNo || "N/A");
           let finalName = match ? (match.name || "Unknown") : (scoreNode.name || "Unknown");
           let finalHrId = match ? (match.hrId || dbIdentifier) : dbIdentifier;
           
-          let finalYear = "3rd Year"; // Default fallback
+          let finalYear = "3rd Year"; 
           if (match && match.year) {
             finalYear = match.year;
           } else if (finalRollNo !== "N/A" && finalRollNo.length >= 2) {
@@ -350,7 +348,6 @@
           });
         });
 
-        // స్కోర్ల ఆధారంగా Descending order లో సార్ట్ చేస్తుంది
         synchronizedRoster.sort((a, b) => b.score - a.score);
         currentLeaderboardData = synchronizedRoster;
         
@@ -358,7 +355,7 @@
       });
     }
 
-    // 🎯 EXCEL UPLOAD PARSER
+    // EXCEL UPLOAD PARSER
     document.getElementById('excelUploadInput').addEventListener('change', function(e) {
       const file = e.target.files[0];
       if (!file) return;
@@ -378,7 +375,11 @@
 
         const globalStudentsSnapshot = await get(ref(db, 'students'));
         const globalStudentsMap = globalStudentsSnapshot.exists() ? globalStudentsSnapshot.val() : {};
-        const globalStudentsArray = Object.values(globalStudentsMap);
+        
+        let globalStudentsArray = [];
+        if (globalStudentsMap) {
+          globalStudentsArray = Object.values(globalStudentsMap).filter(s => s !== null);
+        }
 
         const scoreUpdates = {};
 
