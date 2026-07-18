@@ -13,7 +13,8 @@ if not firebase_admin._apps:
     })
 
 # 2. ఒక కొత్త ఎగ్జామ్ టెంప్లేట్ క్రియేట్ చేస్తున్నాం
-EXAM_ID = "view-batch-2023-exam-practice-cse-acse-it"
+EXAM_ID = "# దీన్ని మార్చండి
+EXAM_ID = "day2-oop-batch-2023"
 print("⏳ Creating Exam Template in Firebase...")
 db.reference(f'hackerrankExams/{EXAM_ID}').set({
     "title": "AI Automated Python Exam"
