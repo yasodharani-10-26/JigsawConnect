@@ -6,12 +6,85 @@ import {
 } from "./firebase.js";
 
 document.addEventListener("DOMContentLoaded", () => {
+  // 1. Existing Team Automation Trigger
   const btn = document.getElementById("autoCreateTeamsBtn");
   if (btn) {
     btn.addEventListener("click", autoCreateTeams);
   }
+
+  // 2. New HackerRank Automated Leaderboard Trigger
+  const syncBtn = document.getElementById("syncHackerRankBtn");
+  if (syncBtn) {
+    syncBtn.addEventListener("click", handleHackerRankAutomation);
+  }
 });
 
+/**
+ * 🚀 NEW FUNCTION: Handles HackerRank Link Submission & Automation
+ * Sends the URL to the Vercel/Firebase Python API backend to auto-extract scores.
+ */
+async function handleHackerRankAutomation() {
+  const syncBtn = document.getElementById("syncHackerRankBtn");
+  const linkInput = document.getElementById("hackerRankUrlInput");
+  const examDropdown = document.getElementById("adminContestSelectDropdown"); // Make sure this ID exists in your HTML
+
+  if (!linkInput || !examDropdown) {
+    alert("⚠️ Setup Error: Input field or Exam dropdown not found in HTML layout.");
+    return;
+  }
+
+  const hackerrankUrl = linkInput.value.trim();
+  const selectedExamId = examDropdown.value;
+
+  if (!selectedExamId) {
+    alert("⚠️ Action Required: Please select an active Exam Template from the dropdown first.");
+    return;
+  }
+
+  if (!hackerrankUrl) {
+    alert("⚠️ Input Required: Please paste a valid HackerRank results link or raw leaderboard data.");
+    return;
+  }
+
+  // UI Visual Feedback Loop: Trigger loading state
+  const originalText = syncBtn.innerHTML;
+  syncBtn.disabled = true;
+  syncBtn.innerHTML = `<span>⏳</span> AI Extracting Scores...`;
+
+  try {
+    // Calling the Project Backend API Bridge (Python Endpoint)
+    const response = await fetch('/api/extract-scores', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        examId: selectedExamId,
+        url: hackerrankUrl
+      })
+    });
+
+    const result = await response.json();
+
+    if (response.ok && result.success) {
+      syncBtn.innerHTML = `<span>🎯</span> Leaderboard Synced!`;
+      alert("🎉 Cloud Automation Success! Scores extracted by AI and instantly pushed to the Global Leaderboard.");
+      linkInput.value = ""; // Clear input on success
+    } else {
+      throw new Error(result.error || "Server rejected the processing pipeline.");
+    }
+
+  } catch (error) {
+    console.error("Automation Gateway Interrupted:", error);
+    alert(`❌ Pipeline Error: ${error.message || "Failed to contact backend script."}`);
+  } finally {
+    resetButton(syncBtn, originalText);
+  }
+}
+
+/**
+ * 👥 EXISTING FUNCTION: Algorithmic Team Roster Optimization
+ */
 async function autoCreateTeams() {
   const btn = document.getElementById("autoCreateTeamsBtn");
   
