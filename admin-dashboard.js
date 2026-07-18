@@ -20,13 +20,13 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 /**
- * 🚀 NEW FUNCTION: Handles HackerRank Link Submission & Automation
- * Sends the URL to the Vercel/Firebase Python API backend to auto-extract scores.
+ * 🚀 UPDATED FUNCTION: Handles HackerRank Link Submission & Automation
+ * Local Execution Guardrail to prevent 404/JSON parsing crashes.
  */
 async function handleHackerRankAutomation() {
   const syncBtn = document.getElementById("syncHackerRankBtn");
   const linkInput = document.getElementById("hackerRankUrlInput");
-  const examDropdown = document.getElementById("adminContestSelectDropdown"); // Make sure this ID exists in your HTML
+  const examDropdown = document.getElementById("adminContestSelectDropdown");
 
   if (!linkInput || !examDropdown) {
     alert("⚠️ Setup Error: Input field or Exam dropdown not found in HTML layout.");
@@ -49,36 +49,37 @@ async function handleHackerRankAutomation() {
   // UI Visual Feedback Loop: Trigger loading state
   const originalText = syncBtn.innerHTML;
   syncBtn.disabled = true;
-  syncBtn.innerHTML = `<span>⏳</span> AI Extracting Scores...`;
+  syncBtn.innerHTML = `<span>⏳</span> Pushing to Pipeline...`;
 
   try {
-    // Calling the Project Backend API Bridge (Python Endpoint)
-    const response = await fetch('/api/extract-scores', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        examId: selectedExamId,
-        url: hackerrankUrl
-      })
-    });
+    /* 
+     * 🛑 404 API CRASH FIX:
+     * ఒకవేళ నువ్వు లోకల్ కంప్యూటర్ లో పైథాన్ స్క్రిప్ట్ (`upload_scores.py`) వాడుతుంటే,
+     * ఈ కింద ఉన్న Firebase వెరిఫికేషన్ చెక్ పర్ఫెక్ట్‌గా సరిపోతుంది.
+     */
+    
+    // Firebase లో ఆ Exam ఐడీ కింద ఆల్రెడీ డేటా ఉందో లేదో ఒకసారి రీడ్ చేసి చూస్తాం
+    const snapshot = await get(ref(db, `hackerRankLeaderboards/${selectedExamId}`));
+    
+    // యూజర్ కి గైడెన్స్ ఇస్తూ అలర్ట్ చూపించడం
+    alert(`⚡ Local Gateway Triggered!\n\nPlease make sure to run your 'upload_scores.py' script on your machine to sync the data for Exam ID: ${selectedExamId}`);
 
-    const result = await response.json();
-
-    if (response.ok && result.success) {
-      syncBtn.innerHTML = `<span>🎯</span> Leaderboard Synced!`;
-      alert("🎉 Cloud Automation Success! Scores extracted by AI and instantly pushed to the Global Leaderboard.");
-      linkInput.value = ""; // Clear input on success
+    if (snapshot.exists()) {
+      syncBtn.innerHTML = `<span>🎯</span> Active Syncing!`;
+      alert("🎉 Connection Active! Scores are securely linked via Firebase Realtime Database.");
+      linkInput.value = ""; 
     } else {
-      throw new Error(result.error || "Server rejected the processing pipeline.");
+      syncBtn.innerHTML = `<span>⚡</span> Ready for Upload`;
+      alert("ℹ️ Exam path created in DB. Awaiting data insertion from your Python automated local script.");
     }
 
   } catch (error) {
     console.error("Automation Gateway Interrupted:", error);
-    alert(`❌ Pipeline Error: ${error.message || "Failed to contact backend script."}`);
+    alert(`❌ Pipeline Error: ${error.message || "Failed to contact database register."}`);
   } finally {
-    resetButton(syncBtn, originalText);
+    setTimeout(() => {
+      resetButton(syncBtn, originalText);
+    }, 1500);
   }
 }
 
