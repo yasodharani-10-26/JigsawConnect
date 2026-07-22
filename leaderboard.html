@@ -307,6 +307,10 @@
           const scoreNode = scoresObj[key];
           if (!scoreNode) return;
           
+          // Filter out Sasi and Rani explicitly from realtime DB feed if present
+          const cleanName = String(scoreNode.name || "").trim().toLowerCase();
+          if (cleanName === "sasi" || cleanName === "rani") return;
+
           const dbIdentifier = String(scoreNode.hrId || scoreNode.hackerRankId || key || "").trim();
           const cleanDbId = cleanIdentifier(dbIdentifier);
           
@@ -389,6 +393,9 @@
         const scoreUpdates = {};
 
         excelRows.forEach(row => {
+          let rowName = String(row["Name"] || "").trim().toLowerCase();
+          if (rowName === "sasi" || rowName === "rani") return; // Filter out test entries
+
           let excelIdentifier = String(row["data"] || row["HackerRank ID"] || row["Roll Number"] || row["username"] || row["Username"] || "").trim();
           const cleanExcelId = cleanIdentifier(excelIdentifier);
 
