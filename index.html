@@ -297,7 +297,6 @@
       width: 100%;
       max-width: 650px;
       height: 380px;
-      object-fit: cover;
       border-radius: 24px;
       border: 1px solid rgba(255, 255, 255, 0.15);
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 35px var(--accent-glow);
@@ -468,7 +467,7 @@
     @media (max-width: 1200px) {
       .hero-container { flex-direction: column; text-align: center; }
       .hero-text { text-align: center; }
-      .college-display-img { max-width: 100%; height: auto; }
+      .college-display-img { max-width: 100%; height: 350px; }
     }
 
     @media (max-width: 1024px) {
@@ -487,6 +486,7 @@
       .navbar { padding: 16px 24px; }
       .hero-text h1 { font-size: 2.4rem; }
       .about-section { grid-template-columns: 1fr; }
+      .college-display-img { height: 260px; }
     }
   </style>
 </head>
@@ -549,7 +549,7 @@
 
     <main class="main-content-stream">
       
-      <!-- HERO SECTION (NO EXTRA BUTTONS INSIDE) -->
+      <!-- HERO SECTION WITH INTEGRATED EMBEDDED VIDEO -->
       <section class="hero-container">
         <div class="hero-text">
           <span class="hero-badge">✨ Vignan's Institute of Engineering for Women</span>
@@ -558,7 +558,16 @@
         </div>
 
         <div class="hero-image-wrapper">
-          <img src="https://i.postimg.cc/tT5ntVGS/Whats-App-Image-2026-07-03-at-00-12-13.jpg" alt="Platform Dashboard Interface" class="college-display-img">
+          <!-- YOUTUBE EMBED PLAYER -->
+          <iframe 
+            id="scrollVideo"
+            class="college-display-img"
+            src="https://www.youtube.com/embed/YwZZ-lqUHJI?enablejsapi=1&autoplay=1&mute=1&playlist=YwZZ-lqUHJI&loop=1&controls=0" 
+            title="StudyConnect Overview Video" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen>
+          </iframe>
         </div>
       </section>
 
@@ -669,5 +678,39 @@
     </div>
   </footer>
 
+  <!-- YOUTUBE IFRAME API SCRIPT FOR AUTOMATIC SCROLL PLAY/PAUSE -->
+  <script src="https://www.youtube.com/iframe_api"></script>
+  <script>
+    let player;
+
+    // Called automatically when YouTube API script is loaded
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('scrollVideo', {
+        events: {
+          'onReady': onPlayerReady
+        }
+      });
+    }
+
+    function onPlayerReady(event) {
+      // Browser Autoplay Policy meedha issue rakunda Audio ni Mute chestunnam
+      event.target.mute();
+      
+      // Intersection Observer setup to detect when video is visible on screen
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            // Video screen meedha kanipinchaagane PLAY avtundhi
+            player.playVideo();
+          } else {
+            // Video cross ayi vellipogaane PAUSE avtundhi
+            player.pauseVideo();
+          }
+        });
+      }, { threshold: 0.4 }); // 40% video viewport lo kanipinchaagane trigger avtundhi
+
+      observer.observe(document.getElementById('scrollVideo'));
+    }
+  </script>
 </body>
 </html>
