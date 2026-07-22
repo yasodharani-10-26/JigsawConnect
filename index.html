@@ -11,12 +11,12 @@
 
   <style>
     /* ==========================================================================
-       GLOBAL DESIGN SYSTEM & TOKENS
+       GLOBAL DESIGN SYSTEM DESIGN TOKENS
        ========================================================================== */
     :root {
-      --bg: #070a12;
-      --card-bg: rgba(18, 26, 47, 0.55);
-      --border: rgba(255, 255, 255, 0.1);
+      --bg: #0b0f19;
+      --card-bg: rgba(20, 30, 54, 0.45);
+      --border: rgba(255, 255, 255, 0.08);
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
       --primary: #2563eb;
@@ -24,8 +24,8 @@
       --accent-purple: #a855f7;
       --success: #10b981;
       --warning: #f59e0b;
-      --accent-glow: rgba(6, 182, 212, 0.25);
-      --primary-glow: rgba(37, 99, 235, 0.3);
+      --accent-glow: rgba(6, 182, 212, 0.15);
+      --primary-glow: rgba(37, 99, 235, 0.2);
     }
 
     * {
@@ -43,14 +43,16 @@
       line-height: 1.5;
     }
 
-    /* AMBIENT BACKGROUND GLOWS */
+    /* BACKGROUND GLOWS */
     body::before {
       content: '';
       position: fixed;
       width: 700px;
       height: 700px;
-      background: radial-gradient(circle, rgba(37, 99, 235, 0.25), transparent 70%);
-      top: -250px;
+      background: var(--primary);
+      filter: blur(240px);
+      opacity: 0.12;
+      top: -200px;
       left: -200px;
       z-index: -1;
       pointer-events: none;
@@ -61,15 +63,17 @@
       position: fixed;
       width: 700px;
       height: 700px;
-      background: radial-gradient(circle, rgba(168, 85, 247, 0.2), transparent 70%);
-      bottom: -250px;
+      background: var(--accent-purple);
+      filter: blur(240px);
+      opacity: 0.1;
+      bottom: -200px;
       right: -200px;
       z-index: -1;
       pointer-events: none;
     }
 
     /* ==========================================================================
-       NAVIGATION LAYER
+       NAVIGATION LAYER (ONLY ADMIN & STUDENT LOGIN BUTTONS)
        ========================================================================== */
     .navbar {
       position: fixed;
@@ -80,7 +84,7 @@
       justify-content: space-between;
       align-items: center;
       padding: 18px 6%;
-      background: rgba(7, 10, 18, 0.85);
+      background: rgba(11, 15, 25, 0.85);
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
       border-bottom: 1px solid var(--border);
@@ -93,15 +97,10 @@
       color: #fff;
       text-decoration: none;
       letter-spacing: -0.5px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
     }
 
     .logo span {
-      background: linear-gradient(135deg, var(--accent), var(--accent-purple));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      color: var(--accent);
     }
 
     .nav-actions {
@@ -110,7 +109,7 @@
       gap: 16px;
     }
 
-    /* BUTTONS */
+    /* ONLY LOGIN BUTTONS STYLING */
     .btn {
       display: inline-flex;
       align-items: center;
@@ -133,7 +132,7 @@
 
     .btn-primary:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(6, 182, 212, 0.5);
+      box-shadow: 0 8px 28px rgba(6, 182, 212, 0.4);
     }
 
     .btn-outline {
@@ -148,18 +147,18 @@
       box-shadow: 0 0 20px var(--accent-glow);
     }
 
-    /* MAIN CONTAINER WITH SIDEBAR */
+    /* MAIN LAYOUT CONTAINER */
     .home-layout-container {
-      max-width: 1480px;
+      max-width: 1440px;
       margin: 0 auto;
-      padding: 110px 24px 60px;
+      padding: 120px 24px 60px;
       display: flex;
-      gap: 32px;
+      gap: 30px;
     }
 
-    /* SIDEBAR NAVIGATION CARDS */
+    /* SIDEBAR INFORMATIONAL CARDS */
     .navigation-sidebar {
-      width: 270px;
+      width: 280px;
       display: flex;
       flex-direction: column;
       gap: 14px;
@@ -170,18 +169,16 @@
 
     .sidebar-card {
       background: var(--card-bg);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       border: 1px solid var(--border);
       border-radius: 16px;
       padding: 16px;
       display: flex;
       align-items: center;
       gap: 14px;
-      text-decoration: none;
       color: var(--text-main);
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-      cursor: pointer;
+      user-select: none;
     }
 
     .sidebar-card .icon-box {
@@ -193,8 +190,10 @@
       justify-content: center;
       font-size: 20px;
       background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--border);
-      transition: all 0.2s;
+    }
+
+    .sidebar-card .card-info {
+      flex: 1;
     }
 
     .sidebar-card .card-info h4 {
@@ -202,7 +201,7 @@
       font-weight: 700;
       display: flex;
       align-items: center;
-      gap: 6px;
+      justify-content: space-between;
     }
 
     .sidebar-card .card-info p {
@@ -211,16 +210,19 @@
       margin-top: 2px;
     }
 
-    .sidebar-card:hover {
-      transform: translateX(6px);
-      border-color: var(--accent);
-      background: rgba(6, 182, 212, 0.1);
+    .lock-tag {
+      font-size: 10px;
+      background: rgba(239, 68, 68, 0.15);
+      color: #f87171;
+      padding: 2px 8px;
+      border-radius: 10px;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      font-weight: 600;
     }
 
     .sidebar-card.active-card {
       border-color: var(--accent);
-      background: linear-gradient(135deg, rgba(6, 182, 212, 0.25), rgba(37, 99, 235, 0.15));
-      box-shadow: 0 0 20px var(--accent-glow);
+      background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), rgba(37, 99, 235, 0.1));
     }
 
     .sidebar-card.active-card .icon-box {
@@ -228,108 +230,98 @@
       color: #0b0f19;
     }
 
-    .lock-badge {
-      font-size: 10px;
-      background: rgba(255, 255, 255, 0.1);
-      padding: 2px 6px;
-      border-radius: 4px;
-      color: var(--warning);
-    }
-
-    /* MAIN CONTENT STREAM */
+    /* MAIN STREAM */
     .main-content-stream {
       flex: 1;
       display: flex;
       flex-direction: column;
-      gap: 50px;
+      gap: 60px;
     }
 
     /* HERO AREA STRUCTURE */
     .hero-container {
       display: flex;
-      flex-direction: column;
+      gap: 40px;
       align-items: center;
-      text-align: center;
-      gap: 30px;
-      padding: 20px 0;
+      padding: 10px 0;
     }
 
-    .hero-header-badge {
+    .hero-text {
+      flex: 1;
+      text-align: left;
+    }
+
+    .hero-badge {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 8px 20px;
+      padding: 8px 18px;
       border-radius: 30px;
-      background: rgba(6, 182, 212, 0.1);
-      border: 1px solid rgba(6, 182, 212, 0.3);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
       font-size: 13px;
-      font-weight: 700;
+      font-weight: 600;
       color: var(--accent);
+      margin-bottom: 20px;
     }
 
-    .hero h1 {
-      font-size: 3rem;
+    .hero-text h1 {
+      font-size: 3.2rem;
       font-weight: 800;
-      line-height: 1.2;
-      letter-spacing: -1px;
-      max-width: 900px;
+      line-height: 1.15;
+      margin-bottom: 20px;
+      letter-spacing: -1.5px;
     }
 
-    .hero h1 em {
+    .hero-text h1 em {
       font-style: normal;
-      background: linear-gradient(135deg, var(--accent), var(--accent-purple));
+      background: linear-gradient(135deg, var(--accent), #a855f7);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
-    /* EXPANDED IMAGE DISPLAY SHOWCASE */
+    .hero-text p {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
     .hero-image-wrapper {
-      width: 100%;
+      flex: 1.2;
       display: flex;
       justify-content: center;
       align-items: center;
-      margin-top: 10px;
     }
 
     .college-display-img {
       width: 100%;
-      max-width: 1100px;
-      height: auto;
+      max-width: 650px;
+      height: 380px;
+      object-fit: cover;
       border-radius: 24px;
       border: 1px solid rgba(255, 255, 255, 0.15);
-      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), 0 0 40px var(--accent-glow);
-      transition: transform 0.4s ease, box-shadow 0.4s ease;
-    }
-
-    .college-display-img:hover {
-      transform: scale(1.015);
-      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.8), 0 0 50px rgba(168, 85, 247, 0.3);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 35px var(--accent-glow);
     }
 
     /* TELEMETRY STATS */
     .stats-bar {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       gap: 20px;
     }
 
     .stat-node {
       background: var(--card-bg);
-      backdrop-filter: blur(16px);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       border: 1px solid var(--border);
       border-radius: 20px;
       padding: 24px;
       text-align: center;
-      transition: transform 0.3s;
-    }
-
-    .stat-node:hover {
-      transform: translateY(-4px);
-      border-color: rgba(6, 182, 212, 0.4);
     }
 
     .stat-node h2 {
-      font-size: 2.4rem;
+      font-size: 2.2rem;
       color: var(--accent);
       font-weight: 800;
     }
@@ -340,44 +332,35 @@
       text-transform: uppercase;
       font-weight: 700;
       margin-top: 4px;
-      letter-spacing: 0.5px;
     }
 
-    /* FEATURES SECTION */
+    /* FEATURES GRID */
     .section-title {
       font-size: 2.2rem;
       font-weight: 800;
-      margin-bottom: 24px;
+      margin-bottom: 30px;
       letter-spacing: -0.5px;
     }
 
     .section-title span {
-      background: linear-gradient(135deg, var(--accent), var(--accent-purple));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      color: var(--accent);
     }
 
     .feature-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 24px;
     }
 
     .feature-card {
       background: var(--card-bg);
       backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       border: 1px solid var(--border);
       padding: 32px;
       border-radius: 24px;
       position: relative;
       overflow: hidden;
-      transition: all 0.3s ease;
-    }
-
-    .feature-card:hover {
-      transform: translateY(-5px);
-      border-color: rgba(6, 182, 212, 0.4);
-      box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.7);
     }
 
     .badge-tag {
@@ -402,7 +385,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 16px;
+      border-radius: 14px;
       border: 1px solid var(--border);
     }
 
@@ -419,7 +402,7 @@
       line-height: 1.6;
     }
 
-    /* MISSION SECTION */
+    /* MISSION CARDS */
     .about-section {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -428,7 +411,8 @@
 
     .about-node {
       background: var(--card-bg);
-      backdrop-filter: blur(16px);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       border: 1px solid var(--border);
       border-radius: 20px;
       padding: 32px;
@@ -439,27 +423,26 @@
       margin-bottom: 12px;
     }
 
-    /* CALL TO ACTION */
+    /* CTA BANNER (CLEANED) */
     .cta-banner {
-      padding: 60px 40px;
+      padding: 50px 40px;
       text-align: center;
-      background: linear-gradient(135deg, rgba(37, 99, 235, 0.3), rgba(168, 85, 247, 0.2));
-      border: 1px solid rgba(168, 85, 247, 0.4);
-      backdrop-filter: blur(16px);
+      background: linear-gradient(135deg, rgba(29, 78, 216, 0.8), rgba(14, 116, 144, 0.8));
+      backdrop-filter: blur(12px);
       border-radius: 24px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .cta-banner h2 {
-      font-size: 2.5rem;
+      font-size: 2.2rem;
       font-weight: 800;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     /* FOOTER */
     .footer {
       padding: 60px 24px 30px;
-      background: rgba(5, 8, 15, 0.95);
+      background: rgba(7, 10, 16, 0.95);
       backdrop-filter: blur(12px);
       border-top: 1px solid var(--border);
     }
@@ -477,33 +460,17 @@
     .footer-brand p {
       color: var(--text-muted);
       font-size: 14px;
-      max-width: 380px;
+      max-width: 350px;
       margin-top: 10px;
     }
 
-    .footer-links-group h4 {
-      font-size: 14px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 16px;
-    }
-
-    .footer-links {
-      list-style: none;
-    }
-
-    .footer-links li { margin-bottom: 10px; }
-
-    .footer-links a {
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 14px;
-      transition: color 0.2s;
-    }
-
-    .footer-links a:hover { color: var(--accent); }
-
     /* RESPONSIVENESS */
+    @media (max-width: 1200px) {
+      .hero-container { flex-direction: column; text-align: center; }
+      .hero-text { text-align: center; }
+      .college-display-img { max-width: 100%; height: auto; }
+    }
+
     @media (max-width: 1024px) {
       .home-layout-container { flex-direction: column; }
       .navigation-sidebar {
@@ -517,15 +484,15 @@
     }
 
     @media (max-width: 768px) {
-      .navbar { padding: 16px 20px; }
-      .hero h1 { font-size: 2.2rem; }
+      .navbar { padding: 16px 24px; }
+      .hero-text h1 { font-size: 2.4rem; }
       .about-section { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
-  <!-- NAVBAR (Direct options removed, ONLY Admin & Student Portal) -->
+  <!-- NAVBAR: ONLY ADMIN & STUDENT LOGIN BUTTONS -->
   <nav class="navbar">
     <a href="index.html" class="logo">📚 Study<span>Connect</span></a>
     
@@ -537,62 +504,61 @@
 
   <div class="home-layout-container">
     
-    <!-- SIDEBAR NAVIGATION (Protected Access) -->
+    <!-- SIDEBAR: VISUAL DASHBOARD OVERVIEW -->
     <aside class="navigation-sidebar">
-      <a href="index.html" class="sidebar-card active-card">
+      <div class="sidebar-card active-card">
         <div class="icon-box">🏠</div>
         <div class="card-info">
           <h4>Home Overview</h4>
           <p>Ecosystem Landing</p>
         </div>
-      </a>
-
-      <div onclick="requireLogin('Discussions Forum')" class="sidebar-card">
+      </div>
+      
+      <div class="sidebar-card">
         <div class="icon-box">💬</div>
         <div class="card-info">
-          <h4>Discussions <span class="lock-badge">🔒 Login</span></h4>
+          <h4>Discussions <span class="lock-tag">Login Req</span></h4>
           <p>Peer Q&A Forums</p>
         </div>
       </div>
 
-      <div onclick="requireLogin('Assessments & Live Quizzes')" class="sidebar-card">
+      <div class="sidebar-card">
         <div class="icon-box">📝</div>
         <div class="card-info">
-          <h4>Assessments <span class="lock-badge">🔒 Login</span></h4>
+          <h4>Assessments <span class="lock-tag">Login Req</span></h4>
           <p>Adaptive Live Quizzes</p>
         </div>
       </div>
 
-      <div onclick="requireLogin('Placements Hub')" class="sidebar-card">
+      <div class="sidebar-card">
         <div class="icon-box">💼</div>
         <div class="card-info">
-          <h4>Placements Hub <span class="lock-badge">🔒 Login</span></h4>
+          <h4>Placements Hub <span class="lock-tag">Login Req</span></h4>
           <p>Drives & Tracking</p>
         </div>
       </div>
 
-      <div onclick="requireLogin('Global Leaderboard')" class="sidebar-card">
+      <div class="sidebar-card">
         <div class="icon-box">🏆</div>
         <div class="card-info">
-          <h4>Leaderboard <span class="lock-badge">🔒 Login</span></h4>
+          <h4>Leaderboard <span class="lock-tag">Login Req</span></h4>
           <p>Global Metrics</p>
         </div>
       </div>
     </aside>
 
-    <!-- MAIN CONTENT STREAM -->
     <main class="main-content-stream">
       
+      <!-- HERO SECTION (NO EXTRA BUTTONS INSIDE) -->
       <section class="hero-container">
-        <div class="hero-header-badge">✨ Vignan's Institute of Engineering for Women</div>
-        
-        <div class="hero">
-          <h1>JIGSAW <em>COLLABORATIVE</em> LEARNING</h1>
+        <div class="hero-text">
+          <span class="hero-badge">✨ Vignan's Institute of Engineering for Women</span>
+          <h1>JIGSAW <em>LEARNING & PLACEMENT</em> COLLABORATIVE LEARNING</h1>
+          <p>An integrated platform designed to empower students through peer collaboration, skill assessments, placement tracking, and interactive resources.</p>
         </div>
 
-        <!-- HIGH-RESOLUTION EXPANDED CAMPUS DISPLAY -->
         <div class="hero-image-wrapper">
-          <img src="https://i.postimg.cc/tT5ntVGS/Whats-App-Image-2026-07-03-at-00-12-13.jpg" alt="Vignan Institute Campus Display" class="college-display-img">
+          <img src="https://i.postimg.cc/tT5ntVGS/Whats-App-Image-2026-07-03-at-00-12-13.jpg" alt="Platform Dashboard Interface" class="college-display-img">
         </div>
       </section>
 
@@ -616,16 +582,16 @@
         </div>
       </section>
 
-      <!-- PLATFORM FEATURES -->
+      <!-- PLATFORM ECOSYSTEM -->
       <section id="features">
-        <h2 class="section-title">⚡ Core <span>Platform Capabilities</span></h2>
+        <h2 class="section-title">✨ Platform <span>Ecosystem Matrix</span></h2>
         
         <div class="feature-grid">
           <div class="feature-card">
             <span class="badge-tag" style="color: var(--success);">LIVE ASSESSMENT</span>
             <div class="feature-icon" style="border-color: var(--success); color: var(--success);">🚀</div>
             <h3>HackerRank Gateways</h3>
-            <p>Seamlessly authenticate profiles, submit verified codes, and sync automated exam scores into campus evaluation databases.</p>
+            <p>Authenticate profiles, submit verified codes, and sync automated exam scores into campus evaluation databases seamlessly.</p>
           </div>
 
           <div class="feature-card">
@@ -669,13 +635,13 @@
       <section class="about-section">
         <div class="about-node">
           <h3>🎯 Our Core Mission</h3>
-          <p style="color: var(--text-muted); font-size: 14px; margin-top: 8px; line-height: 1.6;">
+          <p style="color: var(--text-muted); font-size: 14px; margin-top: 6px; line-height: 1.6;">
             To systematically remove friction from collegiate networking by unifying distributed student nodes, resource repositories, code groups, and skill mapping metrics into one high-performance interface.
           </p>
         </div>
         <div class="about-node">
           <h3>💡 Why StudyConnect?</h3>
-          <p style="color: var(--text-muted); font-size: 14px; margin-top: 8px; line-height: 1.6;">
+          <p style="color: var(--text-muted); font-size: 14px; margin-top: 6px; line-height: 1.6;">
             Unlike disconnected workspace channels, StudyConnect forms a tailored academic ecosystem engineered to log milestones, demonstrate performance data, and drive actual technical portfolio outputs.
           </p>
         </div>
@@ -683,29 +649,19 @@
 
       <!-- CTA BANNER -->
       <section class="cta-banner">
-        <h2>Ready to Access Your Workspace?</h2>
-        <p style="color: #e2e8f0; margin-bottom: 24px;">Please authenticate through your portal credentials to enter discussions, assessments, and placement drives.</p>
-        <div style="display: flex; gap: 16px; justify-content: center;">
-          <a href="student-login.html" class="btn btn-primary">🎓 Student Portal Login</a>
-          <a href="admin-login.html" class="btn btn-outline">🔑 Admin Login</a>
-        </div>
+        <h2>Secure Portal Access</h2>
+        <p style="color: #e2e8f0;">Please sign in using the top navigation bar with your Student Portal or Admin credentials to access full platform modules.</p>
       </section>
 
     </main>
   </div>
 
+  <!-- FOOTER -->
   <footer class="footer">
     <div class="footer-content">
       <div class="footer-brand">
         <h3 style="font-weight: 800;">📚 StudyConnect</h3>
         <p>Empowering students through high-impact collaboration, continuous learning infrastructure, and system resource optimization.</p>
-      </div>
-      <div class="footer-links-group">
-        <h4 style="color: var(--accent);">Authentication Portals</h4>
-        <ul class="footer-links">
-          <li><a href="admin-login.html">🔑 Admin Portal Login</a></li>
-          <li><a href="student-login.html">🎓 Student Portal Login</a></li>
-        </ul>
       </div>
     </div>
     <div style="text-align: center; border-top: 1px solid var(--border); padding-top: 20px; color: #64748b; font-size: 13px;">
@@ -713,11 +669,5 @@
     </div>
   </footer>
 
-  <script>
-    function requireLogin(featureName) {
-      alert("🔒 Access Restricted!\n\nYou must log in first to access '" + featureName + "'. Please choose 'Student Portal' or 'Admin Login'.");
-      window.location.href = "student-login.html";
-    }
-  </script>
 </body>
 </html>
