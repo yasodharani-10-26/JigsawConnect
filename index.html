@@ -11,12 +11,12 @@
 
   <style>
     /* ==========================================================================
-       GLOBAL DESIGN SYSTEM DESIGN TOKENS
+       GLOBAL DESIGN SYSTEM & TOKENS
        ========================================================================== */
     :root {
-      --bg: #0b0f19;
-      --card-bg: rgba(20, 30, 54, 0.45);
-      --border: rgba(255, 255, 255, 0.08);
+      --bg: #070a12;
+      --card-bg: rgba(18, 26, 47, 0.55);
+      --border: rgba(255, 255, 255, 0.1);
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
       --primary: #2563eb;
@@ -24,8 +24,8 @@
       --accent-purple: #a855f7;
       --success: #10b981;
       --warning: #f59e0b;
-      --accent-glow: rgba(6, 182, 212, 0.15);
-      --primary-glow: rgba(37, 99, 235, 0.2);
+      --accent-glow: rgba(6, 182, 212, 0.25);
+      --primary-glow: rgba(37, 99, 235, 0.3);
     }
 
     * {
@@ -43,16 +43,14 @@
       line-height: 1.5;
     }
 
-    /* BACKGROUND GLOWS */
+    /* AMBIENT BACKGROUND GLOWS */
     body::before {
       content: '';
       position: fixed;
-      width: 600px;
-      height: 600px;
-      background: var(--primary);
-      filter: blur(220px);
-      opacity: 0.12;
-      top: -200px;
+      width: 700px;
+      height: 700px;
+      background: radial-gradient(circle, rgba(37, 99, 235, 0.25), transparent 70%);
+      top: -250px;
       left: -200px;
       z-index: -1;
       pointer-events: none;
@@ -61,19 +59,17 @@
     body::after {
       content: '';
       position: fixed;
-      width: 600px;
-      height: 600px;
-      background: var(--accent-purple);
-      filter: blur(220px);
-      opacity: 0.08;
-      bottom: -200px;
+      width: 700px;
+      height: 700px;
+      background: radial-gradient(circle, rgba(168, 85, 247, 0.2), transparent 70%);
+      bottom: -250px;
       right: -200px;
       z-index: -1;
       pointer-events: none;
     }
 
     /* ==========================================================================
-       NAVIGATION LAYER WITH SIDEBAR COMPATIBILITY
+       NAVIGATION LAYER
        ========================================================================== */
     .navbar {
       position: fixed;
@@ -83,8 +79,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 20px 6%;
-      background: rgba(11, 15, 25, 0.85);
+      padding: 18px 6%;
+      background: rgba(7, 10, 18, 0.85);
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
       border-bottom: 1px solid var(--border);
@@ -97,34 +93,21 @@
       color: #fff;
       text-decoration: none;
       letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .logo span {
-      color: var(--accent);
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 32px;
-    }
-
-    .nav-links a:not(.btn) {
-      text-decoration: none;
-      color: var(--text-muted);
-      font-size: 14px;
-      font-weight: 600;
-      transition: color 0.25s ease;
-    }
-
-    .nav-links a:not(.btn):hover, .nav-links a.active {
-      color: var(--accent);
+      background: linear-gradient(135deg, var(--accent), var(--accent-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
     .nav-actions {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 16px;
     }
 
     /* BUTTONS */
@@ -132,28 +115,30 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      padding: 12px 24px;
+      padding: 12px 26px;
       border-radius: 12px;
       text-decoration: none;
       font-size: 14px;
       font-weight: 700;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
     }
 
     .btn-primary {
       background: linear-gradient(135deg, var(--accent), var(--primary));
       color: white;
       box-shadow: 0 4px 20px var(--primary-glow);
+      border: none;
     }
 
     .btn-primary:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 24px rgba(6, 182, 212, 0.4);
+      box-shadow: 0 8px 25px rgba(6, 182, 212, 0.5);
     }
 
     .btn-outline {
-      border: 1px solid rgba(6, 182, 212, 0.3);
-      background: rgba(6, 182, 212, 0.03);
+      border: 1px solid rgba(6, 182, 212, 0.4);
+      background: rgba(6, 182, 212, 0.05);
       color: var(--accent);
     }
 
@@ -165,16 +150,16 @@
 
     /* MAIN CONTAINER WITH SIDEBAR */
     .home-layout-container {
-      max-width: 1440px;
+      max-width: 1480px;
       margin: 0 auto;
-      padding: 120px 24px 60px;
+      padding: 110px 24px 60px;
       display: flex;
-      gap: 30px;
+      gap: 32px;
     }
 
     /* SIDEBAR NAVIGATION CARDS */
     .navigation-sidebar {
-      width: 260px;
+      width: 270px;
       display: flex;
       flex-direction: column;
       gap: 14px;
@@ -185,8 +170,8 @@
 
     .sidebar-card {
       background: var(--card-bg);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       border: 1px solid var(--border);
       border-radius: 16px;
       padding: 16px;
@@ -196,23 +181,28 @@
       text-decoration: none;
       color: var(--text-main);
       transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
     }
 
     .sidebar-card .icon-box {
-      width: 42px;
-      height: 42px;
-      border-radius: 10px;
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 20px;
       background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
       transition: all 0.2s;
     }
 
     .sidebar-card .card-info h4 {
       font-size: 14px;
       font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
     .sidebar-card .card-info p {
@@ -222,14 +212,15 @@
     }
 
     .sidebar-card:hover {
-      transform: translateX(4px);
+      transform: translateX(6px);
       border-color: var(--accent);
       background: rgba(6, 182, 212, 0.1);
     }
 
     .sidebar-card.active-card {
       border-color: var(--accent);
-      background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), rgba(37, 99, 235, 0.1));
+      background: linear-gradient(135deg, rgba(6, 182, 212, 0.25), rgba(37, 99, 235, 0.15));
+      box-shadow: 0 0 20px var(--accent-glow);
     }
 
     .sidebar-card.active-card .icon-box {
@@ -237,108 +228,108 @@
       color: #0b0f19;
     }
 
+    .lock-badge {
+      font-size: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: var(--warning);
+    }
+
     /* MAIN CONTENT STREAM */
     .main-content-stream {
       flex: 1;
       display: flex;
       flex-direction: column;
-      gap: 60px;
+      gap: 50px;
     }
 
     /* HERO AREA STRUCTURE */
     .hero-container {
       display: flex;
-      gap: 40px;
+      flex-direction: column;
       align-items: center;
-      padding: 40px 0;
+      text-align: center;
+      gap: 30px;
+      padding: 20px 0;
     }
 
-    .hero {
-      flex: 1;
-      text-align: left;
-    }
-
-    .hero-image-wrapper {
-      flex: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .college-display-img {
-      width: 100%;
-      max-width: 500px;
-      height: auto;
-      border-radius: 20px;
-      border: 1px solid var(--border);
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 25px var(--accent-glow);
-      transition: transform 0.3s ease;
-    }
-
-    .college-display-img:hover {
-      transform: scale(1.02);
-    }
-
-    .hero-badge {
+    .hero-header-badge {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 8px 18px;
+      padding: 8px 20px;
       border-radius: 30px;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--border);
+      background: rgba(6, 182, 212, 0.1);
+      border: 1px solid rgba(6, 182, 212, 0.3);
       font-size: 13px;
-      font-weight: 600;
+      font-weight: 700;
       color: var(--accent);
-      margin-bottom: 24px;
     }
 
     .hero h1 {
-      font-size: 3.5rem;
+      font-size: 3rem;
       font-weight: 800;
-      line-height: 1.15;
-      margin-bottom: 20px;
-      letter-spacing: -1.5px;
+      line-height: 1.2;
+      letter-spacing: -1px;
+      max-width: 900px;
     }
 
     .hero h1 em {
       font-style: normal;
-      background: linear-gradient(135deg, var(--accent), #a855f7);
+      background: linear-gradient(135deg, var(--accent), var(--accent-purple));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
-    .hero p {
-      font-size: 1.15rem;
-      color: var(--text-muted);
-      margin-bottom: 32px;
-      max-width: 800px;
+    /* EXPANDED IMAGE DISPLAY SHOWCASE */
+    .hero-image-wrapper {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 10px;
     }
 
-    .hero-buttons {
-      display: flex;
-      gap: 16px;
+    .college-display-img {
+      width: 100%;
+      max-width: 1100px;
+      height: auto;
+      border-radius: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), 0 0 40px var(--accent-glow);
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .college-display-img:hover {
+      transform: scale(1.015);
+      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.8), 0 0 50px rgba(168, 85, 247, 0.3);
     }
 
     /* TELEMETRY STATS */
     .stats-bar {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 20px;
     }
 
     .stat-node {
       background: var(--card-bg);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(16px);
       border: 1px solid var(--border);
       border-radius: 20px;
       padding: 24px;
       text-align: center;
+      transition: transform 0.3s;
+    }
+
+    .stat-node:hover {
+      transform: translateY(-4px);
+      border-color: rgba(6, 182, 212, 0.4);
     }
 
     .stat-node h2 {
-      font-size: 2.2rem;
+      font-size: 2.4rem;
       color: var(--accent);
       font-weight: 800;
     }
@@ -349,19 +340,21 @@
       text-transform: uppercase;
       font-weight: 700;
       margin-top: 4px;
+      letter-spacing: 0.5px;
     }
 
     /* FEATURES SECTION */
     .section-title {
       font-size: 2.2rem;
       font-weight: 800;
-      margin-bottom: 30px;
+      margin-bottom: 24px;
       letter-spacing: -0.5px;
-      position: relative;
     }
 
     .section-title span {
-      color: var(--accent);
+      background: linear-gradient(135deg, var(--accent), var(--accent-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
     .feature-grid {
@@ -373,31 +366,18 @@
     .feature-card {
       background: var(--card-bg);
       backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
       border: 1px solid var(--border);
       padding: 32px;
       border-radius: 24px;
       position: relative;
       overflow: hidden;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .feature-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; width: 4px; height: 100%;
-      background: transparent;
-      transition: background 0.3s;
-    }
-
-    .feature-card:hover::before {
-      background: var(--accent);
+      transition: all 0.3s ease;
     }
 
     .feature-card:hover {
-      transform: translateY(-4px);
-      border-color: rgba(6, 182, 212, 0.3);
-      box-shadow: 0 20px 40px -20px rgba(0,0,0,0.6);
+      transform: translateY(-5px);
+      border-color: rgba(6, 182, 212, 0.4);
+      box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.7);
     }
 
     .badge-tag {
@@ -413,12 +393,6 @@
       border: 1px solid var(--border);
     }
 
-    .feature-card:hover .badge-tag {
-      background: rgba(6, 182, 212, 0.15);
-      color: var(--accent);
-      border-color: rgba(6, 182, 212, 0.3);
-    }
-
     .feature-icon {
       font-size: 2.2rem;
       margin-bottom: 20px;
@@ -428,7 +402,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 14px;
+      border-radius: 16px;
       border: 1px solid var(--border);
     }
 
@@ -445,96 +419,7 @@
       line-height: 1.6;
     }
 
-    /* SKILL MATRIX SIMULATOR */
-    .skill-simulator-card {
-      background: linear-gradient(135deg, rgba(168, 85, 247, 0.12), rgba(6, 182, 212, 0.06));
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(168, 85, 247, 0.3);
-      border-radius: 24px;
-      padding: 32px;
-    }
-
-    .simulator-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-
-    .simulator-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 30px;
-      margin-top: 20px;
-    }
-
-    .streak-box {
-      background: rgba(11, 15, 25, 0.7);
-      border: 1px solid var(--border);
-      padding: 20px;
-      border-radius: 16px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-    }
-
-    .streak-counter {
-      font-size: 3rem;
-      font-weight: 800;
-      color: var(--warning);
-      line-height: 1;
-    }
-
-    .progress-bar-container {
-      margin-bottom: 14px;
-    }
-
-    .progress-label {
-      display: flex;
-      justify-content: space-between;
-      font-size: 13px;
-      margin-bottom: 6px;
-      color: var(--text-main);
-    }
-
-    .progress-track {
-      width: 100%;
-      height: 8px;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 10px;
-      overflow: hidden;
-    }
-
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--accent), var(--accent-purple));
-      width: 0%;
-      transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .sim-btn {
-      margin-top: 15px;
-      width: 100%;
-      background: rgba(255, 255, 255, 0.05);
-      color: white;
-      border: 1px solid var(--border);
-      padding: 12px;
-      border-radius: 10px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .sim-btn:hover {
-      background: var(--accent-purple);
-      border-color: var(--accent-purple);
-      box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
-    }
-
-    /* MISSION CARD BOXES */
+    /* MISSION SECTION */
     .about-section {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -543,8 +428,7 @@
 
     .about-node {
       background: var(--card-bg);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(16px);
       border: 1px solid var(--border);
       border-radius: 20px;
       padding: 32px;
@@ -559,11 +443,11 @@
     .cta-banner {
       padding: 60px 40px;
       text-align: center;
-      background: linear-gradient(135deg, rgba(29, 78, 216, 0.9), rgba(14, 116, 144, 0.9));
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.3), rgba(168, 85, 247, 0.2));
+      border: 1px solid rgba(168, 85, 247, 0.4);
+      backdrop-filter: blur(16px);
       border-radius: 24px;
-      box-shadow: 0 20px 50px rgba(37, 99, 235, 0.2);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
     }
 
     .cta-banner h2 {
@@ -575,7 +459,7 @@
     /* FOOTER */
     .footer {
       padding: 60px 24px 30px;
-      background: rgba(7, 10, 16, 0.95);
+      background: rgba(5, 8, 15, 0.95);
       backdrop-filter: blur(12px);
       border-top: 1px solid var(--border);
     }
@@ -593,7 +477,7 @@
     .footer-brand p {
       color: var(--text-muted);
       font-size: 14px;
-      max-width: 350px;
+      max-width: 380px;
       margin-top: 10px;
     }
 
@@ -620,12 +504,6 @@
     .footer-links a:hover { color: var(--accent); }
 
     /* RESPONSIVENESS */
-    @media (max-width: 1200px) {
-      .hero-container { flex-direction: column; text-align: center; }
-      .hero { text-align: center; }
-      .hero-buttons { justify-content: center; }
-    }
-
     @media (max-width: 1024px) {
       .home-layout-container { flex-direction: column; }
       .navigation-sidebar {
@@ -639,78 +517,86 @@
     }
 
     @media (max-width: 768px) {
-      .navbar { padding: 16px 24px; flex-direction: column; gap: 12px; }
-      .nav-links { gap: 16px; }
-      .hero h1 { font-size: 2.6rem; }
-      .simulator-grid { grid-template-columns: 1fr; }
+      .navbar { padding: 16px 20px; }
+      .hero h1 { font-size: 2.2rem; }
       .about-section { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
+  <!-- NAVBAR (Direct options removed, ONLY Admin & Student Portal) -->
   <nav class="navbar">
     <a href="index.html" class="logo">📚 Study<span>Connect</span></a>
-    <div class="nav-links">
-      <a href="index.html" class="active">Home</a>
-      <a href="discussions.html">Discussions</a>
-      <a href="quiz.html">Quiz Portal</a>
-      <a href="placements.html">Placements</a>
-    </div>
+    
     <div class="nav-actions">
-      <a href="admin-login.html" class="btn btn-outline">Admin</a>
-      <a href="student-login.html" class="btn btn-primary">Student Portal</a>
+      <a href="admin-login.html" class="btn btn-outline">🔑 Admin Login</a>
+      <a href="student-login.html" class="btn btn-primary">🎓 Student Portal</a>
     </div>
   </nav>
 
   <div class="home-layout-container">
     
+    <!-- SIDEBAR NAVIGATION (Protected Access) -->
     <aside class="navigation-sidebar">
       <a href="index.html" class="sidebar-card active-card">
         <div class="icon-box">🏠</div>
         <div class="card-info">
-          <h4>Home Dashboard</h4>
-          <p>Ecosystem Overview</p>
+          <h4>Home Overview</h4>
+          <p>Ecosystem Landing</p>
         </div>
       </a>
-      <a href="discussions.html" class="sidebar-card">
+
+      <div onclick="requireLogin('Discussions Forum')" class="sidebar-card">
         <div class="icon-box">💬</div>
         <div class="card-info">
-          <h4>Discussions</h4>
+          <h4>Discussions <span class="lock-badge">🔒 Login</span></h4>
           <p>Peer Q&A Forums</p>
         </div>
-      </a>
-      <a href="quiz.html" class="sidebar-card">
+      </div>
+
+      <div onclick="requireLogin('Assessments & Live Quizzes')" class="sidebar-card">
         <div class="icon-box">📝</div>
         <div class="card-info">
-          <h4>Assessments</h4>
+          <h4>Assessments <span class="lock-badge">🔒 Login</span></h4>
           <p>Adaptive Live Quizzes</p>
         </div>
-      </a>
-      <a href="placements.html" class="sidebar-card">
+      </div>
+
+      <div onclick="requireLogin('Placements Hub')" class="sidebar-card">
         <div class="icon-box">💼</div>
         <div class="card-info">
-          <h4>Placements Hub</h4>
+          <h4>Placements Hub <span class="lock-badge">🔒 Login</span></h4>
           <p>Drives & Tracking</p>
         </div>
-      </a>
-      <a href="leaderboard.html" class="sidebar-card">
+      </div>
+
+      <div onclick="requireLogin('Global Leaderboard')" class="sidebar-card">
         <div class="icon-box">🏆</div>
         <div class="card-info">
-          <h4>Leaderboard</h4>
-          <p>Global Matrices</p>
+          <h4>Leaderboard <span class="lock-badge">🔒 Login</span></h4>
+          <p>Global Metrics</p>
         </div>
-      </a>
+      </div>
     </aside>
 
+    <!-- MAIN CONTENT STREAM -->
     <main class="main-content-stream">
       
-      
-        <div class="hero-image-wrapper">
-          <img src="https://i.postimg.cc/tT5ntVGS/Whats-App-Image-2026-07-03-at-00-12-13.jpg" alt="Platform Dashboard Interface" class="college-display-img">
+      <section class="hero-container">
+        <div class="hero-header-badge">✨ Vignan's Institute of Engineering for Women</div>
+        
+        <div class="hero">
+          <h1>Next-Gen Collaborative <em>Learning & Placement</em> Ecosystem</h1>
         </div>
-    
 
+        <!-- HIGH-RESOLUTION EXPANDED CAMPUS DISPLAY -->
+        <div class="hero-image-wrapper">
+          <img src="https://i.postimg.cc/tT5ntVGS/Whats-App-Image-2026-07-03-at-00-12-13.jpg" alt="Vignan Institute Campus Display" class="college-display-img">
+        </div>
+      </section>
+
+      <!-- STATS BAR -->
       <section class="stats-bar">
         <div class="stat-node">
           <h2>1.2k+</h2>
@@ -730,8 +616,9 @@
         </div>
       </section>
 
+      <!-- PLATFORM FEATURES -->
       <section id="features">
-        <h2 class="section-title">✨ Platform <span>Ecosystem Matrix</span></h2>
+        <h2 class="section-title">⚡ Core <span>Platform Capabilities</span></h2>
         
         <div class="feature-grid">
           <div class="feature-card">
@@ -778,25 +665,30 @@
         </div>
       </section>
 
+      <!-- ABOUT & MISSION -->
       <section class="about-section">
         <div class="about-node">
           <h3>🎯 Our Core Mission</h3>
-          <p style="color: var(--text-muted); font-size: 14px; margin-top: 6px; line-height: 1.6;">
+          <p style="color: var(--text-muted); font-size: 14px; margin-top: 8px; line-height: 1.6;">
             To systematically remove friction from collegiate networking by unifying distributed student nodes, resource repositories, code groups, and skill mapping metrics into one high-performance interface.
           </p>
         </div>
         <div class="about-node">
           <h3>💡 Why StudyConnect?</h3>
-          <p style="color: var(--text-muted); font-size: 14px; margin-top: 6px; line-height: 1.6;">
+          <p style="color: var(--text-muted); font-size: 14px; margin-top: 8px; line-height: 1.6;">
             Unlike disconnected workspace channels, StudyConnect forms a tailored academic ecosystem engineered to log milestones, demonstrate performance data, and drive actual technical portfolio outputs.
           </p>
         </div>
       </section>
 
+      <!-- CTA BANNER -->
       <section class="cta-banner">
-        <h2>Ready to Start Your Journey?</h2>
-        <p style="color: #e2e8f0; margin-bottom: 24px;">Initialize your profile parameters and collaborate with active students inside the pipeline today.</p>
-        <a href="student-login.html" class="btn btn-primary">🚀 Join Workspace Now</a>
+        <h2>Ready to Access Your Workspace?</h2>
+        <p style="color: #e2e8f0; margin-bottom: 24px;">Please authenticate through your portal credentials to enter discussions, assessments, and placement drives.</p>
+        <div style="display: flex; gap: 16px; justify-content: center;">
+          <a href="student-login.html" class="btn btn-primary">🎓 Student Portal Login</a>
+          <a href="admin-login.html" class="btn btn-outline">🔑 Admin Login</a>
+        </div>
       </section>
 
     </main>
@@ -809,12 +701,10 @@
         <p>Empowering students through high-impact collaboration, continuous learning infrastructure, and system resource optimization.</p>
       </div>
       <div class="footer-links-group">
-        <h4>Navigation Gateways</h4>
+        <h4 style="color: var(--accent);">Authentication Portals</h4>
         <ul class="footer-links">
-          <li><a href="admin-login.html">Admin Portal Login</a></li>
-          <li><a href="student-login.html">Student Portal Login</a></li>
-          <li><a href="discussions.html">Community Discussions Feed</a></li>
-          <li><a href="leaderboard.html">Global Leaderboard Ledger</a></li>
+          <li><a href="admin-login.html">🔑 Admin Portal Login</a></li>
+          <li><a href="student-login.html">🎓 Student Portal Login</a></li>
         </ul>
       </div>
     </div>
@@ -824,26 +714,10 @@
   </footer>
 
   <script>
-    function triggerSimulationMetrics() {
-      const dsa = Math.floor(Math.random() * 30) + 65;
-      const sys = Math.floor(Math.random() * 40) + 55;
-      const algo = Math.floor(Math.random() * 25) + 75;
-      
-      document.getElementById("fillDsa").style.width = dsa + "%";
-      document.getElementById("fillSys").style.width = sys + "%";
-      document.getElementById("fillAlgo").style.width = algo + "%";
-      
-      document.getElementById("valDsa").innerText = dsa + "%";
-      document.getElementById("valSys").innerText = sys + "%";
-      document.getElementById("valAlgo").innerText = algo + "%";
-      
-      const currentStreak = parseInt(document.getElementById("streakNum").innerText, 10);
-      document.getElementById("streakNum").innerText = currentStreak + 1;
+    function requireLogin(featureName) {
+      alert("🔒 Access Restricted!\n\nYou must log in first to access '" + featureName + "'. Please choose 'Student Portal' or 'Admin Login'.");
+      window.location.href = "student-login.html";
     }
-    
-    window.addEventListener("DOMContentLoaded", () => {
-      setTimeout(triggerSimulationMetrics, 600);
-    });
   </script>
 </body>
 </html>
