@@ -123,6 +123,7 @@
         <option value="CSM">CSM</option>
         <option value="CSD">CSD</option>
         <option value="CAI">CAI</option>
+        <option value="CSC">CSC</option>
       </select>
       <select id="sectionFilter" class="select-control" style="min-width: 120px;">
         <option value="">All Sections</option>
@@ -165,7 +166,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
-    import { getDatabase, ref, set, get, onValue, update } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
+    import { getDatabase, ref, set, get, onValue } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCaCkliRZk8HmNtOsJpoA084YhNY7MeMWM",
@@ -197,21 +198,25 @@
       return String(id).trim().toLowerCase().replace(/[@\s]/g, '');
     }
 
+    // Flexible extraction to catch any score column layout
     function extractScore(row) {
-      if (!row) return 0;
+      if (row === null || row === undefined) return 0;
       if (typeof row === 'number') return row;
-      if (row.score !== undefined && typeof row.score === 'number') return row.score;
-
-      const directKeys = ['score', 'Score', 'SCORE', 'marks', 'Marks', 'MARKS'];
+      
+      const directKeys = ['score', 'Score', 'SCORE', 'marks', 'Marks', 'MARKS', 'total', 'Total', 'data2', 'data3'];
       for (let k of directKeys) {
         if (row[k] !== undefined && row[k] !== null && row[k] !== "") {
-          let val = parseFloat(row[k]);
-          if (!isNaN(val)) return val;
+          let strVal = String(row[k]).trim();
+          if (!strVal.includes(':')) {
+            let val = parseFloat(strVal);
+            if (!isNaN(val)) return val;
+          }
         }
       }
 
       for (let key in row) {
-        if (key.toLowerCase().includes("score") || key.toLowerCase().includes("mark")) {
+        let lKey = key.toLowerCase();
+        if (lKey.includes("score") || lKey.includes("mark") || lKey.includes("total")) {
           let val = parseFloat(row[key]);
           if (!isNaN(val)) return val;
         }
@@ -280,69 +285,34 @@
         return;
       }
 
-      leaderboardListenerUnsub = onValue(ref(db, `hackerRankLeaderboards/${selectedExamId}`), async (snapshot) => {
+      leaderboardListenerUnsub = onValue(ref(db, `hackerRankLeaderboards/${selectedExamId}`), (snapshot) => {
         const scoresObj = snapshot.exists() ? snapshot.val() : {};
-
-        const globalStudentsSnapshot = await get(ref(db, 'students'));
-        const globalStudentsMap = globalStudentsSnapshot.exists() ? globalStudentsSnapshot.val() : {};
-        
-        let globalStudentsArray = [];
-        if (globalStudentsMap) {
-          globalStudentsArray = Object.values(globalStudentsMap).filter(s => s !== null);
-        }
-
         let synchronizedRoster = [];
 
         Object.keys(scoresObj).forEach(key => {
           const scoreNode = scoresObj[key];
           if (!scoreNode) return;
-          
-          const dbIdentifier = String(scoreNode.hrId || scoreNode.hackerRankId || scoreNode.rollNo || key || "").trim();
-          const cleanDbId = cleanIdentifier(dbIdentifier);
-          
+
+          let finalRollNo = scoreNode.rollNo || scoreNode["Roll Number"] || key || "N/A";
+          let finalName = scoreNode.name || scoreNode["Name"] || "Unknown";
+          let finalHrId = scoreNode.hrId || scoreNode["HackerRank ID"] || "N/A";
+          let finalBranch = scoreNode.branch || scoreNode["Branch"] || "CSE";
+          let finalSection = scoreNode.section || scoreNode["Section"] || "A";
+          let finalYear = scoreNode.year || scoreNode["Year"] || "3rd Year";
           let finalScore = extractScore(scoreNode);
-
-          let match = globalStudentsArray.find(s => 
-            (s.hrId && cleanIdentifier(s.hrId) === cleanDbId) ||
-            (s.rollNo && cleanIdentifier(s.rollNo) === cleanDbId)
-          );
-
-          if (!match && scoreNode.rollNo && scoreNode.rollNo !== "N/A") {
-            const cleanRoll = cleanIdentifier(scoreNode.rollNo);
-            match = globalStudentsArray.find(s => 
-              s.rollNo && cleanIdentifier(s.rollNo) === cleanRoll
-            );
-          }
-
-          let finalRollNo = match ? (match.rollNo || "N/A") : (scoreNode.rollNo || scoreNode["Roll Number"] || "N/A");
-          let finalName = match ? (match.name || "Unknown") : (scoreNode.name || scoreNode["Name"] || "Unknown");
-          let finalHrId = match ? (match.hrId || dbIdentifier) : (scoreNode.hrId || scoreNode["HackerRank ID"] || dbIdentifier);
-          
-          let finalYear = scoreNode.year || scoreNode["Year"] || "3rd Year"; 
-          if (match && match.year) {
-            finalYear = match.year;
-          } else if (finalRollNo !== "N/A" && finalRollNo.length >= 2) {
-            let startYear = finalRollNo.substring(0, 2);
-            if (startYear === "25") finalYear = "1st Year";
-            else if (startYear === "24") finalYear = "2nd Year";
-            else if (startYear === "23") finalYear = "3rd Year";
-            else if (startYear === "22") finalYear = "4th Year";
-          }
-
-          let rawBranch = match ? (match.branch || "CSE") : (scoreNode.branch || scoreNode["Branch"] || "CSE");
-          let rawSection = match ? (match.section || "A") : (scoreNode.section || scoreNode["Section"] || "A");
 
           synchronizedRoster.push({
             rollNo: String(finalRollNo).toUpperCase(),
-            name: finalName,
-            hrId: finalHrId,
-            branch: String(rawBranch).toUpperCase(),
-            section: String(rawSection).toUpperCase(),
-            year: finalYear,
-            score: finalScore
+            name: String(finalName),
+            hrId: String(finalHrId),
+            branch: String(finalBranch).toUpperCase(),
+            section: String(finalSection).toUpperCase(),
+            year: String(finalYear),
+            score: Number(finalScore)
           });
         });
 
+        // STRICT SORTING: Highest Score to Lowest Score
         synchronizedRoster.sort((a, b) => b.score - a.score);
         currentLeaderboardData = synchronizedRoster;
         
@@ -350,67 +320,55 @@
       });
     }
 
-    // EXCEL UPLOAD PARSER
+    // EXCEL UPLOAD PARSER WITH CLEAN OVERWRITE
     document.getElementById('excelUploadInput').addEventListener('change', function(e) {
       const file = e.target.files[0];
       if (!file) return;
 
-      if (!selectedExamId) {
-        alert('⚠️ Please select an active Exam Template from dropdown first.');
-        e.target.value = '';
-        return;
-      }
-
       const reader = new FileReader();
       reader.onload = async function(evt) {
-        const data = new Uint8Array(evt.target.result);
-        const workbook = XLSX.read(data, { type: 'array' });
-        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-        const excelRows = XLSX.utils.sheet_to_json(worksheet);
-
-        const globalStudentsSnapshot = await get(ref(db, 'students'));
-        const globalStudentsMap = globalStudentsSnapshot.exists() ? globalStudentsSnapshot.val() : {};
-        
-        let globalStudentsArray = [];
-        if (globalStudentsMap) {
-          globalStudentsArray = Object.values(globalStudentsMap).filter(s => s !== null);
-        }
-
-        const scoreUpdates = {};
-
-        excelRows.forEach(row => {
-          let excelIdentifier = String(row["Roll Number"] || row["HackerRank ID"] || row["data"] || row["username"] || row["Username"] || "").trim();
-          const cleanExcelId = cleanIdentifier(excelIdentifier);
-
-          if (excelIdentifier) {
-            let parsedScore = extractScore(row);
-
-            let match = globalStudentsArray.find(s => 
-              (s.hrId && cleanIdentifier(s.hrId) === cleanExcelId) ||
-              (s.rollNo && cleanIdentifier(s.rollNo) === cleanExcelId)
-            );
-
-            let finalTargetKey = match && match.rollNo ? match.rollNo : excelIdentifier;
-            const safeDbKey = finalTargetKey.replace(/[.#$\[\]\/]/g, '_');
-
-            scoreUpdates[safeDbKey] = {
-              rollNo: match ? match.rollNo : (row["Roll Number"] || excelIdentifier.toUpperCase()),
-              name: match ? match.name : (row["Name"] || "Unknown"),
-              hrId: match ? (match.hrId || excelIdentifier) : (row["HackerRank ID"] || excelIdentifier),
-              branch: match ? (match.branch || "CSE") : (row["Branch"] || "CSE"),
-              section: match ? (match.section || "A") : (row["Section"] || "A"),
-              year: match ? (match.year || "3rd Year") : (row["Year"] || "3rd Year"),
-              score: parsedScore
-            };
-          }
-        });
-
         try {
+          const data = new Uint8Array(evt.target.result);
+          const workbook = XLSX.read(data, { type: 'array' });
+          const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+          const excelRows = XLSX.utils.sheet_to_json(worksheet);
+
+          if (!excelRows || excelRows.length === 0) {
+            alert("⚠️ Uploaded Excel File is empty!");
+            return;
+          }
+
+          const scoreUpdates = {};
+
+          excelRows.forEach((row, idx) => {
+            let rollNo = row["Roll Number"] || row["rollNo"] || row["RollNo"] || row["roll_number"] || row["Roll"] || "";
+            let name = row["Name"] || row["name"] || row["Student Name"] || "Unknown";
+            let hrId = row["HackerRank ID"] || row["hrId"] || row["HackerRankId"] || row["username"] || rollNo || `user_${idx}`;
+            let branch = row["Branch"] || row["branch"] || "CSE";
+            let section = row["Section"] || row["section"] || "A";
+            let year = row["Year"] || row["year"] || "3rd Year";
+            let score = extractScore(row);
+
+            if (rollNo || hrId) {
+              const primaryKey = String(rollNo || hrId).trim().replace(/[.#$\[\]\/]/g, '_');
+              scoreUpdates[primaryKey] = {
+                rollNo: String(rollNo).trim(),
+                name: String(name).trim(),
+                hrId: String(hrId).trim(),
+                branch: String(branch).trim(),
+                section: String(section).trim(),
+                year: String(year).trim(),
+                score: Number(score)
+              };
+            }
+          });
+
+          // Clean Overwrite to erase old 0-score nodes completely
           await set(ref(db, `hackerRankLeaderboards/${selectedExamId}`), scoreUpdates);
-          alert('🎯 Day 2 OOP Batch Excel Data updated successfully!');
+          alert('🎯 Day 2 OOP Batch Leaderboard excel uploaded & sorted successfully!');
           currentPage = 1;
         } catch (error) {
-          alert('❌ Firebase Sync Error: ' + error.message);
+          alert('❌ Upload Failed: ' + error.message);
         }
       };
       reader.readAsArrayBuffer(file);
@@ -438,7 +396,7 @@
           <td><span class="badge-info">${user.branch}</span></td>
           <td><span class="badge-sec">${user.section}</span></td>
           <td style="color: var(--text-main); font-weight: 500;">${user.year}</td>
-          <td><span class="badge-score">${user.score.toFixed(2)}</span></td>
+          <td><span class="badge-score">${Number(user.score).toFixed(2)}</span></td>
         </tr>`;
         tableBody.innerHTML += row;
       });
