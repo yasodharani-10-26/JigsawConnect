@@ -3,7 +3,7 @@
 <head> 
   <meta charset="UTF-8"> 
   <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-  <title>Leaderboard | StudyConnect</title> 
+  <title>Day 2 OOP Batch Leaderboard | StudyConnect</title> 
   <link rel="preconnect" href="https://fonts.googleapis.com"> 
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700;800&display=swap" rel="stylesheet"> 
@@ -100,10 +100,10 @@
 
   <div class="container">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 15px;">
-      <h1 class="page-title" style="margin-bottom: 0;">🏆 Global <span>Leaderboard</span></h1>
+      <h1 class="page-title" style="margin-bottom: 0;">🏆 Day 2 OOP Batch <span>Leaderboard</span></h1>
       <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
         <select id="contestSelectDropdown" class="select-control">
-          <option value="">-- Select Exam Platform --</option>
+          <option value="day2_oop_batch" selected>Day 2 OOP Batch</option>
         </select>
         <div class="live-indicator"><span class="pulse-dot"></span> Dynamic Tracking</div>
       </div>
@@ -119,6 +119,9 @@
         <option value="EEE">EEE</option>
         <option value="MECH">MECH</option>
         <option value="CIVIL">CIVIL</option>
+        <option value="IT">IT</option>
+        <option value="CSM">CSM</option>
+        <option value="CSD">CSD</option>
       </select>
       <select id="sectionFilter" class="select-control" style="min-width: 120px;">
         <option value="">All Sections</option>
@@ -151,7 +154,7 @@
           </tr>
         </thead>
         <tbody id="leaderboardTableBody">
-          <tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding:30px;">Please choose an active exam template folder above.</td></tr>
+          <!-- Populated dynamically via JS -->
         </tbody>
       </table>
     </div>
@@ -180,7 +183,7 @@
     const rowsPerPage = 20; 
     let currentLeaderboardData = [];
     let filteredData = [];
-    let selectedExamId = "";
+    let selectedExamId = "day2_oop_batch";
     let leaderboardListenerUnsub = null;
 
     const contestDropdown = document.getElementById('contestSelectDropdown');
@@ -229,14 +232,16 @@
 
     function initContestDropdown() {
       onValue(ref(db, 'hackerrankExams'), (snapshot) => {
-        contestDropdown.innerHTML = '<option value="">-- Select Exam Template --</option>';
+        contestDropdown.innerHTML = '<option value="day2_oop_batch">Day 2 OOP Batch</option>';
         if (snapshot.exists()) {
           const exams = snapshot.val();
           Object.keys(exams).forEach(key => {
-            const option = document.createElement('option');
-            option.value = key;
-            option.textContent = exams[key].title || 'Unnamed Exam';
-            contestDropdown.appendChild(option);
+            if (key !== "day2_oop_batch") {
+              const option = document.createElement('option');
+              option.value = key;
+              option.textContent = exams[key].title || key;
+              contestDropdown.appendChild(option);
+            }
           });
         }
       });
@@ -497,11 +502,12 @@
       const worksheet = XLSX.utils.json_to_sheet(excelOutputData);
       const workbook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workbook, worksheet, "Leaderboard");
-      XLSX.writeFile(workbook, "StudyConnect_Leaderboard.xlsx");
+      XLSX.writeFile(workbook, "Day2_OOP_Batch_Leaderboard.xlsx");
     });
 
     window.onload = () => {
       initContestDropdown();
+      attachLeaderboardRealtimeSync();
     };
   </script>
 </body> 
