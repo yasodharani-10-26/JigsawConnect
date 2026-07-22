@@ -122,6 +122,7 @@
         <option value="IT">IT</option>
         <option value="CSM">CSM</option>
         <option value="CSD">CSD</option>
+        <option value="CAI">CAI</option>
       </select>
       <select id="sectionFilter" class="select-control" style="min-width: 120px;">
         <option value="">All Sections</option>
@@ -209,17 +210,6 @@
         }
       }
 
-      const fallbacks = ["data2", "data3", "data", "data1"];
-      for (let key of fallbacks) {
-        if (row[key] !== undefined && row[key] !== null && row[key] !== "") {
-          let strVal = String(row[key]).trim();
-          if (!strVal.includes(':')) {
-            let val = parseFloat(strVal);
-            if (!isNaN(val)) return val;
-          }
-        }
-      }
-
       for (let key in row) {
         if (key.toLowerCase().includes("score") || key.toLowerCase().includes("mark")) {
           let val = parseFloat(row[key]);
@@ -232,11 +222,11 @@
 
     function initContestDropdown() {
       onValue(ref(db, 'hackerrankExams'), (snapshot) => {
-        contestDropdown.innerHTML = '<option value="day2_oop_batch">Day 2 OOP Batch</option>';
+        contestDropdown.innerHTML = '<option value="day2_oop_batch" selected>Day 2 OOP Batch</option>';
         if (snapshot.exists()) {
           const exams = snapshot.val();
           Object.keys(exams).forEach(key => {
-            if (key !== "day2_oop_batch") {
+            if (key !== "day2_oop_batch" && key !== "ai_automated_python_exam") {
               const option = document.createElement('option');
               option.value = key;
               option.textContent = exams[key].title || key;
@@ -307,11 +297,7 @@
           const scoreNode = scoresObj[key];
           if (!scoreNode) return;
           
-          // Filter out Sasi and Rani explicitly from realtime DB feed if present
-          const cleanName = String(scoreNode.name || "").trim().toLowerCase();
-          if (cleanName === "sasi" || cleanName === "rani") return;
-
-          const dbIdentifier = String(scoreNode.hrId || scoreNode.hackerRankId || key || "").trim();
+          const dbIdentifier = String(scoreNode.hrId || scoreNode.hackerRankId || scoreNode.rollNo || key || "").trim();
           const cleanDbId = cleanIdentifier(dbIdentifier);
           
           let finalScore = extractScore(scoreNode);
@@ -328,11 +314,11 @@
             );
           }
 
-          let finalRollNo = match ? (match.rollNo || "N/A") : (scoreNode.rollNo || "N/A");
-          let finalName = match ? (match.name || "Unknown") : (scoreNode.name || "Unknown");
-          let finalHrId = match ? (match.hrId || dbIdentifier) : dbIdentifier;
+          let finalRollNo = match ? (match.rollNo || "N/A") : (scoreNode.rollNo || scoreNode["Roll Number"] || "N/A");
+          let finalName = match ? (match.name || "Unknown") : (scoreNode.name || scoreNode["Name"] || "Unknown");
+          let finalHrId = match ? (match.hrId || dbIdentifier) : (scoreNode.hrId || scoreNode["HackerRank ID"] || dbIdentifier);
           
-          let finalYear = "3rd Year"; 
+          let finalYear = scoreNode.year || scoreNode["Year"] || "3rd Year"; 
           if (match && match.year) {
             finalYear = match.year;
           } else if (finalRollNo !== "N/A" && finalRollNo.length >= 2) {
@@ -343,11 +329,11 @@
             else if (startYear === "22") finalYear = "4th Year";
           }
 
-          let rawBranch = match ? (match.branch || "CSE") : (scoreNode.branch || "CSE");
-          let rawSection = match ? (match.section || "A") : (scoreNode.section || "A");
+          let rawBranch = match ? (match.branch || "CSE") : (scoreNode.branch || scoreNode["Branch"] || "CSE");
+          let rawSection = match ? (match.section || "A") : (scoreNode.section || scoreNode["Section"] || "A");
 
           synchronizedRoster.push({
-            rollNo: finalRollNo.toUpperCase(),
+            rollNo: String(finalRollNo).toUpperCase(),
             name: finalName,
             hrId: finalHrId,
             branch: String(rawBranch).toUpperCase(),
@@ -393,10 +379,7 @@
         const scoreUpdates = {};
 
         excelRows.forEach(row => {
-          let rowName = String(row["Name"] || "").trim().toLowerCase();
-          if (rowName === "sasi" || rowName === "rani") return; // Filter out test entries
-
-          let excelIdentifier = String(row["data"] || row["HackerRank ID"] || row["Roll Number"] || row["username"] || row["Username"] || "").trim();
+          let excelIdentifier = String(row["Roll Number"] || row["HackerRank ID"] || row["data"] || row["username"] || row["Username"] || "").trim();
           const cleanExcelId = cleanIdentifier(excelIdentifier);
 
           if (excelIdentifier) {
@@ -407,25 +390,24 @@
               (s.rollNo && cleanIdentifier(s.rollNo) === cleanExcelId)
             );
 
-            let finalTargetKey = match && match.hrId ? match.hrId : excelIdentifier;
+            let finalTargetKey = match && match.rollNo ? match.rollNo : excelIdentifier;
             const safeDbKey = finalTargetKey.replace(/[.#$\[\]\/]/g, '_');
 
             scoreUpdates[safeDbKey] = {
-              hrId: finalTargetKey,
+              rollNo: match ? match.rollNo : (row["Roll Number"] || excelIdentifier.toUpperCase()),
               name: match ? match.name : (row["Name"] || "Unknown"),
-              rollNo: match ? match.rollNo : (excelIdentifier.match(/^\d/) ? excelIdentifier.toUpperCase() : "N/A"),
+              hrId: match ? (match.hrId || excelIdentifier) : (row["HackerRank ID"] || excelIdentifier),
               branch: match ? (match.branch || "CSE") : (row["Branch"] || "CSE"),
               section: match ? (match.section || "A") : (row["Section"] || "A"),
-              score: parsedScore,
-              data2: row["data2"] || "",
-              data3: row["data3"] || ""
+              year: match ? (match.year || "3rd Year") : (row["Year"] || "3rd Year"),
+              score: parsedScore
             };
           }
         });
 
         try {
-          await update(ref(db, `hackerRankLeaderboards/${selectedExamId}`), scoreUpdates);
-          alert('🎯 HackerRank Scores extracted and saved successfully!');
+          await set(ref(db, `hackerRankLeaderboards/${selectedExamId}`), scoreUpdates);
+          alert('🎯 Day 2 OOP Batch Excel Data updated successfully!');
           currentPage = 1;
         } catch (error) {
           alert('❌ Firebase Sync Error: ' + error.message);
