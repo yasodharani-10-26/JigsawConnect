@@ -593,7 +593,7 @@
 
   <!-- INTEGRATED ES MODULE LINKED TO SCRIPT LOGIC -->
   <script type="module" src="admin-dashboard.js"></script>
-<script type="module">
+  <script type="module">
     import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
     import { getDatabase, ref, set, get, push, onValue, update } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
 
@@ -700,86 +700,69 @@
       }
     });
 
-    // 💥 1. Gemini API Key
-    const GEMINI_API_KEY = "YOUR_ACTUAL_GEMINI_API_KEY_HERE"; 
-
-    // 💥 2. AI Generator Function
+    // 💥 Secure Backend Gateway via Serverless Endpoint `/api/generate`
     async function generateQuizWithAI(topicTitle, contextText, count, type, diff, publish) {
       const btn = document.getElementById('actionGenQuizBtn');
       btn.innerText = "⚡ Generating Questions via AI...";
       btn.disabled = true;
 
       try {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+        const fullTopicPrompt = `${topicTitle} (Difficulty Level: ${diff}, Requested Format: ${type})`;
+        const promptContext = contextText || uploadedFileText || "";
 
-        const promptContext = contextText || uploadedFileText || "General Programming & Computer Science";
-
-        const systemPrompt = `You are an expert quiz generator. Generate ${count} multiple-choice questions for topic "${topicTitle}".
-Difficulty: ${diff}. Question Format: ${type}.
-Return ONLY a valid JSON Array of objects, with NO markdown formatting, NO backticks, and NO extra text.
-Each object must have the following structure:
-[
-  {
-    "question": "Question text here?",
-    "options": ["Option A", "Option B", "Option C", "Option D"],
-    "correctAnswer": 0
-  }
-]`;
-
-        const response = await fetch(url, {
+        // Send API Request to local Serverless Function
+        const response = await fetch('/api/generate', {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            contents: [{
-              parts: [{ text: `${systemPrompt}\n\nAdditional Context:\n${promptContext}` }]
-            }]
+            topic: promptContext ? `${fullTopicPrompt} - Additional Context: ${promptContext}` : fullTopicPrompt,
+            count: parseInt(count, 10) || 5
           })
         });
 
-        if (!response.ok) {
-          const errorData = await response.json();
-          console.error("Gemini API Error Response:", errorData);
-          throw new Error(`Gemini API Failed with status ${response.status}`);
+        const responseText = await response.text();
+        let questionsArray;
+
+        try {
+          questionsArray = JSON.parse(responseText);
+        } catch (e) {
+          console.error("Non-JSON Server Output:", responseText);
+          throw new Error("Server Response Formatting Error");
         }
 
-        const data = await response.json();
-        let rawText = data.candidates[0].content.parts[0].text;
-
-        // Clean Markdown syntax
-        rawText = rawText.replace(/```json/g, "").replace(/```/g, "").trim();
-
-        // Parse JSON
-        const questionsArray = JSON.parse(rawText);
+        if (!response.ok) {
+          throw new Error(questionsArray.error || `Server returned error status: ${response.status}`);
+        }
 
         if (!Array.isArray(questionsArray) || questionsArray.length === 0) {
-          throw new Error("Parsed AI output is not a valid questions array");
+          throw new Error("Invalid question format received from Server");
         }
 
-        // Save to Firebase Database
+        // Save generated quiz into Firebase RTDB Node
         const newQuizRef = push(ref(db, "quizzes"));
         await set(newQuizRef, {
           title: topicTitle,
           context: promptContext,
           difficulty: diff,
           format: type,
-          questions: questionsArray, // 💥 Array of questions
+          questions: questionsArray,
           questionsCount: questionsArray.length,
           status: publish ? "active" : "draft",
           timestamp: Date.now()
         });
 
-        alert("✅ Quiz generated & saved to Firebase successfully!");
+        alert("✅ Quiz generated & published to Firebase successfully!");
 
       } catch (err) {
-        console.error("Error generating quiz:", err);
-        alert("❌ Failed to generate quiz. Please check your Gemini API key & network connectivity.");
+        console.error("Quiz Generator Error:", err);
+        alert(`❌ Failed to generate quiz: ${err.message}`);
       } finally {
         btn.innerText = "⚡ Build & Publish Quiz to Firebase";
         btn.disabled = false;
       }
     }
 
-    // 💥 3. Event Listener Trigger
+    // Event Listener Handler
     document.getElementById('actionGenQuizBtn').addEventListener('click', () => {
       const topicTitle = document.getElementById('quizTopicTitle').value.trim();
       const count = document.getElementById('qCount').value;
@@ -789,13 +772,12 @@ Each object must have the following structure:
       const contextText = document.getElementById('quizContextText').value.trim();
 
       if (!topicTitle) {
-        alert("Please provide a Quiz Topic/Title.");
+        alert("Please specify a valid Quiz Topic/Title.");
         return;
       }
 
-      // Call AI Generator Function
       generateQuizWithAI(topicTitle, contextText, count, type, diff, publish);
     });
-        </script>
+  </script>
 </body>
 </html>
