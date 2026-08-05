@@ -1,5 +1,5 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
-const formidable = require("formidable");
+const { formidable } = require("formidable"); // <-- ఇక్కడ మార్పు జరిగింది
 const fs = require("fs");
 
 async function handler(req, res) {
@@ -15,6 +15,7 @@ async function handler(req, res) {
   }
 
   try {
+    // Formidable initialization
     const form = formidable({ keepExtensions: true });
 
     // 1. Parse multipart form safely
@@ -95,7 +96,6 @@ async function handler(req, res) {
   }
 }
 
-// CommonJS Exports
 module.exports = handler;
 module.exports.config = {
   api: {
