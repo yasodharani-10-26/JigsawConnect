@@ -177,10 +177,6 @@
       margin-bottom: 32px;
     }
 
-    .search-wrapper {
-      position: relative;
-    }
-
     .search-bar {
       width: 100%;
       padding: 14px 16px;
@@ -382,11 +378,11 @@
         </nav>
       </div>
 
-      <!-- PREMIUM B.TECH VAULT COMPONENT CARD -->
+      <!-- PREMIUM B.TECH VAULT COMPONENT CARD (FIXED LINK) -->
       <div class="sidebar-vault-card">
         <h4>⚡ B.Tech Premium Vault</h4>
         <p>Access structured semester-wise study material & labs repository blueprints.</p>
-        <a href="https://share.google/bhRpi8GfQ6DJWmTZD" target="_blank" class="vault-side-btn">Launch Cloud Vault</a>
+        <a href="https://drive.google.com/drive/folders/1_WORKING_GOOGLE_DRIVE_FOLDER_ID" target="_blank" rel="noopener noreferrer" class="vault-side-btn">Launch Cloud Vault</a>
       </div>
 
       <a href="index.html" class="sidebar-item sidebar-logout">🚪 System Logout</a>
@@ -406,6 +402,7 @@
         <form id="uploadForm" class="upload-form-grid">
           <input type="text" id="assetTitle" placeholder="Asset Title" required>
           <input type="text" id="assetSize" placeholder="File Size (e.g., 2.4 MB)" required>
+          <input type="url" id="assetUrl" placeholder="File Download URL (PDF/Drive Link)" style="grid-column: 1 / -1;" required>
           <select id="assetCategory" required>
             <option value="cyan">C Programming</option>
             <option value="blue">Python Pipeline</option>
@@ -448,7 +445,7 @@
           </div>
           <div class="card-bottom">
             <span class="meta-size">2.4 MB</span>
-            <button class="download-btn trigger-dl">Download Node</button>
+            <a href="data:text/plain;charset=utf-8,C%20Pointers%20and%20Memory%20Architecture%20Notes" download="C_Pointers_Notes.txt" class="download-btn">Download Node</a>
           </div>
         </div>
 
@@ -464,7 +461,7 @@
           </div>
           <div class="card-bottom">
             <span class="meta-size">3.8 MB</span>
-            <button class="download-btn trigger-dl">Download Node</button>
+            <a href="data:text/plain;charset=utf-8,Python%20Data%20Structures%20and%20Decorators%20Notes" download="Python_Advanced_Notes.txt" class="download-btn">Download Node</a>
           </div>
         </div>
 
@@ -480,7 +477,7 @@
           </div>
           <div class="card-bottom">
             <span class="meta-size">4.5 MB</span>
-            <button class="download-btn trigger-dl">Download Node</button>
+            <a href="data:text/plain;charset=utf-8,Computer%20Networks%20TCP%20IP%20Handshake%20Notes" download="CN_TCPIP_Notes.txt" class="download-btn">Download Node</a>
           </div>
         </div>
 
@@ -524,13 +521,14 @@
       e.preventDefault();
       const title = document.getElementById("assetTitle").value;
       const size = document.getElementById("assetSize").value;
+      const fileUrl = document.getElementById("assetUrl").value;
       const category = document.getElementById("assetCategory").value;
       const fType = document.getElementById("fileType").value;
 
       try {
         const dbRef = ref(db, "resources");
         const newNode = push(dbRef);
-        await set(newNode, { title, size, category, fileType: fType, timestamp: Date.now() });
+        await set(newNode, { title, size, fileUrl, category, fileType: fType, timestamp: Date.now() });
         alert("🎉 Success: Asset metadata deployed into your live database system cloud deck ledger!");
         uploadForm.reset();
       } catch (err) { console.error(err); }
@@ -547,6 +545,7 @@
           card.setAttribute("data-tags", `${data.title} ${data.fileType}`.toLowerCase());
 
           let label = data.category === "cyan" ? "C Programming" : data.category === "blue" ? "Python Pipeline" : "Theory Segment";
+          const downloadUrl = data.fileUrl || "#";
 
           card.innerHTML = `
             <div class="card-top">
@@ -559,13 +558,12 @@
             </div>
             <div class="card-bottom">
               <span class="meta-size">${data.size}</span>
-              <button class="download-btn trigger-dl">Download Node</button>
+              <a href="${downloadUrl}" target="_blank" download class="download-btn">Download Node</a>
             </div>
           `;
           resourcesDeck.insertBefore(card, searchFailureBlock);
         });
       }
-      attachHandlers();
     });
 
     // HYBRID SEARCH AND EXTRA FILTER FUNCTIONALITY
@@ -596,16 +594,6 @@
 
     searchInput.addEventListener("input", filterSystem);
     catSelector.addEventListener("change", filterSystem);
-
-    function attachHandlers() {
-      document.querySelectorAll(".trigger-dl").forEach(btn => {
-        btn.onclick = (e) => {
-          const t = e.target.closest(".resource-card").querySelector("h3").innerText;
-          alert(`📥 Download Initialized: Data packets for "${t}" compiled successfully!`);
-        };
-      });
-    }
-    attachHandlers();
   </script>
 </body>
 </html>
