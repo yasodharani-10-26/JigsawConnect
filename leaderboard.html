@@ -1,0 +1,494 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+  <meta charset="UTF-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <title>Day 2 OOP Batch Leaderboard | StudyConnect</title> 
+  <link rel="preconnect" href="https://fonts.googleapis.com"> 
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700;800&display=swap" rel="stylesheet"> 
+   
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+  <style> 
+    :root {
+      --bg: #0b0f19; 
+      --card-bg: rgba(20, 30, 54, 0.45); 
+      --border: rgba(255, 255, 255, 0.08); 
+      --text-main: #f8fafc; 
+      --text-muted: #94a3b8; 
+      --accent-cyan: #06b6d4; 
+      --accent-blue: #2563eb; 
+      --success: #10b981;
+      --warning: #f59e0b;
+    } 
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; } 
+    body { background: var(--bg); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; } 
+
+    /* NAVBAR */
+    .navbar { display: flex; justify-content: space-between; align-items: center; padding: 18px 6%; background: rgba(11, 15, 25, 0.85); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; } 
+    .logo { font-size: 24px; font-weight: 800; color: #fff; text-decoration: none; } 
+    .logo span { color: var(--accent-cyan); } 
+    .nav-links { display: flex; gap: 24px; align-items: center; } 
+    .nav-links a { text-decoration: none; color: var(--text-muted); font-size: 14px; font-weight: 600; } 
+    .nav-links a.active { color: var(--accent-cyan); } 
+
+    /* MAIN CONTAINER */
+    .container { width: 100%; max-width: 1200px; margin: 40px auto; padding: 0 20px; flex: 1; }
+    .page-title { font-size: 2rem; font-weight: 800; margin-bottom: 24px; letter-spacing: -0.5px; }
+    .page-title span { color: var(--accent-cyan); }
+
+    /* SEARCH AND FILTER CONTROLS */
+    .filter-section { display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; }
+    .search-input { flex: 1; min-width: 280px; padding: 12px 18px; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border); border-radius: 10px; color: white; font-size: 14px; outline: none; transition: border-color 0.2s; }
+    .search-input:focus { border-color: var(--accent-cyan); }
+
+    /* ACTION CONTROLS */
+    .controls-wrapper { display: flex; justify-content: space-between; align-items: center; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; }
+    
+    .upload-btn-wrapper { position: relative; overflow: hidden; display: inline-block; }
+    .upload-btn-wrapper input[type=file] { font-size: 100px; position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer; }
+    
+    .action-btn { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border); color: #fff; padding: 10px 18px; border-radius: 10px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; }
+    .action-btn:hover { background: rgba(255, 255, 255, 0.1); border-color: var(--accent-cyan); }
+    .btn-download { background: var(--accent-blue); border-color: var(--accent-blue); }
+    .btn-download:hover { background: #1d4ed8; }
+    
+    /* INPUT SELECT CONTROL */
+    .select-control { padding: 10px 16px; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border); border-radius: 10px; color: white; font-size: 14px; outline: none; cursor: pointer; min-width: 220px; }
+    .select-control option { background: #141e36; color: #fff; }
+
+    /* LIVE REFRESH INDICATOR */
+    .live-indicator { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: var(--success); background: rgba(16, 185, 129, 0.1); padding: 6px 12px; border-radius: 20px; border: 1px solid rgba(16, 185, 129, 0.2); }
+    .pulse-dot { width: 8px; height: 8px; background: var(--success); border-radius: 50%; animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0% { transform: scale(0.9); opacity: 1; } 50% { transform: scale(1.2); opacity: 0.4; } 100% { transform: scale(0.9); opacity: 1; } }
+
+    /* TABLE STYLE */
+    .table-container { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 24px; backdrop-filter: blur(12px); overflow-x: auto; box-shadow: 0 20px 40px -15px rgba(0,0,0,0.3); }
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th, td { padding: 16px; border-bottom: 1px solid var(--border); font-size: 14px; }
+    th { color: var(--text-muted); font-weight: 700; text-transform: uppercase; font-size: 12px; letter-spacing: 1px; }
+    td { color: var(--text-main); font-weight: 500; }
+    tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background: rgba(255, 255, 255, 0.02); }
+
+    .hr-id-txt { font-weight: 700; color: #fff; }
+    .badge-info { background: rgba(37, 99, 235, 0.1); color: #60a5fa; padding: 4px 10px; border-radius: 6px; font-weight: 600; font-size: 12px; border: 1px solid rgba(37, 99, 235, 0.15); }
+    .badge-sec { background: rgba(16, 185, 129, 0.1); color: #34d399; padding: 4px 10px; border-radius: 6px; font-weight: 600; font-size: 12px; border: 1px solid rgba(16, 185, 129, 0.15); }
+    .badge-score { background: rgba(245, 158, 11, 0.1); color: var(--warning); padding: 4px 12px; border-radius: 6px; font-weight: 700; font-size: 13px; border: 1px solid rgba(245, 158, 11, 0.2); }
+
+    /* PAGINATION CONTROLS */
+    .pagination-wrapper { display: flex; justify-content: center; align-items: center; gap: 6px; margin-top: 28px; flex-wrap: wrap; }
+    .page-btn { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border); color: var(--text-muted); padding: 8px 14px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.2s; }
+    .page-btn:hover { background: rgba(255, 255, 255, 0.1); color: white; }
+    .page-btn.active { background: var(--accent-blue); color: white; border-color: var(--accent-blue); box-shadow: 0 0 15px rgba(37, 99, 235, 0.4); }
+  </style> 
+</head> 
+
+<body> 
+
+  <nav class="navbar"> 
+    <a href="index.html" class="logo">📚 Study<span>Connect</span></a> 
+    <div class="nav-links"> 
+      <a href="admin-dashboard.html">Dashboard</a> 
+      <a href="leaderboard.html" class="active">Leaderboard</a> 
+      <a href="quiz.html">Quizzes</a> 
+      <a href="index.html">Logout</a> 
+    </div> 
+  </nav> 
+
+  <div class="container">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 15px;">
+      <h1 class="page-title" style="margin-bottom: 0;">🏆 Day 2 OOP Batch <span>Leaderboard</span></h1>
+      <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+        <select id="contestSelectDropdown" class="select-control">
+          <option value="day2_oop_batch" selected>Day 2 OOP Batch</option>
+        </select>
+        <div class="live-indicator"><span class="pulse-dot"></span> Dynamic Tracking</div>
+      </div>
+    </div>
+    
+    <!-- SEARCH & FILTER BAR -->
+    <div class="filter-section">
+      <input type="text" id="searchInput" class="search-input" placeholder="Search by Name, Roll Number, or HackerRank ID...">
+      <select id="branchFilter" class="select-control" style="min-width: 150px;">
+        <option value="">All Branches</option>
+        <option value="CSE">CSE</option>
+        <option value="ECE">ECE</option>
+        <option value="EEE">EEE</option>
+        <option value="MECH">MECH</option>
+        <option value="CIVIL">CIVIL</option>
+        <option value="IT">IT</option>
+        <option value="CSM">CSM</option>
+        <option value="CSD">CSD</option>
+        <option value="CAI">CAI</option>
+        <option value="CSC">CSC</option>
+      </select>
+      <select id="sectionFilter" class="select-control" style="min-width: 120px;">
+        <option value="">All Sections</option>
+        <option value="A">A</option>
+        <option value="B">B</option>
+        <option value="C">C</option>
+        <option value="D">D</option>
+      </select>
+    </div>
+    
+    <div class="controls-wrapper">
+      <div class="upload-btn-wrapper">
+        <button class="action-btn">📤 Upload Exam Excel</button>
+        <input type="file" id="excelUploadInput" accept=".xlsx, .xls" />
+      </div>
+      <button class="action-btn btn-download" id="downloadExcelBtn">📥 Download Leaderboard (.xlsx)</button>
+    </div>
+    
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Roll Number</th>
+            <th>Name</th>
+            <th>HackerRank ID</th>
+            <th>Branch</th>
+            <th>Section</th>
+            <th>Year</th>
+            <th>Score</th>
+          </tr>
+        </thead>
+        <tbody id="leaderboardTableBody">
+          <!-- Populated dynamically via JS -->
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pagination-wrapper" id="pagination"></div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+    import { getDatabase, ref, set, update, onValue } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCaCkliRZk8HmNtOsJpoA084YhNY7MeMWM",
+      authDomain: "jigsawconnect-677da.firebaseapp.com",
+      databaseURL: "https://jigsawconnect-677da-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "jigsawconnect-677da",
+      storageBucket: "jigsawconnect-677da.firebasestorage.app",
+      messagingSenderId: "200774226361",
+      appId: "1:200774226361:web:266cb216968403793f6668"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    let currentPage = 1;
+    const rowsPerPage = 20; 
+    let currentLeaderboardData = [];
+    let filteredData = [];
+    let selectedExamId = "day2_oop_batch";
+    let leaderboardListenerUnsub = null;
+
+    const contestDropdown = document.getElementById('contestSelectDropdown');
+    const searchInput = document.getElementById('searchInput');
+    const branchFilter = document.getElementById('branchFilter');
+    const sectionFilter = document.getElementById('sectionFilter');
+
+    function cleanIdentifier(id) {
+      if (!id) return "";
+      return String(id).trim().toLowerCase().replace(/[@\s]/g, '');
+    }
+
+    function extractScore(row) {
+      if (row === null || row === undefined) return 0;
+      if (typeof row === 'number') return row;
+      
+      const directKeys = ['score', 'Score', 'SCORE', 'marks', 'Marks', 'MARKS', 'total', 'Total', 'data2', 'data3'];
+      for (let k of directKeys) {
+        if (row[k] !== undefined && row[k] !== null && row[k] !== "") {
+          let strVal = String(row[k]).trim();
+          if (!strVal.includes(':')) {
+            let val = parseFloat(strVal);
+            if (!isNaN(val)) return val;
+          }
+        }
+      }
+
+      for (let key in row) {
+        let lKey = key.toLowerCase();
+        if (lKey.includes("score") || lKey.includes("mark") || lKey.includes("total")) {
+          let val = parseFloat(row[key]);
+          if (!isNaN(val)) return val;
+        }
+      }
+
+      return 0;
+    }
+
+    // ⚡ NEW: Node.js / HackerRank API నుండి స్కోర్‌లను సింక్ చేసే లాజిక్
+    async function syncHackerRankLiveScores() {
+      if (!selectedExamId) return;
+      try {
+        console.log(`Syncing HackerRank scores for: ${selectedExamId}...`);
+        const response = await fetch(`http://localhost:3000/api/get-scores/${selectedExamId}`);
+        const result = await response.json();
+
+        if (result.success && result.data && Array.isArray(result.data)) {
+          const liveLeaderboard = result.data;
+
+          liveLeaderboard.forEach(student => {
+            const hrUsername = student.hacker || student.username;
+            const liveScore = student.score;
+
+            if (hrUsername) {
+              const safeKey = hrUsername.replace(/[.#$\[\]\/]/g, '_');
+              
+              // Firebase లో పాత 0 స్కోర్ స్థానంలో రియల్ స్కోర్‌ని అప్‌డేట్ చేస్తుంది
+              update(ref(db, `hackerRankLeaderboards/${selectedExamId}/${safeKey}`), {
+                score: Number(liveScore)
+              });
+            }
+          });
+        }
+      } catch (err) {
+        console.warn("Backend Sync Error (Node.js server running in 3000?):", err.message);
+      }
+    }
+
+    function initContestDropdown() {
+      onValue(ref(db, 'hackerrankExams'), (snapshot) => {
+        contestDropdown.innerHTML = '<option value="day2_oop_batch" selected>Day 2 OOP Batch</option>';
+        if (snapshot.exists()) {
+          const exams = snapshot.val();
+          Object.keys(exams).forEach(key => {
+            if (key !== "day2_oop_batch" && key !== "ai_automated_python_exam") {
+              const option = document.createElement('option');
+              option.value = key;
+              option.textContent = exams[key].title || key;
+              contestDropdown.appendChild(option);
+            }
+          });
+        }
+      });
+    }
+
+    contestDropdown.addEventListener('change', (e) => {
+      selectedExamId = e.target.value;
+      currentPage = 1;
+      syncHackerRankLiveScores();
+      attachLeaderboardRealtimeSync();
+    });
+
+    function applyFilters() {
+      const query = cleanIdentifier(searchInput.value);
+      const selectedBranch = branchFilter.value.toUpperCase();
+      const selectedSection = sectionFilter.value.toUpperCase();
+
+      filteredData = currentLeaderboardData.filter(user => {
+        const matchesSearch = !query || 
+          cleanIdentifier(user.name).includes(query) || 
+          cleanIdentifier(user.rollNo).includes(query) || 
+          cleanIdentifier(user.hrId).includes(query);
+
+        const matchesBranch = !selectedBranch || user.branch === selectedBranch;
+        const matchesSection = !selectedSection || user.section === selectedSection;
+
+        return matchesSearch && matchesBranch && matchesSection;
+      });
+
+      currentPage = 1;
+      renderTable(filteredData, currentPage);
+      setupPagination(filteredData);
+    }
+
+    searchInput.addEventListener('input', applyFilters);
+    branchFilter.addEventListener('change', applyFilters);
+    sectionFilter.addEventListener('change', applyFilters);
+
+    function attachLeaderboardRealtimeSync() {
+      if (leaderboardListenerUnsub) leaderboardListenerUnsub();
+
+      if (!selectedExamId) {
+        currentLeaderboardData = [];
+        filteredData = [];
+        renderTable(currentLeaderboardData, currentPage);
+        setupPagination(currentLeaderboardData);
+        return;
+      }
+
+      leaderboardListenerUnsub = onValue(ref(db, `hackerRankLeaderboards/${selectedExamId}`), (snapshot) => {
+        const scoresObj = snapshot.exists() ? snapshot.val() : {};
+        let synchronizedRoster = [];
+
+        Object.keys(scoresObj).forEach(key => {
+          const scoreNode = scoresObj[key];
+          if (!scoreNode) return;
+
+          let finalRollNo = scoreNode.rollNo || scoreNode["Roll Number"] || key || "N/A";
+          let finalName = scoreNode.name || scoreNode["Name"] || "Unknown";
+          let finalHrId = scoreNode.hrId || scoreNode["HackerRank ID"] || key || "N/A";
+          let finalBranch = scoreNode.branch || scoreNode["Branch"] || "CSE";
+          let finalSection = scoreNode.section || scoreNode["Section"] || "A";
+          let finalYear = scoreNode.year || scoreNode["Year"] || "3rd Year";
+          let finalScore = extractScore(scoreNode);
+
+          synchronizedRoster.push({
+            rollNo: String(finalRollNo).toUpperCase(),
+            name: String(finalName),
+            hrId: String(finalHrId),
+            branch: String(finalBranch).toUpperCase(),
+            section: String(finalSection).toUpperCase(),
+            year: String(finalYear),
+            score: Number(finalScore)
+          });
+        });
+
+        // STRICT SORTING: Highest Score to Lowest Score
+        synchronizedRoster.sort((a, b) => b.score - a.score);
+        currentLeaderboardData = synchronizedRoster;
+        
+        applyFilters(); 
+      });
+    }
+
+    // EXCEL UPLOAD PARSER
+    document.getElementById('excelUploadInput').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = async function(evt) {
+        try {
+          const data = new Uint8Array(evt.target.result);
+          const workbook = XLSX.read(data, { type: 'array' });
+          const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+          const excelRows = XLSX.utils.sheet_to_json(worksheet);
+
+          if (!excelRows || excelRows.length === 0) {
+            alert("⚠️ Uploaded Excel File is empty!");
+            return;
+          }
+
+          const scoreUpdates = {};
+
+          excelRows.forEach((row, idx) => {
+            let rollNo = row["Roll Number"] || row["rollNo"] || row["RollNo"] || row["roll_number"] || row["Roll"] || "";
+            let name = row["Name"] || row["name"] || row["Student Name"] || "Unknown";
+            let hrId = row["HackerRank ID"] || row["hrId"] || row["HackerRankId"] || row["username"] || rollNo || `user_${idx}`;
+            let branch = row["Branch"] || row["branch"] || "CSE";
+            let section = row["Section"] || row["section"] || "A";
+            let year = row["Year"] || row["year"] || "3rd Year";
+            let score = extractScore(row);
+
+            if (rollNo || hrId) {
+              const primaryKey = String(hrId || rollNo).trim().replace(/[.#$\[\]\/]/g, '_');
+              scoreUpdates[primaryKey] = {
+                rollNo: String(rollNo).trim(),
+                name: String(name).trim(),
+                hrId: String(hrId).trim(),
+                branch: String(branch).trim(),
+                section: String(section).trim(),
+                year: String(year).trim(),
+                score: Number(score)
+              };
+            }
+          });
+
+          await set(ref(db, `hackerRankLeaderboards/${selectedExamId}`), scoreUpdates);
+          alert('🎯 Day 2 OOP Batch Leaderboard excel uploaded & sorted successfully!');
+          currentPage = 1;
+        } catch (error) {
+          alert('❌ Upload Failed: ' + error.message);
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    });
+
+    function renderTable(data, page) {
+      const tableBody = document.getElementById('leaderboardTableBody');
+      tableBody.innerHTML = "";
+      page--;
+
+      let start = rowsPerPage * page;
+      let end = start + rowsPerPage;
+      let paginatedItems = data.slice(start, end);
+
+      if (paginatedItems.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding:30px;">No records found matching criteria.</td></tr>`;
+        return;
+      }
+
+      paginatedItems.forEach((user) => {
+        let row = `<tr>
+          <td><span class="badge-info" style="background:rgba(255,255,255,0.05); color:#fff;">${user.rollNo}</span></td>
+          <td><span class="hr-id-txt">${user.name}</span></td>
+          <td><span class="text-muted">${user.hrId}</span></td>
+          <td><span class="badge-info">${user.branch}</span></td>
+          <td><span class="badge-sec">${user.section}</span></td>
+          <td style="color: var(--text-main); font-weight: 500;">${user.year}</td>
+          <td><span class="badge-score">${Number(user.score).toFixed(2)}</span></td>
+        </tr>`;
+        tableBody.innerHTML += row;
+      });
+    }
+
+    function setupPagination(data) {
+      const paginationWrapper = document.getElementById('pagination');
+      paginationWrapper.innerHTML = "";
+
+      let pageCount = Math.ceil(data.length / rowsPerPage);
+      if (pageCount <= 1) return; 
+      
+      for (let i = 1; i <= pageCount; i++) {
+        let btn = document.createElement('button');
+        btn.innerText = i;
+        btn.classList.add('page-btn');
+        if (currentPage === i) btn.classList.add('active');
+
+        btn.addEventListener('click', function () {
+          currentPage = i;
+          renderTable(data, currentPage);
+          
+          let currentBtn = document.querySelector('.page-btn.active');
+          if (currentBtn) currentBtn.classList.remove('active');
+          btn.classList.add('active');
+          
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        paginationWrapper.appendChild(btn);
+      }
+    }
+
+    document.getElementById('downloadExcelBtn').addEventListener('click', () => {
+      const downloadData = filteredData.length > 0 ? filteredData : currentLeaderboardData;
+      if (downloadData.length === 0) {
+        alert("No data available to download.");
+        return;
+      }
+
+      const excelOutputData = downloadData.map((user) => ({
+        "Roll Number": user.rollNo,
+        "Name": user.name,
+        "HackerRank ID": user.hrId,
+        "Branch": user.branch,
+        "Section": user.section,
+        "Year": user.year,
+        "Score": user.score
+      }));
+
+      const worksheet = XLSX.utils.json_to_sheet(excelOutputData);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Leaderboard");
+      XLSX.writeFile(workbook, "Day2_OOP_Batch_Leaderboard.xlsx");
+    });
+
+    window.onload = () => {
+      initContestDropdown();
+      attachLeaderboardRealtimeSync();
+
+      // లీడర్‌బోర్డ్ ఓపెన్ అయిన వెంటనే ఫెచ్ చేసి, ఆపై ప్రతి 20 సెకన్లకు ఒకసారి Auto-Sync చేస్తుంది
+      syncHackerRankLiveScores();
+      setInterval(syncHackerRankLiveScores, 20000); 
+    };
+  </script>
+</body> 
+</html>

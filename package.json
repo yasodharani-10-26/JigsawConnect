@@ -1,0 +1,19 @@
+{
+  "name": "jigsawconnect",
+  "version": "1.0.0",
+  "description": "Live Preview on Vercel: [jigsaw-connect-seven.vercel.app](https://jigsaw-connect-seven.vercel.app)",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "axios": "^1.18.1",
+    "express": "^5.2.1",
+    "formidable": "^3.5.4"
+  }
+}

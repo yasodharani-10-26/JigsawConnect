@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz Challenge | StudyConnect</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #0b0f19; 
+      --card-bg: rgba(20, 30, 54, 0.45); 
+      --border: rgba(255, 255, 255, 0.08); 
+      --text-main: #f8fafc; 
+      --text-muted: #94a3b8; 
+      --accent-cyan: #06b6d4; 
+      --accent-blue: #2563eb; 
+      --success: #10b981; 
+      --danger: #ef4444;
+      --warning: #f59e0b; 
+    } 
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; } 
+    body { background: var(--bg); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; } 
+
+    .navbar { display: flex; justify-content: space-between; align-items: center; padding: 18px 6%; background: rgba(11, 15, 25, 0.85); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; } 
+    .logo { font-size: 24px; font-weight: 800; color: #fff; text-decoration: none; } 
+    .logo span { color: var(--accent-cyan); } 
+    .nav-links { display: flex; gap: 24px; align-items: center; } 
+    .nav-links a { text-decoration: none; color: var(--text-muted); font-size: 14px; font-weight: 600; transition: color 0.2s ease; } 
+    .nav-links a.active, .nav-links a:hover { color: var(--accent-cyan); } 
+
+    .main-workspace-wrapper { width: 100%; max-width: 1440px; margin: 0 auto; padding: 30px 20px; } 
+    .content-stream { display: flex; flex-direction: column; gap: 24px; } 
+
+    .page-header { padding: 32px; background: linear-gradient(135deg, rgba(37, 99, 235, 0.12), rgba(6, 182, 212, 0.04)); border: 1px solid var(--border); border-radius: 24px; } 
+    .page-header h1 { font-size: 2.2rem; font-weight: 800; letter-spacing: -1px; margin-bottom: 6px; } 
+    
+    .quizzes-grid { display: flex; flex-direction: column; gap: 16px; }
+
+    .panel-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 24px; backdrop-filter: blur(12px); margin-bottom: 12px; }
+    .panel-title { font-size: 16px; font-weight: 700; color: #fff; display: flex; justify-content: space-between; align-items: center; width: 100%; }
+    
+    .hackerrank-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: #2ec866; color: #0e141e; text-decoration: none; padding: 12px 20px; border-radius: 12px; font-weight: 700; font-size: 14px; border: none; cursor: pointer; width: 100%; transition: all 0.2s; text-align: center; margin-top: 10px; }
+    .hackerrank-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(46, 200, 102, 0.3); }
+
+    .input-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+    .input-control { padding: 12px 16px; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border); border-radius: 10px; color: white; font-size: 14px; width: 100%; outline: none; }
+    .input-control:focus { border-color: var(--accent-cyan); }
+    
+    .quiz-quadrant-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .quadrant-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 18px; backdrop-filter: blur(12px); }
+    .quadrant-title { font-size: 15px; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; gap: 8px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+    .empty-note { color: var(--text-muted); font-size: 12px; padding: 12px 4px; }
+
+    /* ---- Modals ---- */
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(11, 15, 25, 0.85); backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: center; z-index: 2000; visibility: hidden; opacity: 0; transition: all 0.3s ease; }
+    .modal-overlay.active { visibility: visible; opacity: 1; }
+    .modal-box { background: #141e36; border: 1px solid var(--border); border-radius: 24px; padding: 30px; width: 100%; max-width: 550px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); transform: translateY(-20px); transition: all 0.3s ease; max-height: 90vh; overflow-y: auto; }
+    .modal-overlay.active .modal-box { transform: translateY(0); }
+    .modal-header { font-size: 20px; font-weight: 800; margin-bottom: 20px; color: #fff; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+    .modal-actions { display: flex; gap: 12px; margin-top: 20px; }
+    .btn-cancel { background: transparent; border: 1px solid var(--border); color: var(--text-muted); padding: 12px; border-radius: 12px; font-weight: 700; cursor: pointer; flex: 1; }
+    .btn-submit { background: var(--accent-blue); color: white; border: none; padding: 14px; border-radius: 12px; font-weight: 700; cursor: pointer; flex: 2; transition: all 0.2s; }
+    .btn-submit:hover:not(:disabled) { background: #1d4ed8; }
+    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    /* Interactive Quiz Items Styling */
+    .q-block { margin-bottom: 20px; padding: 16px; background: rgba(15, 23, 42, 0.4); border-radius: 12px; border: 1px solid var(--border); }
+    .q-title { font-size: 15px; font-weight: 600; margin-bottom: 12px; color: #fff; }
+    .opt-label { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; cursor: pointer; font-size: 14px; color: var(--text-muted); padding: 8px 12px; border-radius: 8px; border: 1px solid transparent; background: rgba(255,255,255,0.02); }
+    .opt-label:hover { border-color: var(--accent-cyan); color: #fff; }
+    .opt-label input { accent-color: var(--accent-cyan); }
+
+    @media (max-width: 700px) {
+      .quiz-quadrant-grid { grid-template-columns: 1fr; }
+    }
+  </style> 
+</head> 
+
+<body> 
+
+  <nav class="navbar"> 
+    <a href="index.html" class="logo">📚 Study<span>Connect</span></a> 
+    <div class="nav-links"> 
+      <a href="student-dashboard.html">Dashboard</a> 
+      <a href="leaderboard.html">Leaderboard</a> 
+      <a href="profile.html">My Profile</a>
+      <a href="quiz.html" class="active">Quizzes</a> 
+      <a href="index.html">Logout</a> 
+    </div> 
+  </nav> 
+
+  <div class="main-workspace-wrapper"> 
+    <main class="content-stream"> 
+      
+      <div class="page-header"> 
+        <h1>Ecosystem Quiz Matrix</h1> 
+        <p>Participate in authorized evaluation slots or synchronize metrics with external coding environments.</p> 
+        
+        <div class="header-actions-wrapper" style="margin-top: 24px;">
+          <div class="quiz-quadrant-grid">
+
+            <div class="quadrant-card">
+              <h3 class="quadrant-title">🟢 Active HackerRank Exams</h3>
+              <div id="activeExamsContainer" class="quizzes-grid"></div>
+            </div>
+
+            <div class="quadrant-card">
+              <h3 class="quadrant-title">🟢 Active Quizzes</h3>
+              <div id="activeQuizzesContainer" class="quizzes-grid"></div>
+            </div>
+
+            <div class="quadrant-card">
+              <h3 class="quadrant-title">🕓 Past Exams</h3>
+              <div id="pastExamsContainer" class="quizzes-grid"></div>
+            </div>
+
+            <div class="quadrant-card">
+              <h3 class="quadrant-title">🕓 Past Quizzes</h3>
+              <div id="pastQuizzesContainer" class="quizzes-grid"></div>
+            </div>
+
+          </div>
+        </div>
+      </div> 
+
+    </main> 
+  </div> 
+
+  <!-- HackerRank Modal -->
+  <div class="modal-overlay" id="detailsModal">
+    <div class="modal-box">
+      <div class="modal-header">Enter Your Details for Exam</div>
+      <form id="participantForm">
+        <div class="input-group">
+          <label for="studentName" style="font-size: 13px; color: var(--text-muted);">Full Name</label>
+          <input type="text" id="studentName" class="input-control" required placeholder="e.g. Rahul Kumar">
+        </div>
+        <div class="input-group">
+          <label for="studentHrId" style="font-size: 13px; color: var(--text-muted);">HackerRank Username ID</label>
+          <input type="text" id="studentHrId" class="input-control" required placeholder="e.g. rahul_cse22">
+        </div>
+        <div class="input-group">
+          <label for="studentRollNo" style="font-size: 13px; color: var(--text-muted);">Roll Number / Reg No</label>
+          <input type="text" id="studentRollNo" class="input-control" required placeholder="e.g. 22A31A0501">
+        </div>
+        <div class="input-group">
+          <label for="studentBranch" style="font-size: 13px; color: var(--text-muted);">Branch</label>
+          <input type="text" id="studentBranch" class="input-control" required placeholder="e.g. CSE / ECE / IT">
+        </div>
+        
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel" id="closeModalBtn">Cancel</button>
+          <button type="submit" class="btn-submit" id="submitBtn">🚀 Enter & Sync Leaderboard</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Dynamic Native Quiz Player Modal -->
+  <div class="modal-overlay" id="quizRunnerModal">
+    <div class="modal-box">
+      <div class="modal-header" id="quizRunnerTitle">Dynamic Quiz Challenge</div>
+      <div id="quizQuestionsArea"></div>
+      <div class="modal-actions">
+        <button type="button" class="btn-cancel" id="closeQuizRunnerBtn">Close</button>
+        <button type="button" class="btn-submit" id="submitQuizAnswersBtn">Submit Evaluation</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+    import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCaCkliRZk8HmNtOsJpoA084YhNY7MeMWM",
+      authDomain: "jigsawconnect-677da.firebaseapp.com",
+      databaseURL: "https://jigsawconnect-677da-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "jigsawconnect-677da",
+      storageBucket: "jigsawconnect-677da.firebasestorage.app",
+      messagingSenderId: "200774226361",
+      appId: "1:200774226361:web:266cb216968403793f6668"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    const detailsModal = document.getElementById('detailsModal');
+    const quizRunnerModal = document.getElementById('quizRunnerModal');
+    const participantForm = document.getElementById('participantForm');
+    
+    let currentTargetLink = "";
+    let currentContestSlug = "";
+    let loadedQuizzesCache = {};
+    let activeQuizKey = null;
+
+    function closeModal() { detailsModal.classList.remove('active'); }
+    function closeQuizRunner() { quizRunnerModal.classList.remove('active'); }
+
+    detailsModal.addEventListener('click', (e) => { if (e.target === detailsModal) closeModal(); });
+    quizRunnerModal.addEventListener('click', (e) => { if (e.target === quizRunnerModal) closeQuizRunner(); });
+    
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') { closeModal(); closeQuizRunner(); }
+    });
+
+    // 1. HackerRank Cards Generator
+    function makeExamCard(exam, slug, isPast) {
+      const card = document.createElement('div');
+      card.className = "panel-card";
+      const hrLink = isPast 
+        ? `https://www.hackerrank.com/contests/${slug}/leaderboard` 
+        : `https://www.hackerrank.com/contests/${slug}`;
+
+      card.innerHTML = `
+        <div class="panel-title">
+          <span>📝 ${exam.title || slug.toUpperCase()}</span>
+        </div>
+        <button class="hackerrank-btn exam-btn" data-slug="${slug}" data-link="${hrLink}">
+          ${isPast ? '👁️ View Past Contest Leaderboard' : '🚀 Enter HackerRank Arena & Start Exam'}
+        </button>
+      `;
+      return card;
+    }
+
+    // 2. Quiz Cards Generator
+    function makeQuizCard(quiz, key, isPast) {
+      const card = document.createElement('div');
+      card.className = "panel-card";
+
+      card.innerHTML = `
+        <div class="panel-title">
+          <span>🧠 ${quiz.title || 'Untitled Quiz'}</span>
+        </div>
+        <button class="hackerrank-btn quiz-btn" style="background: var(--accent-blue); color: white;" data-key="${key}">
+          ${isPast ? '👁️ View Quiz Details' : '🚀 Start Quiz'}
+        </button>
+      `;
+      return card;
+    }
+
+    // 3. Render Quiz Questions inside Modal (With Firebase Sub-fetch Fallback)
+    async function openQuizPlayer(quizKey) {
+      activeQuizKey = quizKey;
+      const quiz = loadedQuizzesCache[quizKey];
+      if (!quiz) return alert("Quiz data not available.");
+
+      document.getElementById('quizRunnerTitle').innerText = quiz.title || "Quiz Evaluation";
+      const area = document.getElementById('quizQuestionsArea');
+      area.innerHTML = `<div style="text-align:center; padding:20px; color:var(--text-muted);">⏳ Loading questions...</div>`;
+
+      // Step 1: Check existing keys
+      let rawQuestions = quiz.questions || quiz.generatedQuestions || quiz.mcqs || quiz.quizData;
+
+      // Step 2: If questions not found inside the main quiz object, fetch from sub-path or separate reference
+      if (!rawQuestions) {
+        try {
+          const snapshot = await get(ref(db, `quizzes/${quizKey}/questions`));
+          if (snapshot.exists()) {
+            rawQuestions = snapshot.val();
+          } else {
+            // Check alternate standalone node if used
+            const altSnapshot = await get(ref(db, `quizQuestions/${quizKey}`));
+            if (altSnapshot.exists()) {
+              rawQuestions = altSnapshot.val();
+            }
+          }
+        } catch (e) {
+          console.error("Error fetching sub-questions:", e);
+        }
+      }
+
+      // Step 3: Parse Stringified JSON if needed
+      if (typeof rawQuestions === 'string') {
+        try { rawQuestions = JSON.parse(rawQuestions); } catch (e) {}
+      }
+
+      // Step 4: Convert to Array
+      let questionsList = [];
+      if (Array.isArray(rawQuestions)) {
+        questionsList = rawQuestions;
+      } else if (typeof rawQuestions === 'object' && rawQuestions !== null) {
+        questionsList = Object.values(rawQuestions);
+      }
+
+      // Step 5: Render
+      area.innerHTML = "";
+      if (!questionsList || questionsList.length === 0) {
+        area.innerHTML = `
+          <div style="text-align:center; padding: 20px;">
+            <p class="empty-note" style="color:var(--danger);">⚠️ No questions found in Database for this quiz!</p>
+            <p style="font-size:12px; color:var(--text-muted); margin-top:8px;">
+              Please generate/re-upload this quiz from Admin Dashboard ensuring <code>questions</code> array is included.
+            </p>
+          </div>`;
+      } else {
+        questionsList.forEach((q, idx) => {
+          if (typeof q === 'string') { try { q = JSON.parse(q); } catch(e){} }
+
+          const qDiv = document.createElement('div');
+          qDiv.className = 'q-block';
+
+          const questionTitle = q.questionText || q.question || q.title || q.q || `Question ${idx + 1}`;
+          let options = q.options || q.choices || q.answers || [];
+          if (typeof options === 'object' && !Array.isArray(options)) options = Object.values(options);
+
+          let optionsHTML = '';
+          if (Array.isArray(options) && options.length > 0) {
+            options.forEach((opt, optIdx) => {
+              const optText = typeof opt === 'object' ? (opt.text || opt.option || JSON.stringify(opt)) : opt;
+              optionsHTML += `
+                <label class="opt-label">
+                  <input type="radio" name="q_${idx}" value="${optIdx}">
+                  <span>${optText}</span>
+                </label>`;
+            });
+          }
+
+          qDiv.innerHTML = `<div class="q-title">${idx + 1}. ${questionTitle}</div>${optionsHTML}`;
+          area.appendChild(qDiv);
+        });
+      }
+
+      quizRunnerModal.classList.add('active');
+    }
+    // 4. Card Button Event Listeners
+    function bindCardButtons(container) {
+      container.querySelectorAll('.exam-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          currentTargetLink = btn.getAttribute('data-link');
+          currentContestSlug = btn.getAttribute('data-slug');
+          
+          if (localStorage.getItem('studentName')) {
+            document.getElementById('studentName').value = localStorage.getItem('studentName');
+            document.getElementById('studentHrId').value = localStorage.getItem('studentHrId');
+            document.getElementById('studentRollNo').value = localStorage.getItem('studentRollNo');
+            document.getElementById('studentBranch').value = localStorage.getItem('studentBranch');
+          }
+          detailsModal.classList.add('active');
+        });
+      });
+
+      container.querySelectorAll('.quiz-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const key = btn.getAttribute('data-key');
+          openQuizPlayer(key);
+        });
+      });
+    }
+
+    // HackerRank Form Submission Handler
+    participantForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.innerText = "🔄 Syncing Score...";
+      submitBtn.disabled = true;
+
+      const name = document.getElementById('studentName').value.trim();
+      const hrId = document.getElementById('studentHrId').value.trim();
+      const rollNo = document.getElementById('studentRollNo').value.trim();
+      const branch = document.getElementById('studentBranch').value.trim();
+
+      if (!hrId || !currentContestSlug) {
+        submitBtn.innerText = "🚀 Enter & Sync Leaderboard";
+        submitBtn.disabled = false;
+        return;
+      }
+
+      const safeKey = hrId.replace(/[.#$\[\]\/]/g, '_');
+      let extractedScore = 0;
+
+      try {
+        const response = await fetch(`http://localhost:3000/api/get-scores/${currentContestSlug}`);
+        if (response.ok) {
+          const result = await response.json();
+          if (result.success && result.data) {
+            const studentData = result.data.find(
+              item => item.hacker && item.hacker.toLowerCase() === hrId.toLowerCase()
+            );
+            if (studentData) extractedScore = studentData.score || 0;
+          }
+        }
+      } catch (err) {
+        console.warn("Backend server not reached, default score 0 set:", err);
+      }
+
+      try {
+        await set(ref(db, `students/${safeKey}`), { name, hrId, rollNo, branch });
+        await set(ref(db, `hackerRankLeaderboards/${currentContestSlug}/${safeKey}`), {
+          hrId: hrId, hackerRankId: hrId, name: name, rollNo: rollNo, branch: branch, score: extractedScore, timestamp: Date.now()
+        });
+
+        localStorage.setItem('studentName', name);
+        localStorage.setItem('studentHrId', hrId);
+        localStorage.setItem('studentRollNo', rollNo);
+        localStorage.setItem('studentBranch', branch);
+
+        closeModal();
+        participantForm.reset();
+        window.open(currentTargetLink, '_blank');
+      } catch(err) {
+        console.error("Exam registration error:", err);
+        alert("Failed to sync metrics with Firebase.");
+      } finally {
+        submitBtn.innerText = "🚀 Enter & Sync Leaderboard";
+        submitBtn.disabled = false;
+      }
+    });
+
+    document.getElementById('closeModalBtn').addEventListener('click', closeModal);
+    document.getElementById('closeQuizRunnerBtn').addEventListener('click', closeQuizRunner);
+
+    // 5. Render Quizzes
+    function renderQuizzes(quizzesData) {
+      const activeContainer = document.getElementById('activeQuizzesContainer');
+      const pastContainer = document.getElementById('pastQuizzesContainer');
+      activeContainer.innerHTML = ""; 
+      pastContainer.innerHTML = "";
+
+      if (!quizzesData) {
+        loadedQuizzesCache = {};
+        activeContainer.innerHTML = `<p class="empty-note">No active quizzes right now.</p>`;
+        pastContainer.innerHTML = `<p class="empty-note">No past quizzes yet.</p>`;
+        return;
+      }
+
+      loadedQuizzesCache = quizzesData;
+      let hasActive = false, hasPast = false;
+
+      Object.keys(quizzesData).forEach(key => {
+        const quiz = quizzesData[key];
+        const isPast = quiz.status === 'past';
+        const card = makeQuizCard(quiz, key, isPast);
+        (isPast ? pastContainer : activeContainer).appendChild(card);
+        if (isPast) hasPast = true; else hasActive = true;
+      });
+
+      if (!hasActive) activeContainer.innerHTML = `<p class="empty-note">No active quizzes right now.</p>`;
+      if (!hasPast) pastContainer.innerHTML = `<p class="empty-note">No past quizzes yet.</p>`;
+
+      bindCardButtons(activeContainer);
+      bindCardButtons(pastContainer);
+    }
+
+    // 6. Render HackerRank Exams
+    function renderExams(examsData) {
+      const activeContainer = document.getElementById('activeExamsContainer');
+      const pastContainer = document.getElementById('pastExamsContainer');
+      activeContainer.innerHTML = ""; 
+      pastContainer.innerHTML = "";
+
+      if (!examsData) {
+        activeContainer.innerHTML = `<p class="empty-note">No active HackerRank exams registered currently.</p>`;
+        pastContainer.innerHTML = `<p class="empty-note">No past exams yet.</p>`;
+        return;
+      }
+
+      let hasActive = false, hasPast = false;
+      Object.keys(examsData).forEach(key => {
+        const exam = examsData[key];
+        const isPast = exam.status === 'past';
+        const card = makeExamCard(exam, key, isPast);
+        (isPast ? pastContainer : activeContainer).appendChild(card);
+        if (isPast) hasPast = true; else hasActive = true;
+      });
+
+      if (!hasActive) activeContainer.innerHTML = `<p class="empty-note">No active HackerRank exams registered currently.</p>`;
+      if (!hasPast) pastContainer.innerHTML = `<p class="empty-note">No past exams yet.</p>`;
+
+      bindCardButtons(activeContainer);
+      bindCardButtons(pastContainer);
+    }
+
+    // Firebase Data Listeners
+    onValue(ref(db, "quizzes"), (snapshot) => {
+      renderQuizzes(snapshot.exists() ? snapshot.val() : null);
+    });
+
+    onValue(ref(db, "hackerrankExams"), (snapshot) => {
+      renderExams(snapshot.exists() ? snapshot.val() : null);
+    });
+  </script>
+</body>
+</html>

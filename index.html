@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JigsawConnect | Smart Student Collaboration Platform</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       GLOBAL DESIGN SYSTEM DESIGN TOKENS
+       ========================================================================== */
+    :root {
+      --bg: #0b0f19;
+      --card-bg: rgba(20, 30, 54, 0.45);
+      --border: rgba(255, 255, 255, 0.08);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --primary: #2563eb;
+      --accent: #06b6d4;
+      --accent-purple: #a855f7;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --accent-glow: rgba(6, 182, 212, 0.15);
+      --primary-glow: rgba(37, 99, 235, 0.2);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text-main);
+      overflow-x: hidden;
+      line-height: 1.5;
+    }
+
+    /* BACKGROUND GLOWS */
+    body::before {
+      content: '';
+      position: fixed;
+      width: 700px;
+      height: 700px;
+      background: var(--primary);
+      filter: blur(240px);
+      opacity: 0.12;
+      top: -200px;
+      left: -200px;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      width: 700px;
+      height: 700px;
+      background: var(--accent-purple);
+      filter: blur(240px);
+      opacity: 0.1;
+      bottom: -200px;
+      right: -200px;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* ==========================================================================
+       NAVIGATION LAYER
+       ========================================================================== */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 6%;
+      background: rgba(11, 15, 25, 0.85);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--border);
+      z-index: 1000;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 800;
+      color: #fff;
+      text-decoration: none;
+      letter-spacing: -0.5px;
+    }
+
+    .logo span {
+      color: var(--accent);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 26px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 700;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--primary));
+      color: white;
+      box-shadow: 0 4px 20px var(--primary-glow);
+      border: none;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(6, 182, 212, 0.4);
+    }
+
+    .btn-outline {
+      border: 1px solid rgba(6, 182, 212, 0.4);
+      background: rgba(6, 182, 212, 0.05);
+      color: var(--accent);
+    }
+
+    .btn-outline:hover {
+      background: var(--accent);
+      color: var(--bg);
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
+
+    /* MAIN LAYOUT CONTAINER */
+    .home-layout-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 120px 24px 60px;
+    }
+
+    .main-content-stream {
+      display: flex;
+      flex-direction: column;
+      gap: 60px;
+    }
+
+    /* HERO AREA STRUCTURE */
+    .hero-container {
+      display: flex;
+      gap: 40px;
+      align-items: center;
+      padding: 10px 0;
+    }
+
+    .hero-text {
+      flex: 1;
+      text-align: left;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 18px;
+      border-radius: 30px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 20px;
+    }
+
+    .hero-text h1 {
+      font-size: 3.2rem;
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 20px;
+      letter-spacing: -1.5px;
+    }
+
+    .hero-text h1 em {
+      font-style: normal;
+      background: linear-gradient(135deg, var(--accent), #a855f7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-text p {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* VIDEO CONTAINER WRAPPER TO CLIP EXTRA YOUTUBE UI ELEMENTS */
+    .hero-image-wrapper {
+      flex: 1.2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    .video-box-container {
+      position: relative;
+      width: 100%;
+      max-width: 650px;
+      height: 380px;
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 35px var(--accent-glow);
+    }
+
+    /* Scaling iframe to crop out top and bottom YouTube overlay controls */
+    .video-box-container iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      pointer-events: none; /* Disables click and extra overlay popups */
+      object-fit: cover;
+    }
+
+    /* STATS BAR */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 20px;
+    }
+
+    .stat-node {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 24px;
+      text-align: center;
+    }
+
+    .stat-node h2 {
+      font-size: 2.2rem;
+      color: var(--accent);
+      font-weight: 800;
+    }
+
+    .stat-node p {
+      color: var(--text-muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-top: 4px;
+    }
+
+    /* FEATURES GRID */
+    .section-title {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: 30px;
+      letter-spacing: -0.5px;
+    }
+
+    .section-title span {
+      color: var(--accent);
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      padding: 32px;
+      border-radius: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .badge-tag {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+
+    .feature-icon {
+      font-size: 2.2rem;
+      margin-bottom: 20px;
+      background: rgba(255, 255, 255, 0.03);
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+    }
+
+    .feature-card h3 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: #fff;
+    }
+
+    .feature-card p {
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* MISSION CARDS */
+    .about-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .about-node {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+    }
+
+    .about-node h3 {
+      font-size: 20px;
+      margin-bottom: 12px;
+    }
+
+    /* CTA BANNER */
+    .cta-banner {
+      padding: 50px 40px;
+      text-align: center;
+      background: linear-gradient(135deg, rgba(29, 78, 216, 0.8), rgba(14, 116, 144, 0.8));
+      backdrop-filter: blur(12px);
+      border-radius: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .cta-banner h2 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    /* FOOTER */
+    .footer {
+      padding: 60px 24px 30px;
+      background: rgba(7, 10, 16, 0.95);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      gap: 40px;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+    }
+
+    .footer-brand p {
+      color: var(--text-muted);
+      font-size: 14px;
+      max-width: 350px;
+      margin-top: 10px;
+    }
+
+    /* RESPONSIVENESS */
+    @media (max-width: 1200px) {
+      .hero-container { flex-direction: column; text-align: center; }
+      .hero-text { text-align: center; }
+      .video-box-container { max-width: 100%; height: 350px; }
+    }
+
+    @media (max-width: 768px) {
+      .navbar { padding: 16px 24px; }
+      .hero-text h1 { font-size: 2.4rem; }
+      .about-section { grid-template-columns: 1fr; }
+      .video-box-container { height: 260px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <a href="index.html" class="logo">📚 Jigsaw<span>Connect</span></a>
+    
+    <div class="nav-actions">
+      <a href="admin-login.html" class="btn btn-outline">🔑 Admin Login</a>
+      <a href="student-login.html" class="btn btn-primary">🎓 Student Portal</a>
+    </div>
+  </nav>
+
+  <div class="home-layout-container">
+    <main class="main-content-stream">
+      
+      <!-- HERO SECTION -->
+      <section class="hero-container">
+        <div class="hero-text">
+          <span class="hero-badge">✨ Vignan's Institute of Engineering for Women</span>
+          <h1>JIGSAW <em>LEARNING & PLACEMENT</em> COLLABORATIVE LEARNING</h1>
+          <p>An integrated platform designed to empower students through peer collaboration, skill assessments, placement tracking, and interactive resources.</p>
+        </div>
+
+        <div class="hero-image-wrapper">
+          <div class="video-box-container" id="videoContainer">
+            <!-- Privacy-enhanced YouTube embed without extra controls or overlays -->
+            <iframe 
+              id="scrollVideo" 
+              src="https://www.youtube-nocookie.com/embed/YwZZ-lqUHJI?enablejsapi=1&autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&loop=1&playlist=YwZZ-lqUHJI&showinfo=0&iv_load_policy=3" 
+              title="Overview Video" 
+              allow="autoplay; encrypted-media">
+            </iframe>
+          </div>
+        </div>
+      </section>
+
+      <!-- STATS BAR -->
+      <section class="stats-bar">
+        <div class="stat-node">
+          <h2>1.2k+</h2>
+          <p>Contests Solved</p>
+        </div>
+        <div class="stat-node">
+          <h2>45+</h2>
+          <p>Active Drives</p>
+        </div>
+        <div class="stat-node">
+          <h2>98%</h2>
+          <p>Success Index</p>
+        </div>
+        <div class="stat-node">
+          <h2>250+</h2>
+          <p>Streak Coders</p>
+        </div>
+      </section>
+
+      <!-- PLATFORM ECOSYSTEM -->
+      <section id="features">
+        <h2 class="section-title">✨ Platform <span>Ecosystem Matrix</span></h2>
+        
+        <div class="feature-grid">
+          <div class="feature-card">
+            <span class="badge-tag" style="color: var(--success);">LIVE ASSESSMENT</span>
+            <div class="feature-icon" style="border-color: var(--success); color: var(--success);">🚀</div>
+            <h3>HackerRank Gateways</h3>
+            <p>Authenticate profiles, submit verified codes, and sync automated exam scores into campus evaluation databases seamlessly.</p>
+          </div>
+
+          <div class="feature-card">
+            <span class="badge-tag" style="color: var(--accent);">SANDBOX GRID</span>
+            <div class="feature-icon" style="border-color: var(--accent); color: var(--accent);">💻</div>
+            <h3>Multi-Platform Sandbox</h3>
+            <p>Track metrics natively across multiple coding frameworks including LeetCode, CodeChef, and HackerRank synchronization layers.</p>
+          </div>
+
+          <div class="feature-card">
+            <span class="badge-tag" style="color: var(--warning);">COMPETITIVE</span>
+            <div class="feature-icon" style="border-color: var(--warning); color: var(--warning);">🏁</div>
+            <h3>Hackathons & Contests</h3>
+            <p>Register for internal campus code sprints, capture flag protocols, schedule technical seminars, and win community stars.</p>
+          </div>
+
+          <div class="feature-card">
+            <span class="badge-tag" style="color: var(--accent-purple);">CORPORATE</span>
+            <div class="feature-icon" style="border-color: var(--accent-purple); color: var(--accent-purple);">💼</div>
+            <h3>Placements Intelligence</h3>
+            <p>Track elite corporate drives, filter eligibility criteria parameters, process resumes, and evaluate historical placement analytics.</p>
+          </div>
+
+          <div class="feature-card">
+            <span class="badge-tag" style="color: var(--warning);">RANKINGS</span>
+            <div class="feature-icon" style="border-color: var(--warning); color: var(--warning);">🏆</div>
+            <h3>Live Global Leaderboard</h3>
+            <p>Real-time class rankings dynamically pulled from HackerRank scores, assessment completion speeds, and active peer review logs.</p>
+          </div>
+
+          <div class="feature-card">
+            <span class="badge-tag">NETWORKING</span>
+            <div class="feature-icon">👥</div>
+            <h3>Peer Node Decoupler</h3>
+            <p>Form custom deployment teams, match programming skill vectors with open source contributors, and launch portfolio architectures.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ABOUT & MISSION -->
+      <section class="about-section">
+        <div class="about-node">
+          <h3>🎯 Our Core Mission</h3>
+          <p style="color: var(--text-muted); font-size: 14px; margin-top: 6px; line-height: 1.6;">
+            To systematically remove friction from collegiate networking by unifying distributed student nodes, resource repositories, code groups, and skill mapping metrics into one high-performance interface.
+          </p>
+        </div>
+        <div class="about-node">
+          <h3>💡 Why JigsawConnect?</h3>
+          <p style="color: var(--text-muted); font-size: 14px; margin-top: 6px; line-height: 1.6;">
+            Unlike disconnected workspace channels, StudyConnect forms a tailored academic ecosystem engineered to log milestones, demonstrate performance data, and drive actual technical portfolio outputs.
+          </p>
+        </div>
+      </section>
+
+      <!-- CTA BANNER -->
+      <section class="cta-banner">
+        <h2>Secure Portal Access</h2>
+        <p style="color: #e2e8f0;">Please sign in using the top navigation bar with your Student Portal or Admin credentials to access full platform modules.</p>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <h3 style="font-weight: 800;">📚 JigsawConnect</h3>
+        <p>Empowering students through high-impact collaboration, continuous learning infrastructure, and system resource optimization.</p>
+      </div>
+    </div>
+    <div style="text-align: center; border-top: 1px solid var(--border); padding-top: 20px; color: #64748b; font-size: 13px;">
+      2026 JigsawConnect | CH.YASODHA RANI|CSD|3RD YEAR🚀
+    </div>
+  </footer>
+
+  <!-- YOUTUBE IFRAME API SCRIPT FOR AUTOMATIC SCROLL PLAY/PAUSE -->
+  <script src="https://www.youtube.com/iframe_api"></script>
+  <script>
+    let player;
+
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('scrollVideo', {
+        events: {
+          'onReady': onPlayerReady
+        }
+      });
+    }
+
+    function onPlayerReady(event) {
+      event.target.mute();
+      
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            player.playVideo();
+          } else {
+            player.pauseVideo();
+          }
+        });
+      }, { threshold: 0.5 });
+
+      observer.observe(document.getElementById('videoContainer'));
+    }
+  </script>
+</body>
+</html>
