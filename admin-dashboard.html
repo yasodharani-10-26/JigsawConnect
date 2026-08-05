@@ -1,6 +1,6 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
-<head> 
+<head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin Dashboard – StudyConnect</title>
@@ -48,7 +48,7 @@
       color: var(--text);
       min-height: 100vh;
       overflow-x: hidden;
-      background-image: 
+      background-image:
         radial-gradient(circle at 10% 20%, rgba(79, 70, 229, 0.05) 0%, transparent 40%),
         radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.05) 0%, transparent 40%);
     }
@@ -524,7 +524,7 @@
         <div class="form-group">
           <label>Target Active Exam Template</label>
           <select id="adminContestSelectDropdown">
-            <option value="">-- Select Loaded active Node Reference --</option>
+            <option value="">-- Select Mapped Active Exam Template --</option>
           </select>
         </div>
         <div class="form-group">
@@ -686,7 +686,7 @@
         alert("Please specify a valid HackerRank ID.");
         return;
       }
-      const safeKey = hrId.replace(/[.#$\[\]\/]/g, '_');
+      const safeKey = hrId.replace(/[.#$[\]/]/g, '_');
 
       try {
         await set(ref(db, `students/${safeKey}`), { name, hrId, branch, year });
