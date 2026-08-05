@@ -23,7 +23,7 @@ export default async function handler(req, res) {
 
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
-      // JSON ఫార్మాట్‌లోనే ఎర్రర్ పంపాలి
+      // Send error in JSON format
       return res.status(500).json({ error: 'GEMINI_API_KEY environment variable is missing.' });
     }
 
@@ -41,7 +41,7 @@ export default async function handler(req, res) {
 
   } catch (error) {
     console.error("Doubt Solver Error:", error);
-    // 💥 క్రాష్ అయినా కూడా HTML పంపకుండా JSON ఎర్రర్ పంపడం
+    // Send JSON error even if it crashes
     return res.status(500).json({ 
       error: `Server Error: ${error.message || 'Something went wrong on the server'}` 
     });
