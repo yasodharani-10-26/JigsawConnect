@@ -13,7 +13,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Missing required parameters: topic or count' });
     }
 
-    const apiKey = process.env.GEMINI_API_KEY; 
+    const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
       return res.status(500).json({ error: 'Server Configuration Error: GEMINI_API_KEY is missing.' });
     }
@@ -21,7 +21,7 @@ export default async function handler(req, res) {
     const ai = new GoogleGenerativeAI(apiKey);
 
     // 🚀 సరిచేసిన స్థిరమైన మోడల్: gemini-1.5-flash
-    const model = ai.getGenerativeModel({ 
+    const model = ai.getGenerativeModel({
       model: "gemini-1.5-flash",
       generationConfig: {
         responseMimeType: "application/json",
