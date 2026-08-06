@@ -20,8 +20,24 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 /**
+ * 🛠️ UTILITY: Score Normalizer / Parser
+ * Prevents [object Object] by extracting primitive numeric scores 
+ * whether stored as integer, string, or nested JSON object.
+ */
+function parseScoreValue(scoreData) {
+  if (scoreData === null || scoreData === undefined) return 0;
+  
+  // If it's already a primitive number or string digit (e.g., 175 or "175")
+  if (typeof scoreData !== 'object') {
+    return scoreData;
+  }
+  
+  // If it's a nested object (e.g., { score: 175 } or { marks: 175 })
+  return scoreData.marks ?? scoreData.score ?? scoreData.total ?? scoreData.val ?? JSON.stringify(scoreData);
+}
+
+/**
  * 🚀 UPDATED FUNCTION: Handles HackerRank Link Submission & Automation
- * Local Execution Guardrail to prevent 404/JSON parsing crashes.
  */
 async function handleHackerRankAutomation() {
   const syncBtn = document.getElementById("syncHackerRankBtn");
@@ -46,22 +62,13 @@ async function handleHackerRankAutomation() {
     return;
   }
 
-  // UI Visual Feedback Loop: Trigger loading state
   const originalText = syncBtn.innerHTML;
   syncBtn.disabled = true;
   syncBtn.innerHTML = `<span>⏳</span> Pushing to Pipeline...`;
 
   try {
-    /* 
-     * 🛑 404 API CRASH FIX:
-     * ఒకవేళ నువ్వు లోకల్ కంప్యూటర్ లో పైథాన్ స్క్రిప్ట్ (`upload_scores.py`) వాడుతుంటే,
-     * ఈ కింద ఉన్న Firebase వెరిఫికేషన్ చెక్ పర్ఫెక్ట్‌గా సరిపోతుంది.
-     */
-    
-    // Firebase లో ఆ Exam ఐడీ కింద ఆల్రెడీ డేటా ఉందో లేదో ఒకసారి రీడ్ చేసి చూస్తాం
     const snapshot = await get(ref(db, `hackerRankLeaderboards/${selectedExamId}`));
     
-    // యూజర్ కి గైడెన్స్ ఇస్తూ అలర్ట్ చూపించడం
     alert(`⚡ Local Gateway Triggered!\n\nPlease make sure to run your 'upload_scores.py' script on your machine to sync the data for Exam ID: ${selectedExamId}`);
 
     if (snapshot.exists()) {
@@ -89,7 +96,6 @@ async function handleHackerRankAutomation() {
 async function autoCreateTeams() {
   const btn = document.getElementById("autoCreateTeamsBtn");
   
-  // Interactive UI Feedback: Set loading state
   const originalBtnText = btn.innerHTML;
   btn.disabled = true;
   btn.innerHTML = `<span>⏳</span> Optimizing Roster...`;
@@ -103,15 +109,15 @@ async function autoCreateTeams() {
       return;
     }
 
-    // Isolate and map active student accounts
+    // Isolate and map active student accounts, normalizing score values
     const users = Object.entries(snap.val())
       .map(([uid, data]) => ({
         uid,
-        ...data
+        ...data,
+        score: Number(parseScoreValue(data.score)) || 0
       }))
       .filter(user => user.role === "student");
 
-    // Guardrail: Ensure there are enough students to actually form pairs/teams
     if (users.length < 2) {
       alert("⚠️ Structure Alert: You need at least 2 students registered to run team formations.");
       resetButton(btn, originalBtnText);
@@ -119,38 +125,29 @@ async function autoCreateTeams() {
     }
 
     // Sort students by score descending (Highest scores first)
-    users.sort((a, b) => (b.score || 0) - (a.score || 0));
+    users.sort((a, b) => b.score - a.score);
 
-    // Dynamic Allocation: Determine target teams based on pool scale (Max 10 leaders)
     const totalLeadersCount = Math.min(10, Math.max(1, Math.floor(users.length / 2)));
     const leaders = users.slice(0, totalLeadersCount);
     const members = users.slice(totalLeadersCount);
 
-    // If there are no members because pool is perfectly split or small, merge distribution back
     if (members.length === 0) {
       alert("ℹ️ Pool distribution is too compact to divide further. Try onboarding more users.");
       resetButton(btn, originalBtnText);
       return;
     }
 
-    // Construct a single multi-path update bundle object
     const updatePayload = {};
     let leaderIndex = 0;
 
     for (const member of members) {
       const assignedLeader = leaders[leaderIndex];
-      
-      // Stage updates sequentially into local memory memory paths
       updatePayload[`users/${member.uid}/teamLeader`] = assignedLeader.uid;
-
-      // Cycle distribution patterns through existing leader indexes
       leaderIndex = (leaderIndex + 1) % leaders.length;
     }
 
-    // Single Atomic Write: Executes all records in one swift network transaction
     await update(ref(db), updatePayload);
 
-    // Success state response
     btn.innerHTML = `<span>🎯</span> Formations Deployed!`;
     setTimeout(() => {
       alert("Algorithmic Balance Complete! Teams balanced dynamically across leaderboard scores. ✅");
@@ -164,7 +161,6 @@ async function autoCreateTeams() {
   }
 }
 
-// Micro-interaction Helper function to restore element states smoothly
 function resetButton(buttonElement, originalText) {
   buttonElement.disabled = false;
   buttonElement.innerHTML = originalText;
