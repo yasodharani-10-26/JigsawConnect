@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="te">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RuralConnect AI - Universal Study Hub</title>
+  <title>RuralConnect AI - Multi-Branch Study Hub</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -18,8 +18,8 @@
       --primary: #2563eb;
       --primary-hover: #1d4ed8;
       --accent-orange: #f97316;
-      --accent-orange-hover: #ea580c;
       --accent-green: #10b981;
+      --accent-red: #ef4444;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
@@ -72,27 +72,28 @@
       background: #1f2937;
       color: var(--text-main);
       border: 1px solid #374151;
-      padding: 8px 12px;
+      padding: 10px 14px;
       border-radius: 8px;
       font-size: 13px;
+      font-weight: 600;
       outline: none;
       cursor: pointer;
     }
 
     .btn {
-      padding: 8px 16px;
+      padding: 10px 18px;
       border-radius: 8px;
       font-size: 13px;
       font-weight: 600;
       border: none;
       cursor: pointer;
-      transition: background 0.2s;
+      transition: all 0.2s;
     }
 
     .btn-primary { background: var(--primary); color: #fff; }
     .btn-primary:hover { background: var(--primary-hover); }
     .btn-orange { background: var(--accent-orange); color: #fff; }
-    .btn-orange:hover { background: var(--accent-orange-hover); }
+    .btn-orange:hover { background: #ea580c; }
     .btn-outline { background: transparent; border: 1px solid var(--card-border); color: var(--text-main); }
     .btn-outline:hover { background: rgba(255,255,255,0.05); }
 
@@ -140,35 +141,52 @@
     .tab-content { display: none; }
     .tab-content.active { display: block; }
 
-    /* EXECUTIVE SUMMARY */
+    .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; padding: 24px; }
+
     .summary-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
     @media (max-width: 768px) { .summary-grid { grid-template-columns: 1fr; } }
 
-    .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; padding: 20px; }
-
     .exam-note {
       background: rgba(245, 158, 11, 0.1); border-left: 4px solid #f59e0b;
-      padding: 12px; border-radius: 0 8px 8px 0; margin-top: 16px; font-size: 13px; color: #fbbf24;
+      padding: 14px; border-radius: 0 8px 8px 0; margin-top: 16px; font-size: 13px; color: #fbbf24;
     }
 
-    /* MIND GRAPH */
-    .mindmap-canvas {
-      height: 320px; background: #070a13; border-radius: 12px; border: 1px solid var(--card-border);
-      margin-top: 16px; position: relative; display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap;
+    /* MIND GRAPH CANVAS */
+    .mindmap-container {
+      position: relative; width: 100%; min-height: 350px; background: #070a13;
+      border-radius: 12px; border: 1px solid var(--card-border); padding: 20px;
+      display: flex; align-items: center; justify-content: space-around; flex-wrap: wrap; gap: 20px;
+      overflow: hidden;
     }
-    .node {
-      padding: 12px; background: rgba(31, 41, 55, 0.8); border: 1px solid var(--primary);
-      border-radius: 10px; text-align: center; font-size: 12px; width: 180px;
-    }
-    .node-tag { font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 4px; background: var(--primary); color: #fff; margin-bottom: 4px; display: inline-block; }
 
-    /* QUIZ PANEL */
-    .quiz-box { text-align: center; max-width: 550px; margin: 20px auto; display: flex; flex-direction: column; gap: 16px; }
+    .mind-node {
+      background: rgba(31, 41, 55, 0.9); border: 2px solid var(--primary);
+      border-radius: 12px; padding: 14px 18px; width: 220px; z-index: 2;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5); text-align: left;
+    }
+    .mind-node .tag { font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 4px; background: var(--primary); color: #fff; display: inline-block; margin-bottom: 6px; }
+
+    /* DIAGRAM HOLDER */
+    .diagram-holder {
+      background: #070a13; border-radius: 12px; padding: 24px;
+      border: 1px solid var(--card-border); text-align: center;
+    }
+
+    /* QUIZ INTERACTIVE STYLING */
+    .quiz-box { text-align: center; max-width: 650px; margin: 0 auto; }
+    .quiz-options { display: flex; flex-direction: column; gap: 10px; margin: 20px 0; text-align: left; }
+    .quiz-opt-btn {
+      padding: 14px; border-radius: 10px; background: #1f2937; border: 1px solid var(--card-border);
+      color: var(--text-main); font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s;
+    }
+    .quiz-opt-btn:hover { background: #374151; }
+    .quiz-opt-btn.correct { background: rgba(16, 185, 129, 0.2) !important; border-color: var(--accent-green) !important; color: var(--accent-green) !important; }
+    .quiz-opt-btn.wrong { background: rgba(239, 68, 68, 0.2) !important; border-color: var(--accent-red) !important; color: var(--accent-red) !important; }
 
     /* MODAL POPUP */
     .modal-overlay {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(4px);
+      background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(4px);
       display: none; align-items: center; justify-content: center; z-index: 1000;
     }
     .modal-overlay.open { display: flex; }
@@ -189,22 +207,39 @@
 
   <div class="container">
     
+    <!-- HEADER -->
     <header class="header">
       <div>
         <span class="badge-low-bw">⚡ Ultra-Low Bandwidth Mode Active (50 Kbps)</span>
         <h1 class="header-title">AI Study Hub & Visual Practice Engine</h1>
-        <p class="header-desc">Interactive Learning Suite: AI Visual Aid Generator, Offline Practice Quiz, Text-to-Speech</p>
+        <p class="header-desc">Interactive Multi-Branch Learning Suite with AI Quiz Engine & Mind Maps</p>
       </div>
       <div class="header-controls">
-        <select id="topicSelect">
-          <option>Power Electronics & Microgrid Inverter Systems</option>
-          <option>Semiconductor Physics</option>
-          <option>MPPT Charge Controllers</option>
+        <select id="branchTopicSelect" onchange="loadTopicData()">
+          <optgroup label="⚡ Electrical & Electronics (EEE)">
+            <option value="eee_power">Power Electronics & Microgrid Inverters</option>
+          </optgroup>
+          <optgroup label="💻 Computer Science (CSE)">
+            <option value="cse_dsa">Data Structures & Algorithms</option>
+          </optgroup>
+          <optgroup label="📡 Electronics & Comm (ECE)">
+            <option value="ece_dsp">Digital Signal Processing & Wireless</option>
+          </optgroup>
+          <optgroup label="⚙️ Mechanical Eng (MECH)">
+            <option value="mech_thermo">Thermodynamics & Fluid Mechanics</option>
+          </optgroup>
+          <optgroup label="🏗️ Civil Engineering (CIVIL)">
+            <option value="civil_struct">Structural Analysis & Concrete Design</option>
+          </optgroup>
+          <optgroup label="🤖 AI & Data Science (AI/ML)">
+            <option value="aiml_nn">Deep Learning & Neural Networks</option>
+          </optgroup>
         </select>
-        <button class="btn btn-primary">🔄 Regenerate</button>
+        <button class="btn btn-primary" onclick="loadTopicData()">🔄 Regenerate</button>
       </div>
     </header>
 
+    <!-- STREAK BANNER -->
     <section class="streak-banner">
       <div class="streak-info">
         <div class="fire-icon">🔥</div>
@@ -229,89 +264,69 @@
 
       <div style="display: flex; align-items: center; gap: 12px;">
         <div style="text-align: right;">
-          <div style="font-size: 16px; font-weight: 700; color: #fbbf24;">⚡ 420 XP</div>
+          <div style="font-size: 16px; font-weight: 700; color: #fbbf24;" id="xpDisplay">⚡ 420 XP</div>
           <div style="font-size: 11px; color: var(--text-muted);">Best: 12 Days</div>
         </div>
         <button class="btn btn-outline" id="openReminderBtn">🔔 19:00</button>
-        <button class="btn btn-orange">Log Session (+15 XP)</button>
+        <button class="btn btn-orange" onclick="addXP(15)">Log Session (+15 XP)</button>
       </div>
     </section>
 
+    <!-- TABS NAVIGATION -->
     <nav class="tab-bar">
       <button class="tab-btn active" onclick="switchTab('summary', this)">📖 Executive Summary & Audio</button>
       <button class="tab-btn" onclick="switchTab('mindmap', this)">🌐 Concept Relationship Map (AI Mind Graph)</button>
-      <button class="tab-btn" onclick="switchTab('diagrams', this)">🖼️ AI Visual Diagrams (Mermaid.js)</button>
+      <button class="tab-btn" onclick="switchTab('diagrams', this)">🖼️ AI Visual Diagrams</button>
       <button class="tab-btn" onclick="switchTab('quiz', this)">🎯 Offline Practice Quiz</button>
     </nav>
 
+    <!-- TAB 1: EXECUTIVE SUMMARY -->
     <div id="summary" class="tab-content active">
       <div class="summary-grid">
         <div class="card">
-          <h2 style="font-size: 16px; margin-bottom: 12px;">Lecture Core Summary</h2>
-          <p style="font-size: 14px; color: var(--text-muted); line-height: 1.6;">
-            In microgrid systems, power electronics play a crucial role in regulating and converting energy from non-steady renewable sources like Solar PV. Inverters use Droop Control Algorithms to ensure frequency and voltage stability without dedicated high-speed communication channels between nodes.
-          </p>
-          <div class="exam-note">
-            <strong>Semester Exam Note:</strong> Remember: Open Circuit Voltage (Voc) decreases as temperature increases!
-          </div>
+          <h2 style="font-size: 18px; margin-bottom: 12px;" id="summaryTitle">Core Lecture Summary</h2>
+          <p style="font-size: 14px; color: var(--text-muted); line-height: 1.6;" id="summaryBody">Loading summary...</p>
+          <div class="exam-note" id="examNote">Exam Note: ...</div>
         </div>
         <div class="card">
-          <h3 style="font-size: 14px; margin-bottom: 10px;">Directly Connected Concepts</h3>
-          <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button class="btn btn-outline" style="text-align: left;">➔ MPPT Charge Controller</button>
-            <button class="btn btn-outline" style="text-align: left;">➔ Semiconductor Physics</button>
-            <button class="btn btn-outline" style="text-align: left;">➔ Phase-Locked Loop (PLL)</button>
+          <h3 style="font-size: 14px; margin-bottom: 12px;">Directly Connected Concepts</h3>
+          <div style="display: flex; flex-direction: column; gap: 8px;" id="relatedConcepts">
+            <!-- Dynamic Concepts -->
           </div>
         </div>
       </div>
     </div>
 
+    <!-- TAB 2: MIND GRAPH -->
     <div id="mindmap" class="tab-content">
       <div class="card">
-        <h2 style="font-size: 16px;">AI Mind Graph • Electrical & Electronics Engineering</h2>
-        <div class="mindmap-canvas">
-          <div class="node">
-            <span class="node-tag">FORMULA</span>
-            <div>Droop Control Algorithm</div>
-            <code style="font-size: 10px; color: #60a5fa; margin-top: 4px; display: block;">f - f_0 = -k_p * (P - P_0)</code>
-          </div>
-          <div class="node" style="border-color: #10b981;">
-            <span class="node-tag" style="background: #10b981;">PREREQUISITE</span>
-            <div>Semiconductor Physics</div>
-          </div>
-          <div class="node" style="border-color: #f59e0b;">
-            <span class="node-tag" style="background: #f59e0b;">APPLICATION</span>
-            <div>Rural Microgrid Distribution</div>
-          </div>
+        <h2 style="font-size: 18px; margin-bottom: 12px;">AI Mind Graph - Interactive Concept Nodes</h2>
+        <div class="mindmap-container" id="mindMapNodesHolder">
+          <!-- Dynamic Nodes -->
         </div>
       </div>
     </div>
 
+    <!-- TAB 3: DIAGRAMS -->
     <div id="diagrams" class="tab-content">
-      <div class="card" style="text-align: center; padding: 40px;">
-        <h3>Mermaid.js Flowchart Render Engine</h3>
-        <p style="color: var(--text-muted); font-size: 13px; margin-top: 8px;">Solar PV -> DC-DC Converter (MPPT) -> Microgrid Inverter -> Local Load</p>
+      <div class="card">
+        <h2 style="font-size: 18px; margin-bottom: 16px;">AI Generated Visual System Diagram</h2>
+        <div class="diagram-holder" id="diagramContainer">
+          <!-- Dynamic SVG Diagram -->
+        </div>
       </div>
     </div>
 
+    <!-- TAB 4: QUIZ ENGINE -->
     <div id="quiz" class="tab-content">
-      <div class="card quiz-box">
-        <div style="font-size: 40px;">🧠</div>
-        <h2>Ready to Test Your Knowledge?</h2>
-        <p style="font-size: 13px; color: var(--text-muted);">Topic: Power Electronics & Microgrid Inverter Systems</p>
-        
-        <select>
-          <option>Basic Concepts</option>
-          <option selected>Semester Exam Prep</option>
-          <option>Advanced Practice</option>
-        </select>
-
-        <button class="btn btn-primary" style="padding: 12px;">Start Practice Quiz Now ➔</button>
+      <div class="card quiz-box" id="quizContainer">
+        <!-- Interactive Quiz renders here -->
       </div>
     </div>
 
   </div>
 
+  <!-- REMINDER MODAL POPUP -->
   <div class="modal-overlay" id="reminderModal">
     <div class="modal">
       <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -321,8 +336,8 @@
 
       <div style="background: rgba(249, 115, 22, 0.1); border: 1px solid rgba(249, 115, 22, 0.3); border-radius: 10px; padding: 12px; display: flex; justify-content: space-between; align-items: center;">
         <div>
-          <div style="font-size: 13px; font-weight: 700;">Daily Study Session Reminder</div>
-          <div style="font-size: 11px; color: var(--text-muted);">Active: Automated prompt before streak breaks</div>
+          <div style="font-size: 13px; font-weight: 700;">Daily Study Reminder</div>
+          <div style="font-size: 11px; color: var(--text-muted);">Active: Automated notification before streak breaks</div>
         </div>
         <input type="checkbox" checked style="accent-color: var(--accent-orange); width: 18px; height: 18px;">
       </div>
@@ -339,13 +354,366 @@
 
       <div style="display: flex; gap: 10px; margin-top: 8px;">
         <button class="btn btn-outline" style="flex: 1;" id="cancelModalBtn">Cancel</button>
-        <button class="btn btn-orange" style="flex: 1;" id="saveModalBtn">Save Reminder Schedule</button>
+        <button class="btn btn-orange" style="flex: 1;" id="saveModalBtn">Save Schedule</button>
       </div>
     </div>
   </div>
 
   <script>
-    // Tab switching function
+    // 1. MULTI-BRANCH SUBJECTS DATABASE
+    const knowledgeBase = {
+      "eee_power": {
+        title: "Power Electronics & Microgrid Inverters (EEE)",
+        summary: "In microgrid systems, power electronics regulate and convert energy from non-steady renewable sources like Solar PV. Inverters use Droop Control Algorithms to ensure frequency and voltage stability without needing high-speed communication lines between distributed nodes.",
+        examNote: "Remember: Open Circuit Voltage (Voc) of a solar module decreases linearly as cell temperature increases!",
+        related: ["MPPT Charge Controller", "Semiconductor Physics", "Phase-Locked Loop (PLL)"],
+        nodes: [
+          { tag: "FORMULA", title: "Droop Control Equation", sub: "f - f0 = -kp * (P - P0)" },
+          { tag: "PREREQUISITE", title: "Semiconductor Physics", sub: "MOSFET / IGBT Switching" },
+          { tag: "APPLICATION", title: "Microgrid Distribution", sub: "Islanded & Grid-Tied Modes" }
+        ],
+        diagramSvg: `<svg viewBox="0 0 600 120" width="100%" height="160">
+          <rect x="20" y="35" width="110" height="50" rx="8" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
+          <text x="75" y="65" fill="#fff" font-size="12" text-anchor="middle">Solar PV Array</text>
+          <line x1="130" y1="60" x2="180" y2="60" stroke="#3b82f6" stroke-width="2" stroke-dasharray="4"/>
+          
+          <rect x="180" y="35" width="120" height="50" rx="8" fill="#1e293b" stroke="#f59e0b" stroke-width="2"/>
+          <text x="240" y="65" fill="#fff" font-size="12" text-anchor="middle">MPPT Converter</text>
+          <line x1="300" y1="60" x2="350" y2="60" stroke="#f59e0b" stroke-width="2"/>
+
+          <rect x="350" y="35" width="110" height="50" rx="8" fill="#1e293b" stroke="#10b981" stroke-width="2"/>
+          <text x="405" y="65" fill="#fff" font-size="12" text-anchor="middle">DC/AC Inverter</text>
+          <line x1="460" y1="60" x2="510" y2="60" stroke="#10b981" stroke-width="2"/>
+
+          <rect x="510" y="35" width="70" height="50" rx="8" fill="#3b82f6"/>
+          <text x="545" y="65" fill="#fff" font-size="12" text-anchor="middle">AC Grid</text>
+        </svg>`,
+        quiz: [
+          { q: "What happens to Solar PV Open Circuit Voltage (Voc) when temperature increases?", opts: ["Increases significantly", "Decreases linearly", "Stays constant", "Fluctuates randomly"], ans: 1 },
+          { q: "Which control method allows inverters to operate in parallel without communications?", opts: ["Droop Control Algorithm", "PID Controller", "Open-loop PWM", "Scalar Control"], ans: 0 },
+          { q: "What is the full form of MPPT?", opts: ["Maximum Power Point Tracking", "Main Power Phase Transfer", "Micro Power Peak Transformer", "Minimum Pulse Pulse Frequency"], ans: 0 },
+          { q: "Which power semiconductor switch is preferred for high-frequency microgrid inverters?", opts: ["IGBT / MOSFET", "SCR Thyristor", "Diode", "BJT Transistor"], ans: 0 },
+          { q: "In an islanded microgrid, what maintains the voltage and frequency?", opts: ["Grid Utility Provider", "Grid-Forming Inverter", "DC Battery directly", "Transformer"], ans: 1 }
+        ]
+      },
+
+      "cse_dsa": {
+        title: "Data Structures & Algorithms (CSE)",
+        summary: "Data Structures organize and manage memory efficiently, while Algorithms provide logical execution steps. Master operations on Trees, Graphs, Hash Tables, and dynamic memory allocation to write high-performance applications.",
+        examNote: "QuickSort has an average time complexity of O(N log N) and a worst-case time complexity of O(N²).",
+        related: ["Asymptotic Big-O Analysis", "Graph Traversal (BFS/DFS)", "Dynamic Programming"],
+        nodes: [
+          { tag: "CORE CONCEPT", title: "Time Complexity", sub: "Big-O Notation Analysis" },
+          { tag: "DATA STRUCTURE", title: "Binary Search Tree", sub: "O(log N) Search & Insertion" },
+          { tag: "ALGORITHM", title: "Dijkstra's Algorithm", sub: "Single Source Shortest Path" }
+        ],
+        diagramSvg: `<svg viewBox="0 0 600 120" width="100%" height="160">
+          <circle cx="300" cy="30" r="20" fill="#2563eb" />
+          <text x="300" y="35" fill="#fff" font-size="12" text-anchor="middle">Root (50)</text>
+          
+          <line x1="285" y1="45" x2="200" y2="80" stroke="#3b82f6" stroke-width="2"/>
+          <circle cx="200" cy="90" r="18" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
+          <text x="200" y="95" fill="#fff" font-size="11" text-anchor="middle">Left (30)</text>
+
+          <line x1="315" y1="45" x2="400" y2="80" stroke="#3b82f6" stroke-width="2"/>
+          <circle cx="400" cy="90" r="18" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
+          <text x="400" y="95" fill="#fff" font-size="11" text-anchor="middle">Right (70)</text>
+        </svg>`,
+        quiz: [
+          { q: "Which data structure follows the LIFO (Last In First Out) principle?", opts: ["Queue", "Stack", "Array", "Linked List"], ans: 1 },
+          { q: "What is the average time complexity of QuickSort algorithm?", opts: ["O(N)", "O(N log N)", "O(N²)", "O(1)"], ans: 1 },
+          { q: "Which algorithm traversal uses a Queue data structure?", opts: ["Breadth First Search (BFS)", "Depth First Search (DFS)", "In-order Traversal", "Post-order Traversal"], ans: 0 },
+          { q: "What is the worst-case lookup time in a balanced Binary Search Tree (AVL)?", opts: ["O(N)", "O(log N)", "O(N log N)", "O(1)"], ans: 1 },
+          { q: "Which technique avoids redundant calculations by caching subproblem results?", opts: ["Dynamic Programming", "Greedy Method", "Divide and Conquer", "Backtracking"], ans: 0 }
+        ]
+      },
+
+      "ece_dsp": {
+        title: "Digital Signal Processing & Wireless (ECE)",
+        summary: "Digital Signal Processing involves manipulating signals using mathematical functions after digitizing them via ADCs. Fast Fourier Transform (FFT) converts time-domain signals into the frequency domain for spectral analysis.",
+        examNote: "Nyquist Sampling Theorem states that Sampling Frequency (Fs) must be at least 2 times the Maximum Signal Frequency (2 * Fm).",
+        related: ["Nyquist-Shannon Theorem", "Z-Transform Analysis", "FIR/IIR Filter Design"],
+        nodes: [
+          { tag: "THEOREM", title: "Nyquist Criteria", sub: "Fs >= 2 * Fm (No Aliasing)" },
+          { tag: "TRANSFORM", title: "FFT & DFT Analysis", sub: "Time to Frequency Domain" },
+          { tag: "FILTER", title: "FIR & IIR Filters", sub: "Linear Phase Response" }
+        ],
+        diagramSvg: `<svg viewBox="0 0 600 120" width="100%" height="160">
+          <rect x="50" y="40" width="100" height="40" rx="6" fill="#1e293b" stroke="#3b82f6"/>
+          <text x="100" y="65" fill="#fff" font-size="11" text-anchor="middle">Analog Signal</text>
+          <line x1="150" y1="60" x2="200" y2="60" stroke="#3b82f6" stroke-width="2"/>
+          
+          <rect x="200" y="40" width="100" height="40" rx="6" fill="#2563eb"/>
+          <text x="250" y="65" fill="#fff" font-size="11" text-anchor="middle">ADC Sampler</text>
+          <line x1="300" y1="60" x2="350" y2="60" stroke="#3b82f6" stroke-width="2"/>
+
+          <rect x="350" y="40" width="110" height="40" rx="6" fill="#1e293b" stroke="#10b981"/>
+          <text x="405" y="65" fill="#fff" font-size="11" text-anchor="middle">DSP (FFT Processing)</text>
+        </svg>`,
+        quiz: [
+          { q: "According to Nyquist Theorem, if signal frequency is 5 kHz, minimum sampling rate is:", opts: ["5 kHz", "10 kHz", "2.5 kHz", "20 kHz"], ans: 1 },
+          { q: "What happens when sampling rate is less than twice the maximum frequency?", opts: ["Aliasing Effect", "Signal Amplification", "Resonance", "Phase Distortion"], ans: 0 },
+          { q: "FFT reduces computational complexity of DFT from O(N²) to:", opts: ["O(N log N)", "O(N)", "O(log N)", "O(1)"], ans: 0 },
+          { q: "Which filter type always offers strict Linear Phase response?", opts: ["FIR Filter", "IIR Butterworth Filter", "Chebyshev Filter", "Elliptic Filter"], ans: 0 },
+          { q: "What converts discrete signals from time domain to discrete z-domain?", opts: ["Z-Transform", "Fourier Series", "Laplace Transform", "Convolution"], ans: 0 }
+        ]
+      },
+
+      "mech_thermo": {
+        title: "Thermodynamics & Fluid Mechanics (MECH)",
+        summary: "Thermodynamics covers energy transformation between heat and work. Bernoulli's equation applies conservation of energy to flowing fluids, connecting pressure, velocity, and elevation.",
+        examNote: "Second Law of Thermodynamics dictates that total entropy of an isolated system always increases over time.",
+        related: ["Carnot Cycle Efficiency", "Bernoulli's Energy Equation", "Rankine Power Cycle"],
+        nodes: [
+          { tag: "LAW", title: "Entropy & 2nd Law", sub: "dS >= dQ / T" },
+          { tag: "EQUATION", title: "Bernoulli Theorem", sub: "P + 0.5*rho*v^2 + rho*g*h = C" },
+          { tag: "CYCLE", title: "Ideal Carnot Cycle", sub: "Maximum Thermal Efficiency" }
+        ],
+        diagramSvg: `<svg viewBox="0 0 600 120" width="100%" height="160">
+          <rect x="100" y="30" width="120" height="60" rx="6" fill="#1e293b" stroke="#ef4444"/>
+          <text x="160" y="65" fill="#fff" font-size="12" text-anchor="middle">Heat Source (Th)</text>
+          <line x1="220" y1="60" x2="300" y2="60" stroke="#f59e0b" stroke-width="3"/>
+
+          <circle cx="340" cy="60" r="30" fill="#2563eb"/>
+          <text x="340" y="65" fill="#fff" font-size="11" text-anchor="middle">Heat Engine</text>
+          <line x1="370" y1="60" x2="450" y2="60" stroke="#10b981" stroke-width="3"/>
+
+          <rect x="450" y="30" width="110" height="60" rx="6" fill="#1e293b" stroke="#3b82f6"/>
+          <text x="505" y="65" fill="#fff" font-size="12" text-anchor="middle">Work Output (W)</text>
+        </svg>`,
+        quiz: [
+          { q: "Which law states that energy can neither be created nor destroyed?", opts: ["First Law of Thermodynamics", "Second Law", "Zeroth Law", "Third Law"], ans: 0 },
+          { q: "Bernoulli's principle is derived from the conservation of:", opts: ["Energy", "Mass", "Linear Momentum", "Angular Momentum"], ans: 0 },
+          { q: "What is the theoretical maximum efficiency engine cycle?", opts: ["Carnot Cycle", "Otto Cycle", "Diesel Cycle", "Rankine Cycle"], ans: 0 },
+          { q: "In a fluid flow, Venturimeter is used to measure:", opts: ["Discharge / Flow Rate", "Fluid Pressure", "Viscosity", "Temperature"], ans: 0 },
+          { q: "Isentropic process means:", opts: ["Reversible Adiabatic (Constant Entropy)", "Constant Pressure", "Constant Volume", "Constant Temperature"], ans: 0 }
+        ]
+      },
+
+      "civil_struct": {
+        title: "Structural Analysis & Concrete Design (CIVIL)",
+        summary: "Structural Analysis determines the effects of loads on physical structures and members. Reinforced Cement Concrete (RCC) combines concrete's high compressive strength with steel's high tensile strength.",
+        examNote: "In RCC Beams, neutral axis depth balanced condition occurs when strain in steel and concrete reach design yield limits simultaneously.",
+        related: ["Bending Moment & Shear Force", "Limit State Design (IS 456)", "Truss Analysis (Method of Joints)"],
+        nodes: [
+          { tag: "DESIGN", title: "Limit State Method", sub: "Safety & Serviceability" },
+          { tag: "ANALYSIS", title: "Bending Moment Diagram", sub: "M = w * L^2 / 8 (SS Beam)" },
+          { tag: "MATERIAL", title: "RCC Beam Behavior", sub: "Concrete in Comp, Steel in Tension" }
+        ],
+        diagramSvg: `<svg viewBox="0 0 600 120" width="100%" height="160">
+          <rect x="100" y="50" width="400" height="20" fill="#334155" stroke="#94a3b8"/>
+          <polygon points="100,70 90,90 110,90" fill="#f59e0b"/>
+          <polygon points="500,70 490,90 510,90" fill="#f59e0b"/>
+          <line x1="300" y1="10" x2="300" y2="45" stroke="#ef4444" stroke-width="3"/>
+          <text x="300" y="25" fill="#ef4444" font-size="12" text-anchor="middle">Point Load (W)</text>
+        </svg>`,
+        quiz: [
+          { q: "Why is steel reinforcement used inside concrete beams?", opts: ["To carry Tensile Stresses", "To increase weight", "To prevent thermal expansion", "To absorb water"], ans: 0 },
+          { q: "Maximum Bending Moment for a simply supported beam with Point Load at center is:", opts: ["W * L / 4", "W * L / 8", "W * L / 2", "W * L"], ans: 0 },
+          { q: "Grade of Concrete M20 represents characteristic compressive strength of:", opts: ["20 N/mm²", "200 N/mm²", "2 N/mm²", "20 kN/m²"], ans: 0 },
+          { q: "In a cantilever beam, tension zone reinforcement is placed at:", opts: ["Top Fiber", "Bottom Fiber", "Neutral Axis", "Side Face"], ans: 0 },
+          { q: "Slenderness ratio of a column is the ratio of effective length to its:", opts: ["Least Lateral Dimension", "Total Area", "Volume", "Mass"], ans: 0 }
+        ]
+      },
+
+      "aiml_nn": {
+        title: "Deep Learning & Neural Networks (AI/ML)",
+        summary: "Deep Learning utilizes artificial neural networks with multiple layers (DNNs) to model complex patterns in high-dimensional data. Backpropagation updates weights using Gradient Descent.",
+        examNote: "ReLU activation function f(x) = max(0, x) solves the vanishing gradient problem in deep networks.",
+        related: ["Gradient Descent Optimization", "Convolutional Neural Networks (CNN)", "Transformer Architectures"],
+        nodes: [
+          { tag: "OPTIMIZATION", title: "Gradient Descent", sub: "W = W - alpha * dL/dW" },
+          { tag: "ACTIVATION", title: "ReLU Function", sub: "f(x) = max(0, x)" },
+          { tag: "ARCHITECTURE", title: "Transformer Models", sub: "Self-Attention Mechanism" }
+        ],
+        diagramSvg: `<svg viewBox="0 0 600 120" width="100%" height="160">
+          <circle cx="150" cy="35" r="14" fill="#2563eb"/><circle cx="150" cy="85" r="14" fill="#2563eb"/>
+          <circle cx="300" cy="20" r="14" fill="#10b981"/><circle cx="300" cy="60" r="14" fill="#10b981"/><circle cx="300" cy="100" r="14" fill="#10b981"/>
+          <circle cx="450" cy="60" r="14" fill="#f59e0b"/>
+          <line x1="164" y1="35" x2="286" y2="20" stroke="#475569"/><line x1="164" y1="35" x2="286" y2="60" stroke="#475569"/>
+          <line x1="314" y1="60" x2="436" y2="60" stroke="#475569"/>
+        </svg>`,
+        quiz: [
+          { q: "Which algorithm updates weights in a Neural Network during training?", opts: ["Backpropagation", "K-Means Clustering", "Apriori Algorithm", "Linear Regression"], ans: 0 },
+          { q: "What problem does the ReLU activation function primarily mitigate?", opts: ["Vanishing Gradient Problem", "Overfitting", "Underfitting", "Data Bias"], ans: 0 },
+          { q: "Which neural network architecture is best suited for Computer Vision tasks?", opts: ["Convolutional Neural Network (CNN)", "RNN", "MLP", "LSTM"], ans: 0 },
+          { q: "What is the role of Loss Function in AI training?", opts: ["Measures error between prediction and actual target", "Increases dataset size", "Converts text to speech", "Normalizes images"], ans: 0 },
+          { q: "Which attention mechanism powered modern LLMs like ChatGPT?", opts: ["Self-Attention Transformer", "Recurrent Gate", "Pooling Layer", "Dense Dropout"], ans: 0 }
+        ]
+      }
+    };
+
+    // GLOBAL APP STATE
+    let currentTopicKey = "eee_power";
+    let userXp = 420;
+    
+    // QUIZ STATE
+    let quizState = {
+      active: false,
+      currentQ: 0,
+      score: 0,
+      selectedOpt: null,
+      answered: false
+    };
+
+    // INITIAL LOAD
+    window.onload = function() {
+      loadTopicData();
+    };
+
+    // DYNAMIC DATA RENDERER
+    function loadTopicData() {
+      currentTopicKey = document.getElementById('branchTopicSelect').value;
+      const data = knowledgeBase[currentTopicKey];
+
+      // Update Executive Summary Tab
+      document.getElementById('summaryTitle').innerText = data.title;
+      document.getElementById('summaryBody').innerText = data.summary;
+      document.getElementById('examNote').innerHTML = `<strong>Semester Exam Note:</strong> ${data.examNote}`;
+      
+      const relatedContainer = document.getElementById('relatedConcepts');
+      relatedContainer.innerHTML = '';
+      data.related.forEach(item => {
+        relatedContainer.innerHTML += `<button class="btn btn-outline" style="text-align: left;">➔ ${item}</button>`;
+      });
+
+      // Update Mind Map Tab Nodes
+      const mindHolder = document.getElementById('mindMapNodesHolder');
+      mindHolder.innerHTML = '';
+      data.nodes.forEach(node => {
+        mindHolder.innerHTML += `
+          <div class="mind-node">
+            <span class="tag">${node.tag}</span>
+            <div style="font-weight:700; font-size:14px;">${node.title}</div>
+            <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">${node.sub}</div>
+          </div>
+        `;
+      });
+
+      // Update Diagrams Tab
+      document.getElementById('diagramContainer').innerHTML = data.diagramSvg;
+
+      // Reset and Render Quiz
+      resetQuizState();
+    }
+
+    // INTERACTIVE QUIZ ENGINE
+    function resetQuizState() {
+      quizState = { active: false, currentQ: 0, score: 0, selectedOpt: null, answered: false };
+      renderQuizHome();
+    }
+
+    function renderQuizHome() {
+      const data = knowledgeBase[currentTopicKey];
+      const container = document.getElementById('quizContainer');
+      container.innerHTML = `
+        <div style="font-size: 40px; margin-bottom:10px;">🎯</div>
+        <h2 style="font-size: 20px;">Ready to Test Your Knowledge?</h2>
+        <p style="font-size: 13px; color: var(--text-muted); margin-top:6px;">Topic: <strong>${data.title}</strong></p>
+        
+        <div style="display:flex; justify-content:center; gap:16px; margin: 20px 0;">
+          <div style="background:#1f2937; padding:12px 20px; border-radius:10px; font-size:12px;"><strong>${data.quiz.length}</strong> Questions</div>
+          <div style="background:#1f2937; padding:12px 20px; border-radius:10px; font-size:12px;"><strong>100%</strong> Offline Ready</div>
+          <div style="background:#1f2937; padding:12px 20px; border-radius:10px; font-size:12px; color:var(--accent-green);"><strong>+25 XP</strong> Reward</div>
+        </div>
+
+        <button class="btn btn-primary" style="padding: 12px 24px; font-size:14px;" onclick="startQuiz()">Start Practice Quiz Now ➔</button>
+      `;
+    }
+
+    function startQuiz() {
+      quizState.active = true;
+      quizState.currentQ = 0;
+      quizState.score = 0;
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      const data = knowledgeBase[currentTopicKey];
+      const q = data.quiz[quizState.currentQ];
+      quizState.answered = false;
+
+      const container = document.getElementById('quizContainer');
+      container.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; font-size:12px; color:var(--text-muted);">
+          <span>Question ${quizState.currentQ + 1} of ${data.quiz.length}</span>
+          <span>Score: ${quizState.score}</span>
+        </div>
+
+        <h3 style="font-size:16px; text-align:left; line-height:1.4;">${q.q}</h3>
+
+        <div class="quiz-options">
+          ${q.opts.map((opt, idx) => `
+            <button class="quiz-opt-btn" id="optBtn_${idx}" onclick="submitAnswer(${idx})">${opt}</button>
+          `).join('')}
+        </div>
+
+        <div id="quizFeedback" style="min-height:24px; font-size:13px; font-weight:700; margin-bottom:12px;"></div>
+
+        <button class="btn btn-primary" id="nextQBtn" style="display:none; width:100%; padding:12px;" onclick="nextQuestion()">Next Question ➔</button>
+      `;
+    }
+
+    function submitAnswer(selectedIdx) {
+      if (quizState.answered) return;
+      quizState.answered = true;
+
+      const data = knowledgeBase[currentTopicKey];
+      const q = data.quiz[quizState.currentQ];
+      const feedbackEl = document.getElementById('quizFeedback');
+      const nextBtn = document.getElementById('nextQBtn');
+
+      if (selectedIdx === q.ans) {
+        quizState.score++;
+        document.getElementById(`optBtn_${selectedIdx}`).classList.add('correct');
+        feedbackEl.style.color = 'var(--accent-green)';
+        feedbackEl.innerText = " Correct Answer! Great Job!";
+      } else {
+        document.getElementById(`optBtn_${selectedIdx}`).classList.add('wrong');
+        document.getElementById(`optBtn_${q.ans}`).classList.add('correct');
+        feedbackEl.style.color = 'var(--accent-red)';
+        feedbackEl.innerText = ` Incorrect! Correct choice was: ${q.opts[q.ans]}`;
+      }
+
+      nextBtn.style.display = 'block';
+    }
+
+    function nextQuestion() {
+      const data = knowledgeBase[currentTopicKey];
+      quizState.currentQ++;
+      if (quizState.currentQ < data.quiz.length) {
+        renderQuestion();
+      } else {
+        renderQuizResults();
+      }
+    }
+
+    function renderQuizResults() {
+      const data = knowledgeBase[currentTopicKey];
+      const xpEarned = quizState.score * 5;
+      addXP(xpEarned);
+
+      const container = document.getElementById('quizContainer');
+      container.innerHTML = `
+        <div style="font-size: 50px; margin-bottom:10px;">🏆</div>
+        <h2 style="font-size: 22px;">Quiz Completed!</h2>
+        <p style="font-size: 14px; color: var(--text-muted); margin-top:6px;">Your Score: <strong style="color:#fff;">${quizState.score} / ${data.quiz.length}</strong></p>
+
+        <div style="margin:20px 0; background:rgba(16,185,129,0.1); border:1px solid var(--accent-green); padding:16px; border-radius:12px; color:var(--accent-green); font-weight:700;">
+          +${xpEarned} XP Added to your profile!
+        </div>
+
+        <button class="btn btn-primary" style="padding:12px 24px;" onclick="resetQuizState()">Try Again 🔄</button>
+      `;
+    }
+
+    // GAMIFICATION XP COUNTER
+    function addXP(points) {
+      userXp += points;
+      document.getElementById('xpDisplay').innerText = `⚡ ${userXp} XP`;
+    }
+
+    // TAB NAVIGATION
     function switchTab(tabId, element) {
       document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -354,22 +722,16 @@
       element.classList.add('active');
     }
 
-    // Modal popup control logic
+    // MODAL POPUP LOGIC
     const modal = document.getElementById('reminderModal');
-    const openBtn = document.getElementById('openReminderBtn');
-    const closeBtn = document.getElementById('closeReminderBtn');
-    const cancelBtn = document.getElementById('cancelModalBtn');
-    const saveBtn = document.getElementById('saveModalBtn');
-
-    openBtn.onclick = () => modal.classList.add('open');
-    closeBtn.onclick = () => modal.classList.remove('open');
-    cancelBtn.onclick = () => modal.classList.remove('open');
-    saveBtn.onclick = () => {
-      alert('Reminder schedule saved successfully!');
+    document.getElementById('openReminderBtn').onclick = () => modal.classList.add('open');
+    document.getElementById('closeReminderBtn').onclick = () => modal.classList.remove('open');
+    document.getElementById('cancelModalBtn').onclick = () => modal.classList.remove('open');
+    document.getElementById('saveModalBtn').onclick = () => {
+      alert('Reminder schedule saved!');
       modal.classList.remove('open');
     };
 
-    // Time Chip active toggle
     document.querySelectorAll('.chip').forEach(chip => {
       chip.addEventListener('click', function() {
         document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
