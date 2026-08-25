@@ -10,9 +10,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
-    /* ==========================================================================
-       GLOBAL ARCHITECTURAL DESIGN SYSTEM
-       ========================================================================== */
     :root {
       --bg: #070a13;
       --sidebar-bg: #0f1422;
@@ -41,9 +38,6 @@
       display: flex;
     }
 
-    /* ==========================================================================
-       SIDEBAR NAVIGATION SYSTEM
-       ========================================================================== */
     .app-container {
       display: flex;
       width: 100%;
@@ -143,9 +137,6 @@
       color: #fff;
     }
 
-    /* ==========================================================================
-       MAIN WORKSPACE CONTENT
-       ========================================================================== */
     .workspace {
       flex-grow: 1;
       padding: 40px;
@@ -172,7 +163,6 @@
       font-size: 15px;
     }
 
-    /* SEARCH & FILTER CONTROLS */
     .search-filter-grid {
       display: grid;
       grid-template-columns: 2fr 1fr;
@@ -204,7 +194,6 @@
       font-size: 14px;
     }
 
-    /* RESOURCE CARD DECK */
     .card-deck {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -315,13 +304,6 @@
       border-color: var(--success);
     }
 
-    .saved-offline-tag {
-      background: rgba(16, 185, 129, 0.15) !important;
-      color: var(--success) !important;
-      border-color: rgba(16, 185, 129, 0.3) !important;
-    }
-
-    /* OFFLINE DRAWER PANEL */
     .offline-drawer {
       background: rgba(15, 23, 42, 0.8);
       border: 1px solid var(--success);
@@ -356,7 +338,6 @@
       font-size: 13px;
     }
 
-    /* ADMIN PANEL CONTROLS */
     .admin-upload-panel {
       background: rgba(15, 23, 42, 0.6);
       border: 1px dashed var(--accent-cyan);
@@ -420,7 +401,6 @@
 
   <div class="app-container">
     
-    <!-- LEFT SIDEBAR NAVIGATION COMPONENT -->
     <aside class="sidebar">
       <div>
         <a href="index.html" class="sidebar-brand">📚 Study<span>Connect</span></a>
@@ -434,7 +414,6 @@
         </nav>
       </div>
 
-      <!-- PREMIUM B.TECH VAULT COMPONENT CARD -->
       <div class="sidebar-vault-card">
         <h4>⚡ B.Tech Premium Vault</h4>
         <p>Access structured semester-wise study material & labs repository blueprints.</p>
@@ -444,7 +423,6 @@
       <a href="index.html" class="sidebar-item sidebar-logout">🚪 System Logout</a>
     </aside>
 
-    <!-- MAIN INTERACTIVE HUB WORKSPACE -->
     <main class="workspace">
       
       <header class="workspace-header">
@@ -457,7 +435,6 @@
         </button>
       </header>
 
-      <!-- OFFLINE CACHED RESOURCES CONTAINER -->
       <div class="offline-drawer" id="offlineDrawer">
         <h3>⚡ Offline Vault Cache (Available without Internet)</h3>
         <div class="offline-list" id="offlineListContainer">
@@ -465,29 +442,28 @@
         </div>
       </div>
 
-      <!-- ADMIN UPLOAD PORTAL LAYER -->
-      <div class="admin-upload-panel" id="adminUploadPanel" style="display: none;">
-        <h3>⚡ Admin Control Matrix</h3>
+      <!-- FILE UPLOAD MATRIX LAYER -->
+      <div class="admin-upload-panel" id="adminUploadPanel">
+        <h3>⚡ Direct File & Document Upload Center</h3>
         <form id="uploadForm" class="upload-form-grid">
-          <input type="text" id="assetTitle" placeholder="Asset Title" required>
-          <input type="text" id="assetSize" placeholder="File Size (e.g., 2.4 MB)" required>
-          <input type="url" id="assetUrl" placeholder="File Download URL (PDF/Drive Link)" style="grid-column: 1 / -1;" required>
+          <input type="text" id="assetTitle" placeholder="Document/Resource Title" required>
+          <input type="file" id="assetFile" accept=".pdf,.doc,.docx,.ppt,.pptx,.txt,image/*" style="grid-column: 1 / -1;" required>
           <select id="assetCategory" required>
             <option value="cyan">C Programming</option>
             <option value="blue">Python Pipeline</option>
             <option value="orange">Computer Networks</option>
-            <option value="purple">Other Mathematics</option>
+            <option value="purple">Mathematics</option>
           </select>
           <select id="fileType" required>
             <option value="Cheat Sheet">Cheat Sheet</option>
             <option value="Reference Manual">Reference Manual</option>
             <option value="Core Syllabus">Core Syllabus</option>
+            <option value="Lab Record">Lab Record</option>
           </select>
-          <button type="submit" class="upload-btn">Deploy Matrix Asset</button>
+          <button type="submit" class="upload-btn" id="uploadSubmitBtn">Upload Document To Cloud</button>
         </form>
       </div>
 
-      <!-- DYNAMIC CONFIG SEARCH GRID BAR -->
       <div class="search-filter-grid">
         <input type="text" id="resourceSearch" class="search-bar" placeholder="Search parameters by engineering discipline, tags or asset title...">
         <select id="categorySelector" class="category-filter">
@@ -499,11 +475,9 @@
         </select>
       </div>
 
-      <!-- CARDS DECK GRID VIEW -->
       <section class="card-deck" id="resourcesDeck">
         
-        <!-- HARDCODED RESOURCE NODE 1 -->
-        <div class="resource-card" data-category="cyan" data-tags="c language pointers memory allocation pointers">
+        <div class="resource-card" data-category="cyan" data-tags="c language pointers memory allocation">
           <div class="card-top">
             <span class="resource-badge badge-cyan">C Programming</span>
             <span class="file-type">Cheat Sheet</span>
@@ -516,45 +490,7 @@
             <span class="meta-size">2.4 MB</span>
             <div class="action-group">
               <button onclick="saveForOffline('C Pointers Notes', 'data:text/plain;charset=utf-8,C%20Pointers%20and%20Memory%20Architecture%20Notes')" class="offline-save-btn">💾 Save</button>
-              <a href="data:text/plain;charset=utf-8,C%20Pointers%20and%20Memory%20Architecture%20Notes" download="C_Pointers_Notes.txt" class="download-btn">Download</a>
-            </div>
-          </div>
-        </div>
-
-        <!-- HARDCODED RESOURCE NODE 2 -->
-        <div class="resource-card" data-category="blue" data-tags="python backend structures syntax advanced lambda">
-          <div class="card-top">
-            <span class="resource-badge badge-blue">Python Pipeline</span>
-            <span class="file-type">Reference Manual</span>
-          </div>
-          <div class="card-mid">
-            <h3>Advanced Data Structures & Python Decorators</h3>
-            <p>Deep-dive architecture exploring generators expressions, custom decorators initialization, and compilation.</p>
-          </div>
-          <div class="card-bottom">
-            <span class="meta-size">3.8 MB</span>
-            <div class="action-group">
-              <button onclick="saveForOffline('Python Advanced Notes', 'data:text/plain;charset=utf-8,Python%20Data%20Structures%20and%20Decorators%20Notes')" class="offline-save-btn">💾 Save</button>
-              <a href="data:text/plain;charset=utf-8,Python%20Data%20Structures%20and%20Decorators%20Notes" download="Python_Advanced_Notes.txt" class="download-btn">Download</a>
-            </div>
-          </div>
-        </div>
-
-        <!-- HARDCODED RESOURCE NODE 3 -->
-        <div class="resource-card" data-category="orange" data-tags="computer networks layers osi protocol tcp ip dns">
-          <div class="card-top">
-            <span class="resource-badge badge-orange">Computer Networks</span>
-            <span class="file-type">Core Syllabus</span>
-          </div>
-          <div class="card-mid">
-            <h3>TCP/IP Three-Way Handshake Protocols</h3>
-            <p>Non-technical logic overview explaining state packet control mapping, synchronization sequencing logs.</p>
-          </div>
-          <div class="card-bottom">
-            <span class="meta-size">4.5 MB</span>
-            <div class="action-group">
-              <button onclick="saveForOffline('CN TCP/IP Notes', 'data:text/plain;charset=utf-8,Computer%20Networks%20TCP%20IP%20Handshake%20Notes')" class="offline-save-btn">💾 Save</button>
-              <a href="data:text/plain;charset=utf-8,Computer%20Networks%20TCP%20IP%20Handshake%20Notes" download="CN_TCPIP_Notes.txt" class="download-btn">Download</a>
+              <button onclick="downloadLocalPC('data:text/plain;charset=utf-8,C%20Pointers%20and%20Memory%20Architecture%20Notes', 'C_Pointers_Notes.txt')" class="download-btn">Download</button>
             </div>
           </div>
         </div>
@@ -568,10 +504,10 @@
     </main>
   </div>
 
-  <!-- FIREBASE INTEGRATION & ARCHITECTURE SCRIPT CONTROL -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
-    import { getDatabase, ref, push, set, onValue } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
+    import { getDatabase, ref as dbRef, push, set, onValue } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
+    import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-storage.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCaCkliRZk8HmNtOsJpoA084YhNY7MeMWM",
@@ -585,36 +521,63 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
+    const storage = getStorage(app);
 
     const uploadForm = document.getElementById("uploadForm");
     const resourcesDeck = document.getElementById("resourcesDeck");
     const searchFailureBlock = document.getElementById("searchFailureBlock");
-    const adminUploadPanel = document.getElementById("adminUploadPanel");
-    
-    const userRole = localStorage.getItem("userRole") || "student";
-    if (userRole === "admin") adminUploadPanel.style.display = "block";
 
-    // ADMIN UPLOAD CAPTURE SUBMIT
-    if(uploadForm) {
+    // FILE UPLOAD AND SAVE ENGINE
+    if (uploadForm) {
       uploadForm.addEventListener("submit", async (e) => {
         e.preventDefault();
+        
         const title = document.getElementById("assetTitle").value;
-        const size = document.getElementById("assetSize").value;
-        const fileUrl = document.getElementById("assetUrl").value;
+        const fileInput = document.getElementById("assetFile");
         const category = document.getElementById("assetCategory").value;
         const fType = document.getElementById("fileType").value;
+        const submitBtn = document.getElementById("uploadSubmitBtn");
+
+        if (fileInput.files.length === 0) return alert("Please select a document file to upload!");
+
+        const file = fileInput.files[0];
+        const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2) + " MB";
 
         try {
-          const dbRef = ref(db, "resources");
-          const newNode = push(dbRef);
-          await set(newNode, { title, size, fileUrl, category, fileType: fType, timestamp: Date.now() });
-          alert("🎉 Success: Asset metadata deployed into your live database system cloud deck ledger!");
+          submitBtn.innerText = "Uploading File to Storage...";
+          submitBtn.disabled = true;
+
+          // 1. Upload File directly to Firebase Storage
+          const fileRef = storageRef(storage, `documents/${Date.now()}_${file.name}`);
+          await uploadBytes(fileRef, file);
+          const fileUrl = await getDownloadURL(fileRef);
+
+          // 2. Deploy metadata into Firebase RTDB
+          const resRef = dbRef(db, "resources");
+          const newNode = push(resRef);
+          await set(newNode, {
+            title,
+            size: fileSizeMB,
+            fileUrl,
+            fileName: file.name,
+            category,
+            fileType: fType,
+            timestamp: Date.now()
+          });
+
+          alert("🎉 Document uploaded & deployed to live resources deck successfully!");
           uploadForm.reset();
-        } catch (err) { console.error(err); }
+        } catch (err) {
+          console.error(err);
+          alert("Error uploading file. Please verify Firebase Storage rules.");
+        } finally {
+          submitBtn.innerText = "Upload Document To Cloud";
+          submitBtn.disabled = false;
+        }
       });
     }
 
-    // FUNCTION TO TRIGGER DIRECT FILE DOWNLOAD TO LOCAL PC
+    // DIRECT DOWNLOAD TO PC FUNCTIONALITY
     window.downloadLocalPC = async function(fileUrl, fileName) {
       try {
         const response = await fetch(fileUrl);
@@ -629,37 +592,34 @@
         document.body.removeChild(a);
         URL.revokeObjectURL(blobUrl);
       } catch (e) {
-        // Fallback for CORS or direct links
         const a = document.createElement('a');
         a.href = fileUrl;
         a.target = '_blank';
         a.download = fileName || 'study_document';
         a.click();
       }
-
     };
 
-    // SAVE FILE TO LOCAL STORAGE / INDEXED BROWSER CACHE FOR OFFLINE ACCESS
+    // LOCAL CACHE & OFFLINE PERSISTENCE SYSTEM
     window.saveForOffline = function(title, url) {
       let saved = JSON.parse(localStorage.getItem("offlineResources") || "[]");
-      if(saved.some(item => item.title === title)) {
-        alert("ℹ️ File is already saved for offline viewing!");
+      if (saved.some(item => item.title === title)) {
+        alert("ℹ️ File is already saved for offline access!");
         return;
       }
       
       saved.push({ title, url, date: new Date().toLocaleDateString() });
       localStorage.setItem("offlineResources", JSON.stringify(saved));
-      alert("✅ Saved for offline access! You can view this file anytime in offline mode.");
+      alert("✅ Saved for offline access! Viewable even without an active connection.");
       updateOfflineUI();
     };
 
-    // UPDATE OFFLINE DRAWER UI
     function updateOfflineUI() {
       const saved = JSON.parse(localStorage.getItem("offlineResources") || "[]");
       document.getElementById("offlineCount").innerText = saved.length;
       
       const container = document.getElementById("offlineListContainer");
-      if(saved.length === 0) {
+      if (saved.length === 0) {
         container.innerHTML = '<p style="color: #64748b; font-size: 13px;">No files saved for offline access yet.</p>';
         return;
       }
@@ -692,8 +652,8 @@
 
     updateOfflineUI();
 
-    // DYNAMIC RETRIEVAL ENGINE FROM FIREBASE
-    onValue(ref(db, "resources"), (snapshot) => {
+    // DYNAMIC RETRIEVAL ENGINE FROM FIREBASE DB
+    onValue(dbRef(db, "resources"), (snapshot) => {
       document.querySelectorAll(".dynamic-resource-card").forEach(c => c.remove());
       if (snapshot.exists()) {
         Object.values(snapshot.val()).forEach(data => {
@@ -702,7 +662,7 @@
           card.setAttribute("data-category", data.category || "cyan");
           card.setAttribute("data-tags", `${data.title} ${data.fileType}`.toLowerCase());
 
-          let label = data.category === "cyan" ? "C Programming" : data.category === "blue" ? "Python / ECE" : data.category === "orange" ? "Networks / EEE" : "General Notes";
+          let label = data.category === "cyan" ? "C Programming" : data.category === "blue" ? "Python / ECE" : data.category === "orange" ? "Networks / EEE" : "Mathematics";
           const downloadUrl = data.fileUrl || "#";
           const fileName = data.fileName || (data.title + ".pdf");
 
@@ -728,7 +688,7 @@
       }
     });
 
-    // HYBRID SEARCH AND EXTRA FILTER FUNCTIONALITY
+    // SEARCH FILTER
     const searchInput = document.getElementById("resourceSearch");
     const catSelector = document.getElementById("categorySelector");
 
