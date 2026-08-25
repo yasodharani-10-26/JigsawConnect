@@ -155,6 +155,9 @@
 
     .workspace-header {
       margin-bottom: 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
     .workspace-header h1 {
@@ -204,7 +207,7 @@
     /* RESOURCE CARD DECK */
     .card-deck {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
       gap: 24px;
     }
 
@@ -274,15 +277,21 @@
       justify-content: space-between;
       padding-top: 12px;
       border-top: 1px solid rgba(255,255,255,0.03);
+      gap: 8px;
     }
 
     .meta-size { font-size: 12px; color: #64748b; }
 
-    .download-btn {
+    .action-group {
+      display: flex;
+      gap: 8px;
+    }
+
+    .download-btn, .offline-save-btn {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 8px 14px;
+      padding: 8px 12px;
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid var(--border);
       border-radius: 8px;
@@ -298,6 +307,53 @@
       background: var(--accent-cyan);
       color: #000;
       border-color: var(--accent-cyan);
+    }
+
+    .offline-save-btn:hover {
+      background: var(--success);
+      color: #000;
+      border-color: var(--success);
+    }
+
+    .saved-offline-tag {
+      background: rgba(16, 185, 129, 0.15) !important;
+      color: var(--success) !important;
+      border-color: rgba(16, 185, 129, 0.3) !important;
+    }
+
+    /* OFFLINE DRAWER PANEL */
+    .offline-drawer {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid var(--success);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 32px;
+      display: none;
+    }
+
+    .offline-drawer h3 {
+      font-size: 15px;
+      color: var(--success);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .offline-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .offline-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 13px;
     }
 
     /* ADMIN PANEL CONTROLS */
@@ -378,7 +434,7 @@
         </nav>
       </div>
 
-      <!-- PREMIUM B.TECH VAULT COMPONENT CARD (LINK UPDATED) -->
+      <!-- PREMIUM B.TECH VAULT COMPONENT CARD -->
       <div class="sidebar-vault-card">
         <h4>⚡ B.Tech Premium Vault</h4>
         <p>Access structured semester-wise study material & labs repository blueprints.</p>
@@ -392,9 +448,22 @@
     <main class="workspace">
       
       <header class="workspace-header">
-        <h1>Architecture Curriculum Library</h1>
-        <p>Explore target system documentation, notes framework, and peer metrics deployment keys.</p>
+        <div>
+          <h1>Architecture Curriculum Library</h1>
+          <p>Explore target system documentation, notes framework, and peer metrics deployment keys.</p>
+        </div>
+        <button id="toggleOfflineDrawerBtn" class="download-btn" style="border-color: var(--success); color: var(--success);">
+          💾 View Saved Offline Resources (<span id="offlineCount">0</span>)
+        </button>
       </header>
+
+      <!-- OFFLINE CACHED RESOURCES CONTAINER -->
+      <div class="offline-drawer" id="offlineDrawer">
+        <h3>⚡ Offline Vault Cache (Available without Internet)</h3>
+        <div class="offline-list" id="offlineListContainer">
+          <p style="color: #64748b; font-size: 13px;">No files saved for offline access yet.</p>
+        </div>
+      </div>
 
       <!-- ADMIN UPLOAD PORTAL LAYER -->
       <div class="admin-upload-panel" id="adminUploadPanel" style="display: none;">
@@ -445,7 +514,10 @@
           </div>
           <div class="card-bottom">
             <span class="meta-size">2.4 MB</span>
-            <a href="data:text/plain;charset=utf-8,C%20Pointers%20and%20Memory%20Architecture%20Notes" download="C_Pointers_Notes.txt" class="download-btn">Download Node</a>
+            <div class="action-group">
+              <button onclick="saveForOffline('C Pointers Notes', 'data:text/plain;charset=utf-8,C%20Pointers%20and%20Memory%20Architecture%20Notes')" class="offline-save-btn">💾 Save</button>
+              <a href="data:text/plain;charset=utf-8,C%20Pointers%20and%20Memory%20Architecture%20Notes" download="C_Pointers_Notes.txt" class="download-btn">Download</a>
+            </div>
           </div>
         </div>
 
@@ -461,7 +533,10 @@
           </div>
           <div class="card-bottom">
             <span class="meta-size">3.8 MB</span>
-            <a href="data:text/plain;charset=utf-8,Python%20Data%20Structures%20and%20Decorators%20Notes" download="Python_Advanced_Notes.txt" class="download-btn">Download Node</a>
+            <div class="action-group">
+              <button onclick="saveForOffline('Python Advanced Notes', 'data:text/plain;charset=utf-8,Python%20Data%20Structures%20and%20Decorators%20Notes')" class="offline-save-btn">💾 Save</button>
+              <a href="data:text/plain;charset=utf-8,Python%20Data%20Structures%20and%20Decorators%20Notes" download="Python_Advanced_Notes.txt" class="download-btn">Download</a>
+            </div>
           </div>
         </div>
 
@@ -477,7 +552,10 @@
           </div>
           <div class="card-bottom">
             <span class="meta-size">4.5 MB</span>
-            <a href="data:text/plain;charset=utf-8,Computer%20Networks%20TCP%20IP%20Handshake%20Notes" download="CN_TCPIP_Notes.txt" class="download-btn">Download Node</a>
+            <div class="action-group">
+              <button onclick="saveForOffline('CN TCP/IP Notes', 'data:text/plain;charset=utf-8,Computer%20Networks%20TCP%20IP%20Handshake%20Notes')" class="offline-save-btn">💾 Save</button>
+              <a href="data:text/plain;charset=utf-8,Computer%20Networks%20TCP%20IP%20Handshake%20Notes" download="CN_TCPIP_Notes.txt" class="download-btn">Download</a>
+            </div>
           </div>
         </div>
 
@@ -517,48 +595,132 @@
     if (userRole === "admin") adminUploadPanel.style.display = "block";
 
     // ADMIN UPLOAD CAPTURE SUBMIT
-    uploadForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const title = document.getElementById("assetTitle").value;
-      const size = document.getElementById("assetSize").value;
-      const fileUrl = document.getElementById("assetUrl").value;
-      const category = document.getElementById("assetCategory").value;
-      const fType = document.getElementById("fileType").value;
+    if(uploadForm) {
+      uploadForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const title = document.getElementById("assetTitle").value;
+        const size = document.getElementById("assetSize").value;
+        const fileUrl = document.getElementById("assetUrl").value;
+        const category = document.getElementById("assetCategory").value;
+        const fType = document.getElementById("fileType").value;
 
+        try {
+          const dbRef = ref(db, "resources");
+          const newNode = push(dbRef);
+          await set(newNode, { title, size, fileUrl, category, fileType: fType, timestamp: Date.now() });
+          alert("🎉 Success: Asset metadata deployed into your live database system cloud deck ledger!");
+          uploadForm.reset();
+        } catch (err) { console.error(err); }
+      });
+    }
+
+    // FUNCTION TO TRIGGER DIRECT FILE DOWNLOAD TO LOCAL PC
+    window.downloadLocalPC = async function(fileUrl, fileName) {
       try {
-        const dbRef = ref(db, "resources");
-        const newNode = push(dbRef);
-        await set(newNode, { title, size, fileUrl, category, fileType: fType, timestamp: Date.now() });
-        alert("🎉 Success: Asset metadata deployed into your live database system cloud deck ledger!");
-        uploadForm.reset();
-      } catch (err) { console.error(err); }
+        const response = await fetch(fileUrl);
+        const blob = await response.blob();
+        const blobUrl = URL.createObjectURL(blob);
+        
+        const a = document.createElement('a');
+        a.href = blobUrl;
+        a.download = fileName || 'study_document';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(blobUrl);
+      } catch (e) {
+        // Fallback for CORS or direct links
+        const a = document.createElement('a');
+        a.href = fileUrl;
+        a.target = '_blank';
+        a.download = fileName || 'study_document';
+        a.click();
+      }
+
+    };
+
+    // SAVE FILE TO LOCAL STORAGE / INDEXED BROWSER CACHE FOR OFFLINE ACCESS
+    window.saveForOffline = function(title, url) {
+      let saved = JSON.parse(localStorage.getItem("offlineResources") || "[]");
+      if(saved.some(item => item.title === title)) {
+        alert("ℹ️ File is already saved for offline viewing!");
+        return;
+      }
+      
+      saved.push({ title, url, date: new Date().toLocaleDateString() });
+      localStorage.setItem("offlineResources", JSON.stringify(saved));
+      alert("✅ Saved for offline access! You can view this file anytime in offline mode.");
+      updateOfflineUI();
+    };
+
+    // UPDATE OFFLINE DRAWER UI
+    function updateOfflineUI() {
+      const saved = JSON.parse(localStorage.getItem("offlineResources") || "[]");
+      document.getElementById("offlineCount").innerText = saved.length;
+      
+      const container = document.getElementById("offlineListContainer");
+      if(saved.length === 0) {
+        container.innerHTML = '<p style="color: #64748b; font-size: 13px;">No files saved for offline access yet.</p>';
+        return;
+      }
+
+      container.innerHTML = saved.map((item, index) => `
+        <div class="offline-item">
+          <div>
+            <strong>${item.title}</strong>
+            <span style="font-size: 11px; color: #64748b; margin-left: 8px;">Saved on: ${item.date}</span>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <a href="${item.url}" target="_blank" class="download-btn" style="padding: 4px 8px; font-size: 11px;">👁 View Offline</a>
+            <button onclick="removeOfflineItem(${index})" style="background: rgba(239, 68, 68, 0.2); border: none; color: #ef4444; border-radius: 6px; padding: 4px 8px; cursor: pointer;">🗑</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    window.removeOfflineItem = function(index) {
+      let saved = JSON.parse(localStorage.getItem("offlineResources") || "[]");
+      saved.splice(index, 1);
+      localStorage.setItem("offlineResources", JSON.stringify(saved));
+      updateOfflineUI();
+    };
+
+    document.getElementById("toggleOfflineDrawerBtn").addEventListener("click", () => {
+      const drawer = document.getElementById("offlineDrawer");
+      drawer.style.display = drawer.style.display === "block" ? "none" : "block";
     });
 
-    // DYNAMIC RETRIEVAL ENGINE 
+    updateOfflineUI();
+
+    // DYNAMIC RETRIEVAL ENGINE FROM FIREBASE
     onValue(ref(db, "resources"), (snapshot) => {
       document.querySelectorAll(".dynamic-resource-card").forEach(c => c.remove());
       if (snapshot.exists()) {
         Object.values(snapshot.val()).forEach(data => {
           const card = document.createElement("div");
           card.className = "resource-card dynamic-resource-card";
-          card.setAttribute("data-category", data.category);
+          card.setAttribute("data-category", data.category || "cyan");
           card.setAttribute("data-tags", `${data.title} ${data.fileType}`.toLowerCase());
 
-          let label = data.category === "cyan" ? "C Programming" : data.category === "blue" ? "Python Pipeline" : "Theory Segment";
+          let label = data.category === "cyan" ? "C Programming" : data.category === "blue" ? "Python / ECE" : data.category === "orange" ? "Networks / EEE" : "General Notes";
           const downloadUrl = data.fileUrl || "#";
+          const fileName = data.fileName || (data.title + ".pdf");
 
           card.innerHTML = `
             <div class="card-top">
-              <span class="resource-badge badge-${data.category}">${label}</span>
-              <span class="file-type">${data.fileType}</span>
+              <span class="resource-badge badge-${data.category || 'cyan'}">${label}</span>
+              <span class="file-type">${data.fileType || 'Document'}</span>
             </div>
             <div class="card-mid">
               <h3>${data.title}</h3>
-              <p>Dynamic cloud data stream loaded directly from live data nodes storage metrics architecture.</p>
+              <p>Uploaded study material available for online reading & direct offline download.</p>
             </div>
             <div class="card-bottom">
-              <span class="meta-size">${data.size}</span>
-              <a href="${downloadUrl}" target="_blank" download class="download-btn">Download Node</a>
+              <span class="meta-size">${data.size || 'Cloud File'}</span>
+              <div class="action-group">
+                <button onclick="saveForOffline('${data.title}', '${downloadUrl}')" class="offline-save-btn">💾 Save</button>
+                <button onclick="downloadLocalPC('${downloadUrl}', '${fileName}')" class="download-btn">Download</button>
+              </div>
             </div>
           `;
           resourcesDeck.insertBefore(card, searchFailureBlock);
