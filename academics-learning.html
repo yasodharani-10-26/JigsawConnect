@@ -24,72 +24,6 @@
       transition: background 0.3s, color 0.3s;
     }
 
-    /* Login Page Styling */
-    #loginPage {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
-    }
-
-    .login-card {
-      background: #ffffff;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-      width: 100%;
-      max-width: 380px;
-      text-align: center;
-    }
-
-    .login-card h2 {
-      margin-bottom: 20px;
-      color: var(--primary);
-    }
-
-    .input-group {
-      margin-bottom: 15px;
-      text-align: left;
-    }
-
-    .input-group label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: 600;
-      font-size: 0.9rem;
-    }
-
-    .input-group input {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      box-sizing: border-box;
-    }
-
-    .btn-login {
-      width: 100%;
-      background: var(--primary);
-      color: white;
-      border: none;
-      padding: 12px;
-      font-weight: bold;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 1rem;
-      transition: background 0.2s;
-    }
-
-    .btn-login:hover {
-      background: #4338ca;
-    }
-
-    /* Main Portal Styling */
-    #portalPage {
-      display: none;
-    }
-
     header {
       background: var(--primary);
       color: #fff;
@@ -143,6 +77,8 @@
       border-radius: 6px;
       cursor: pointer;
       transition: opacity 0.2s;
+      text-decoration: none;
+      display: inline-block;
     }
 
     .btn-logout:hover { opacity: 0.9; }
@@ -156,19 +92,26 @@
       flex-wrap: wrap;
     }
 
-    nav button {
+    nav button, nav a.nav-link {
       padding: 10px 20px;
       border: none;
       background: #fff;
+      color: var(--text-color);
       font-weight: 600;
       border-radius: 5px;
       cursor: pointer;
       transition: 0.2s;
+      text-decoration: none;
+      display: inline-block;
     }
 
     nav button.active {
       background: var(--primary);
       color: #fff;
+    }
+
+    nav a.nav-link:hover {
+      background: #d1d5db;
     }
 
     main {
@@ -231,124 +174,55 @@
 </head>
 <body>
 
-  <!-- Login Section -->
-  <div id="loginPage">
-    <div class="login-card">
-      <h2>Student Login</h2>
-      <form onsubmit="handleLogin(event)">
-        <div class="input-group">
-          <label for="username">Username</label>
-          <input type="text" id="username" placeholder="Enter username" required>
-        </div>
-        <div class="input-group">
-          <label for="password">Password</label>
-          <input type="password" id="password" placeholder="Enter password" required>
-        </div>
-        <button type="submit" class="btn-login">Login</button>
-      </form>
+  <header>
+    <h2>Interactive Student Portal</h2>
+    <div class="status-container">
+      <span id="modeBadge" class="badge badge-online">ONLINE</span>
+      <button class="btn-switch" onclick="toggleManualOfflineMode()">Switch Mode (Go Offline)</button>
+      <!-- External Logout Action (e.g., redirect to login) -->
+      <a href="login.html" class="btn-logout">Logout</a>
     </div>
-  </div>
+  </header>
 
-  <!-- Portal Main Section -->
-  <div id="portalPage">
-    <header>
-      <h2>Interactive Student Portal</h2>
-      <div class="status-container">
-        <span id="modeBadge" class="badge badge-online">ONLINE</span>
-        <button class="btn-switch" onclick="toggleManualOfflineMode()">Switch Mode (Go Offline)</button>
-        <button class="btn-logout" onclick="handleLogout()">Logout</button>
+  <nav>
+    <!-- Internal Tab Navigation -->
+    <button class="nav-btn active" onclick="switchTab('notes')">Notes & Offline Save</button>
+    <button class="nav-btn" onclick="switchTab('aptitude')">Aptitude</button>
+    
+    <!-- External Page Links -->
+    <a href="student-dashboard.html" class="nav-link">Student Dashboard</a>
+    <a href="quiz.html" class="nav-link">Quiz Page</a>
+    <a href="codehub.html" class="nav-link">CodeHub</a>
+  </nav>
+
+  <main>
+    <!-- Notes Module -->
+    <section id="notes" class="tab-content active">
+      <h3>Offline Dynamic Notes</h3>
+      <p>Net lekapoina meeruikada rasthe details <b>LocalStorage</b> lo automatic ga safe ayyi untai.</p>
+      <textarea id="noteInput" placeholder="Save key definitions or formula points here..."></textarea>
+      <button class="save-btn" onclick="saveNote()">Save Note</button>
+      <div id="savedNotes" style="margin-top:20px;"></div>
+    </section>
+
+    <!-- Aptitude Module -->
+    <section id="aptitude" class="tab-content">
+      <h3>Aptitude & Reasoning Offline Vault</h3>
+      <div>
+        <h4>1. Speed, Distance & Time Formula</h4>
+        <p><b>Formula:</b> Speed = Distance / Time</p>
+        <p><b>Shortcut:</b> Convert km/hr to m/s multiplying by <b>5/18</b>.</p>
       </div>
-    </header>
-
-    <nav>
-      <button class="nav-btn active" onclick="switchTab('quiz')">Quiz</button>
-      <button class="nav-btn" onclick="switchTab('notes')">Notes & Offline Save</button>
-      <button class="nav-btn" onclick="switchTab('coding')">Coding Reference</button>
-      <button class="nav-btn" onclick="switchTab('aptitude')">Aptitude</button>
-    </nav>
-
-    <main>
-      <!-- Quiz Module -->
-      <section id="quiz" class="tab-content active">
-        <div id="quizContainer">
-          <h3 id="questionTitle">Loading Question...</h3>
-          <div id="optionsContainer"></div>
-          <p id="scoreBoard" style="font-weight: bold; margin-top: 15px;"></p>
-        </div>
-      </section>
-
-      <!-- Notes Module -->
-      <section id="notes" class="tab-content">
-        <h3>Offline Dynamic Notes</h3>
-        <p>Net lekapoina meeruikada rasthe details <b>LocalStorage</b> lo automatic ga safe ayyi untai.</p>
-        <textarea id="noteInput" placeholder="Save key definitions or formula points here..."></textarea>
-        <button class="save-btn" onclick="saveNote()">Save Note</button>
-        <div id="savedNotes" style="margin-top:20px;"></div>
-      </section>
-
-      <!-- Coding Module -->
-      <section id="coding" class="tab-content">
-        <h3>Quick Coding Cheat Sheet (Offline Ready)</h3>
-        <h4>Java: Fast I/O Example</h4>
-        <pre>
-import java.io.*;
-public class Main {
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String str = br.readLine();
-        System.out.println("Output: " + str);
-    }
-}</pre>
-        <h4>Python: Basic Data Structure Parsing</h4>
-        <pre>
-# Quick List Comprehension & Dict Parsing
-nums = [1, 2, 3, 4, 5]
-squares = [x**2 for x in nums if x % 2 == 0]
-print(squares) # Output: [4, 16]</pre>
-      </section>
-
-      <!-- Aptitude Module -->
-      <section id="aptitude" class="tab-content">
-        <h3>Aptitude & Reasoning Offline Vault</h3>
-        <div>
-          <h4>1. Speed, Distance & Time Formula</h4>
-          <p><b>Formula:</b> Speed = Distance / Time</p>
-          <p><b>Shortcut:</b> Convert km/hr to m/s multiplying by <b>5/18</b>.</p>
-        </div>
-        <hr>
-        <div>
-          <h4>2. Quantitative Aptitude Practice Problem</h4>
-          <p><b>Q:</b> A train running at 60 km/hr crosses a pole in 9 seconds. What is the length of the train?</p>
-          <button class="btn-switch" style="background:#e5e7eb;" onclick="alert('Speed = 60 * (5/18) = 50/3 m/s.\nLength = Speed * Time = (50/3) * 9 = 150 meters.')">Show Answer</button>
-        </div>
-      </section>
-    </main>
-  </div>
+      <hr>
+      <div>
+        <h4>2. Quantitative Aptitude Practice Problem</h4>
+        <p><b>Q:</b> A train running at 60 km/hr crosses a pole in 9 seconds. What is the length of the train?</p>
+        <button class="btn-switch" style="background:#e5e7eb;" onclick="alert('Speed = 60 * (5/18) = 50/3 m/s.\nLength = Speed * Time = (50/3) * 9 = 150 meters.')">Show Answer</button>
+      </div>
+    </section>
+  </main>
 
   <script>
-    // Authentication State & Session Management
-    function checkAuthStatus() {
-      const isLoggedIn = sessionStorage.getItem('isLoggedIn');
-      if (isLoggedIn === 'true') {
-        document.getElementById('loginPage').style.display = 'none';
-        document.getElementById('portalPage').style.display = 'block';
-      } else {
-        document.getElementById('loginPage').style.display = 'flex';
-        document.getElementById('portalPage').style.display = 'none';
-      }
-    }
-
-    function handleLogin(event) {
-      event.preventDefault();
-      sessionStorage.setItem('isLoggedIn', 'true');
-      checkAuthStatus();
-    }
-
-    function handleLogout() {
-      sessionStorage.removeItem('isLoggedIn');
-      checkAuthStatus();
-    }
-
     // System Online/Offline State Management
     let isManualOffline = false;
 
@@ -375,86 +249,21 @@ print(squares) # Output: [4, 16]</pre>
     window.addEventListener('online', updateNetworkStatus);
     window.addEventListener('offline', updateNetworkStatus);
 
-    // Tab Navigation Logic
+    // Tab Navigation Logic (Only for active internal tabs)
     function switchTab(tabId) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
       
-      document.getElementById(tabId).classList.add('active');
-      
+      const selectedTab = document.getElementById(tabId);
+      if (selectedTab) {
+        selectedTab.classList.add('active');
+      }
+
       const activeBtn = Array.from(document.querySelectorAll('.nav-btn'))
-                             .find(btn => btn.getAttribute('onclick').includes(tabId));
-      if(activeBtn) {
+                             .find(btn => btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(tabId));
+      if (activeBtn) {
         activeBtn.classList.add('active');
       }
-    }
-
-    // Interactive Offline Quiz Implementation
-    const quizData = [
-      {
-        q: "What is the time complexity of searching in a balanced Binary Search Tree (BST)?",
-        options: ["O(1)", "O(n)", "O(log n)", "O(n^2)"],
-        ans: 2
-      },
-      {
-        q: "Which keyword is used to make variables immutable in Java?",
-        options: ["static", "final", "abstract", "volatile"],
-        ans: 1
-      },
-      {
-        q: "In Aptitude: If 12 men complete a work in 8 days, how many days will 6 men take?",
-        options: ["16 Days", "12 Days", "4 Days", "10 Days"],
-        ans: 0
-      }
-    ];
-
-    let currentQ = 0;
-    let score = 0;
-
-    function loadQuiz() {
-      if(currentQ >= quizData.length) {
-        document.getElementById('quizContainer').innerHTML = `
-          <h3>Quiz Completed!</h3>
-          <p>Your Final Score: <b>${score} / ${quizData.length}</b></p>
-          <button class="btn-switch" onclick="restartQuiz()">Restart Quiz</button>
-        `;
-        return;
-      }
-
-      const q = quizData[currentQ];
-      document.getElementById('questionTitle').textContent = `Q${currentQ + 1}. ${q.q}`;
-      const optContainer = document.getElementById('optionsContainer');
-      optContainer.innerHTML = '';
-
-      q.options.forEach((opt, idx) => {
-        const btn = document.createElement('button');
-        btn.className = 'option-btn';
-        btn.textContent = opt;
-        btn.onclick = () => selectAnswer(idx);
-        optContainer.appendChild(btn);
-      });
-    }
-
-    function selectAnswer(idx) {
-      if(idx === quizData[currentQ].ans) {
-        score++;
-        alert("Correct Answer!");
-      } else {
-        alert("Wrong Answer! Correct: " + quizData[currentQ].options[quizData[currentQ].ans]);
-      }
-      currentQ++;
-      loadQuiz();
-    }
-
-    function restartQuiz() {
-      currentQ = 0;
-      score = 0;
-      document.getElementById('quizContainer').innerHTML = `
-        <h3 id="questionTitle">Loading Question...</h3>
-        <div id="optionsContainer"></div>
-        <p id="scoreBoard" style="font-weight: bold; margin-top: 15px;"></p>
-      `;
-      loadQuiz();
     }
 
     // Local Storage - Notes Persistence Logic
@@ -495,8 +304,6 @@ print(squares) # Output: [4, 16]</pre>
     }
 
     // Initializations
-    checkAuthStatus();
-    loadQuiz();
     displayNotes();
     updateNetworkStatus();
   </script>
