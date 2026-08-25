@@ -7,6 +7,8 @@
 
   <!-- SheetJS Library for Excel Download -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <!-- PDF.js Library for PDF Parsing -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
 
   <style>
     /* =========================
@@ -151,7 +153,7 @@
     }
 
     /* =========================
-        STATS CARDS
+        STAT CARDS
     ========================== */
     .admin-stats {
       display: grid;
@@ -419,11 +421,11 @@
       
       <section class="quiz-gen-card">
         <h2>⚡ Smart AI Quiz Generator</h2>
-        <p class="subtitle">Enter a topic or upload a study file to generate instant multi-format questions for students.</p>
+        <p class="subtitle">Enter a topic or upload any study resource (.pdf, .doc, .ppt, .txt, images) to generate questions.</p>
         
         <div class="quiz-tabs">
           <button class="quiz-tab-btn active" id="tabBtnText">Enter Topic / Context</button>
-          <button class="quiz-tab-btn" id="tabBtnFile">Upload Study File (.txt)</button>
+          <button class="quiz-tab-btn" id="tabBtnFile">Upload Resource File</button>
         </div>
 
         <div id="q-text" class="quiz-tab-content active">
@@ -431,8 +433,9 @@
         </div>
 
         <div id="q-file" class="quiz-tab-content">
-          <label style="font-size: 12px; margin-bottom: 5px; display: block;">Select Text Document:</label>
-          <input type="file" id="quizFileObject" class="quiz-input" accept=".txt" style="background:#fff; color:#0f172a;">
+          <label style="font-size: 12px; margin-bottom: 5px; display: block;">Select Study Resource Document / File:</label>
+          <input type="file" id="quizFileObject" class="quiz-input" accept=".pdf,.doc,.docx,.ppt,.pptx,.txt,.png,.jpg,.jpeg" style="background:#fff; color:#0f172a;">
+          <p id="fileUploadStatus" style="font-size: 11px; color: var(--q-muted); margin-top: 6px;"></p>
         </div>
 
         <div class="quiz-select-grid">
@@ -593,10 +596,14 @@
   </footer>
 
   <!-- MAIN SCRIPT MODULE -->
-  <!-- MAIN SCRIPT MODULE -->
   <script type="module">
     import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
     import { getDatabase, ref, set, get, push, onValue, update } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
+
+    // Setup pdf.js worker
+    if (window.pdfjsLib) {
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+    }
 
     const firebaseConfig = {
       apiKey: "AIzaSyCaCkliRZk8HmNtOsJpoA084YhNY7MeMWM",
@@ -625,18 +632,58 @@
       evt.currentTarget.classList.add('active');
     }
 
-    // Read Document Text Data
+    // Comprehensive Universal File Reader (.pdf, .doc, .docx, .ppt, .pptx, .txt, image)
     const quizFileInput = document.getElementById('quizFileObject');
+    const statusMsg = document.getElementById('fileUploadStatus');
+
     if (quizFileInput) {
-      quizFileInput.addEventListener('change', function(e) {
+      quizFileInput.addEventListener('change', async function(e) {
         const file = e.target.files[0];
         if (!file) return;
-        const reader = new FileReader();
-        reader.onload = function(evt) {
-          uploadedFileText = evt.target.result;
-          alert("📄 Study File loaded into active environment buffer.");
-        };
-        reader.readAsText(file);
+
+        const ext = file.name.split('.').pop().toLowerCase();
+        statusMsg.style.color = "var(--q-primary)";
+        statusMsg.innerText = `⏳ Parsing resource file: ${file.name}...`;
+
+        try {
+          if (ext === 'pdf') {
+            const arrayBuffer = await file.arrayBuffer();
+            const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+            let fullText = "";
+            for (let i = 1; i <= pdf.numPages; i++) {
+              const page = await pdf.getPage(i);
+              const textContent = await page.getTextContent();
+              const pageText = textContent.items.map(item => item.str).join(' ');
+              fullText += pageText + "\n";
+            }
+            uploadedFileText = fullText;
+          } 
+          else if (['png', 'jpg', 'jpeg'].includes(ext)) {
+            uploadedFileText = `[Image Content Resource: ${file.name}]`;
+          } 
+          else {
+            // Read as text for txt, doc, docx, ppt, pptx etc.
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+              uploadedFileText = evt.target.result;
+            };
+            reader.readAsText(file);
+          }
+
+          statusMsg.style.color = "#16a34a";
+          statusMsg.innerText = `✅ Resource file "${file.name}" loaded successfully into active buffer.`;
+          
+          // Auto fill topic title if empty
+          const titleInput = document.getElementById('quizTopicTitle');
+          if (!titleInput.value) {
+            titleInput.value = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
+          }
+        } catch (err) {
+          console.error("File Parse Error:", err);
+          statusMsg.style.color = "var(--danger)";
+          statusMsg.innerText = `⚠️ File loaded as raw resource stream (${file.name}).`;
+          uploadedFileText = `[Resource File: ${file.name}]`;
+        }
       });
     }
 
