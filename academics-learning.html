@@ -24,6 +24,72 @@
       transition: background 0.3s, color 0.3s;
     }
 
+    /* Login Page Styling */
+    #loginPage {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+    }
+
+    .login-card {
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      width: 100%;
+      max-width: 380px;
+      text-align: center;
+    }
+
+    .login-card h2 {
+      margin-bottom: 20px;
+      color: var(--primary);
+    }
+
+    .input-group {
+      margin-bottom: 15px;
+      text-align: left;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-sizing: border-box;
+    }
+
+    .btn-login {
+      width: 100%;
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.2s;
+    }
+
+    .btn-login:hover {
+      background: #4338ca;
+    }
+
+    /* Main Portal Styling */
+    #portalPage {
+      display: none;
+    }
+
     header {
       background: var(--primary);
       color: #fff;
@@ -32,12 +98,15 @@
       justify-content: space-between;
       align-items: center;
       box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+      flex-wrap: wrap;
+      gap: 10px;
     }
 
     .status-container {
       display: flex;
       align-items: center;
       gap: 15px;
+      flex-wrap: wrap;
     }
 
     .badge {
@@ -65,12 +134,26 @@
 
     .btn-switch:hover { opacity: 0.9; }
 
+    .btn-logout {
+      background: var(--danger);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .btn-logout:hover { opacity: 0.9; }
+
     nav {
       background: #e5e7eb;
       display: flex;
       justify-content: center;
       gap: 10px;
       padding: 10px;
+      flex-wrap: wrap;
     }
 
     nav button {
@@ -104,7 +187,6 @@
 
     .tab-content.active { display: block; }
 
-    /* Component Specific UI */
     .option-btn {
       display: block;
       width: 100%;
@@ -134,6 +216,7 @@
       border-radius: 6px;
       border: 1px solid #ccc;
       margin-bottom: 10px;
+      box-sizing: border-box;
     }
 
     .save-btn {
@@ -148,45 +231,66 @@
 </head>
 <body>
 
-  <header>
-    <h2>Interactive Student Portal</h2>
-    <div class="status-container">
-      <span id="modeBadge" class="badge badge-online">ONLINE</span>
-      <button class="btn-switch" onclick="toggleManualOfflineMode()">Switch Mode (Go Offline)</button>
+  <!-- Login Section -->
+  <div id="loginPage">
+    <div class="login-card">
+      <h2>Student Login</h2>
+      <form onsubmit="handleLogin(event)">
+        <div class="input-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" placeholder="Enter username" required>
+        </div>
+        <div class="input-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="Enter password" required>
+        </div>
+        <button type="submit" class="btn-login">Login</button>
+      </form>
     </div>
-  </header>
+  </div>
 
-  <nav>
-    <button class="nav-btn active" onclick="switchTab('quiz')">Quiz</button>
-    <button class="nav-btn" onclick="switchTab('notes')">Notes & Offline Save</button>
-    <button class="nav-btn" onclick="switchTab('coding')">Coding Reference</button>
-    <button class="nav-btn" onclick="switchTab('aptitude')">Aptitude</button>
-  </nav>
-
-  <main>
-    <!-- Quiz Module -->
-    <section id="quiz" class="tab-content active">
-      <div id="quizContainer">
-        <h3 id="questionTitle">Loading Question...</h3>
-        <div id="optionsContainer"></div>
-        <p id="scoreBoard" style="font-weight: bold; margin-top: 15px;"></p>
+  <!-- Portal Main Section -->
+  <div id="portalPage">
+    <header>
+      <h2>Interactive Student Portal</h2>
+      <div class="status-container">
+        <span id="modeBadge" class="badge badge-online">ONLINE</span>
+        <button class="btn-switch" onclick="toggleManualOfflineMode()">Switch Mode (Go Offline)</button>
+        <button class="btn-logout" onclick="handleLogout()">Logout</button>
       </div>
-    </section>
+    </header>
 
-    <!-- Notes Module -->
-    <section id="notes" class="tab-content">
-      <h3>Offline Dynamic Notes</h3>
-      <p>Net lekapoina meeruikada rasthe details <b>LocalStorage</b> lo automatic ga safe ayyi untai.</p>
-      <textarea id="noteInput" placeholder="Save key definitions or formula points here..."></textarea>
-      <button class="save-btn" onclick="saveNote()">Save Note</button>
-      <div id="savedNotes" style="margin-top:20px;"></div>
-    </section>
+    <nav>
+      <button class="nav-btn active" onclick="switchTab('quiz')">Quiz</button>
+      <button class="nav-btn" onclick="switchTab('notes')">Notes & Offline Save</button>
+      <button class="nav-btn" onclick="switchTab('coding')">Coding Reference</button>
+      <button class="nav-btn" onclick="switchTab('aptitude')">Aptitude</button>
+    </nav>
 
-    <!-- Coding Module -->
-    <section id="coding" class="tab-content">
-      <h3>Quick Coding Cheat Sheet (Offline Ready)</h3>
-      <h4>Java: Fast I/O Example</h4>
-      <pre>
+    <main>
+      <!-- Quiz Module -->
+      <section id="quiz" class="tab-content active">
+        <div id="quizContainer">
+          <h3 id="questionTitle">Loading Question...</h3>
+          <div id="optionsContainer"></div>
+          <p id="scoreBoard" style="font-weight: bold; margin-top: 15px;"></p>
+        </div>
+      </section>
+
+      <!-- Notes Module -->
+      <section id="notes" class="tab-content">
+        <h3>Offline Dynamic Notes</h3>
+        <p>Net lekapoina meeruikada rasthe details <b>LocalStorage</b> lo automatic ga safe ayyi untai.</p>
+        <textarea id="noteInput" placeholder="Save key definitions or formula points here..."></textarea>
+        <button class="save-btn" onclick="saveNote()">Save Note</button>
+        <div id="savedNotes" style="margin-top:20px;"></div>
+      </section>
+
+      <!-- Coding Module -->
+      <section id="coding" class="tab-content">
+        <h3>Quick Coding Cheat Sheet (Offline Ready)</h3>
+        <h4>Java: Fast I/O Example</h4>
+        <pre>
 import java.io.*;
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -195,32 +299,56 @@ public class Main {
         System.out.println("Output: " + str);
     }
 }</pre>
-      <h4>Python: Basic Data Structure Parsing</h4>
-      <pre>
+        <h4>Python: Basic Data Structure Parsing</h4>
+        <pre>
 # Quick List Comprehension & Dict Parsing
 nums = [1, 2, 3, 4, 5]
 squares = [x**2 for x in nums if x % 2 == 0]
 print(squares) # Output: [4, 16]</pre>
-    </section>
+      </section>
 
-    <!-- Aptitude Module -->
-    <section id="aptitude" class="tab-content">
-      <h3>Aptitude & Reasoning Offline Vault</h3>
-      <div>
-        <h4>1. Speed, Distance & Time Formula</h4>
-        <p><b>Formula:</b> Speed = Distance / Time</p>
-        <p><b>Shortcut:</b> Convert km/hr to m/s multiplying by <b>5/18</b>.</p>
-      </div>
-      <hr>
-      <div>
-        <h4>2. Quantitative Aptitude Practice Problem</h4>
-        <p><b>Q:</b> A train running at 60 km/hr crosses a pole in 9 seconds. What is the length of the train?</p>
-        <button class="btn-switch" style="background:#e5e7eb;" onclick="alert('Speed = 60 * (5/18) = 50/3 m/s.\nLength = Speed * Time = (50/3) * 9 = 150 meters.')">Show Answer</button>
-      </div>
-    </section>
-  </main>
+      <!-- Aptitude Module -->
+      <section id="aptitude" class="tab-content">
+        <h3>Aptitude & Reasoning Offline Vault</h3>
+        <div>
+          <h4>1. Speed, Distance & Time Formula</h4>
+          <p><b>Formula:</b> Speed = Distance / Time</p>
+          <p><b>Shortcut:</b> Convert km/hr to m/s multiplying by <b>5/18</b>.</p>
+        </div>
+        <hr>
+        <div>
+          <h4>2. Quantitative Aptitude Practice Problem</h4>
+          <p><b>Q:</b> A train running at 60 km/hr crosses a pole in 9 seconds. What is the length of the train?</p>
+          <button class="btn-switch" style="background:#e5e7eb;" onclick="alert('Speed = 60 * (5/18) = 50/3 m/s.\nLength = Speed * Time = (50/3) * 9 = 150 meters.')">Show Answer</button>
+        </div>
+      </section>
+    </main>
+  </div>
 
   <script>
+    // Authentication State & Session Management
+    function checkAuthStatus() {
+      const isLoggedIn = sessionStorage.getItem('isLoggedIn');
+      if (isLoggedIn === 'true') {
+        document.getElementById('loginPage').style.display = 'none';
+        document.getElementById('portalPage').style.display = 'block';
+      } else {
+        document.getElementById('loginPage').style.display = 'flex';
+        document.getElementById('portalPage').style.display = 'none';
+      }
+    }
+
+    function handleLogin(event) {
+      event.preventDefault();
+      sessionStorage.setItem('isLoggedIn', 'true');
+      checkAuthStatus();
+    }
+
+    function handleLogout() {
+      sessionStorage.removeItem('isLoggedIn');
+      checkAuthStatus();
+    }
+
     // System Online/Offline State Management
     let isManualOffline = false;
 
@@ -247,13 +375,18 @@ print(squares) # Output: [4, 16]</pre>
     window.addEventListener('online', updateNetworkStatus);
     window.addEventListener('offline', updateNetworkStatus);
 
-    // Tab Navigation logic
+    // Tab Navigation Logic
     function switchTab(tabId) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
       
       document.getElementById(tabId).classList.add('active');
-      event.target.classList.add('active');
+      
+      const activeBtn = Array.from(document.querySelectorAll('.nav-btn'))
+                             .find(btn => btn.getAttribute('onclick').includes(tabId));
+      if(activeBtn) {
+        activeBtn.classList.add('active');
+      }
     }
 
     // Interactive Offline Quiz Implementation
@@ -283,7 +416,7 @@ print(squares) # Output: [4, 16]</pre>
         document.getElementById('quizContainer').innerHTML = `
           <h3>Quiz Completed!</h3>
           <p>Your Final Score: <b>${score} / ${quizData.length}</b></p>
-          <button class="btn-switch" onclick="location.reload()">Restart Quiz</button>
+          <button class="btn-switch" onclick="restartQuiz()">Restart Quiz</button>
         `;
         return;
       }
@@ -310,6 +443,17 @@ print(squares) # Output: [4, 16]</pre>
         alert("Wrong Answer! Correct: " + quizData[currentQ].options[quizData[currentQ].ans]);
       }
       currentQ++;
+      loadQuiz();
+    }
+
+    function restartQuiz() {
+      currentQ = 0;
+      score = 0;
+      document.getElementById('quizContainer').innerHTML = `
+        <h3 id="questionTitle">Loading Question...</h3>
+        <div id="optionsContainer"></div>
+        <p id="scoreBoard" style="font-weight: bold; margin-top: 15px;"></p>
+      `;
       loadQuiz();
     }
 
@@ -351,6 +495,7 @@ print(squares) # Output: [4, 16]</pre>
     }
 
     // Initializations
+    checkAuthStatus();
     loadQuiz();
     displayNotes();
     updateNetworkStatus();
