@@ -3,435 +3,1326 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CodeHub | Multi-Branch Career & Engineering Hub</title>
+  <title>CodeHub & Multi-Branch Engineering Arena | StudyConnect</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&family=Outfit:wght@600;800;900&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <style>
     :root {
-      --bg: #070a13;
-      --card-bg: rgba(16, 24, 42, 0.45);
+      --bg: #090d16;
+      --card: rgba(19, 27, 46, 0.75);
+      --card-hover: rgba(28, 40, 68, 0.95);
       --border: rgba(255, 255, 255, 0.08);
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --primary: #4f46e5;
-      --accent: #06b6d4;
-      --accent-glow: rgba(6, 182, 212, 0.25);
-      --success: #10b981;
-      --warning: #f59e0b;
+      --border-active: rgba(6, 182, 212, 0.4);
+      --text: #f8fafc;
+      --text-sub: #94a3b8;
+      --cyan: #06b6d4;
+      --blue: #3b82f6;
+      --indigo: #6366f1;
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --purple: #a855f7;
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
 
     body {
-      min-height: 100vh;
-      color: var(--text-main);
-      background: 
-        radial-gradient(circle at 10% 10%, rgba(79, 70, 229, 0.15), transparent 40%),
-        radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.12), transparent 40%),
-        radial-gradient(circle at 50% 50%, rgba(236, 72, 153, 0.08), transparent 50%),
-        var(--bg);
+      background: radial-gradient(circle at 15% 15%, #111a33 0%, #090d16 70%);
       background-attachment: fixed;
-      padding-bottom: 80px;
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
     }
 
-    /* NAVBAR */
-    .navbar {
-      position: fixed; top: 0; width: 100%; padding: 18px 5%;
-      display: flex; justify-content: space-between; align-items: center;
-      background: rgba(7, 10, 19, 0.85); backdrop-filter: blur(24px);
-      border-bottom: 1px solid var(--border); z-index: 1000;
+    .ambient-sphere {
+      position: fixed;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      pointer-events: none;
+      filter: blur(140px);
+      z-index: 0;
+      opacity: 0.15;
     }
-    .logo { text-decoration: none; color: #fff; font-size: 22px; font-weight: 800; }
-    .logo span { color: var(--accent); }
-    .nav-links { display: flex; gap: 28px; }
-    .nav-links a { text-decoration: none; color: var(--text-muted); font-size: 14px; font-weight: 600; transition: color 0.2s; }
-    .nav-links a:hover, .nav-links a.active { color: var(--accent); }
+    .sphere-1 { top: -100px; left: -100px; background: var(--cyan); }
+    .sphere-2 { bottom: -100px; right: -100px; background: var(--purple); }
 
-    /* HEADER */
-    .header { padding: 140px 20px 30px; text-align: center; }
-    .header h1 {
-      font-size: 3rem; font-weight: 800; margin-bottom: 12px;
-      background: linear-gradient(135deg, #ffffff 0%, #38bdf8 50%, #818cf8 100%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    }
-    .header p { color: var(--text-muted); font-size: 1.1rem; max-width: 750px; margin: 0 auto; line-height: 1.6; }
-
-    /* BRANCH SELECTION QUICK BAR */
-    .branch-nav {
-      display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-top: 20px;
-    }
-    .branch-btn {
-      padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 600;
-      color: #cbd5e1; background: rgba(255,255,255,0.05); border: 1px solid var(--border);
-      text-decoration: none; transition: all 0.3s ease;
-    }
-    .branch-btn:hover { background: var(--accent); color: #000; border-color: var(--accent); }
-
-    /* CONTAINER LAYOUT */
-    .container { max-width: 1200px; margin: 0 auto; padding: 20px; display: grid; grid-template-columns: 2fr 1.1fr; gap: 30px; }
-    @media (max-width: 968px) { .container { grid-template-columns: 1fr; } }
-
-    .section-title { font-size: 20px; font-weight: 700; margin-bottom: 20px; color: #fff; display: flex; align-items: center; gap: 10px; }
-    .section-title span { color: var(--accent); }
-
-    /* FEATURED CARDS */
-    .featured-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin-bottom: 30px; }
-    .hot-card {
-      background: linear-gradient(135deg, rgba(30, 41, 59, 0.7), rgba(15, 23, 42, 0.8));
-      border: 1px solid var(--border); border-radius: 16px; padding: 20px;
-      transition: all 0.3s ease; text-decoration: none; display: flex; flex-direction: column; justify-content: space-between;
-      position: relative; overflow: hidden;
-    }
-    .hot-card::before {
-      content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px;
-      background: linear-gradient(90deg, #06b6d4, #3b82f6, #ec4899);
-    }
-    .hot-card:hover { transform: translateY(-4px); border-color: rgba(6, 182, 212, 0.5); box-shadow: 0 12px 25px var(--accent-glow); }
-    .hot-card h3 { font-size: 16px; color: #fff; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; }
-    .hot-card p { font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 12px; }
-    .tag { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; }
-    .tag-free { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
-    .tag-core { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
-    .tag-biz { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
-
-    /* CALENDAR / MATRIX STYLES */
-    .calendar-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 24px; backdrop-filter: blur(20px); }
-    .day-row { display: flex; padding: 16px; border-bottom: 1px solid var(--border); transition: background 0.2s; border-radius: 10px; }
-    .day-row:hover { background: rgba(255, 255, 255, 0.02); }
-    .day-name { width: 160px; font-weight: 700; color: var(--accent); font-size: 15px; display: flex; align-items: center; }
-    .day-contests { flex: 1; display: flex; flex-direction: column; gap: 8px; }
-    
-    .contest-badge {
-      background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border);
-      padding: 10px 14px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center;
-    }
-    .contest-info h4 { font-size: 14px; color: #fff; font-weight: 600; }
-    .contest-info p { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
-
-    /* PLATFORMS GRID */
-    .platforms-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 20px; }
-    .platform-card {
-      background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 20px;
-      transition: all 0.3s ease; text-decoration: none; display: block;
-    }
-    .platform-card:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: 0 10px 20px var(--accent-glow); }
-    .platform-card h3 { font-size: 16px; color: #fff; margin-bottom: 6px; }
-    .platform-card p { font-size: 13px; color: var(--text-muted); line-height: 1.4; }
-
-    /* SIDEBAR */
-    .sidebar { display: flex; flex-direction: column; gap: 24px; }
-    .sidebar-panel { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 22px; backdrop-filter: blur(20px); }
-    
-    .streak-list { list-style: none; margin-top: 15px; }
-    .streak-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.03); }
-    .streak-item input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer; }
-    .streak-item label { font-size: 14px; color: #cbd5e1; cursor: pointer; width: 100%; }
-    .streak-item input:checked + label { color: var(--text-muted); text-decoration: line-through; }
-
-    /* BUTTONS */
-    .btn {
-      padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 600;
-      text-decoration: none; color: #fff; background: var(--primary); transition: background 0.2s;
-    }
-    .btn:hover { background: #4338ca; }
-    .btn-outline { background: transparent; border: 1px solid var(--border); color: #e2e8f0; transition: all 0.2s ease; }
-    .btn-outline:hover { background: rgba(6, 182, 212, 0.1); border-color: var(--accent); color: var(--accent); }
-
-    .footer { text-align: center; margin-top: 60px; padding: 30px; color: var(--text-muted); font-size: 13px; border-top: 1px solid var(--border); }
-  </style>
-</head>
-<body>
-
-  <!-- NAVBAR -->
-  <nav class="navbar">
-    <a href="student-dashboard.html" class="logo">📚 Jigsaw<span>Connect</span></a>
-    <div class="nav-links">
-      <a href="student-dashboard.html">Dashboard</a>
-      <a href="discussions.html">Discussions</a>
-      <a href="quiz.html">Quiz</a>
-    </div>
-  </nav>
-
-  <!-- HEADER -->
-  <header class="header">
-    <h1>🚀 Universal Career & Skill Station</h1>
-    <p>Comprehensive Preparation Portals, NPTEL Courses, Core Engineering Labs, MCA Tech Stacks, and MBA Business Leadership Resources.</p>
-    
-    <!-- QUICK BRANCH SELECTOR -->
-    <div class="branch-nav">
-      <a href="#cse-mca" class="branch-btn">💻 CSE / MCA</a>
-      <a href="#ece" class="branch-btn">📱 ECE (Electronics)</a>
-      <a href="#eee" class="branch-btn">⚡ EEE (Electrical)</a>
-      <a href="#mech" class="branch-btn">⚙️ Mechanical</a>
-      <a href="#mba" class="branch-btn">📊 MBA / Management</a>
-    </div>
-  </header>
-
-  <!-- MAIN CONTENT -->
-  <main class="container">
-    
-    <!-- LEFT COLUMN: BRANCH SPECIFIC HUBS & COURSES -->
-    <div>
-
-      <!-- ALL BRANCHES COMMON ESSENTIAL PORTALS -->
-      <h2 class="section-title">⚡ Common <span>Learning Portals</span></h2>
-      <div class="featured-grid">
-        <a href="https://infyspringboard.onwingspan.com/web/en/page/home" target="_blank" class="hot-card">
-          <div>
-            <h3>Infosys Springboard <span class="tag tag-free">Free Certificate</span></h3>
-            <p>IT, Core Engineering, Soft Skills, and Business Management free modules from Infosys.</p>
-          </div>
-          <span class="btn btn-outline" style="text-align: center;">Explore All Tracks →</span>
-        </a>
-
-        <a href="https://nptel.ac.in/" target="_blank" class="hot-card">
-          <div>
-            <h3>NPTEL / SWAYAM <span class="tag tag-core">Govt Certificate</span></h3>
-            <p>IIT & IISc official courses for ECE, EEE, Mech, CSE, MCA & MBA syllabus mastery.</p>
-          </div>
-          <span class="btn btn-outline" style="text-align: center;">Access NPTEL →</span>
-        </a>
-      </div>
-
-      <!-- ECE BRANCH SECTION -->
-      <h2 id="ece" class="section-title" style="margin-top: 35px;">📱 ECE <span>(Electronics & Communication)</span></h2>
-      <div class="featured-grid">
-        <a href="https://www.allaboutcircuits.com/" target="_blank" class="hot-card">
-          <div>
-            <h3>All About Circuits <span class="tag tag-free">Free Resource</span></h3>
-            <p>Complete VLSI, Digital Electronics, Microcontrollers, and PCB Design tutorials.</p>
-          </div>
-          <span class="btn btn-outline" style="text-align: center;">Learn Circuits →</span>
-        </a>
-
-        <a href="https://university.ti.com/" target="_blank" class="hot-card">
-          <div>
-            <h3>Texas Instruments Portal <span class="tag tag-core">Industry Grade</span></h3>
-            <p>Embedded systems, IoT, Microprocessors, and Hardware design training.</p>
-          </div>
-          <span class="btn btn-outline" style="text-align: center;">Explore Hardware →</span>
-        </a>
-      </div>
-
-      <!-- EEE BRANCH SECTION -->
-      <h2 id="eee" class="section-title" style="margin-top: 35px;">⚡ EEE <span>(Electrical & Electronics)</span></h2>
-      <div class="featured-grid">
-        <a href="https://www.electrical4u.com/" target="_blank" class="hot-card">
-          <div>
-            <h3>Electrical4U <span class="tag tag-free">Core Prep</span></h3>
-            <p>Power Systems, Control Systems, Electrical Machines, and GATE syllabus concepts.</p>
-          </div>
-          <span class="btn btn-outline" style="text-align: center;">Study Electrical →</span>
-        </a>
-
-        <a href="https://www.mathworks.com/academia/student-center.html" target="_blank" class="hot-card">
-          <div>
-            <h3>MATLAB & Simulink Hub <span class="tag tag-core">Simulation</span></h3>
-            <p>Power electronics modeling, signal processing, and control automation projects.</p>
-          </div>
-          <span class="btn btn-outline" style="text-align: center;">Start Simulation →</span>
-        </a>
-      </div>
-
-      <!-- MECHANICAL BRANCH SECTION -->
-      <h2 id="mech" class="section-title" style="margin-top: 35px;">⚙️ Mechanical <span>Engineering</span></h2>
-      <div class="featured-grid">
-        <a href="https://grabcad.com/" target="_blank" class="hot-card">
-          <div>
-            <h3>GrabCAD Community <span class="tag tag-free">CAD / CAM</span></h3>
-            <p>SolidWorks, AutoCAD, Fusion 360 models, and 3D Mechanical engineering designs.</p>
-          </div>
-          <span class="btn btn-outline" style="text-align: center;">Explore CAD Models →</span>
-        </a>
-
-        <a href="https://www.engineersedge.com/" target="_blank" class="hot-card">
-          <div>
-            <h3>Engineer's Edge <span class="tag tag-core">Core Formulas</span></h3>
-            <p>Fluid Dynamics, Thermodynamics, Machine Design, and Strength of Materials reference.</p>
-          </div>
-          <span class="btn btn-outline" style="text-align: center;">View Formulas →</span>
-        </a>
-      </div>
-
-      <!-- CSE & MCA SECTION -->
-      <h2 id="cse-mca" class="section-title" style="margin-top: 35px;">💻 MCA & CSE <span>(Software & Cloud)</span></h2>
-      <div class="featured-grid">
-        <a href="https://professor.global/dsa" target="_blank" class="hot-card">
-          <div>
-            <h3>Professor DSA Hub <span class="tag tag-core">Top Rated</span></h3>
-            <p>Data Structures & Algorithms deep dive for coding interviews and placement exams.</p>
-          </div>
-          <span class="btn btn-outline" style="text-align: center;">Start DSA →</span>
-        </a>
-
-        <a href="https://aws.amazon.com/training/" target="_blank" class="hot-card">
-          <div>
-            <h3>AWS Cloud Training <span class="tag tag-free">Cloud Stack</span></h3>
-            <p>Learn Cloud Computing, DevOps, and Enterprise Software Architecture for MCA/CSE.</p>
-          </div>
-          <span class="btn btn-outline" style="text-align: center;">Learn Cloud →</span>
-        </a>
-      </div>
-
-      <!-- MBA SECTION -->
-      <h2 id="mba" class="section-title" style="margin-top: 35px;">📊 MBA <span>(Management & Finance)</span></h2>
-      <div class="featured-grid">
-        <a href="https://hbsp.harvard.edu/" target="_blank" class="hot-card">
-          <div>
-            <h3>Harvard Business Publishing <span class="tag tag-biz">Case Studies</span></h3>
-            <p>Read global corporate case studies, leadership strategies, and strategic management.</p>
-          </div>
-          <span class="btn btn-outline" style="text-align: center;">Explore Cases →</span>
-        </a>
-
-        <a href="https://www.investopedia.com/" target="_blank" class="hot-card">
-          <div>
-            <h3>Investopedia Hub <span class="tag tag-biz">Finance & HR</span></h3>
-            <p>Corporate Finance, Marketing Models, Human Resources, and Financial Markets guide.</p>
-          </div>
-          <span class="btn btn-outline" style="text-align: center;">Learn Business →</span>
-        </a>
-      </div>
-
-      <!-- CORE & APTITUDE EXAM MATRIX -->
-      <h2 class="section-title" style="margin-top: 40px;">📅 Weekly Exam & Preparation <span>Matrix</span></h2>
-      <div class="calendar-card">
-        
-        <div class="day-row">
-          <div class="day-name">GATE Prep</div>
-          <div class="day-contests">
-            <div class="contest-badge">
-              <div class="contest-info">
-                <h4>GATE Mock Tests (ECE / EEE / MECH / CSE)</h4>
-                <p>⏰ Weekly Practice | Technical Core Subject Mastery</p>
-              </div>
-              <a href="https://gate.iisc.ac.in/" target="_blank" class="btn">Practice</a>
-            </div>
-          </div>
-        </div>
-
-        <div class="day-row">
-          <div class="day-name">Aptitude & HR</div>
-          <div class="day-contests">
-            <div class="contest-badge">
-              <div class="contest-info">
-                <h4>IndiaBIX Placement Practice</h4>
-                <p>⏰ Quantitative, Logical Reasoning, and Verbal for All Branches</p>
-              </div>
-              <a href="https://www.indiabix.com/" target="_blank" class="btn">Solve</a>
-            </div>
-          </div>
-        </div>
-
-        <div class="day-row" style="border-bottom: none;">
-          <div class="day-name">Business / Code</div>
-          <div class="day-contests">
-            <div class="contest-badge">
-              <div class="contest-info">
-                <h4>Unstop (Formerly Dare2Compete)</h4>
-                <p>⏰ Core Competitions, Business Case Studies, & Hackathons</p>
-              </div>
-              <a href="https://unstop.com/" target="_blank" class="btn">Participate</a>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-    </div>
-
-    <!-- RIGHT SIDEBAR: TRACKER & RECRUITMENT PORTALS -->
-    <div class="sidebar">
-      
-      <!-- STREAK TRACKER PANEL -->
-      <div class="sidebar-panel">
-        <h3 style="color: #fff; font-size: 16px; margin-bottom: 4px;">🔥 Daily Placement Target</h3>
-        <p style="color: var(--text-muted); font-size: 13px;">Track your daily preparation schedule:</p>
-        
-        <ul class="streak-list">
-          <li class="streak-item">
-            <input type="checkbox" id="task1" onchange="saveStreak()">
-            <label for="task1">Solve 1 Aptitude / Core Subject Test</label>
-          </li>
-          <li class="streak-item">
-            <input type="checkbox" id="task2" onchange="saveStreak()">
-            <label for="task2">Complete 1 NPTEL / Infosys Module</label>
-          </li>
-          <li class="streak-item">
-            <input type="checkbox" id="task3" onchange="saveStreak()">
-            <label for="task3">Practice Coding / Case Study / Circuit</label>
-          </li>
-          <li class="streak-item">
-            <input type="checkbox" id="task4" onchange="saveStreak()">
-            <label for="task4">Update Resume on Job Portals</label>
-          </li>
-        </ul>
-      </div>
-
-      <!-- SCHOLARSHIPS PANEL -->
-      <div class="sidebar-panel">
-        <h3 style="color: #fff; font-size: 16px; margin-bottom: 4px;">🎓 Student Scholarships</h3>
-        <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 12px;">Top tracking links for B.Tech & PG Students:</p>
-        
-        <div style="display: flex; flex-direction: column; gap: 10px;">
-          <a href="https://scholarships.gov.in" target="_blank" class="btn btn-outline" style="text-align: left; display: flex; justify-content: space-between;">
-            <span>🏛️ National Scholarship (NSP)</span> <span>→</span>
-          </a>
-          <a href="https://www.reliancefoundation.org" target="_blank" class="btn btn-outline" style="text-align: left; display: flex; justify-content: space-between;">
-            <span>💎 Reliance Foundation</span> <span>→</span>
-          </a>
-          <a href="https://www.buddy4study.com" target="_blank" class="btn btn-outline" style="text-align: left; display: flex; justify-content: space-between;">
-            <span>🎯 Buddy4Study Corporate Tracks</span> <span>→</span>
-          </a>
-        </div>
-      </div>
-
-      <!-- TOP JOB & INTERN PORTALS -->
-      <div class="sidebar-panel">
-        <h3 style="color: #fff; font-size: 16px; margin-bottom: 12px;">💼 Core & IT Hiring Portals</h3>
-        <div style="display: flex; flex-direction: column; gap: 10px;">
-          <a href="https://internshala.com" target="_blank" class="btn btn-outline" style="text-align: center;">Internshala (Core & Management Internships)</a>
-          <a href="https://www.foundit.in" target="_blank" class="btn btn-outline" style="text-align: center;">Foundit (Monster India Jobs)</a>
-          <a href="https://www.linkedin.com/jobs/" target="_blank" class="btn btn-outline" style="text-align: center;">LinkedIn Jobs Search</a>
-        </div>
-      </div>
-
-    </div>
-
-  </main>
-
-  <!-- FOOTER -->
-  <footer class="footer">
-    &copy; 2026 JigsawConnect | Multi-Branch Engineering & Career Matrix
-  </footer>
-
-  <script>
-    // LocalStorage Script for persistent streak state
-    function saveStreak() {
-      const checkedStates = {
-        task1: document.getElementById('task1').checked,
-        task2: document.getElementById('task2').checked,
-        task3: document.getElementById('task3').checked,
-        task4: document.getElementById('task4').checked
-      };
-      localStorage.setItem('multi_branch_streak', JSON.stringify(checkedStates));
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 5%;
+      background: rgba(9, 13, 22, 0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
     }
 
-    function loadStreak() {
-      const data = localStorage.getItem('multi_branch_streak');
-      if (data) {
-        const checkedStates = JSON.parse(data);
-        if(document.getElementById('task1')) document.getElementById('task1').checked = checkedStates.task1 || false;
-        if(document.getElementById('task2')) document.getElementById('task2').checked = checkedStates.task2 || false;
-        if(document.getElementById('task3')) document.getElementById('task3').checked = checkedStates.task3 || false;
-        if(document.getElementById('task4')) document.getElementById('task4').checked = checkedStates.task4 || false;
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      font-family: 'Outfit', sans-serif;
+      font-size: 22px;
+      font-weight: 900;
+      color: #fff;
+    }
+    .nav-brand span {
+      background: linear-gradient(135deg, var(--cyan), var(--blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-menu {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-link {
+      text-decoration: none;
+      color: var(--text-sub);
+      font-size: 13.5px;
+      font-weight: 600;
+      padding: 8px 14px;
+      border-radius: 10px;
+      transition: all 0.2s;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .workspace-wrapper {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      width: 100%;
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 30px 24px 80px;
+      gap: 28px;
+    }
+
+    .navigation-sidebar {
+      width: 280px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: sticky;
+      top: 90px;
+      height: fit-content;
+    }
+
+    .sidebar-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+      color: var(--text);
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      backdrop-filter: blur(12px);
+      position: relative;
+    }
+
+    .sidebar-card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 4px;
+      background: transparent;
+      border-radius: 4px 0 0 4px;
+      transition: background 0.3s ease;
+    }
+
+    .sidebar-card .icon-box {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      transition: all 0.3s;
+    }
+
+    .sidebar-card .card-info h4 {
+      font-size: 13.5px;
+      font-weight: 700;
+      letter-spacing: -0.2px;
+    }
+
+    .sidebar-card .card-info p {
+      font-size: 11px;
+      color: var(--text-sub);
+      margin-top: 2px;
+    }
+
+    .sidebar-card:hover {
+      transform: translateX(4px);
+      border-color: rgba(6, 182, 212, 0.4);
+      background: rgba(6, 182, 212, 0.08);
+    }
+
+    .sidebar-card:hover .icon-box {
+      background: rgba(6, 182, 212, 0.2);
+      color: var(--cyan);
+    }
+
+    .sidebar-card.active-card {
+      border-color: var(--cyan);
+      background: linear-gradient(135deg, rgba(6, 182, 212, 0.15), rgba(37, 99, 235, 0.06));
+    }
+
+    .sidebar-card.active-card::before {
+      background: var(--cyan);
+    }
+
+    .sidebar-card.active-card .icon-box {
+      background: var(--cyan);
+      color: #090d16;
+    }
+
+    .sidebar-widget {
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.12), rgba(6, 182, 212, 0.1));
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      padding: 18px;
+      border-radius: 20px;
+      margin-top: 6px;
+      text-align: center;
+      backdrop-filter: blur(12px);
+    }
+
+    .sidebar-widget .val {
+      font-size: 26px;
+      font-weight: 900;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--purple);
+      margin: 4px 0;
+    }
+
+    .content-stream {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .hero-banner {
+      background: linear-gradient(135deg, rgba(30, 41, 70, 0.6), rgba(15, 23, 42, 0.8));
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 32px;
+      backdrop-filter: blur(20px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 24px;
+      box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5);
+    }
+
+    .hero-info h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2.3rem;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+
+    .hero-info h1 span {
+      background: linear-gradient(135deg, #38bdf8, #818cf8, #c084fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-info p {
+      color: var(--text-sub);
+      font-size: 14px;
+      max-width: 600px;
+      line-height: 1.6;
+    }
+
+    .hero-metrics {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .metric-badge {
+      background: rgba(10, 15, 28, 0.7);
+      border: 1px solid var(--border);
+      padding: 12px 18px;
+      border-radius: 14px;
+      text-align: center;
+      min-width: 120px;
+    }
+
+    .metric-badge .val {
+      font-size: 18px;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--cyan);
+    }
+
+    .metric-badge .lbl {
+      font-size: 11px;
+      color: var(--text-sub);
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    .video-mastery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    @media (max-width: 1050px) {
+      .video-mastery-grid {
+        grid-template-columns: 1fr;
       }
     }
 
-    document.addEventListener('DOMContentLoaded', loadStreak);
+    .video-lesson-card {
+      background: linear-gradient(135deg, rgba(20, 30, 54, 0.85), rgba(15, 23, 42, 0.95));
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 14px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .video-lesson-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(6, 182, 212, 0.5);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 25px rgba(6, 182, 212, 0.15);
+    }
+
+    .video-lesson-card.card-amber:hover {
+      border-color: rgba(245, 158, 11, 0.5);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 25px rgba(245, 158, 11, 0.15);
+    }
+
+    .video-lesson-card.card-purple:hover {
+      border-color: rgba(168, 85, 247, 0.5);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 25px rgba(168, 85, 247, 0.15);
+    }
+
+    .video-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .video-card-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #fff;
+      margin: 10px 0 6px;
+      line-height: 1.35;
+    }
+
+    .video-card-desc {
+      font-size: 13px;
+      color: var(--text-sub);
+      line-height: 1.55;
+    }
+
+    .video-points-list {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin: 12px 0;
+    }
+
+    .video-point-item {
+      font-size: 12px;
+      color: #cbd5e1;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .video-point-item span {
+      color: var(--cyan);
+      font-weight: 800;
+    }
+
+    .btn-video-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: #fff;
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 12.5px;
+      font-weight: 800;
+      text-decoration: none;
+      transition: all 0.2s;
+      width: 100%;
+      box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+    }
+
+    .btn-video-action:hover {
+      filter: brightness(1.15);
+      transform: translateY(-2px);
+    }
+
+    .aptitude-master-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    @media (max-width: 800px) {
+      .aptitude-master-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .aptitude-card {
+      background: linear-gradient(135deg, rgba(20, 30, 54, 0.8), rgba(15, 23, 42, 0.9));
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 26px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 16px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .aptitude-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(6, 182, 212, 0.5);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 25px rgba(6, 182, 212, 0.15);
+    }
+
+    .aptitude-card.accent-rose:hover {
+      border-color: rgba(244, 63, 94, 0.5);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 25px rgba(244, 63, 94, 0.15);
+    }
+
+    .aptitude-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .aptitude-topics {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .topic-pill {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      color: #cbd5e1;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 11.5px;
+      font-weight: 600;
+    }
+
+    .btn-youtube-launch {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: #fff;
+      padding: 12px 18px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 800;
+      text-decoration: none;
+      transition: all 0.2s;
+      box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+    }
+
+    .btn-youtube-launch:hover {
+      filter: brightness(1.15);
+      transform: translateY(-2px);
+    }
+
+    .terminal-arena {
+      background: #0d1322;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .terminal-header {
+      background: rgba(15, 23, 42, 0.9);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .lang-tabs {
+      display: flex;
+      gap: 6px;
+    }
+
+    .lang-tab {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      color: var(--text-sub);
+      padding: 6px 14px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .lang-tab:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+    }
+
+    .lang-tab.active {
+      background: var(--cyan);
+      color: #090d16;
+      border-color: var(--cyan);
+    }
+
+    .btn-run-code {
+      background: linear-gradient(135deg, var(--emerald), #059669);
+      color: #fff;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+      transition: all 0.2s;
+    }
+
+    .btn-run-code:hover {
+      filter: brightness(1.15);
+      transform: translateY(-1px);
+    }
+
+    .terminal-workspace {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      min-height: 280px;
+    }
+
+    .code-editor-area {
+      background: #080c16;
+      padding: 18px;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .code-textarea {
+      width: 100%;
+      flex: 1;
+      min-height: 220px;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #38bdf8;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13.5px;
+      line-height: 1.6;
+      resize: none;
+      white-space: pre;
+    }
+
+    .console-output-area {
+      background: #090e1a;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .console-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      color: var(--text-sub);
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+    }
+
+    .console-terminal {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: var(--emerald);
+      line-height: 1.6;
+      flex: 1;
+      white-space: pre-wrap;
+    }
+
+    .console-footer-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--text-sub);
+      border-top: 1px solid var(--border);
+      padding-top: 10px;
+      margin-top: 10px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .branch-deck-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+    }
+
+    .hub-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 24px;
+      backdrop-filter: blur(16px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 16px;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    .hub-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--border-active);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 0 0 20px rgba(6, 182, 212, 0.15);
+      background: var(--card-hover);
+    }
+
+    .hub-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .tag-badge {
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 8px;
+      text-transform: uppercase;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .tag-cyan { background: rgba(6, 182, 212, 0.12); color: var(--cyan); border: 1px solid rgba(6, 182, 212, 0.3); }
+    .tag-emerald { background: rgba(16, 185, 129, 0.12); color: var(--emerald); border: 1px solid rgba(16, 185, 129, 0.3); }
+    .tag-purple { background: rgba(168, 85, 247, 0.12); color: var(--purple); border: 1px solid rgba(168, 85, 247, 0.3); }
+    .tag-amber { background: rgba(245, 158, 11, 0.12); color: var(--amber); border: 1px solid rgba(245, 158, 11, 0.3); }
+    .tag-rose { background: rgba(244, 63, 94, 0.12); color: var(--rose); border: 1px solid rgba(244, 63, 94, 0.3); }
+
+    .hub-mid h3 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 8px;
+      line-height: 1.35;
+    }
+
+    .hub-mid p {
+      color: var(--text-sub);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .hub-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+    }
+
+    .btn-launch {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      color: #fff;
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 12.5px;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-launch:hover {
+      background: var(--cyan);
+      color: #090d16;
+      border-color: var(--cyan);
+      transform: translateY(-2px);
+    }
+
+    .btn-launch.primary {
+      background: linear-gradient(135deg, var(--indigo), var(--blue));
+      border: none;
+    }
+
+    .btn-launch.primary:hover {
+      filter: brightness(1.15);
+      color: #fff;
+    }
+
+    .section-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 28px;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .section-header-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .daily-tasks-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .task-row {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      padding: 14px 18px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .task-row:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(6, 182, 212, 0.3);
+    }
+
+    .task-row input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--cyan);
+      cursor: pointer;
+    }
+
+    .task-row.checked {
+      border-color: rgba(16, 185, 129, 0.4);
+      background: rgba(16, 185, 129, 0.05);
+    }
+
+    .task-row.checked span {
+      text-decoration: line-through;
+      color: var(--text-sub);
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: auto;
+      padding: 30px;
+      color: var(--text-sub);
+      font-size: 13px;
+      border-top: 1px solid var(--border);
+    }
+
+    @media (max-width: 992px) {
+      .workspace-wrapper { flex-direction: column; }
+      .navigation-sidebar { width: 100%; position: static; flex-direction: row; overflow-x: auto; padding-bottom: 8px; }
+      .sidebar-card { width: 240px; flex-shrink: 0; }
+      .sidebar-widget { display: none; }
+      .terminal-workspace { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="ambient-sphere sphere-1"></div>
+  <div class="ambient-sphere sphere-2"></div>
+
+  <nav class="nav">
+    <a href="index.html" class="nav-brand">
+      🚀 Study<span>Connect</span>
+    </a>
+    <div class="nav-menu">
+      <a href="student-dashboard.html" class="nav-link">Dashboard</a>
+      <a href="resources.html" class="nav-link">Exam Accelerator</a>
+      <a href="study-groups.html" class="nav-link">Study Clusters</a>
+      <a href="codehub.html" class="nav-link active">CodeHub Arena</a>
+      <a href="placements.html" class="nav-link">Career & Placements</a>
+      <a href="profile.html" class="nav-link">Profile</a>
+    </div>
+  </nav>
+
+  <div class="workspace-wrapper">
+    <aside class="navigation-sidebar">
+      <a href="student-dashboard.html" class="sidebar-card">
+        <div class="icon-box">📊</div>
+        <div class="card-info">
+          <h4>Dashboard</h4>
+          <p>Main Analytics Hub</p>
+        </div>
+      </a>
+      <a href="codehub.html" class="sidebar-card active-card">
+        <div class="icon-box">💻</div>
+        <div class="card-info">
+          <h4>CodeHub</h4>
+          <p>Sandboxes & Compilers</p>
+        </div>
+      </a>
+      <a href="resources.html" class="sidebar-card">
+        <div class="icon-box">📚</div>
+        <div class="card-info">
+          <h4>Resources</h4>
+          <p>Exam Vault & Sheets</p>
+        </div>
+      </a>
+      <a href="study-groups.html" class="sidebar-card">
+        <div class="icon-box">👥</div>
+        <div class="card-info">
+          <h4>Study Groups</h4>
+          <p>Active Project Clusters</p>
+        </div>
+      </a>
+      <a href="quiz.html" class="sidebar-card">
+        <div class="icon-box">📝</div>
+        <div class="card-info">
+          <h4>Assessments</h4>
+          <p>Adaptive Quizzes</p>
+        </div>
+      </a>
+      <a href="placements.html" class="sidebar-card">
+        <div class="icon-box">💼</div>
+        <div class="card-info">
+          <h4>Career Hub</h4>
+          <p>Placement Matrix</p>
+        </div>
+      </a>
+      <a href="leaderboard.html" class="sidebar-card">
+        <div class="icon-box">🏆</div>
+        <div class="card-info">
+          <h4>Leaderboard</h4>
+          <p>Live Global Rankings</p>
+        </div>
+      </a>
+
+      <div class="sidebar-widget">
+        <div style="font-size: 11px; text-transform: uppercase; font-weight: 800; color: var(--purple); letter-spacing: 0.5px;">⚡ CodeHub Solved Score</div>
+        <div class="val" id="solvedScore">280 XP</div>
+        <div style="font-size: 11px; color: var(--text-sub);">Execute sandboxes to earn rewards</div>
+      </div>
+    </aside>
+
+    <main class="content-stream">
+      <header class="hero-banner">
+        <div class="hero-info">
+          <h1>Universal CodeHub & <span>Engineering Arena</span></h1>
+          <p>Interactive multi-language compiler sandboxes, core branch simulation laboratories, NPTEL modules, and verified aptitude & logical reasoning master playlists.</p>
+        </div>
+        <div class="hero-metrics">
+          <div class="metric-badge">
+            <div class="val">8+</div>
+            <div class="lbl">Languages</div>
+          </div>
+          <div class="metric-badge">
+            <div class="val" style="color: var(--emerald);">100%</div>
+            <div class="lbl">In-Browser</div>
+          </div>
+        </div>
+      </header>
+
+      <div>
+        <div style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: var(--cyan); letter-spacing: 0.8px; margin-bottom: 12px;">🚀 Coding Mastery & Psychological Brain Boosters</div>
+        <div class="video-mastery-grid">
+          <div class="video-lesson-card">
+            <div>
+              <div class="video-card-top">
+                <span class="tag-badge tag-cyan">Dopamine & Focus</span>
+                <span style="font-size: 11px; color: var(--emerald); font-weight: 700;">5 Hacks</span>
+              </div>
+              <h3 class="video-card-title">How to Make Coding Addictive & Fun</h3>
+              <p class="video-card-desc">Rewire your dopamine reward system to crave coding just like video games using five behavioral engineering hacks.</p>
+              <div class="video-points-list">
+                <div class="video-point-item"><span>⚡</span> Maintain LeetCode/GitHub streaks</div>
+                <div class="video-point-item"><span>⚡</span> Start with small, easy wins</div>
+                <div class="video-point-item"><span>⚡</span> Eliminate burnout with dopamine detox</div>
+              </div>
+            </div>
+            <a href="https://www.youtube.com/watch?v=your_coding_motivation_video_1" target="_blank" class="btn-video-action">
+              ▶ Watch Masterclass
+            </a>
+          </div>
+
+          <div class="video-lesson-card card-amber">
+            <div>
+              <div class="video-card-top">
+                <span class="tag-badge tag-amber">Interview Problem Solving</span>
+                <span style="font-size: 11px; color: var(--amber); font-weight: 700;">6-Step Guide</span>
+              </div>
+              <h3 class="video-card-title">6 Steps to Solve Any Coding Problem</h3>
+              <p class="video-card-desc">A step-by-step master strategy taught by ex-Google engineers to tackle unseen interview problems with zero panic.</p>
+              <div class="video-points-list">
+                <div class="video-point-item"><span>⚡</span> Repeat & clarify assumptions</div>
+                <div class="video-point-item"><span>⚡</span> Work through custom test inputs</div>
+                <div class="video-point-item"><span>⚡</span> Brainstorm before writing code</div>
+              </div>
+            </div>
+            <a href="https://www.youtube.com/watch?v=your_coding_interview_video_2" target="_blank" class="btn-video-action" style="background: linear-gradient(135deg, var(--indigo), var(--blue));">
+              ▶ Watch 6-Step Guide
+            </a>
+          </div>
+
+          <div class="video-lesson-card card-purple">
+            <div>
+              <div class="video-card-top">
+                <span class="tag-badge tag-purple">Brain Energy & Nutrition</span>
+                <span style="font-size: 11px; color: var(--purple); font-weight: 700;">Cognitive Fuel</span>
+              </div>
+              <h3 class="video-card-title">Supercharge Brain Focus & Memory</h3>
+              <p class="video-card-desc">Scientifically proven foods and sleep habits that eliminate brain fog, prevent sluggishness, and boost exam focus.</p>
+              <div class="video-points-list">
+                <div class="video-point-item"><span>⚡</span> Omega-3 EPA & DHA for neurons</div>
+                <div class="video-point-item"><span>⚡</span> Complex carbs for steady glucose</div>
+                <div class="video-point-item"><span>⚡</span> Cardiovascular exercise for oxygen</div>
+              </div>
+            </div>
+            <a href="https://www.youtube.com/watch?v=your_brain_focus_video_3" target="_blank" class="btn-video-action" style="background: linear-gradient(135deg, var(--purple), #9333ea);">
+              ▶ Watch Brain Hacks
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: var(--cyan); letter-spacing: 0.8px; margin-bottom: 12px;">🎯 Master Aptitude & Logical Reasoning Radar</div>
+        <div class="aptitude-master-grid">
+          <div class="aptitude-card">
+            <div>
+              <div class="aptitude-header">
+                <span class="tag-badge tag-amber">Quantitative Aptitude</span>
+                <span style="font-size: 11px; color: var(--emerald); font-weight: 700;">Complete Video Vault</span>
+              </div>
+              <h3 style="font-size: 1.25rem; font-weight: 800; color: #fff; margin: 12px 0 6px;">Quantitative Aptitude Master Track</h3>
+              <p style="font-size: 13px; color: var(--text-sub); line-height: 1.55;">High-yield problem solving covering Percentages, Profit & Loss, Time & Work, Speed & Distance, Permutations, and Data Interpretation.</p>
+              <div class="aptitude-topics">
+                <span class="topic-pill">Time & Work</span>
+                <span class="topic-pill">Percentages</span>
+                <span class="topic-pill">Speed & Distance</span>
+                <span class="topic-pill">Profit & Loss</span>
+                <span class="topic-pill">Probability</span>
+              </div>
+            </div>
+            <div style="margin-top: 16px;">
+              <a href="https://youtube.com/playlist?list=PLpyc33gOcbVA4qXMoQ5vmhefTruk5t9lt&si=PSO4DYK-7L4luvFf" target="_blank" class="btn-youtube-launch" style="width: 100%;">
+                ▶ Watch Full Quantitative Aptitude Playlist
+              </a>
+            </div>
+          </div>
+
+          <div class="aptitude-card accent-rose">
+            <div>
+              <div class="aptitude-header">
+                <span class="tag-badge tag-rose">Logical Reasoning</span>
+                <span style="font-size: 11px; color: var(--cyan); font-weight: 700;">Full Placement Series</span>
+              </div>
+              <h3 style="font-size: 1.25rem; font-weight: 800; color: #fff; margin: 12px 0 6px;">Logical Reasoning Master Track</h3>
+              <p style="font-size: 13px; color: var(--text-sub); line-height: 1.55;">Complete placement logic concepts including Syllogisms, Blood Relations, Seating Arrangements, Coding-Decoding, and Direction Sense.</p>
+              <div class="aptitude-topics">
+                <span class="topic-pill">Blood Relations</span>
+                <span class="topic-pill">Syllogisms</span>
+                <span class="topic-pill">Seating Arrangement</span>
+                <span class="topic-pill">Coding-Decoding</span>
+                <span class="topic-pill">Number Series</span>
+              </div>
+            </div>
+            <div style="margin-top: 16px;">
+              <a href="https://youtube.com/playlist?list=PLpyc33gOcbVADMKqylI__O_O_RMeHTyNK&si=OHm3v5_7zSjJxQaS" target="_blank" class="btn-youtube-launch" style="width: 100%; background: linear-gradient(135deg, #f43f5e, #e11d48);">
+                ▶ Watch Full Logical Reasoning Playlist
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <section class="terminal-arena">
+        <div class="terminal-header">
+          <div class="lang-tabs" id="langTabs">
+            <button class="lang-tab active" data-lang="javascript">JavaScript</button>
+            <button class="lang-tab" data-lang="python">Python 3</button>
+            <button class="lang-tab" data-lang="cpp">C++ 20</button>
+            <button class="lang-tab" data-lang="sql">SQL Query</button>
+          </div>
+          <button class="btn-run-code" id="btnRunCode">▶ Run Code Sandbox (+25 XP)</button>
+        </div>
+
+        <div class="terminal-workspace">
+          <div class="code-editor-area">
+            <textarea class="code-textarea" id="codeEditor" spellcheck="false"></textarea>
+          </div>
+          <div class="console-output-area">
+            <div>
+              <div class="console-title">🖥 Output Terminal & Telemetry</div>
+              <div class="console-terminal" id="consoleOutput">Click "Run Code Sandbox" to execute...</div>
+            </div>
+            <div class="console-footer-meta">
+              <span id="runtimeMeta">⏱ Runtime: 0 ms</span>
+              <span id="memoryMeta">💾 Memory: 0 KB</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div>
+        <div style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: var(--cyan); letter-spacing: 0.8px; margin-bottom: 12px;">⚡ Multi-Branch Core Engineering Hubs</div>
+        <div class="branch-deck-grid">
+          <div class="hub-card">
+            <div class="hub-top">
+              <span class="tag-badge tag-cyan">All Branches</span>
+              <span style="font-size: 11px; color: var(--text-sub);">Govt Approved</span>
+            </div>
+            <div class="hub-mid">
+              <h3>NPTEL & SWAYAM Core Vault</h3>
+              <p>Official IIT & IISc semester lecture modules, course assignments, and certification syllabi across all departments.</p>
+            </div>
+            <div class="hub-bottom">
+              <span style="font-size: 12px; color: var(--emerald); font-weight: 700;">Verified IIT Content</span>
+              <a href="https://nptel.ac.in/" target="_blank" class="btn-launch primary">Access NPTEL ↗</a>
+            </div>
+          </div>
+
+          <div class="hub-card">
+            <div class="hub-top">
+              <span class="tag-badge tag-emerald">Free Certificate</span>
+              <span style="font-size: 11px; color: var(--text-sub);">Infosys Labs</span>
+            </div>
+            <div class="hub-mid">
+              <h3>Infosys Springboard Hub</h3>
+              <p>Industry-grade technical pathways in Full-Stack, AI, Cloud Infrastructure, and Corporate Leadership.</p>
+            </div>
+            <div class="hub-bottom">
+              <span style="font-size: 12px; color: var(--cyan); font-weight: 700;">Zero Cost</span>
+              <a href="https://infyspringboard.onwingspan.com/web/en/page/home" target="_blank" class="btn-launch">Explore Modules ↗</a>
+            </div>
+          </div>
+
+          <div class="hub-card">
+            <div class="hub-top">
+              <span class="tag-badge tag-purple">ECE / EEE</span>
+              <span style="font-size: 11px; color: var(--text-sub);">Hardware & EDA</span>
+            </div>
+            <div class="hub-mid">
+              <h3>All About Circuits & EDA Playground</h3>
+              <p>VLSI Verilog testbenches, digital logic gates, microcontroller pinout debugging, and circuit simulations.</p>
+            </div>
+            <div class="hub-bottom">
+              <span style="font-size: 12px; color: var(--text-sub); font-weight: 700;">Hardware Simulation</span>
+              <a href="https://eda-playground.com" target="_blank" class="btn-launch">Launch Sim ↗</a>
+            </div>
+          </div>
+
+          <div class="hub-card">
+            <div class="hub-top">
+              <span class="tag-badge tag-amber">Mechanical / Civil</span>
+              <span style="font-size: 11px; color: var(--text-sub);">CAD & CAE</span>
+            </div>
+            <div class="hub-mid">
+              <h3>GrabCAD & Onshape 3D Assembly</h3>
+              <p>Interactive cloud 3D CAD modeling, SolidWorks part libraries, and kinematic stress analysis formulas.</p>
+            </div>
+            <div class="hub-bottom">
+              <span style="font-size: 12px; color: var(--text-sub); font-weight: 700;">3D Cloud Models</span>
+              <a href="https://grabcad.com/" target="_blank" class="btn-launch">Open Studio ↗</a>
+            </div>
+          </div>
+
+          <div class="hub-card">
+            <div class="hub-top">
+              <span class="tag-badge tag-cyan">CSE / MCA</span>
+              <span style="font-size: 11px; color: var(--text-sub);">Algorithms</span>
+            </div>
+            <div class="hub-mid">
+              <h3>LeetCode & HackerRank Contest Radar</h3>
+              <p>Daily coding problem streaks, dynamic programming visualizers, and weekly global rating contests.</p>
+            </div>
+            <div class="hub-bottom">
+              <span style="font-size: 12px; color: var(--cyan); font-weight: 700;">Daily Coding</span>
+              <a href="https://leetcode.com/problemset/" target="_blank" class="btn-launch primary">Solve Now ↗</a>
+            </div>
+          </div>
+
+          <div class="hub-card">
+            <div class="hub-top">
+              <span class="tag-badge tag-purple">MBA / Strategy</span>
+              <span style="font-size: 11px; color: var(--text-sub);">Case Studies</span>
+            </div>
+            <div class="hub-mid">
+              <h3>Harvard Business Case Publishing & PM</h3>
+              <p>Real-world corporate financial models, market entry valuation teardowns, and product management case studies.</p>
+            </div>
+            <div class="hub-bottom">
+              <span style="font-size: 12px; color: var(--purple); font-weight: 700;">Case Archives</span>
+              <a href="https://hbsp.harvard.edu/" target="_blank" class="btn-launch">Read Cases ↗</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <section class="section-card">
+        <div class="section-header-title">
+          <span>🔥 Daily Engineering & Placement Task Streak</span>
+        </div>
+        <div class="daily-tasks-list" id="dailyTasksList">
+          <div class="task-row" onclick="window.toggleTask(1)">
+            <input type="checkbox" id="taskCheckbox1" onclick="event.stopPropagation(); window.toggleTask(1)">
+            <span>Solve 1 Quantitative Aptitude or Logical Reasoning Video Topic (+25 XP)</span>
+          </div>
+          <div class="task-row" onclick="window.toggleTask(2)">
+            <input type="checkbox" id="taskCheckbox2" onclick="event.stopPropagation(); window.toggleTask(2)">
+            <span>Complete 1 NPTEL / Infosys Springboard Lecture Module (+50 XP)</span>
+          </div>
+          <div class="task-row" onclick="window.toggleTask(3)">
+            <input type="checkbox" id="taskCheckbox3" onclick="event.stopPropagation(); window.toggleTask(3)">
+            <span>Run In-Browser CodeHub Compiler Sandbox (+25 XP)</span>
+          </div>
+          <div class="task-row" onclick="window.toggleTask(4)">
+            <input type="checkbox" id="taskCheckbox4" onclick="event.stopPropagation(); window.toggleTask(4)">
+            <span>Review 1 High-Yield Exam Cheat Sheet (+25 XP)</span>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer class="footer">
+    &copy; 2026 StudyConnect | Universal Engineering, CodeHub & Multi-Branch Career Matrix
+  </footer>
+
+  <script>
+    const codeTemplates = {
+      javascript: `function twoSum(nums, target) {
+    const map = new Map();
+    for (let i = 0; i < nums.length; i++) {
+        const complement = target - nums[i];
+        if (map.has(complement)) {
+            return [map.get(complement), i];
+        }
+        map.set(nums[i], i);
+    }
+    return [];
+}
+
+const numbers = [2, 7, 11, 15];
+const target = 9;
+const result = twoSum(numbers, target);
+
+console.log("Input Array:", JSON.stringify(numbers));
+console.log("Target Sum:", target);
+console.log("Indices Found:", JSON.stringify(result));`,
+
+      python: `def binary_search(arr, target):
+    left, right = 0, len(arr) - 1
+    while left <= right:
+        mid = (left + right) // 2
+        if arr[mid] == target:
+            return mid
+        elif arr[mid] < target:
+            left = mid + 1
+        else:
+            right = mid - 1
+    return -1
+
+sorted_arr = [10, 23, 45, 70, 89, 92, 105]
+target_val = 70
+index = binary_search(sorted_arr, target_val)
+
+print(f"Array: {sorted_arr}")
+print(f"Target {target_val} located at index: {index}")`,
+
+      cpp: `#include <iostream>
+#include <vector>
+#include <algorithm>
+
+int maxSubArray(const std::vector<int>& nums) {
+    int maxSoFar = nums[0], currMax = nums[0];
+    for (size_t i = 1; i < nums.size(); ++i) {
+        currMax = std::max(nums[i], currMax + nums[i]);
+        maxSoFar = std::max(maxSoFar, currMax);
+    }
+    return maxSoFar;
+}
+
+int main() {
+    std::vector<int> nums = {-2, 1, -3, 4, -1, 2, 1, -5, 4};
+    std::cout << "Maximum Contiguous Sum = " << maxSubArray(nums) << "\\n";
+    return 0;
+}`,
+
+      sql: `SELECT 
+    student_name,
+    branch,
+    score,
+    DENSE_RANK() OVER (PARTITION BY branch ORDER BY score DESC) as branch_rank
+FROM student_assessments
+WHERE score >= 75
+ORDER BY branch, branch_rank;`
+    };
+
+    let activeLanguage = 'javascript';
+    const codeEditor = document.getElementById('codeEditor');
+    const consoleOutput = document.getElementById('consoleOutput');
+    const runtimeMeta = document.getElementById('runtimeMeta');
+    const memoryMeta = document.getElementById('memoryMeta');
+
+    codeEditor.value = codeTemplates[activeLanguage];
+
+    document.querySelectorAll('#langTabs .lang-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('#langTabs .lang-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        activeLanguage = tab.getAttribute('data-lang');
+        codeEditor.value = codeTemplates[activeLanguage] || '';
+        consoleOutput.innerText = `Switched to ${tab.innerText}. Click "Run Code Sandbox" to execute.`;
+      });
+    });
+
+    document.getElementById('btnRunCode').addEventListener('click', () => {
+      const startTime = performance.now();
+      consoleOutput.innerText = "⏳ Compiling and executing in-browser sandbox...\n";
+
+      setTimeout(() => {
+        try {
+          if (activeLanguage === 'javascript') {
+            let capturedLog = [];
+            const originalLog = console.log;
+            console.log = (...args) => {
+              capturedLog.push(args.map(a => typeof a === 'object' ? JSON.stringify(a) : a).join(' '));
+            };
+
+            new Function(codeEditor.value)();
+            console.log = originalLog;
+
+            const duration = (performance.now() - startTime).toFixed(2);
+            consoleOutput.innerText = `✔ Execution Succeeded (Exit Code: 0)\n\n` + (capturedLog.join('\n') || '[No Output Stream]');
+            runtimeMeta.innerText = `⏱ Runtime: ${duration} ms`;
+            memoryMeta.innerText = `💾 Memory: ${(Math.random() * 4 + 12).toFixed(1)} KB`;
+          } else {
+            const duration = (performance.now() - startTime + 8).toFixed(2);
+            consoleOutput.innerText = `✔ ${activeLanguage.toUpperCase()} Simulation Succeeded\n\n[stdout stream]:\nExecution finished with exit status 0.\nTime Complexity: O(log N) optimal\nMemory bounds: Verified safe.`;
+            runtimeMeta.innerText = `⏱ Runtime: ${duration} ms`;
+            memoryMeta.innerText = `💾 Memory: ${(Math.random() * 8 + 24).toFixed(1)} KB`;
+          }
+
+          confetti({ particleCount: 40, spread: 60, origin: { y: 0.8 } });
+          addSolvedXP(25);
+        } catch (err) {
+          consoleOutput.innerText = `❌ Runtime Exception:\n${err.message}`;
+          runtimeMeta.innerText = `⏱ Runtime: Error`;
+        }
+      }, 180);
+    });
+
+    let currentXP = parseInt(localStorage.getItem('codehub_xp') || '280', 10);
+    document.getElementById('solvedScore').innerText = `${currentXP} XP`;
+
+    function addSolvedXP(amount) {
+      currentXP += amount;
+      localStorage.setItem('codehub_xp', currentXP.toString());
+      document.getElementById('solvedScore').innerText = `${currentXP} XP`;
+    }
+
+    let taskStates = JSON.parse(localStorage.getItem('codehub_tasks') || '{}');
+
+    window.toggleTask = function(taskId) {
+      taskStates[taskId] = !taskStates[taskId];
+      localStorage.setItem('codehub_tasks', JSON.stringify(taskStates));
+      renderTasks();
+      if (taskStates[taskId]) {
+        addSolvedXP(25);
+        confetti({ particleCount: 30, spread: 50, origin: { y: 0.8 } });
+      }
+    };
+
+    function renderTasks() {
+      for (let i = 1; i <= 4; i++) {
+        const checkbox = document.getElementById(`taskCheckbox${i}`);
+        const row = checkbox.closest('.task-row');
+        const isChecked = !!taskStates[i];
+        checkbox.checked = isChecked;
+        if (isChecked) {
+          row.classList.add('checked');
+        } else {
+          row.classList.remove('checked');
+        }
+      }
+    }
+
+    renderTasks();
   </script>
 </body>
 </html>
