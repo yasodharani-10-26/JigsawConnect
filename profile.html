@@ -6,109 +6,166 @@
   <title>Student Profile | StudyConnect</title> 
   <link rel="preconnect" href="https://fonts.googleapis.com"> 
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700;800&display=swap" rel="stylesheet"> 
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet"> 
    
   <style> 
     :root {
-      --bg: #0b0f19; 
-      --card-bg: rgba(20, 30, 54, 0.45); 
-      --border: rgba(255, 255, 255, 0.08); 
-      --text-main: #f8fafc; 
-      --text-muted: #94a3b8; 
-      --accent-cyan: #06b6d4; 
-      --accent-blue: #2563eb; 
+      --bg-gradient: radial-gradient(circle at 10% 20%, #0d1527 0%, #070a12 90%);
+      --card-bg: rgba(18, 26, 47, 0.65);
+      --card-hover: rgba(26, 38, 68, 0.85);
+      --border: rgba(255, 255, 255, 0.08);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-cyan: #06b6d4;
+      --accent-blue: #3b82f6;
+      --accent-indigo: #6366f1;
       --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --glow-cyan: 0 0 25px rgba(6, 182, 212, 0.25);
     } 
 
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; } 
-    body { background: var(--bg); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; } 
+    body { background: var(--bg-gradient); background-attachment: fixed; color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; } 
 
-    /* NAVBAR */
-    .navbar { display: flex; justify-content: space-between; align-items: center; padding: 18px 6%; background: rgba(11, 15, 25, 0.85); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; } 
-    .logo { font-size: 24px; font-weight: 800; color: #fff; text-decoration: none; } 
-    .logo span { color: var(--accent-cyan); } 
-    .nav-links { display: flex; gap: 24px; align-items: center; } 
-    .nav-links a { text-decoration: none; color: var(--text-muted); font-size: 14px; font-weight: 600; transition: color 0.2s; } 
-    .nav-links a:hover, .nav-links a.active { color: var(--accent-cyan); } 
+    .ambient-glow { position: fixed; width: 450px; height: 450px; border-radius: 50%; pointer-events: none; filter: blur(130px); z-index: 0; opacity: 0.18; }
+    .glow-1 { top: -100px; left: -100px; background: var(--accent-cyan); }
+    .glow-2 { bottom: -100px; right: -100px; background: var(--accent-indigo); }
+
+    .navbar { display: flex; justify-content: space-between; align-items: center; padding: 16px 6%; background: rgba(11, 15, 25, 0.75); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; } 
+    .logo { font-size: 22px; font-weight: 800; color: #fff; text-decoration: none; display: flex; align-items: center; gap: 8px; letter-spacing: -0.5px; } 
+    .logo span { background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; } 
+    .nav-links { display: flex; gap: 16px; align-items: center; } 
+    .nav-links a { text-decoration: none; color: var(--text-muted); font-size: 13.5px; font-weight: 600; padding: 8px 14px; border-radius: 10px; transition: all 0.2s ease; } 
+    .nav-links a:hover, .nav-links a.active { color: #fff; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border); } 
     
-    .btn-logout { background: rgba(239, 68, 68, 0.1); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.2); padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
-    .btn-logout:hover { background: rgba(239, 68, 68, 0.2); color: #ef4444; border-color: rgba(239, 68, 68, 0.4); }
+    .btn-logout { background: rgba(239, 68, 68, 0.12); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.25); padding: 8px 16px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .btn-logout:hover { background: rgba(239, 68, 68, 0.25); color: #ef4444; border-color: rgba(239, 68, 68, 0.5); }
 
-    /* MAIN CONTAINER */
-    .container { width: 100%; max-width: 800px; margin: 40px auto; padding: 0 20px; flex: 1; }
+    .container { position: relative; z-index: 1; width: 100%; max-width: 1000px; margin: 35px auto 60px; padding: 0 20px; flex: 1; }
     
-    /* PROFILE CARD */
-    .profile-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 30px; backdrop-filter: blur(12px); box-shadow: 0 20px 40px -15px rgba(0,0,0,0.3); margin-bottom: 30px; display: flex; align-items: center; gap: 25px; }
-    .profile-avatar { width: 80px; height: 80px; background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 700; color: white; box-shadow: 0 0 20px rgba(6, 182, 212, 0.4); flex-shrink: 0; }
-    .profile-info h2 { font-size: 1.8rem; font-weight: 800; margin-bottom: 5px; word-break: break-word; }
-    .profile-info p { color: var(--text-muted); font-size: 14px; font-weight: 500; }
-    .profile-info span { color: var(--accent-cyan); font-weight: 600; }
+    .profile-hero-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 24px; padding: 32px; backdrop-filter: blur(16px); box-shadow: 0 20px 40px -15px rgba(0,0,0,0.5); margin-bottom: 28px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 24px; }
+    .profile-main-meta { display: flex; align-items: center; gap: 24px; }
+    .profile-avatar { width: 90px; height: 90px; background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan)); border-radius: 24px; display: flex; align-items: center; justify-content: center; font-size: 38px; font-weight: 800; color: white; box-shadow: var(--glow-cyan); flex-shrink: 0; }
+    .profile-info h2 { font-size: 2rem; font-weight: 800; margin-bottom: 6px; letter-spacing: -0.5px; }
+    .profile-badges { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+    .meta-tag { display: inline-flex; align-items: center; gap: 6px; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border); padding: 4px 12px; border-radius: 8px; font-size: 12px; color: var(--text-muted); font-weight: 600; }
+    .meta-tag span { color: var(--accent-cyan); font-family: 'JetBrains Mono', monospace; }
 
-    /* SECTION TITLE */
-    .section-title { font-size: 1.3rem; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
-    .section-title span { color: var(--accent-cyan); }
+    .stats-overview-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 30px; }
+    .stat-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 18px; padding: 20px; text-align: center; backdrop-filter: blur(12px); }
+    .stat-box .num { font-size: 26px; font-weight: 800; font-family: 'JetBrains Mono', monospace; margin-bottom: 4px; }
+    .stat-box .lbl { font-size: 12px; color: var(--text-muted); text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; }
 
-    /* QUIZ SCORES LIST */
-    .scores-list { display: flex; flex-direction: column; gap: 12px; }
-    .score-item { background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s; flex-wrap: wrap; gap: 10px; }
-    .score-item:hover { background: rgba(255, 255, 255, 0.04); border-color: rgba(6, 182, 212, 0.3); transform: translateY(-2px); }
-    .quiz-title { font-weight: 600; font-size: 15px; color: #fff; }
-    .quiz-details { display: flex; align-items: center; gap: 12px; }
-    .badge-score { background: rgba(16, 185, 129, 0.1); color: var(--success); padding: 6px 14px; border-radius: 8px; font-weight: 700; font-size: 14px; border: 1px solid rgba(16, 185, 129, 0.2); }
-    .badge-pct { background: rgba(37, 99, 235, 0.1); color: #60a5fa; padding: 6px 12px; border-radius: 8px; font-weight: 600; font-size: 13px; border: 1px solid rgba(37, 99, 235, 0.2); }
+    .section-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 24px; backdrop-filter: blur(16px); margin-bottom: 24px; }
+    .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+    .section-title { font-size: 1.15rem; font-weight: 700; display: flex; align-items: center; gap: 8px; color: #fff; }
+    .badge-count { background: rgba(255, 255, 255, 0.06); padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; color: var(--accent-cyan); }
 
-    .no-data { text-align: center; color: var(--text-muted); padding: 30px; background: rgba(255, 255, 255, 0.01); border-radius: 12px; border: 1px dashed var(--border); font-size: 14px; }
-    .loading { text-align: center; color: var(--accent-cyan); padding: 40px; font-weight: 600; }
+    .records-list { display: flex; flex-direction: column; gap: 12px; }
+    .record-item { background: rgba(15, 23, 42, 0.5); border: 1px solid var(--border); border-radius: 14px; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s ease; flex-wrap: wrap; gap: 12px; }
+    .record-item:hover { background: var(--card-hover); border-color: rgba(6, 182, 212, 0.35); transform: translateY(-2px); box-shadow: var(--glow-cyan); }
+    
+    .record-info { display: flex; flex-direction: column; gap: 4px; }
+    .record-title { font-weight: 700; font-size: 15px; color: #fff; }
+    .record-date { font-size: 12px; color: var(--text-muted); }
+    
+    .record-metrics { display: flex; align-items: center; gap: 10px; }
+    .badge-score { background: rgba(16, 185, 129, 0.12); color: var(--success); padding: 6px 14px; border-radius: 10px; font-weight: 700; font-size: 13.5px; border: 1px solid rgba(16, 185, 129, 0.25); font-family: 'JetBrains Mono', monospace; }
+    .badge-pct { background: rgba(59, 130, 246, 0.12); color: #60a5fa; padding: 6px 12px; border-radius: 10px; font-weight: 700; font-size: 13px; border: 1px solid rgba(59, 130, 246, 0.25); font-family: 'JetBrains Mono', monospace; }
 
-    @media (max-width: 600px) {
-      .profile-card { flex-direction: column; text-align: center; padding: 20px; }
-      .score-item { flex-direction: column; align-items: flex-start; }
-      .quiz-details { width: 100%; justify-content: space-between; }
-      .nav-links a:not(.active) { display: none; } /* Mobile navbar optimization */
+    .no-data { text-align: center; color: var(--text-muted); padding: 36px 16px; background: rgba(15, 23, 42, 0.3); border-radius: 14px; border: 1px dashed var(--border); font-size: 13.5px; }
+    .loading-spinner { text-align: center; color: var(--accent-cyan); padding: 40px; font-weight: 600; font-size: 14px; }
+
+    @media (max-width: 800px) {
+      .stats-overview-grid { grid-template-columns: repeat(2, 1fr); }
+      .profile-hero-card { flex-direction: column; text-align: center; justify-content: center; }
+      .profile-main-meta { flex-direction: column; }
+      .profile-badges { justify-content: center; }
+    }
+
+    @media (max-width: 500px) {
+      .record-item { flex-direction: column; align-items: flex-start; }
+      .record-metrics { width: 100%; justify-content: space-between; }
+      .nav-links a:not(.active) { display: none; }
     }
   </style> 
 </head> 
 
 <body> 
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
 
-  <!-- NAVBAR -->
   <nav class="navbar"> 
-    <a href="index.html" class="logo">📚 Study<span>Connect</span></a> 
+    <a href="index.html" class="logo">⚡ Study<span>Connect</span></a> 
     <div class="nav-links"> 
-      <a href="admin-dashboard.html">Dashboard</a> 
+      <a href="student-dashboard.html">Dashboard</a> 
       <a href="leaderboard.html">Leaderboard</a> 
-      <a href="quiz.html">Quizzes</a> 
-      <a href="#" class="active">My Profile</a> 
+      <a href="quiz.html">Quizzes & Arena</a> 
+      <a href="profile.html" class="active">My Profile</a> 
       <button class="btn-logout" id="btnLogout">Logout</button>
     </div> 
   </nav> 
 
-  <!-- MAIN CONTENT -->
   <div class="container">
-    
-    <!-- Profile Card Widget -->
-    <div class="profile-card">
-      <div class="profile-avatar" id="avatarInitial">S</div>
-      <div class="profile-info">
-        <h2 id="profileName">Loading Profile...</h2>
-        <p>Roll Number: <span id="profileRoll">--</span></p>
+    <div class="profile-hero-card">
+      <div class="profile-main-meta">
+        <div class="profile-avatar" id="avatarInitial">?</div>
+        <div class="profile-info">
+          <h2 id="profileName">Loading Profile...</h2>
+          <div class="profile-badges">
+            <div class="meta-tag">Roll: <span id="profileRoll">--</span></div>
+            <div class="meta-tag">Branch: <span id="profileBranch">--</span></div>
+            <div class="meta-tag">HR ID: <span id="profileHr">--</span></div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- Quiz History Section -->
-    <h3 class="section-title">📊 Quiz <span>Performance History</span></h3>
-    <div class="scores-list" id="quizScoresList">
-      <div class="loading">⏳ Fetching your performance records...</div>
+    <div class="stats-overview-grid">
+      <div class="stat-box">
+        <div class="num" id="statQuizzesCompleted" style="color: var(--accent-cyan);">0</div>
+        <div class="lbl">Quizzes Taken</div>
+      </div>
+      <div class="stat-box">
+        <div class="num" id="statAvgAccuracy" style="color: var(--success);">0%</div>
+        <div class="lbl">Avg. Accuracy</div>
+      </div>
+      <div class="stat-box">
+        <div class="num" id="statTotalScore" style="color: var(--accent-blue);">0</div>
+        <div class="lbl">Total Points</div>
+      </div>
+      <div class="stat-box">
+        <div class="num" id="statHrContests" style="color: var(--warning);">0</div>
+        <div class="lbl">Contests Linked</div>
+      </div>
     </div>
 
+    <div class="section-card">
+      <div class="section-header">
+        <h3 class="section-title">📊 Native Quiz Performance Log</h3>
+        <span class="badge-count" id="quizHistoryCount">0 Records</span>
+      </div>
+      <div class="records-list" id="quizScoresList">
+        <div class="loading-spinner">⏳ Synchronizing evaluation history...</div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-header">
+        <h3 class="section-title">💻 HackerRank Arena Participations</h3>
+        <span class="badge-count" id="hrHistoryCount">0 Contests</span>
+      </div>
+      <div class="records-list" id="hrContestsList">
+        <div class="loading-spinner">⏳ Fetching arena participations...</div>
+      </div>
+    </div>
   </div>
 
-  <!-- FIREBASE ENGINE SCRIPT -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
     import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
 
-    // Firebase Configurations
     const firebaseConfig = {
       apiKey: "AIzaSyCaCkliRZk8HmNtOsJpoA084YhNY7MeMWM",
       authDomain: "jigsawconnect-677da.firebaseapp.com",
@@ -119,81 +176,204 @@
       appId: "1:200774226361:web:266cb216968403793f6668"
     };
 
-    // Initialize Database Connections
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    // Fetch Student Key from LocalStorage
     const hrId = localStorage.getItem('studentHrId');
-    const scoresContainer = document.getElementById('quizScoresList');
+    const storedName = localStorage.getItem('studentName');
+    const storedRoll = localStorage.getItem('studentRollNo');
+    const storedBranch = localStorage.getItem('studentBranch');
 
-    // Helper Function: Prevent XSS attacks
+    const scoresContainer = document.getElementById('quizScoresList');
+    const hrContestsContainer = document.getElementById('hrContestsList');
+
     function escapeHTML(str) {
+      if (str === null || str === undefined) return '';
       return String(str).replace(/[&<>"']/g, function(m) {
         return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m];
       });
     }
 
-    // [సెషన్ చెక్] localStorage లో డేటా లేకపోతే నేరుగా లాగిన్ పేజీకి పంపేలా అమరిక
-    if (!hrId) {
-      alert("⚠️ మీ లాగిన్ సెషన్ ముగిసింది లేదా మీరు లాగిన్ అవ్వలేదు. దయచేసి మళ్ళీ లాగిన్ అవ్వండి.");
-      window.location.href = "login.html";
-    } else {
-      const safeKey = hrId.replace(/[.#$\[\]\/]/g, '_');
-      
-      get(ref(db, `students/${safeKey}`)).then((snapshot) => {
-        if (snapshot.exists()) {
-          const studentData = snapshot.val();
-          
-          // Injecting Profile Data
-          const name = studentData.name || "Unknown Student";
-          document.getElementById('profileName').innerText = name;
-          document.getElementById('profileRoll').innerText = studentData.rollNo || "N/A";
-          
-          // Avatar Initial Letter Setup
-          document.getElementById('avatarInitial').innerText = name.charAt(0).toUpperCase();
-
-          // Render Quiz Performance Rows
-          scoresContainer.innerHTML = "";
-          if (studentData.quizScores && Object.keys(studentData.quizScores).length > 0) {
-            Object.keys(studentData.quizScores).forEach(qId => {
-              const record = studentData.quizScores[qId];
-              
-              // Handle Percentage Formatting Safely
-              const rawPct = record.percentage !== undefined ? record.percentage : 0;
-              const formattedPct = String(rawPct).includes('%') ? rawPct : `${parseFloat(rawPct).toFixed(1)}%`;
-
-              const quizTitle = escapeHTML(record.quizTitle || 'Assessment Quiz');
-              const score = escapeHTML(record.score || 0);
-              const total = escapeHTML(record.total || 0);
-
-              scoresContainer.innerHTML += `
-                <div class="score-item">
-                  <div class="quiz-title">📝 ${quizTitle}</div>
-                  <div class="quiz-details">
-                    <span class="badge-score">${score} / ${total}</span>
-                    <span class="badge-pct">${escapeHTML(formattedPct)}</span>
-                  </div>
-                </div>
-              `;
-            });
-          } else {
-            scoresContainer.innerHTML = `<div class="no-data">No quizzes completed yet. Start taking quizzes to build your profile track record!</div>`;
-          }
-        } else {
-          scoresContainer.innerHTML = `<div class="no-data">⚠️ Student profile record not registered in the active system directory.</div>`;
-          document.getElementById('profileName').innerText = "Profile Not Found";
-        }
-      }).catch((error) => {
-        console.error("Database Retrieval Fault:", error);
-        scoresContainer.innerHTML = `<div class="no-data" style="color:#ef4444;">❌ Failed to load profile data due to database sync constraints.</div>`;
-      });
+    function formatDate(ts) {
+      if (!ts) return 'Recent Evaluation';
+      const d = new Date(ts);
+      return isNaN(d.getTime()) ? 'Recent Evaluation' : d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' });
     }
 
-    // లాగౌట్ బటన్ ఫంక్షనాలిటీ
+    if (!hrId && !storedRoll) {
+      alert("No active student session discovered. Please enter your credentials on the Arena page.");
+      window.location.href = "quiz.html";
+    } else {
+      const activeKey = (hrId || storedRoll).replace(/[.#$\[\]\/]/g, '_');
+
+      async function loadFullProfile() {
+        let studentRecord = {
+          name: storedName || "Student Candidate",
+          rollNo: storedRoll || "N/A",
+          branch: storedBranch || "Engineering",
+          hrId: hrId || "N/A"
+        };
+
+        try {
+          const studentSnap = await get(ref(db, `students/${activeKey}`));
+          if (studentSnap.exists()) {
+            const data = studentSnap.val();
+            studentRecord.name = data.name || studentRecord.name;
+            studentRecord.rollNo = data.rollNo || studentRecord.rollNo;
+            studentRecord.branch = data.branch || studentRecord.branch;
+            studentRecord.hrId = data.hrId || studentRecord.hrId;
+          }
+        } catch (e) {
+          console.warn(e);
+        }
+
+        document.getElementById('profileName').innerText = studentRecord.name;
+        document.getElementById('profileRoll').innerText = studentRecord.rollNo;
+        document.getElementById('profileBranch').innerText = studentRecord.branch;
+        document.getElementById('profileHr').innerText = studentRecord.hrId;
+        document.getElementById('avatarInitial').innerText = studentRecord.name.trim().charAt(0).toUpperCase() || 'S';
+
+        let nativeQuizAttempts = [];
+        let totalScoreSum = 0;
+        let totalPercentageSum = 0;
+
+        try {
+          const studentScoresSnap = await get(ref(db, `students/${activeKey}/quizScores`));
+          if (studentScoresSnap.exists()) {
+            const scoresObj = studentScoresSnap.val();
+            Object.keys(scoresObj).forEach(k => {
+              const item = scoresObj[k];
+              nativeQuizAttempts.push({
+                title: item.quizTitle || item.title || `Assessment (${k})`,
+                score: item.score || 0,
+                total: item.total || 10,
+                percentage: parseFloat(item.percentage) || (item.total ? Math.round(((item.score || 0) / item.total) * 100) : 0),
+                timestamp: item.timestamp || null
+              });
+            });
+          }
+        } catch (e) {
+          console.warn(e);
+        }
+
+        try {
+          const quizSubmissionsSnap = await get(ref(db, 'quizSubmissions'));
+          if (quizSubmissionsSnap.exists()) {
+            const allSubmissions = quizSubmissionsSnap.val();
+            const quizzesSnap = await get(ref(db, 'quizzes'));
+            const quizzesMap = quizzesSnap.exists() ? quizzesSnap.val() : {};
+
+            Object.keys(allSubmissions).forEach(quizId => {
+              const quizSubs = allSubmissions[quizId];
+              if (quizSubs && quizSubs[activeKey]) {
+                const sub = quizSubs[activeKey];
+                const quizMeta = quizzesMap[quizId] || {};
+                const qTitle = quizMeta.title || sub.title || `Evaluation ${quizId}`;
+                
+                const alreadyExists = nativeQuizAttempts.some(a => a.title === qTitle && a.score === sub.score);
+                if (!alreadyExists) {
+                  nativeQuizAttempts.push({
+                    title: qTitle,
+                    score: sub.score || 0,
+                    total: sub.total || 5,
+                    percentage: sub.percentage !== undefined ? parseFloat(sub.percentage) : Math.round(((sub.score || 0) / (sub.total || 5)) * 100),
+                    timestamp: sub.timestamp || null
+                  });
+                }
+              }
+            });
+          }
+        } catch (e) {
+          console.warn(e);
+        }
+
+        scoresContainer.innerHTML = "";
+        document.getElementById('quizHistoryCount').innerText = `${nativeQuizAttempts.length} Records`;
+        document.getElementById('statQuizzesCompleted').innerText = nativeQuizAttempts.length;
+
+        if (nativeQuizAttempts.length > 0) {
+          nativeQuizAttempts.forEach(attempt => {
+            totalScoreSum += Number(attempt.score) || 0;
+            totalPercentageSum += Number(attempt.percentage) || 0;
+
+            const row = document.createElement('div');
+            row.className = "record-item";
+            row.innerHTML = `
+              <div class="record-info">
+                <div class="record-title">📝 ${escapeHTML(attempt.title)}</div>
+                <div class="record-date">${formatDate(attempt.timestamp)}</div>
+              </div>
+              <div class="record-metrics">
+                <span class="badge-score">${escapeHTML(attempt.score)} / ${escapeHTML(attempt.total)}</span>
+                <span class="badge-pct">${escapeHTML(Math.round(attempt.percentage))}%</span>
+              </div>
+            `;
+            scoresContainer.appendChild(row);
+          });
+
+          const avgPct = Math.round(totalPercentageSum / nativeQuizAttempts.length);
+          document.getElementById('statAvgAccuracy').innerText = `${avgPct}%`;
+          document.getElementById('statTotalScore').innerText = totalScoreSum;
+        } else {
+          scoresContainer.innerHTML = `<div class="no-data">No native evaluation submissions found. Participate in quizzes to populate your record.</div>`;
+          document.getElementById('statAvgAccuracy').innerText = "0%";
+          document.getElementById('statTotalScore').innerText = "0";
+        }
+
+        let hrContestAttempts = [];
+        try {
+          const hrLeaderboardSnap = await get(ref(db, 'hackerRankLeaderboards'));
+          if (hrLeaderboardSnap.exists()) {
+            const boards = hrLeaderboardSnap.val();
+            Object.keys(boards).forEach(slug => {
+              const contestParticipants = boards[slug];
+              if (contestParticipants && contestParticipants[activeKey]) {
+                const p = contestParticipants[activeKey];
+                hrContestAttempts.push({
+                  contestSlug: slug,
+                  score: p.score || 0,
+                  timestamp: p.timestamp || null
+                });
+              }
+            });
+          }
+        } catch (e) {
+          console.warn(e);
+        }
+
+        hrContestsContainer.innerHTML = "";
+        document.getElementById('hrHistoryCount').innerText = `${hrContestAttempts.length} Contests`;
+        document.getElementById('statHrContests').innerText = hrContestAttempts.length;
+
+        if (hrContestAttempts.length > 0) {
+          hrContestAttempts.forEach(contest => {
+            const row = document.createElement('div');
+            row.className = "record-item";
+            row.innerHTML = `
+              <div class="record-info">
+                <div class="record-title">💻 ${escapeHTML(contest.contestSlug.toUpperCase())}</div>
+                <div class="record-date">${formatDate(contest.timestamp)}</div>
+              </div>
+              <div class="record-metrics">
+                <span class="badge-score" style="color: var(--accent-cyan); border-color: rgba(6, 182, 212, 0.3);">Synced Score: ${escapeHTML(contest.score)}</span>
+              </div>
+            `;
+            hrContestsContainer.appendChild(row);
+          });
+        } else {
+          hrContestsContainer.innerHTML = `<div class="no-data">No external HackerRank contests linked yet. Register through the Arena quadrant to sync.</div>`;
+        }
+      }
+
+      loadFullProfile();
+    }
+
     document.getElementById('btnLogout').addEventListener('click', () => {
-      if(confirm("మీరు ప్రొఫైల్ నుండి లాగౌట్ అవ్వాలనుకుంటున్నారా?")) {
+      if (confirm("Are you sure you want to end your student session?")) {
         localStorage.removeItem('studentHrId');
+        localStorage.removeItem('studentName');
+        localStorage.removeItem('studentRollNo');
+        localStorage.removeItem('studentBranch');
         window.location.href = "login.html";
       }
     });
