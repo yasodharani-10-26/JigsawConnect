@@ -1,311 +1,1753 @@
 <!DOCTYPE html>
-<html lang="te">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Offline & Online Interactive Portal</title>
+  <title>JigsawConnect | Complete Aptitude, Reasoning & Verbal Studio</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;700;900&display=swap" rel="stylesheet">
+
   <style>
+    @property --angle {
+      syntax: "<angle>";
+      initial-value: 0deg;
+      inherits: false;
+    }
+
     :root {
-      --bg-color: #f4f7f6;
-      --card-bg: #ffffff;
-      --text-color: #333333;
-      --primary: #4f46e5;
-      --success: #10b981;
-      --danger: #ef4444;
-      --warning: #f59e0b;
+      --bg: #030712;
+      --card-bg: rgba(10, 16, 32, 0.7);
+      --card-hover: rgba(16, 26, 52, 0.88);
+
+      --cyan: #00f2fe;
+      --blue: #3b82f6;
+      --purple: #9d4edd;
+      --pink: #f72585;
+      --emerald: #10b981;
+      --rose: #f43f5e;
+      --amber: #f59e0b;
+
+      --text: #f8fafc;
+      --text-sub: #cbd5e1;
+      --text-dim: #64748b;
+
+      --border: rgba(255, 255, 255, 0.08);
+      --radius-sm: 10px;
+      --radius-md: 18px;
+      --radius-lg: 26px;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
     }
 
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      margin: 0;
-      padding: 0;
-      transition: background 0.3s, color 0.3s;
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.6;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    #bg-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -2;
+      pointer-events: none;
+    }
+
+    .grid-mesh {
+      position: fixed;
+      inset: 0;
+      background-size: 50px 50px;
+      background-image: 
+        linear-gradient(to right, rgba(0, 242, 254, 0.025) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 242, 254, 0.025) 1px, transparent 1px);
+      z-index: -1;
+      pointer-events: none;
+      mask-image: radial-gradient(circle at center, rgba(0,0,0,1) 50%, transparent 95%);
+    }
+
+    .cursor-aura {
+      position: fixed;
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0, 242, 254, 0.1), rgba(157, 78, 221, 0.05), transparent 70%);
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      z-index: 9999;
+      mix-blend-mode: screen;
+      transition: width 0.2s, height 0.2s;
     }
 
     header {
-      background: var(--primary);
-      color: #fff;
-      padding: 1rem 2rem;
+      background: rgba(6, 11, 25, 0.75);
+      backdrop-filter: blur(28px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 28px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      gap: 14px;
       flex-wrap: wrap;
-      gap: 10px;
     }
 
-    .status-container {
+    .brand {
       display: flex;
       align-items: center;
-      gap: 15px;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .brand h2 {
+      font-size: 1.25rem;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: -0.5px;
+    }
+
+    .brand h2 span {
+      background: linear-gradient(135deg, var(--cyan), var(--blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 20px rgba(0, 242, 254, 0.35);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
       flex-wrap: wrap;
     }
 
-    .badge {
+    .hud-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
       padding: 6px 14px;
-      border-radius: 20px;
-      font-weight: bold;
-      font-size: 0.85rem;
-      text-transform: uppercase;
+      border-radius: 999px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 700;
       letter-spacing: 0.5px;
+      transition: all 0.3s ease;
     }
 
-    .badge-online { background: var(--success); color: #fff; }
-    .badge-offline { background: var(--danger); color: #fff; }
+    .badge-online {
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: var(--emerald);
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+    }
+    .badge-online .beacon {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--emerald);
+      box-shadow: 0 0 8px var(--emerald);
+      animation: pulseDot 1.6s infinite;
+    }
 
-    .btn-switch {
-      background: #fff;
-      color: var(--primary);
-      border: none;
-      padding: 8px 16px;
-      font-weight: bold;
-      border-radius: 6px;
+    .badge-offline {
+      background: rgba(244, 63, 94, 0.1);
+      border: 1px solid rgba(244, 63, 94, 0.4);
+      color: var(--rose);
+      box-shadow: 0 0 15px rgba(244, 63, 94, 0.2);
+    }
+    .badge-offline .beacon {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--rose);
+    }
+
+    @keyframes pulseDot {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.3); opacity: 0.4; }
+    }
+
+    .xp-pill {
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      color: var(--amber);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-toggle {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      color: var(--text-sub);
+      padding: 7px 16px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      border-radius: 999px;
       cursor: pointer;
-      transition: opacity 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.25s ease;
     }
 
-    .btn-switch:hover { opacity: 0.9; }
+    .btn-toggle:hover {
+      background: rgba(0, 242, 254, 0.12);
+      border-color: var(--cyan);
+      color: #fff;
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.25);
+    }
 
     .btn-logout {
-      background: var(--danger);
-      color: white;
-      border: none;
-      padding: 8px 16px;
-      font-weight: bold;
-      border-radius: 6px;
+      background: rgba(244, 63, 94, 0.12);
+      border: 1px solid rgba(244, 63, 94, 0.35);
+      color: #fda4af;
+      padding: 7px 16px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      border-radius: 999px;
       cursor: pointer;
-      transition: opacity 0.2s;
       text-decoration: none;
-      display: inline-block;
+      transition: all 0.25s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
     }
 
-    .btn-logout:hover { opacity: 0.9; }
+    .btn-logout:hover {
+      background: var(--rose);
+      color: #fff;
+      box-shadow: 0 0 20px rgba(244, 63, 94, 0.4);
+    }
 
     nav {
-      background: #e5e7eb;
+      background: rgba(8, 14, 29, 0.7);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 20px;
       display: flex;
       justify-content: center;
+      align-items: center;
       gap: 10px;
-      padding: 10px;
       flex-wrap: wrap;
     }
 
-    nav button, nav a.nav-link {
-      padding: 10px 20px;
-      border: none;
-      background: #fff;
-      color: var(--text-color);
-      font-weight: 600;
-      border-radius: 5px;
+    .nav-btn, .nav-link {
+      padding: 9px 18px;
+      border: 1px solid transparent;
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text-dim);
+      font-size: 0.82rem;
+      font-weight: 700;
+      border-radius: 999px;
       cursor: pointer;
-      transition: 0.2s;
+      transition: all 0.25s ease;
       text-decoration: none;
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
     }
 
-    nav button.active {
-      background: var(--primary);
+    .nav-btn:hover, .nav-link:hover {
+      background: rgba(255, 255, 255, 0.08);
       color: #fff;
     }
 
-    nav a.nav-link:hover {
-      background: #d1d5db;
+    .nav-btn.active {
+      background: linear-gradient(135deg, rgba(0, 242, 254, 0.2), rgba(59, 130, 246, 0.25));
+      border-color: var(--cyan);
+      color: #fff;
+      box-shadow: 0 0 20px rgba(0, 242, 254, 0.25);
+    }
+
+    .nav-divider {
+      width: 1px;
+      height: 20px;
+      background: var(--border);
+      margin: 0 4px;
     }
 
     main {
-      max-width: 900px;
-      margin: 20px auto;
-      padding: 20px;
+      max-width: 1180px;
+      margin: 30px auto;
+      padding: 0 20px 90px;
     }
 
     .tab-content {
       display: none;
-      background: var(--card-bg);
-      padding: 25px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      animation: tabFade 0.35s ease forwards;
     }
 
-    .tab-content.active { display: block; }
-
-    .option-btn {
+    .tab-content.active {
       display: block;
-      width: 100%;
+    }
+
+    @keyframes tabFade {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hud-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(28px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 34px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+      margin-bottom: 24px;
+    }
+
+    .hud-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 22px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .card-top h3 {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      letter-spacing: -0.5px;
+    }
+
+    .tech-pill {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 700;
+      background: rgba(0, 242, 254, 0.08);
+      border: 1px solid rgba(0, 242, 254, 0.3);
+      color: var(--cyan);
+      padding: 4px 12px;
+      border-radius: 999px;
+    }
+
+    .category-filter-bar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .filter-pill {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 7px 16px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .filter-pill.active, .filter-pill:hover {
+      background: rgba(0, 242, 254, 0.15);
+      border-color: var(--cyan);
+      color: #fff;
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.25);
+    }
+
+    .arena-sub-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .arena-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    .arena-card {
+      background: rgba(6, 11, 25, 0.75);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.3s ease;
+    }
+
+    .arena-card:hover {
+      border-color: rgba(157, 78, 221, 0.4);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+      transform: translateY(-2px);
+    }
+
+    .arena-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .arena-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      border: 1px solid transparent;
+    }
+
+    .tag-quant {
+      background: rgba(0, 242, 254, 0.1);
+      color: var(--cyan);
+      border-color: rgba(0, 242, 254, 0.3);
+    }
+
+    .tag-lr {
+      background: rgba(157, 78, 221, 0.15);
+      color: #d8b4fe;
+      border-color: rgba(157, 78, 221, 0.3);
+    }
+
+    .tag-verbal {
+      background: rgba(247, 37, 133, 0.12);
+      color: #f472b6;
+      border-color: rgba(247, 37, 133, 0.3);
+    }
+
+    .topic-name {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+
+    .problem-statement {
+      font-size: 0.88rem;
+      color: var(--text-sub);
+      font-weight: 500;
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
+    .options-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .opt-btn {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 9px 12px;
       text-align: left;
+      font-size: 0.82rem;
+      color: var(--text-sub);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .opt-btn:hover {
+      background: rgba(0, 242, 254, 0.08);
+      border-color: var(--cyan);
+      color: #fff;
+    }
+
+    .opt-btn.correct {
+      background: rgba(16, 185, 129, 0.2) !important;
+      border-color: var(--emerald) !important;
+      color: #a7f3d0 !important;
+      font-weight: 700;
+    }
+
+    .opt-btn.wrong {
+      background: rgba(244, 63, 94, 0.2) !important;
+      border-color: var(--rose) !important;
+      color: #fecdd3 !important;
+    }
+
+    .solution-drawer {
+      display: none;
+      background: rgba(2, 6, 18, 0.9);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 8px;
       padding: 12px;
-      margin: 8px 0;
-      border: 1px solid #ddd;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      color: #a7f3d0;
+      line-height: 1.6;
+      margin-top: 10px;
+    }
+
+    .template-bar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .template-chip {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      font-size: 0.74rem;
+      font-family: 'JetBrains Mono', monospace;
+      padding: 5px 12px;
       border-radius: 6px;
-      background: #f9fafb;
       cursor: pointer;
+      transition: all 0.2s ease;
     }
 
-    .option-btn:hover { background: #e0e7ff; }
-
-    pre {
-      background: #1e293b;
-      color: #38bdf8;
-      padding: 15px;
-      border-radius: 6px;
-      overflow-x: auto;
+    .template-chip:hover {
+      background: rgba(0, 242, 254, 0.1);
+      border-color: var(--cyan);
+      color: #fff;
     }
 
-    textarea {
+    .notes-editor-box {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .editor-top-row {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 12px;
+    }
+
+    .hud-input, .hud-textarea {
+      background: rgba(4, 8, 20, 0.75);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: #fff;
+      padding: 12px 16px;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.25s, box-shadow 0.25s;
+    }
+
+    .hud-textarea {
       width: 100%;
-      height: 100px;
-      padding: 10px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      margin-bottom: 10px;
-      box-sizing: border-box;
+      height: 130px;
+      resize: vertical;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      line-height: 1.5;
     }
 
-    .save-btn {
-      background: var(--success);
-      color: white;
+    .hud-input:focus, .hud-textarea:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.25);
+    }
+
+    .editor-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .btn-save {
+      background: linear-gradient(135deg, var(--emerald), #059669);
+      color: #fff;
       border: none;
-      padding: 8px 16px;
-      border-radius: 5px;
+      padding: 10px 24px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 800;
       cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.25s ease;
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+    }
+
+    .btn-save:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 30px rgba(16, 185, 129, 0.5);
+    }
+
+    .btn-export {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      color: var(--text-sub);
+      padding: 9px 18px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-export:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+
+    .notes-filter-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 26px 0 14px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .search-input {
+      background: rgba(4, 8, 20, 0.8);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      color: #fff;
+      padding: 8px 16px;
+      font-size: 0.8rem;
+      outline: none;
+      width: 260px;
+    }
+
+    .search-input:focus {
+      border-color: var(--cyan);
+    }
+
+    .notes-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .note-card {
+      background: rgba(6, 11, 25, 0.7);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--cyan);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+      transition: all 0.25s ease;
+    }
+
+    .note-card:hover {
+      background: rgba(12, 20, 42, 0.9);
+      border-color: rgba(0, 242, 254, 0.35);
+      transform: translateY(-2px);
+    }
+
+    .note-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--text-dim);
+    }
+
+    .note-tag-badge {
+      background: rgba(0, 242, 254, 0.1);
+      color: var(--cyan);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 700;
+    }
+
+    .note-title-text {
+      font-size: 0.98rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    .note-content-preview {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      color: var(--text-sub);
+      white-space: pre-wrap;
+      word-break: break-word;
+      line-height: 1.5;
+      max-height: 120px;
+      overflow-y: auto;
+    }
+
+    .note-footer-btns {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .btn-action-mini {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      padding: 4px 10px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-action-mini:hover {
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .btn-action-mini.del:hover {
+      background: rgba(244, 63, 94, 0.15);
+      color: var(--rose);
+      border-color: var(--rose);
+    }
+
+    .calc-box {
+      background: rgba(4, 8, 20, 0.8);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      margin-top: 24px;
+    }
+
+    .calc-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .calc-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .calc-field label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--text-dim);
+    }
+
+    .focus-studio-wrap {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 30px;
+      align-items: center;
+    }
+
+    .timer-ring-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .timer-svg {
+      transform: rotate(-90deg);
+      width: 240px;
+      height: 240px;
+    }
+
+    .timer-circle-bg {
+      fill: none;
+      stroke: rgba(255, 255, 255, 0.05);
+      stroke-width: 10;
+    }
+
+    .timer-circle-progress {
+      fill: none;
+      stroke: url(#timerGradient);
+      stroke-width: 10;
+      stroke-linecap: round;
+      stroke-dasharray: 691;
+      stroke-dashoffset: 0;
+      transition: stroke-dashoffset 1s linear;
+    }
+
+    .timer-inner-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    .timer-clock {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 3rem;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1;
+      text-shadow: 0 0 20px rgba(0, 242, 254, 0.4);
+    }
+
+    .timer-phase {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--cyan);
+      letter-spacing: 1px;
+      margin-top: 4px;
+    }
+
+    .sound-synthesizer {
+      background: rgba(6, 11, 25, 0.8);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .sound-btn-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .sound-chip {
+      flex: 1;
+      min-width: 100px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      color: var(--text-sub);
+      padding: 12px;
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.25s ease;
+    }
+
+    .sound-chip.playing {
+      background: rgba(0, 242, 254, 0.15);
+      border-color: var(--cyan);
+      color: #fff;
+      box-shadow: 0 0 20px rgba(0, 242, 254, 0.3);
+    }
+
+    @media (max-width: 900px) {
+      .notes-grid, .arena-grid, .focus-studio-wrap {
+        grid-template-columns: 1fr;
+      }
+      .editor-top-row, .calc-row {
+        grid-template-columns: 1fr;
+      }
+      header {
+        padding: 12px 18px;
+      }
+      .hud-card {
+        padding: 22px 18px;
+      }
     }
   </style>
 </head>
 <body>
 
+  <div class="cursor-aura" id="cursorAura"></div>
+  <canvas id="bg-canvas"></canvas>
+  <div class="grid-mesh"></div>
+
   <header>
-    <h2>Interactive Student Portal</h2>
-    <div class="status-container">
-      <span id="modeBadge" class="badge badge-online">ONLINE</span>
-      <button class="btn-switch" onclick="toggleManualOfflineMode()">Switch Mode (Go Offline)</button>
-      <!-- External Logout Action (e.g., redirect to login) -->
-      <a href="login.html" class="btn-logout">Logout</a>
+    <a href="index.html" class="brand">
+      <h2>📚 Jigsaw<span>Connect</span></h2>
+    </a>
+
+    <div class="header-actions">
+      <div class="xp-pill">
+        ⚡ XP: <span id="xpCount">450</span>
+      </div>
+
+      <span id="networkBadge" class="hud-badge badge-online">
+        <span class="beacon"></span>
+        <span id="networkText">ONLINE SYSTEM</span>
+      </span>
+
+      <button class="btn-toggle" onclick="toggleNetworkSim()">
+        🔄 <span id="simBtnText">Simulate Offline</span>
+      </button>
+
+      <a href="login.html" class="btn-logout">
+        🚪 Logout
+      </a>
     </div>
   </header>
 
   <nav>
-    <!-- Internal Tab Navigation -->
-    <button class="nav-btn active" onclick="switchTab('notes')">Notes & Offline Save</button>
-    <button class="nav-btn" onclick="switchTab('aptitude')">Aptitude</button>
-    
-    <!-- External Page Links -->
-    <a href="student-dashboard.html" class="nav-link">Student Dashboard</a>
-    <a href="quiz.html" class="nav-link">Quiz Page</a>
-    <a href="codehub.html" class="nav-link">CodeHub</a>
+    <button class="nav-btn active" onclick="navigateTab('arena')">🎯 Aptitude & Reasoning Arena</button>
+    <button class="nav-btn" onclick="navigateTab('notes')">📝 Notes & Snippets</button>
+    <button class="nav-btn" onclick="navigateTab('focus')">⏱️ Focus Studio & Audio</button>
+
+    <div class="nav-divider"></div>
+
+    <a href="student-dashboard.html" class="nav-link">📊 Dashboard</a>
+    <a href="quiz.html" class="nav-link">⚡ Live Quiz</a>
+    <a href="codehub.html" class="nav-link">💻 CodeHub</a>
   </nav>
 
   <main>
-    <!-- Notes Module -->
-    <section id="notes" class="tab-content active">
-      <h3>Offline Dynamic Notes</h3>
-      <p>Net lekapoina meeruikada rasthe details <b>LocalStorage</b> lo automatic ga safe ayyi untai.</p>
-      <textarea id="noteInput" placeholder="Save key definitions or formula points here..."></textarea>
-      <button class="save-btn" onclick="saveNote()">Save Note</button>
-      <div id="savedNotes" style="margin-top:20px;"></div>
+    <section id="arena" class="tab-content active">
+      <div class="hud-card">
+        <div class="card-top">
+          <h3>🎯 Complete Placement Aptitude, Reasoning & Verbal Studio</h3>
+          <span class="tech-pill">24 Core Modules Loaded</span>
+        </div>
+
+        <div class="category-filter-bar">
+          <button class="filter-pill active" onclick="filterCategory('all', this)">All Topics (24)</button>
+          <button class="filter-pill" onclick="filterCategory('quant', this)">Quantitative Aptitude (10)</button>
+          <button class="filter-pill" onclick="filterCategory('lr', this)">Logical Reasoning (8)</button>
+          <button class="filter-pill" onclick="filterCategory('verbal', this)">Verbal Ability (6)</button>
+        </div>
+
+        <div class="arena-sub-bar">
+          <span id="arenaCountLabel" style="font-family:'JetBrains Mono', monospace; font-size:0.8rem; color:var(--text-dim);">Showing 24 Topics</span>
+          <input type="text" id="searchArenaInput" class="search-input" placeholder="🔍 Search topic (e.g. Syllogism, Probability)..." oninput="searchArena(this.value)">
+        </div>
+
+        <div id="arenaGrid" class="arena-grid"></div>
+
+        <div class="calc-box">
+          <h4 style="font-size:0.95rem; color:#fff; margin-bottom:6px;">⚡ Live Unit & Speed-Distance Calculator</h4>
+          <div class="calc-row">
+            <div class="calc-field">
+              <label>KM/HR SPEED INPUT:</label>
+              <input type="number" id="calcKmh" class="hud-input" placeholder="e.g. 72" oninput="runConverter(this.value)">
+            </div>
+            <div class="calc-field">
+              <label>M/S OUTPUT:</label>
+              <input type="text" id="calcMs" class="hud-input" placeholder="= 0 m/s" readonly>
+            </div>
+            <div class="calc-field">
+              <label>FORMULA USED:</label>
+              <input type="text" class="hud-input" value="km/hr * (5 / 18)" readonly style="color:var(--cyan);">
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
 
-    <!-- Aptitude Module -->
-    <section id="aptitude" class="tab-content">
-      <h3>Aptitude & Reasoning Offline Vault</h3>
-      <div>
-        <h4>1. Speed, Distance & Time Formula</h4>
-        <p><b>Formula:</b> Speed = Distance / Time</p>
-        <p><b>Shortcut:</b> Convert km/hr to m/s multiplying by <b>5/18</b>.</p>
+    <section id="notes" class="tab-content">
+      <div class="hud-card">
+        <div class="card-top">
+          <h3>📝 Offline Code & Concept Vault</h3>
+          <span class="tech-pill">Encrypted LocalStorage</span>
+        </div>
+
+        <div class="template-bar">
+          <span style="font-size:0.75rem; color:var(--text-dim); display:flex; align-items:center; margin-right:4px;">Quick Inject:</span>
+          <button class="template-chip" onclick="injectTemplate('cpp')">+ C++ Boilerplate</button>
+          <button class="template-chip" onclick="injectTemplate('dsa')">+ Binary Search</button>
+          <button class="template-chip" onclick="injectTemplate('apti')">+ Speed Formula</button>
+        </div>
+
+        <div class="notes-editor-box">
+          <div class="editor-top-row">
+            <input type="text" id="noteTitle" class="hud-input" placeholder="Title / Topic (e.g., Two Pointer Technique)...">
+            <input type="text" id="noteTag" class="hud-input" placeholder="Tag (e.g., DSA, OS, Aptitude)...">
+          </div>
+          <textarea id="noteBody" class="hud-textarea" placeholder="Type key definitions, algorithms, or formulas. Auto-saved locally..."></textarea>
+          
+          <div class="editor-actions">
+            <button class="btn-save" onclick="createNote()">💾 Save to Offline Storage</button>
+            <button class="btn-export" onclick="exportData()">📥 Export Records (.txt)</button>
+          </div>
+        </div>
+
+        <div class="notes-filter-bar">
+          <span id="notesCountLabel" style="font-family:'JetBrains Mono', monospace; font-size:0.8rem; color:var(--text-dim);">0 Notes Cached</span>
+          <input type="text" id="searchNotesInput" class="search-input" placeholder="🔍 Search offline notes..." oninput="filterNotes(this.value)">
+        </div>
+
+        <div id="notesGrid" class="notes-grid"></div>
       </div>
-      <hr>
-      <div>
-        <h4>2. Quantitative Aptitude Practice Problem</h4>
-        <p><b>Q:</b> A train running at 60 km/hr crosses a pole in 9 seconds. What is the length of the train?</p>
-        <button class="btn-switch" style="background:#e5e7eb;" onclick="alert('Speed = 60 * (5/18) = 50/3 m/s.\nLength = Speed * Time = (50/3) * 9 = 150 meters.')">Show Answer</button>
+    </section>
+
+    <section id="focus" class="tab-content">
+      <div class="hud-card">
+        <div class="card-top">
+          <h3>⏱️ Offline Focus & Binaural Synth Studio</h3>
+          <span class="tech-pill">Zero-Internet Audio</span>
+        </div>
+
+        <div class="focus-studio-wrap">
+          <div class="timer-ring-box">
+            <svg class="timer-svg" viewBox="0 0 240 240">
+              <defs>
+                <linearGradient id="timerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#00f2fe"/>
+                  <stop offset="100%" stop-color="#9d4edd"/>
+                </linearGradient>
+              </defs>
+              <circle class="timer-circle-bg" cx="120" cy="120" r="110"/>
+              <circle id="timerProgressRing" class="timer-circle-progress" cx="120" cy="120" r="110"/>
+            </svg>
+            <div class="timer-inner-text">
+              <div id="clockDisplay" class="timer-clock">25:00</div>
+              <div id="phaseDisplay" class="timer-phase">FOCUS MODE</div>
+            </div>
+
+            <div style="display:flex; gap:10px; margin-top:20px;">
+              <button class="btn-save" id="timerBtn" onclick="toggleTimer()">▶ Start Sprint</button>
+              <button class="btn-export" onclick="resetTimer()">🔄 Reset</button>
+            </div>
+          </div>
+
+          <div class="sound-synthesizer">
+            <h4 style="font-size:1rem; color:#fff;">🎧 Offline Ambient Sound Generator</h4>
+            <p style="font-size:0.82rem; color:var(--text-sub);">Synthesizes live white-noise & focus waves via Web Audio API without needing any audio downloads.</p>
+            
+            <div class="sound-btn-row">
+              <button class="sound-chip" id="pinkNoiseBtn" onclick="toggleSound('pink')">
+                <span>🌊</span>
+                <span>Deep Ocean</span>
+              </button>
+              <button class="sound-chip" id="binauralBtn" onclick="toggleSound('binaural')">
+                <span>🧠</span>
+                <span>Alpha Waves</span>
+              </button>
+              <button class="sound-chip" id="rainBtn" onclick="toggleSound('rain')">
+                <span>🌧️</span>
+                <span>Cyber Rain</span>
+              </button>
+            </div>
+            
+            <div style="font-size:0.75rem; color:var(--text-dim); text-align:center;">
+              Works 100% offline. Helps maintain extreme concentration during placement prep.
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   </main>
 
   <script>
-    // System Online/Offline State Management
-    let isManualOffline = false;
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
 
-    function updateNetworkStatus() {
-      const badge = document.getElementById('modeBadge');
-      const isOnline = navigator.onLine && !isManualOffline;
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
 
-      if (isOnline) {
-        badge.textContent = "ONLINE";
-        badge.className = "badge badge-online";
-      } else {
-        badge.textContent = "OFFLINE MODE";
-        badge.className = "badge badge-offline";
+    window.addEventListener('mousemove', (e) => {
+      const aura = document.getElementById('cursorAura');
+      if (aura) {
+        aura.style.left = `${e.clientX}px`;
+        aura.style.top = `${e.clientY}px`;
+      }
+    });
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2 + 0.5;
+        this.vx = (Math.random() - 0.5) * 0.5;
+        this.vy = (Math.random() - 0.5) * 0.5;
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.x < 0) this.x = canvas.width;
+        if (this.x > canvas.width) this.x = 0;
+        if (this.y < 0) this.y = canvas.height;
+        if (this.y > canvas.height) this.y = 0;
+      }
+      draw() {
+        ctx.fillStyle = 'rgba(0, 242, 254, 0.5)';
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
       }
     }
 
-    function toggleManualOfflineMode() {
-      isManualOffline = !isManualOffline;
-      const btn = document.querySelector('.btn-switch');
-      btn.textContent = isManualOffline ? "Go Online" : "Switch Mode (Go Offline)";
-      updateNetworkStatus();
-    }
+    for (let i = 0; i < 45; i++) particles.push(new Particle());
 
-    window.addEventListener('online', updateNetworkStatus);
-    window.addEventListener('offline', updateNetworkStatus);
-
-    // Tab Navigation Logic (Only for active internal tabs)
-    function switchTab(tabId) {
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-      document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
-      
-      const selectedTab = document.getElementById(tabId);
-      if (selectedTab) {
-        selectedTab.classList.add('active');
-      }
-
-      const activeBtn = Array.from(document.querySelectorAll('.nav-btn'))
-                             .find(btn => btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(tabId));
-      if (activeBtn) {
-        activeBtn.classList.add('active');
-      }
-    }
-
-    // Local Storage - Notes Persistence Logic
-    function saveNote() {
-      const input = document.getElementById('noteInput');
-      if(!input.value.trim()) return;
-
-      let notes = JSON.parse(localStorage.getItem('user_notes') || '[]');
-      notes.push(input.value);
-      localStorage.setItem('user_notes', JSON.stringify(notes));
-      input.value = '';
-      displayNotes();
-    }
-
-    function displayNotes() {
-      const container = document.getElementById('savedNotes');
-      let notes = JSON.parse(localStorage.getItem('user_notes') || '[]');
-      container.innerHTML = '<h4>Saved Local Notes:</h4>' + 
-        (notes.map((n, i) => `<p style="background:#f3f4f6; padding:8px; border-left:3px solid var(--primary);">${i+1}. ${n}</p>`).join('') || '<p>No saved notes found.</p>');
-    }
-
-    // Service Worker Registration for PWA caching
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        const swCode = `
-          const CACHE_NAME = 'portal-v1';
-          self.addEventListener('install', e => {
-            e.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(['./'])));
-          });
-          self.addEventListener('fetch', e => {
-            e.respondWith(caches.match(e.request).then(res => res || fetch(e.request)));
-          });
-        `;
-        const blob = new Blob([swCode], { type: 'application/javascript' });
-        const swUrl = URL.createObjectURL(blob);
-        navigator.serviceWorker.register(swUrl).catch(() => {});
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        p.update();
+        p.draw();
       });
+      requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+
+    let isSimOffline = false;
+
+    function refreshNetworkStatus() {
+      const badge = document.getElementById('networkBadge');
+      const text = document.getElementById('networkText');
+      const online = navigator.onLine && !isSimOffline;
+
+      if (online) {
+        badge.className = 'hud-badge badge-online';
+        text.innerText = 'ONLINE SYSTEM';
+      } else {
+        badge.className = 'hud-badge badge-offline';
+        text.innerText = 'OFFLINE CACHE';
+      }
     }
 
-    // Initializations
-    displayNotes();
-    updateNetworkStatus();
+    function toggleNetworkSim() {
+      isSimOffline = !isSimOffline;
+      document.getElementById('simBtnText').innerText = isSimOffline ? 'Go Online' : 'Simulate Offline';
+      refreshNetworkStatus();
+    }
+
+    window.addEventListener('online', refreshNetworkStatus);
+    window.addEventListener('offline', refreshNetworkStatus);
+
+    function navigateTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+
+      const activeSection = document.getElementById(tabId);
+      if (activeSection) activeSection.classList.add('active');
+
+      const btn = Array.from(document.querySelectorAll('.nav-btn')).find(b => b.getAttribute('onclick').includes(tabId));
+      if (btn) btn.classList.add('active');
+    }
+
+    const arenaTopics = [
+      {
+        id: 'q_num_sys',
+        category: 'quant',
+        catLabel: 'QUANTITATIVE',
+        topic: '1. Number Systems & Divisibility',
+        problem: 'What is the remainder when 2^31 is divided by 5?',
+        options: ['1', '2', '3', '4'],
+        correctIndex: 2,
+        solution: '2^1 = 2 (mod 5), 2^2 = 4 (mod 5), 2^3 = 3 (mod 5), 2^4 = 1 (mod 5). Cyclicity is 4. 31 = 4*7 + 3. Hence 2^31 = 2^3 = 8 = 3 (mod 5).'
+      },
+      {
+        id: 'q_hcf_lcm',
+        category: 'quant',
+        catLabel: 'QUANTITATIVE',
+        topic: '2. HCF & LCM',
+        problem: 'Two numbers are in the ratio 3 : 4. If their HCF is 4, what is their LCM?',
+        options: ['12', '24', '36', '48'],
+        correctIndex: 3,
+        solution: 'Numbers are 3*4 = 12 and 4*4 = 16. LCM(12, 16) = 48. Alternatively, LCM = Ratio Product * HCF = 3 * 4 * 4 = 48.'
+      },
+      {
+        id: 'q_profit_loss',
+        category: 'quant',
+        catLabel: 'QUANTITATIVE',
+        topic: '3. Percentages & Profit/Loss',
+        problem: 'An article bought for ₹500 is sold for ₹600. What is the profit percentage?',
+        options: ['15%', '20%', '25%', '18%'],
+        correctIndex: 1,
+        solution: 'Profit = SP - CP = 600 - 500 = ₹100. Profit % = (Profit / CP) * 100 = (100 / 500) * 100 = 20%.'
+      },
+      {
+        id: 'q_si_ci',
+        category: 'quant',
+        catLabel: 'QUANTITATIVE',
+        topic: '4. Simple & Compound Interest',
+        problem: 'What is the difference between CI and SI on ₹1000 for 2 years at 10% per annum?',
+        options: ['₹5', '₹10', '₹15', '₹20'],
+        correctIndex: 1,
+        solution: 'For 2 years, Difference = P * (R / 100)^2 = 1000 * (10 / 100)^2 = 1000 * (1/100) = ₹10.'
+      },
+      {
+        id: 'q_ratio_mix',
+        category: 'quant',
+        catLabel: 'QUANTITATIVE',
+        topic: '5. Ratio, Proportion & Mixtures',
+        problem: 'Divide ₹600 among A, B, and C in the ratio 2 : 3 : 5. What is B\'s share?',
+        options: ['₹120', '₹180', '₹240', '₹300'],
+        correctIndex: 1,
+        solution: 'Total parts = 2 + 3 + 5 = 10. B\'s share = (3 / 10) * 600 = ₹180.'
+      },
+      {
+        id: 'q_spd_time',
+        category: 'quant',
+        catLabel: 'QUANTITATIVE',
+        topic: '6. Time, Speed & Distance (Trains)',
+        problem: 'A train 120m long travels at 60 km/hr. How many seconds does it take to pass a pole?',
+        options: ['5.4 seconds', '7.2 seconds', '8.0 seconds', '6.0 seconds'],
+        correctIndex: 1,
+        solution: 'Speed in m/s = 60 * (5/18) = 50/3 m/s. Time = Distance / Speed = 120 / (50/3) = 360 / 50 = 7.2 seconds.'
+      },
+      {
+        id: 'q_work_time',
+        category: 'quant',
+        catLabel: 'QUANTITATIVE',
+        topic: '7. Time, Work & Pipes',
+        problem: 'A can finish a task in 12 days and B in 24 days. In how many days can they complete it together?',
+        options: ['6 days', '8 days', '9 days', '10 days'],
+        correctIndex: 1,
+        solution: 'Combined Time = (A * B) / (A + B) = (12 * 24) / (12 + 24) = 288 / 36 = 8 days.'
+      },
+      {
+        id: 'q_perm_prob',
+        category: 'quant',
+        catLabel: 'QUANTITATIVE',
+        topic: '8. Permutation, Combination & Probability',
+        problem: 'Two dice are rolled simultaneously. What is the probability of getting a sum equal to 7?',
+        options: ['1/6', '1/12', '5/36', '1/4'],
+        correctIndex: 0,
+        solution: 'Pairs with sum 7: (1,6), (2,5), (3,4), (4,3), (5,2), (6,1) = 6 pairs. Total outcomes = 36. Probability = 6/36 = 1/6.'
+      },
+      {
+        id: 'q_avg_ages',
+        category: 'quant',
+        catLabel: 'QUANTITATIVE',
+        topic: '9. Averages, Ages & Partnership',
+        problem: 'A father is 30 years older than his son. In 5 years, he will be 3 times as old as his son. Find the son\'s present age.',
+        options: ['10 years', '12 years', '15 years', '8 years'],
+        correctIndex: 0,
+        solution: 'Let son = x, father = x + 30. In 5 yrs: (x + 35) = 3*(x + 5) => x + 35 = 3x + 15 => 2x = 20 => x = 10 years.'
+      },
+      {
+        id: 'q_mensuration',
+        category: 'quant',
+        catLabel: 'QUANTITATIVE',
+        topic: '10. Mensuration & Geometry',
+        problem: 'The area of a circle is 154 cm^2. What is its radius? (Use π = 22/7)',
+        options: ['7 cm', '14 cm', '3.5 cm', '21 cm'],
+        correctIndex: 0,
+        solution: 'Area = π * r^2 => (22/7) * r^2 = 154 => r^2 = 154 * (7/22) = 7 * 7 = 49 => r = 7 cm.'
+      },
+      {
+        id: 'q_blood_rel',
+        category: 'lr',
+        catLabel: 'LOGICAL REASONING',
+        topic: '11. Blood Relations',
+        problem: 'Pointing to a portrait, Arun says: "He is the only son of my mother\'s only son." Who is in the portrait?',
+        options: ['Arun\'s Father', 'Arun\'s Son', 'Arun\'s Brother', 'Arun himself'],
+        correctIndex: 1,
+        solution: 'Arun\'s mother\'s only son is Arun himself. The person in the portrait is the only son of Arun => Arun\'s Son.'
+      },
+      {
+        id: 'q_coding_dec',
+        category: 'lr',
+        catLabel: 'LOGICAL REASONING',
+        topic: '12. Coding & Decoding',
+        problem: 'If CAT is coded as 3120 (C=3, A=1, T=20), how is DOG coded?',
+        options: ['4157', '4158', '4147', '4156'],
+        correctIndex: 0,
+        solution: 'Alphabet numbers: D = 4, O = 15, G = 7. Concatenating them gives 4157.'
+      },
+      {
+        id: 'q_dir_sense',
+        category: 'lr',
+        catLabel: 'LOGICAL REASONING',
+        topic: '13. Direction Sense Test',
+        problem: 'A person walks 10m North, turns Right and walks 10m, then turns Right again and walks 10m. How far is he from the start?',
+        options: ['10m East', '10m West', '20m East', 'At start point'],
+        correctIndex: 0,
+        solution: 'North 10m and South 10m cancel out in vertical axis. The remaining horizontal displacement is 10m towards East.'
+      },
+      {
+        id: 'q_syllogism',
+        category: 'lr',
+        catLabel: 'LOGICAL REASONING',
+        topic: '14. Syllogisms & Venn Diagrams',
+        problem: 'Statements: All cats are dogs. All dogs are birds. Conclusion: All cats are birds.',
+        options: ['Follows logically', 'Does not follow', 'Either or', 'Neither follows'],
+        correctIndex: 0,
+        solution: 'Cats ⊆ Dogs and Dogs ⊆ Birds implies Cats ⊆ Birds. Hence the conclusion strictly follows.'
+      },
+      {
+        id: 'q_seating_arr',
+        category: 'lr',
+        catLabel: 'LOGICAL REASONING',
+        topic: '15. Seating Arrangement',
+        problem: 'Five friends A, B, C, D, E sit in a row facing north. C is in the middle. A & B are at the ends. If D is right of A, who sits next to C on the other side?',
+        options: ['E', 'B', 'A', 'D'],
+        correctIndex: 0,
+        solution: 'Order from left to right: A - D - C - E - B. Hence E is on the other side adjacent to C.'
+      },
+      {
+        id: 'q_series_comp',
+        category: 'lr',
+        catLabel: 'LOGICAL REASONING',
+        topic: '16. Number & Letter Series',
+        problem: 'Find the next number in sequence: 2, 6, 12, 20, 30, ?',
+        options: ['40', '42', '44', '48'],
+        correctIndex: 1,
+        solution: 'Pattern is n^2 + n: 1^2+1=2, 2^2+2=6, 3^2+3=12, 4^2+4=20, 5^2+5=30. Next is 6^2+6 = 36 + 6 = 42.'
+      },
+      {
+        id: 'q_clocks_cal',
+        category: 'lr',
+        catLabel: 'LOGICAL REASONING',
+        topic: '17. Clocks & Calendars',
+        problem: 'What is the angle between the hour hand and minute hand of a clock at 3:30?',
+        options: ['70°', '75°', '80°', '90°'],
+        correctIndex: 1,
+        solution: 'Angle = |(30 * H) - (5.5 * M)| = |(30 * 3) - (5.5 * 30)| = |90 - 165| = 75°.'
+      },
+      {
+        id: 'q_data_suff',
+        category: 'lr',
+        catLabel: 'LOGICAL REASONING',
+        topic: '18. Data Sufficiency',
+        problem: 'Is integer x positive? Statement (1): x^2 = 9. Statement (2): x + 3 = 6.',
+        options: ['Statement (1) alone is sufficient', 'Statement (2) alone is sufficient', 'Both together needed', 'Neither sufficient'],
+        correctIndex: 1,
+        solution: '(1) x = ±3 (ambiguous). (2) x = 3 (uniquely positive). Hence Statement (2) alone is sufficient.'
+      },
+      {
+        id: 'q_spot_error',
+        category: 'verbal',
+        catLabel: 'VERBAL ABILITY',
+        topic: '19. Spotting Errors (Subject-Verb)',
+        problem: 'Identify the error part: "Neither of the candidates (A) / were selected (B) / for the technical role (C) / No error (D)"',
+        options: ['Part A', 'Part B', 'Part C', 'Part D'],
+        correctIndex: 1,
+        solution: '"Neither of" takes a singular verb. "were selected" must be corrected to "was selected". Hence error is in Part B.'
+      },
+      {
+        id: 'q_sent_corr',
+        category: 'verbal',
+        catLabel: 'VERBAL ABILITY',
+        topic: '20. Sentence Correction',
+        problem: 'Choose the correct form: "She prefers coffee ______ tea."',
+        options: ['than', 'to', 'over than', 'against'],
+        correctIndex: 1,
+        solution: 'The verb "prefer" is always followed by the preposition "to", not "than". Correct sentence: "She prefers coffee to tea."'
+      },
+      {
+        id: 'q_syn_ant',
+        category: 'verbal',
+        catLabel: 'VERBAL ABILITY',
+        topic: '21. Synonyms & Vocabulary',
+        problem: 'Choose the exact SYNONYM of the word: "CANDID"',
+        options: ['Secretive', 'Frank & Honest', 'Deceptive', 'Hesitant'],
+        correctIndex: 1,
+        solution: '"Candid" means truthful, straightforward, and frank. "Frank & Honest" is the exact synonym.'
+      },
+      {
+        id: 'q_sent_comp',
+        category: 'verbal',
+        catLabel: 'VERBAL ABILITY',
+        topic: '22. Sentence Completion (Fillers)',
+        problem: 'The engineering team worked tirelessly to ______ the project deadline.',
+        options: ['meet', 'abolish', 'collapse', 'deter'],
+        correctIndex: 0,
+        solution: 'The idiomatic collocation for timelines is "to meet the deadline", meaning to finish on time.'
+      },
+      {
+        id: 'q_idioms',
+        category: 'verbal',
+        catLabel: 'VERBAL ABILITY',
+        topic: '23. Idioms & Phrases',
+        problem: 'What does the idiom "Bite the bullet" mean?',
+        options: ['To give up quickly', 'To face an inevitable grim situation bravely', 'To start an argument', 'To waste resources'],
+        correctIndex: 1,
+        solution: '"Bite the bullet" means to face a difficult or unpleasant situation with courage and fortitude.'
+      },
+      {
+        id: 'q_para_jumble',
+        category: 'verbal',
+        catLabel: 'VERBAL ABILITY',
+        topic: '24. Para Jumbles (Sentence Rearrangement)',
+        problem: 'Arrange in logical order: [P: in the world] [Q: India is] [R: the largest] [S: democracy]',
+        options: ['Q - R - S - P', 'P - Q - R - S', 'S - R - Q - P', 'Q - S - R - P'],
+        correctIndex: 0,
+        solution: 'Subject + Verb + Predicate: "India is (Q) the largest (R) democracy (S) in the world (P)" => Q - R - S - P.'
+      }
+    ];
+
+    let currentCategory = 'all';
+    let currentSearch = '';
+
+    function renderArena() {
+      const grid = document.getElementById('arenaGrid');
+      const label = document.getElementById('arenaCountLabel');
+
+      const filtered = arenaTopics.filter(item => {
+        const matchesCategory = (currentCategory === 'all' || item.category === currentCategory);
+        const matchesSearch = item.topic.toLowerCase().includes(currentSearch.toLowerCase()) || 
+                              item.problem.toLowerCase().includes(currentSearch.toLowerCase());
+        return matchesCategory && matchesSearch;
+      });
+
+      label.innerText = `Showing ${filtered.length} of ${arenaTopics.length} Topics`;
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `<div style="grid-column: 1/-1; color: var(--text-dim); text-align: center; padding: 30px;">No aptitude topics matched your query.</div>`;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(item => {
+        const tagClass = item.category === 'quant' ? 'tag-quant' : (item.category === 'lr' ? 'tag-lr' : 'tag-verbal');
+        
+        return `
+          <div class="arena-card">
+            <div>
+              <div class="arena-header">
+                <span class="arena-tag ${tagClass}">${item.catLabel}</span>
+                <span style="font-size:0.75rem; color:var(--text-dim); font-family:'JetBrains Mono', monospace;">+50 XP</span>
+              </div>
+              <div class="topic-name">${escapeHtml(item.topic)}</div>
+              <div class="problem-statement">${escapeHtml(item.problem)}</div>
+              <div class="options-stack">
+                ${item.options.map((opt, idx) => `
+                  <button class="opt-btn" onclick="submitAnswer(this, ${idx === item.correctIndex}, '${item.id}')">${escapeHtml(opt)}</button>
+                `).join('')}
+              </div>
+            </div>
+            <div id="${item.id}" class="solution-drawer">
+              <strong>Step-by-step Solution:</strong><br>
+              ${escapeHtml(item.solution)}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function filterCategory(cat, btn) {
+      currentCategory = cat;
+      document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      renderArena();
+    }
+
+    function searchArena(val) {
+      currentSearch = val;
+      renderArena();
+    }
+
+    function submitAnswer(btn, isCorrect, solutionId) {
+      const parent = btn.parentElement;
+      const buttons = parent.querySelectorAll('.opt-btn');
+      buttons.forEach(b => b.disabled = true);
+
+      if (isCorrect) {
+        btn.classList.add('correct');
+        addXP(50);
+      } else {
+        btn.classList.add('wrong');
+      }
+
+      const sol = document.getElementById(solutionId);
+      if (sol) sol.style.display = 'block';
+    }
+
+    let notesDB = JSON.parse(localStorage.getItem('jigsaw_cyber_notes') || '[]');
+
+    function createNote() {
+      const titleInput = document.getElementById('noteTitle');
+      const tagInput = document.getElementById('noteTag');
+      const bodyInput = document.getElementById('noteBody');
+
+      const title = titleInput.value.trim() || 'Untitled Note';
+      const tag = tagInput.value.trim() || 'General';
+      const body = bodyInput.value.trim();
+
+      if (!body) return;
+
+      const dateStr = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+      notesDB.unshift({ id: Date.now(), title, tag, body, date: dateStr });
+      localStorage.setItem('jigsaw_cyber_notes', JSON.stringify(notesDB));
+
+      titleInput.value = '';
+      tagInput.value = '';
+      bodyInput.value = '';
+
+      addXP(20);
+      renderNotes();
+    }
+
+    function deleteNote(id) {
+      notesDB = notesDB.filter(n => n.id !== id);
+      localStorage.setItem('jigsaw_cyber_notes', JSON.stringify(notesDB));
+      renderNotes();
+    }
+
+    function copyNote(text) {
+      navigator.clipboard.writeText(text);
+      alert('Note copied to clipboard!');
+    }
+
+    function injectTemplate(type) {
+      const body = document.getElementById('noteBody');
+      const title = document.getElementById('noteTitle');
+      const tag = document.getElementById('noteTag');
+
+      if (type === 'cpp') {
+        title.value = 'Fast I/O & Vectors';
+        tag.value = 'C++';
+        body.value = '#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n    return 0;\n}';
+      } else if (type === 'dsa') {
+        title.value = 'Binary Search O(log N)';
+        tag.value = 'DSA';
+        body.value = 'int l = 0, r = n - 1;\nwhile(l <= r) {\n    int mid = l + (r - l)/2;\n    if(arr[mid] == target) return mid;\n    if(arr[mid] < target) l = mid + 1;\n    else r = mid - 1;\n}';
+      } else if (type === 'apti') {
+        title.value = 'Time & Work Shortcut';
+        tag.value = 'Aptitude';
+        body.value = 'Formula: Combined Days = (A * B) / (A + B)\nEfficiency Ratio = 1 / Days Ratio';
+      }
+    }
+
+    function renderNotes(filterText = '') {
+      const grid = document.getElementById('notesGrid');
+      const countLabel = document.getElementById('notesCountLabel');
+
+      const filtered = notesDB.filter(n => 
+        n.title.toLowerCase().includes(filterText.toLowerCase()) || 
+        n.tag.toLowerCase().includes(filterText.toLowerCase()) ||
+        n.body.toLowerCase().includes(filterText.toLowerCase())
+      );
+
+      countLabel.innerText = `${filtered.length} Notes Cached`;
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `<div style="color:var(--text-dim); font-size:0.85rem; grid-column:1/-1;">No offline notes matched. Create one above to persist it locally.</div>`;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(n => `
+        <div class="note-card">
+          <div>
+            <div class="note-meta">
+              <span class="note-tag-badge">${escapeHtml(n.tag)}</span>
+              <span>${escapeHtml(n.date)}</span>
+            </div>
+            <div class="note-title-text">${escapeHtml(n.title)}</div>
+            <div class="note-content-preview">${escapeHtml(n.body)}</div>
+          </div>
+          <div class="note-footer-btns">
+            <button class="btn-action-mini" onclick="copyNote('${escapeQuotes(n.body)}')">📋 Copy</button>
+            <button class="btn-action-mini del" onclick="deleteNote(${n.id})">🗑️ Delete</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function filterNotes(val) {
+      renderNotes(val);
+    }
+
+    function exportData() {
+      if (notesDB.length === 0) {
+        alert('No notes to export.');
+        return;
+      }
+      const data = notesDB.map(n => `[${n.tag}] ${n.title} (${n.date})\n${n.body}\n${'='.repeat(40)}\n`).join('\n');
+      const blob = new Blob([data], { type: 'text/plain' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `JigsawConnect_Vault_${Date.now()}.txt`;
+      a.click();
+    }
+
+    function escapeHtml(str) {
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+    function escapeQuotes(str) {
+      return String(str).replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\n/g, '\\n');
+    }
+
+    let xp = parseInt(localStorage.getItem('jigsaw_xp') || '450');
+    function addXP(amount) {
+      xp += amount;
+      localStorage.setItem('jigsaw_xp', xp);
+      document.getElementById('xpCount').innerText = xp;
+    }
+    document.getElementById('xpCount').innerText = xp;
+
+    function runConverter(val) {
+      const kmh = parseFloat(val);
+      const output = document.getElementById('calcMs');
+      if (isNaN(kmh)) {
+        output.value = '= 0 m/s';
+        return;
+      }
+      output.value = `= ${(kmh * (5 / 18)).toFixed(2)} m/s`;
+    }
+
+    let totalSeconds = 25 * 60;
+    let currentSeconds = 25 * 60;
+    let timerId = null;
+    const perimeter = 2 * Math.PI * 110;
+
+    function updateTimerUI() {
+      const mins = Math.floor(currentSeconds / 60);
+      const secs = currentSeconds % 60;
+      document.getElementById('clockDisplay').innerText = `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+      
+      const offset = perimeter - (currentSeconds / totalSeconds) * perimeter;
+      document.getElementById('timerProgressRing').style.strokeDashoffset = offset;
+    }
+
+    function toggleTimer() {
+      const btn = document.getElementById('timerBtn');
+      if (!timerId) {
+        timerId = setInterval(() => {
+          if (currentSeconds > 0) {
+            currentSeconds--;
+            updateTimerUI();
+          } else {
+            clearInterval(timerId);
+            timerId = null;
+            addXP(100);
+            alert('Focus session complete! +100 XP gained.');
+            btn.innerText = '▶ Start Sprint';
+          }
+        }, 1000);
+        btn.innerText = '⏸ Pause';
+      } else {
+        clearInterval(timerId);
+        timerId = null;
+        btn.innerText = '▶ Resume';
+      }
+    }
+
+    function resetTimer() {
+      clearInterval(timerId);
+      timerId = null;
+      currentSeconds = totalSeconds;
+      updateTimerUI();
+      document.getElementById('timerBtn').innerText = '▶ Start Sprint';
+    }
+
+    let audioCtx = null;
+    let activeSource = null;
+    let activeSoundType = null;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    }
+
+    function toggleSound(type) {
+      initAudio();
+
+      if (activeSoundType === type) {
+        stopAudio();
+        return;
+      }
+
+      stopAudio();
+      activeSoundType = type;
+
+      const btn = document.getElementById(`${type}Btn`);
+      if (btn) btn.classList.add('playing');
+
+      if (type === 'pink' || type === 'rain') {
+        const bufferSize = audioCtx.sampleRate * 2;
+        const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        const data = buffer.getChannelData(0);
+        let b0 = 0, b1 = 0, b2 = 0;
+
+        for (let i = 0; i < bufferSize; i++) {
+          const white = Math.random() * 2 - 1;
+          b0 = 0.99886 * b0 + white * 0.0555179;
+          b1 = 0.99332 * b1 + white * 0.0750759;
+          b2 = 0.96900 * b2 + white * 0.1538520;
+          data[i] = (b0 + b1 + b2) * 0.1;
+        }
+
+        const noise = audioCtx.createBufferSource();
+        noise.buffer = buffer;
+        noise.loop = true;
+
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = type === 'rain' ? 'highpass' : 'lowpass';
+        filter.frequency.value = type === 'rain' ? 800 : 400;
+
+        const gainNode = audioCtx.createGain();
+        gainNode.gain.value = 0.15;
+
+        noise.connect(filter);
+        filter.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+
+        noise.start();
+        activeSource = noise;
+      } else if (type === 'binaural') {
+        const osc1 = audioCtx.createOscillator();
+        const osc2 = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        osc1.frequency.value = 210;
+        osc2.frequency.value = 220;
+
+        gain.gain.value = 0.08;
+
+        osc1.connect(gain);
+        osc2.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc1.start();
+        osc2.start();
+
+        activeSource = {
+          stop: () => {
+            osc1.stop();
+            osc2.stop();
+          }
+        };
+      }
+    }
+
+    function stopAudio() {
+      if (activeSource) {
+        try { activeSource.stop(); } catch(e){}
+        activeSource = null;
+      }
+      activeSoundType = null;
+      document.querySelectorAll('.sound-chip').forEach(b => b.classList.remove('playing'));
+    }
+
+    renderArena();
+    renderNotes();
+    refreshNetworkStatus();
+    updateTimerUI();
   </script>
 </body>
 </html>
