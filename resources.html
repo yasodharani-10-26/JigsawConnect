@@ -3,25 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Study Resources | JigsawConnect</title>
+  <title>Study Vault & Exam Accelerator | StudyConnect</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&family=Outfit:wght@600;800;900&display=swap" rel="stylesheet">
+  
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <style>
     :root {
-      --bg: #070a13;
-      --sidebar-bg: #0f1422;
-      --card-bg: rgba(20, 30, 54, 0.45);
-      --border: rgba(255, 255, 255, 0.06);
-      --text-main: #f8fafc;
-      --text-muted: #64748b;
-      --accent-cyan: #06b6d4;
-      --accent-blue: #3b82f6;
-      --accent-purple: #a855f7;
-      --accent-orange: #f97316;
-      --success: #10b981;
+      --bg: #090d16;
+      --card: rgba(19, 27, 46, 0.7);
+      --card-hover: rgba(28, 40, 68, 0.9);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-active: rgba(6, 182, 212, 0.4);
+      --text: #f8fafc;
+      --text-sub: #94a3b8;
+      --cyan: #06b6d4;
+      --blue: #3b82f6;
+      --indigo: #6366f1;
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --purple: #a855f7;
     }
 
     * {
@@ -32,482 +37,685 @@
     }
 
     body {
-      background: var(--bg);
-      color: var(--text-main);
+      background: radial-gradient(circle at 15% 15%, #111a33 0%, #090d16 70%);
+      background-attachment: fixed;
+      color: var(--text);
       min-height: 100vh;
       display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
     }
 
-    .app-container {
-      display: flex;
-      width: 100%;
+    .ambient-sphere {
+      position: fixed;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      pointer-events: none;
+      filter: blur(140px);
+      z-index: 0;
+      opacity: 0.15;
     }
+    .sphere-1 { top: -100px; left: -100px; background: var(--cyan); }
+    .sphere-2 { bottom: -100px; right: -100px; background: var(--purple); }
 
-    .sidebar {
-      width: 280px;
-      background: var(--sidebar-bg);
-      border-right: 1px solid var(--border);
-      height: 100vh;
+    .nav {
       position: sticky;
       top: 0;
+      z-index: 1000;
       display: flex;
-      flex-direction: column;
-      padding: 24px;
       justify-content: space-between;
-      flex-shrink: 0;
+      align-items: center;
+      padding: 14px 5%;
+      background: rgba(9, 13, 22, 0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
     }
 
-    .sidebar-brand {
-      font-size: 22px;
-      font-weight: 800;
-      color: #fff;
-      text-decoration: none;
-      letter-spacing: -0.5px;
-      margin-bottom: 32px;
-      display: block;
-    }
-    .sidebar-brand span { color: var(--accent-cyan); }
-
-    .sidebar-menu {
+    .nav-brand {
       display: flex;
-      flex-direction: column;
+      align-items: center;
       gap: 8px;
+      text-decoration: none;
+      font-family: 'Outfit', sans-serif;
+      font-size: 22px;
+      font-weight: 900;
+      color: #fff;
+    }
+    .nav-brand span {
+      background: linear-gradient(135deg, var(--cyan), var(--blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
-    .sidebar-item {
+    .nav-menu {
       display: flex;
       align-items: center;
       gap: 12px;
-      padding: 12px 16px;
-      color: #94a3b8;
+    }
+
+    .nav-link {
       text-decoration: none;
+      color: var(--text-sub);
+      font-size: 13.5px;
       font-weight: 600;
-      font-size: 14px;
-      border-radius: 12px;
-      transition: all 0.2s ease;
+      padding: 8px 14px;
+      border-radius: 10px;
+      transition: all 0.2s;
     }
 
-    .sidebar-item:hover, .sidebar-item.active {
-      background: rgba(6, 182, 212, 0.08);
-      color: var(--accent-cyan);
-    }
-
-    .sidebar-vault-card {
-      background: linear-gradient(135deg, rgba(168, 85, 247, 0.15), rgba(6, 182, 212, 0.15));
-      border: 1px solid rgba(168, 85, 247, 0.3);
-      padding: 16px;
-      border-radius: 16px;
-      margin-top: auto;
-      text-align: center;
-    }
-
-    .sidebar-vault-card h4 {
-      font-size: 14px;
-      color: #c084fc;
-      margin-bottom: 6px;
-    }
-
-    .sidebar-vault-card p {
-      font-size: 11px;
-      color: #94a3b8;
-      margin-bottom: 12px;
-    }
-
-    .vault-side-btn {
-      display: block;
-      background: var(--accent-purple);
-      color: white;
-      text-decoration: none;
-      font-size: 12px;
-      font-weight: 700;
-      padding: 8px;
-      border-radius: 8px;
-      transition: background 0.2s;
-    }
-    .vault-side-btn:hover { background: #9333ea; }
-
-    .sidebar-logout {
-      margin-top: 16px;
-      background: rgba(239, 68, 68, 0.08);
-      color: #ef4444;
-      text-align: center;
-    }
-    .sidebar-logout:hover {
-      background: #ef4444;
+    .nav-link:hover, .nav-link.active {
       color: #fff;
+      background: rgba(255, 255, 255, 0.06);
     }
 
-    .workspace {
-      flex-grow: 1;
-      padding: 40px;
-      max-width: 1300px;
-      overflow-y: auto;
-    }
-
-    .workspace-header {
-      margin-bottom: 32px;
+    .nav-stats {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      gap: 10px;
     }
 
-    .workspace-header h1 {
-      font-size: 2.2rem;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      margin-bottom: 6px;
+    .stat-chip {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      padding: 6px 12px;
+      border-radius: 10px;
+      font-size: 12.5px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'JetBrains Mono', monospace;
     }
 
-    .workspace-header p {
-      color: #94a3b8;
-      font-size: 15px;
-    }
+    .chip-streak { color: var(--amber); border-color: rgba(245, 158, 11, 0.3); }
+    .chip-xp { color: var(--emerald); border-color: rgba(16, 185, 129, 0.3); }
 
-    .search-filter-grid {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 16px;
-      margin-bottom: 32px;
-    }
-
-    .search-bar {
+    .main-wrap {
+      position: relative;
+      z-index: 1;
       width: 100%;
-      padding: 14px 16px;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      background: rgba(15, 23, 42, 0.4);
-      color: white;
-      font-size: 15px;
-      outline: none;
-    }
-    .search-bar:focus {
-      border-color: var(--accent-cyan);
-    }
-
-    .category-filter {
-      padding: 14px;
-      background: rgba(15, 23, 42, 0.4);
-      border: 1px solid var(--border);
-      color: white;
-      border-radius: 14px;
-      outline: none;
-      font-size: 14px;
-    }
-
-    .card-deck {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 28px 4% 80px;
+      display: flex;
+      flex-direction: column;
       gap: 24px;
     }
 
-    .resource-card {
-      background: var(--card-bg);
+    .hero-dash {
+      background: linear-gradient(135deg, rgba(30, 41, 70, 0.6), rgba(15, 23, 42, 0.8));
       border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 24px;
+      border-radius: 24px;
+      padding: 32px;
+      backdrop-filter: blur(20px);
+      display: grid;
+      grid-template-columns: 1.6fr 1fr;
+      gap: 24px;
+      box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5);
+    }
+
+    .hero-title h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2.3rem;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+
+    .hero-title h1 span {
+      background: linear-gradient(135deg, #38bdf8, #818cf8, #c084fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-title p {
+      color: var(--text-sub);
+      font-size: 14px;
+      line-height: 1.6;
+      max-width: 580px;
+    }
+
+    .quest-box {
+      background: rgba(10, 15, 28, 0.7);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 18px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      min-height: 250px;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      gap: 12px;
     }
 
-    .resource-card:hover {
+    .quest-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--cyan);
+    }
+
+    .quest-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .quest-reward {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--emerald);
+      padding: 3px 8px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .music-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(99, 102, 241, 0.1);
+      border: 1px solid rgba(99, 102, 241, 0.25);
+      padding: 8px 14px;
+      border-radius: 12px;
+      font-size: 12px;
+    }
+
+    .btn-audio-toggle {
+      background: var(--indigo);
+      color: #fff;
+      border: none;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-audio-toggle:hover {
+      filter: brightness(1.15);
+    }
+
+    .action-panel {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .search-group {
+      flex: 1;
+      min-width: 280px;
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px 18px 14px 44px;
+      color: #fff;
+      font-size: 14px;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .search-input:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 15px rgba(6, 182, 212, 0.25);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-sub);
+    }
+
+    .filter-tags {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .tag-btn {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      color: var(--text-sub);
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tag-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+    }
+
+    .tag-btn.active {
+      background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), rgba(59, 130, 246, 0.2));
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    .btn-create {
+      background: linear-gradient(135deg, var(--cyan), var(--blue));
+      color: #090d16;
+      border: none;
+      padding: 12px 22px;
+      border-radius: 14px;
+      font-weight: 800;
+      font-size: 13.5px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
+    }
+
+    .btn-create:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.15);
+    }
+
+    .resource-deck {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+    }
+
+    .study-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 22px;
+      backdrop-filter: blur(16px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 16px;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    .study-card:hover {
       transform: translateY(-4px);
-      border-color: rgba(6, 182, 212, 0.3);
-      box-shadow: 0 10px 30px rgba(6, 182, 212, 0.05);
+      border-color: var(--border-active);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 0 0 20px rgba(6, 182, 212, 0.15);
+      background: var(--card-hover);
     }
 
     .card-top {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 16px;
     }
 
-    .resource-badge {
-      padding: 4px 10px;
+    .prob-badge {
+      background: rgba(244, 63, 94, 0.12);
+      border: 1px solid rgba(244, 63, 94, 0.3);
+      color: var(--rose);
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 8px;
       border-radius: 8px;
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
+      font-family: 'JetBrains Mono', monospace;
     }
 
-    .badge-cyan { background: rgba(6, 182, 212, 0.1); color: var(--accent-cyan); }
-    .badge-blue { background: rgba(59, 130, 246, 0.1); color: #60a5fa; }
-    .badge-orange { background: rgba(249, 115, 22, 0.1); color: #fb923c; }
-    .badge-purple { background: rgba(168, 85, 247, 0.1); color: #c084fc; }
-
-    .file-type {
+    .time-badge {
       font-size: 11px;
-      color: #94a3b8;
-      background: rgba(255,255,255,0.03);
-      padding: 4px 8px;
-      border-radius: 6px;
+      color: var(--text-sub);
+      font-weight: 600;
     }
 
     .card-mid h3 {
       font-size: 1.15rem;
-      font-weight: 700;
+      font-weight: 800;
       color: #fff;
       margin-bottom: 8px;
+      line-height: 1.35;
     }
 
     .card-mid p {
+      color: var(--text-sub);
       font-size: 13px;
-      color: #94a3b8;
-      line-height: 1.5;
-      margin-bottom: 16px;
+      line-height: 1.55;
+    }
+
+    .key-points {
+      margin-top: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .point-item {
+      font-size: 12px;
+      color: #cbd5e1;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .point-item span {
+      color: var(--cyan);
+      font-weight: 800;
     }
 
     .card-bottom {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      padding-top: 12px;
-      border-top: 1px solid rgba(255,255,255,0.03);
-      gap: 8px;
-    }
-
-    .meta-size { font-size: 12px; color: #64748b; }
-
-    .action-group {
-      display: flex;
-      gap: 8px;
-    }
-
-    .download-btn, .offline-save-btn {
-      display: inline-flex;
       align-items: center;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+    }
+
+    .xp-pill {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--emerald);
+      background: rgba(16, 185, 129, 0.1);
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .card-actions {
+      display: flex;
       gap: 6px;
-      padding: 8px 12px;
+    }
+
+    .btn-study-action {
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid var(--border);
-      border-radius: 8px;
       color: #fff;
-      text-decoration: none;
+      padding: 8px 12px;
+      border-radius: 10px;
       font-size: 12px;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
       transition: all 0.2s;
     }
 
-    .download-btn:hover {
-      background: var(--accent-cyan);
-      color: #000;
-      border-color: var(--accent-cyan);
+    .btn-study-action:hover {
+      background: var(--cyan);
+      color: #090d16;
+      border-color: var(--cyan);
     }
 
-    .offline-save-btn:hover {
-      background: var(--success);
-      color: #000;
-      border-color: var(--success);
+    .btn-study-action.primary {
+      background: linear-gradient(135deg, var(--indigo), var(--blue));
+      border: none;
     }
 
-    .offline-drawer {
-      background: rgba(15, 23, 42, 0.8);
-      border: 1px solid var(--success);
-      border-radius: 16px;
-      padding: 20px;
-      margin-bottom: 32px;
-      display: none;
+    .btn-study-action.primary:hover {
+      filter: brightness(1.2);
+      color: #fff;
     }
 
-    .offline-drawer h3 {
-      font-size: 15px;
-      color: var(--success);
-      margin-bottom: 12px;
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(5, 8, 15, 0.85);
+      backdrop-filter: blur(14px);
+      z-index: 2000;
       display: flex;
       align-items: center;
-      gap: 8px;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.25s ease;
     }
 
-    .offline-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
+    .modal-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
     }
 
-    .offline-item {
+    .modal-frame {
+      background: #0f1629;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      width: 100%;
+      max-width: 680px;
+      padding: 28px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: rgba(255, 255, 255, 0.03);
-      padding: 10px 16px;
-      border-radius: 8px;
-      font-size: 13px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 20px;
     }
 
-    .admin-upload-panel {
-      background: rgba(15, 23, 42, 0.6);
-      border: 1px dashed var(--accent-cyan);
-      border-radius: 16px;
-      padding: 20px;
-      margin-bottom: 32px;
+    .modal-header h2 {
+      font-size: 1.3rem;
+      font-weight: 800;
     }
 
-    .admin-upload-panel h3 {
-      font-size: 14px;
-      color: var(--accent-cyan);
-      margin-bottom: 12px;
-      text-transform: uppercase;
-    }
-
-    .upload-form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    .upload-form-grid input, .upload-form-grid select {
-      padding: 10px;
-      background: #070a13;
-      border: 1px solid var(--border);
-      color: white;
-      border-radius: 8px;
-      font-size: 13px;
-      outline: none;
-    }
-
-    .upload-btn {
-      grid-column: 1 / -1;
-      padding: 12px;
-      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+    .btn-close {
+      background: transparent;
       border: none;
-      color: white;
-      font-weight: 700;
-      border-radius: 8px;
+      color: var(--text-sub);
+      font-size: 22px;
       cursor: pointer;
     }
 
-    .empty-state {
-      display: none;
-      grid-column: 1 / -1;
-      text-align: center;
-      padding: 40px;
-      border: 1px dashed var(--border);
-      border-radius: 16px;
-      color: #64748b;
+    .btn-close:hover { color: #fff; }
+
+    .flash-takeaways {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .takeaway-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    .takeaway-card h4 {
+      font-size: 13.5px;
+      color: var(--cyan);
+      margin-bottom: 6px;
+      font-weight: 700;
+    }
+
+    .takeaway-card p {
+      font-size: 13px;
+      color: #cbd5e1;
+      line-height: 1.5;
+    }
+
+    .form-row {
+      margin-bottom: 16px;
+    }
+
+    .form-row label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-sub);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+
+    .form-input {
+      width: 100%;
+      background: rgba(10, 15, 28, 0.8);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      color: #fff;
+      font-size: 13.5px;
+      outline: none;
+    }
+
+    .form-input:focus {
+      border-color: var(--cyan);
     }
 
     @media (max-width: 900px) {
-      .app-container { flex-direction: column; }
-      .sidebar { width: 100%; height: auto; position: relative; }
-      .search-filter-grid { grid-template-columns: 1fr; }
+      .hero-dash { grid-template-columns: 1fr; }
+      .nav-menu { display: none; }
     }
   </style>
 </head>
+
 <body>
+  <div class="ambient-sphere sphere-1"></div>
+  <div class="ambient-sphere sphere-2"></div>
 
-  <div class="app-container">
-    
-    <aside class="sidebar">
-      <div>
-        <a href="index.html" class="sidebar-brand">📚 Study<span>Connect</span></a>
-        <nav class="sidebar-menu">
-          <a href="student-dashboard.html" class="sidebar-item">📊 Dashboard</a>
-          <a href="resources.html" class="sidebar-item active">📂 Resources Workspace</a>
-          <a href="leaderboard.html" class="sidebar-item">🏆 Leaderboard Deck</a>
-          <a href="discussions.html" class="sidebar-item">💬 Discussions</a>
-          <a href="quiz.html" class="sidebar-item">🎯 Assessment Portal</a>
-          <a href="placements.html" class="sidebar-item">💼 Placement Drive</a>
-        </nav>
+  <nav class="nav">
+    <a href="index.html" class="nav-brand">
+      🚀 Study<span>Connect</span>
+    </a>
+    <div class="nav-menu">
+      <a href="student-dashboard.html" class="nav-link">Dashboard</a>
+      <a href="resources.html" class="nav-link active">Exam Accelerator</a>
+      <a href="study-groups.html" class="nav-link">Study Clusters</a>
+      <a href="quiz.html" class="nav-link">Practice Quizzes</a>
+      <a href="leaderboard.html" class="nav-link">Rankings</a>
+      <a href="profile.html" class="nav-link">Profile</a>
+    </div>
+    <div class="nav-stats">
+      <div class="stat-chip chip-streak">🔥 <span id="streakCount">7</span> Day Streak</div>
+      <div class="stat-chip chip-xp">⚡ <span id="xpCount">1,450</span> XP</div>
+    </div>
+  </nav>
+
+  <main class="main-wrap">
+    <section class="hero-dash">
+      <div class="hero-title">
+        <h1>High-Yield <span>Exam Notes & Cracker Sheets</span></h1>
+        <p>Skip 500-page textbooks. Master the exact 20% of formulas, code architectures, and exam patterns that score 80% of marks in university and technical interviews.</p>
       </div>
 
-      <div class="sidebar-vault-card">
-        <h4>⚡ B.Tech Premium Vault</h4>
-        <p>Access structured semester-wise study material & labs repository blueprints.</p>
-        <a href="https://btechvault.vercel.app/" target="_blank" rel="noopener noreferrer" class="vault-side-btn">Launch Cloud Vault</a>
-      </div>
-
-      <a href="index.html" class="sidebar-item sidebar-logout">🚪 System Logout</a>
-    </aside>
-
-    <main class="workspace">
-      
-      <header class="workspace-header">
-        <div>
-          <h1>Architecture Curriculum Library</h1>
-          <p>Explore target system documentation, notes framework, and peer metrics deployment keys.</p>
+      <div class="quest-box">
+        <div class="quest-head">
+          <span>🎯 Today's Quick Mission</span>
+          <span id="questStatus">1/2 Completed</span>
         </div>
-        <button id="toggleOfflineDrawerBtn" class="download-btn" style="border-color: var(--success); color: var(--success);">
-          💾 View Saved Offline Resources (<span id="offlineCount">0</span>)
-        </button>
-      </header>
-
-      <div class="offline-drawer" id="offlineDrawer">
-        <h3>⚡ Offline Vault Cache (Available without Internet)</h3>
-        <div class="offline-list" id="offlineListContainer">
-          <p style="color: #64748b; font-size: 13px;">No files saved for offline access yet.</p>
+        <div class="quest-item">
+          <span>📖 Review 2 Cheat Sheets</span>
+          <span class="quest-reward">+100 XP</span>
+        </div>
+        <div class="music-bar">
+          <span>🎧 Focus Lo-Fi Study Beats</span>
+          <button class="btn-audio-toggle" id="audioToggleBtn">▶ Start Focus</button>
         </div>
       </div>
+    </section>
 
-      <!-- FILE UPLOAD MATRIX LAYER -->
-      <div class="admin-upload-panel" id="adminUploadPanel">
-        <h3>⚡ Direct File & Document Upload Center</h3>
-        <form id="uploadForm" class="upload-form-grid">
-          <input type="text" id="assetTitle" placeholder="Document/Resource Title" required>
-          <input type="file" id="assetFile" accept=".pdf,.doc,.docx,.ppt,.pptx,.txt,image/*" style="grid-column: 1 / -1;" required>
-          <select id="assetCategory" required>
-            <option value="cyan">C Programming</option>
-            <option value="blue">Python Pipeline</option>
-            <option value="orange">Computer Networks</option>
-            <option value="purple">Mathematics</option>
+    <section class="action-panel">
+      <div class="search-group">
+        <span class="search-icon">🔍</span>
+        <input type="text" class="search-input" id="filterInput" placeholder="Search by subject, semester, company interview tag, or formula...">
+      </div>
+
+      <div class="filter-tags" id="filterTags">
+        <button class="tag-btn active" data-category="all">⚡ All Resources</button>
+        <button class="tag-btn" data-category="placement">🏆 Placement Crackers</button>
+        <button class="tag-btn" data-category="semester">📝 Semester One-Shots</button>
+        <button class="tag-btn" data-category="formulas">📐 Formulas & Mnemonics</button>
+        <button class="tag-btn" data-category="lab">💻 Lab Code & Viva Q&A</button>
+      </div>
+
+      <button class="btn-create" id="openUploadBtn">✨ Upload Class Notes</button>
+    </section>
+
+    <section class="resource-deck" id="deckContainer"></section>
+  </main>
+
+  <div class="modal-backdrop" id="studyModal">
+    <div class="modal-frame">
+      <div class="modal-header">
+        <h2 id="modalSheetTitle">One-Shot Revision Blueprint</h2>
+        <button class="btn-close" id="closeStudyModal">&times;</button>
+      </div>
+      <div class="flash-takeaways" id="modalTakeaways"></div>
+      <div style="display: flex; justify-content: flex-end; gap: 10px;">
+        <button class="btn-study-action" id="modalDownloadBtn">⬇ Download Offline PDF</button>
+        <button class="btn-study-action primary" id="modalFinishBtn">✓ Finish Review & Claim +50 XP</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="uploadModal">
+    <div class="modal-frame">
+      <div class="modal-header">
+        <h2>✨ Share High-Yield Notes (+100 XP)</h2>
+        <button class="btn-close" id="closeUploadModal">&times;</button>
+      </div>
+      <form id="uploadNotesForm">
+        <div class="form-row">
+          <label>Topic Title</label>
+          <input type="text" class="form-input" id="newTitle" placeholder="e.g. Dynamic Programming 5-Step Formula Sheet" required>
+        </div>
+        <div class="form-row">
+          <label>Category</label>
+          <select class="form-input" id="newCategory" required>
+            <option value="placement">🏆 Placement Cracker</option>
+            <option value="semester">📝 Semester One-Shot</option>
+            <option value="formulas">📐 Formulas & Mnemonics</option>
+            <option value="lab">💻 Lab Code & Viva</option>
           </select>
-          <select id="fileType" required>
-            <option value="Cheat Sheet">Cheat Sheet</option>
-            <option value="Reference Manual">Reference Manual</option>
-            <option value="Core Syllabus">Core Syllabus</option>
-            <option value="Lab Record">Lab Record</option>
-          </select>
-          <button type="submit" class="upload-btn" id="uploadSubmitBtn">Upload Document To Cloud</button>
-        </form>
-      </div>
-
-      <div class="search-filter-grid">
-        <input type="text" id="resourceSearch" class="search-bar" placeholder="Search parameters by engineering discipline, tags or asset title...">
-        <select id="categorySelector" class="category-filter">
-          <option value="all">Filter Entire Category</option>
-          <option value="cyan">C Programming</option>
-          <option value="blue">Python Pipeline</option>
-          <option value="orange">Computer Networks</option>
-          <option value="purple">Mathematics</option>
-        </select>
-      </div>
-
-      <section class="card-deck" id="resourcesDeck">
-        
-        <div class="resource-card" data-category="cyan" data-tags="c language pointers memory allocation">
-          <div class="card-top">
-            <span class="resource-badge badge-cyan">C Programming</span>
-            <span class="file-type">Cheat Sheet</span>
-          </div>
-          <div class="card-mid">
-            <h3>Pointers & Dynamic Memory Architecture in C</h3>
-            <p>Detailed technical guide detailing malloc, calloc, realloc pipelines, and memory leaks isolation arrays.</p>
-          </div>
-          <div class="card-bottom">
-            <span class="meta-size">2.4 MB</span>
-            <div class="action-group">
-              <button onclick="saveForOffline('C Pointers Notes', 'data:text/plain;charset=utf-8,C%20Pointers%20and%20Memory%20Architecture%20Notes')" class="offline-save-btn">💾 Save</button>
-              <button onclick="downloadLocalPC('data:text/plain;charset=utf-8,C%20Pointers%20and%20Memory%20Architecture%20Notes', 'C_Pointers_Notes.txt')" class="download-btn">Download</button>
-            </div>
-          </div>
         </div>
-
-        <div id="searchFailureBlock" class="empty-state">
-          <h3>No Matching Assets Found</h3>
-          <p>Try resetting the text syntax or select a different drop-down category system loop filter.</p>
+        <div class="form-row">
+          <label>Key Exam Takeaway (Core Formula or Trick)</label>
+          <input type="text" class="form-input" id="newKeyPoint" placeholder="e.g. Master Subnet mask calculation in 10 seconds" required>
         </div>
-      </section>
-
-    </main>
+        <div class="form-row">
+          <label>Summary Notes</label>
+          <textarea class="form-input" id="newSummary" style="height: 90px; resize: none;" placeholder="Explain the high-yield shortcuts and exam traps..." required></textarea>
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+          <button type="button" class="btn-study-action" id="cancelUploadBtn">Cancel</button>
+          <button type="submit" class="btn-create">Publish & Earn XP</button>
+        </div>
+      </form>
+    </div>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
-    import { getDatabase, ref as dbRef, push, set, onValue } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
-    import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-storage.js";
+    import { getDatabase, ref, push, set, onValue } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCaCkliRZk8HmNtOsJpoA084YhNY7MeMWM",
@@ -521,201 +729,268 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
-    const storage = getStorage(app);
 
-    const uploadForm = document.getElementById("uploadForm");
-    const resourcesDeck = document.getElementById("resourcesDeck");
-    const searchFailureBlock = document.getElementById("searchFailureBlock");
+    let userXP = parseInt(localStorage.getItem('student_xp') || '1450', 10);
+    document.getElementById('xpCount').innerText = userXP.toLocaleString();
 
-    // FILE UPLOAD AND SAVE ENGINE
-    if (uploadForm) {
-      uploadForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        
-        const title = document.getElementById("assetTitle").value;
-        const fileInput = document.getElementById("assetFile");
-        const category = document.getElementById("assetCategory").value;
-        const fType = document.getElementById("fileType").value;
-        const submitBtn = document.getElementById("uploadSubmitBtn");
-
-        if (fileInput.files.length === 0) return alert("Please select a document file to upload!");
-
-        const file = fileInput.files[0];
-        const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2) + " MB";
-
-        try {
-          submitBtn.innerText = "Uploading File to Storage...";
-          submitBtn.disabled = true;
-
-          // 1. Upload File directly to Firebase Storage
-          const fileRef = storageRef(storage, `documents/${Date.now()}_${file.name}`);
-          await uploadBytes(fileRef, file);
-          const fileUrl = await getDownloadURL(fileRef);
-
-          // 2. Deploy metadata into Firebase RTDB
-          const resRef = dbRef(db, "resources");
-          const newNode = push(resRef);
-          await set(newNode, {
-            title,
-            size: fileSizeMB,
-            fileUrl,
-            fileName: file.name,
-            category,
-            fileType: fType,
-            timestamp: Date.now()
-          });
-
-          alert("🎉 Document uploaded & deployed to live resources deck successfully!");
-          uploadForm.reset();
-        } catch (err) {
-          console.error(err);
-          alert("Error uploading file. Please verify Firebase Storage rules.");
-        } finally {
-          submitBtn.innerText = "Upload Document To Cloud";
-          submitBtn.disabled = false;
-        }
-      });
+    function addXP(amount) {
+      userXP += amount;
+      localStorage.setItem('student_xp', userXP.toString());
+      document.getElementById('xpCount').innerText = userXP.toLocaleString();
+      confetti({ particleCount: 50, spread: 60, origin: { y: 0.8 } });
     }
 
-    // DIRECT DOWNLOAD TO PC FUNCTIONALITY
-    window.downloadLocalPC = async function(fileUrl, fileName) {
-      try {
-        const response = await fetch(fileUrl);
-        const blob = await response.blob();
-        const blobUrl = URL.createObjectURL(blob);
-        
-        const a = document.createElement('a');
-        a.href = blobUrl;
-        a.download = fileName || 'study_document';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(blobUrl);
-      } catch (e) {
-        const a = document.createElement('a');
-        a.href = fileUrl;
-        a.target = '_blank';
-        a.download = fileName || 'study_document';
-        a.click();
+    let isAudioPlaying = false;
+    let audioCtx = null;
+    let osc1, osc2, gainNode;
+
+    document.getElementById('audioToggleBtn').addEventListener('click', () => {
+      const btn = document.getElementById('audioToggleBtn');
+      if (!isAudioPlaying) {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+
+        osc1 = audioCtx.createOscillator();
+        osc2 = audioCtx.createOscillator();
+        gainNode = audioCtx.createGain();
+
+        osc1.type = 'sine';
+        osc1.frequency.setValueAtTime(108, audioCtx.currentTime);
+        osc2.type = 'triangle';
+        osc2.frequency.setValueAtTime(112, audioCtx.currentTime);
+
+        gainNode.gain.setValueAtTime(0.05, audioCtx.currentTime);
+
+        osc1.connect(gainNode);
+        osc2.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+
+        osc1.start();
+        osc2.start();
+
+        isAudioPlaying = true;
+        btn.innerText = "⏸ Pause Lo-Fi";
+        btn.style.background = "var(--emerald)";
+      } else {
+        if (gainNode) gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.5);
+        setTimeout(() => {
+          if (osc1) osc1.stop();
+          if (osc2) osc2.stop();
+        }, 500);
+        isAudioPlaying = false;
+        btn.innerText = "▶ Start Focus";
+        btn.style.background = "var(--indigo)";
+      }
+    });
+
+    const seedVault = {
+      "res_dp_patterns": {
+        title: "Top 7 Dynamic Programming Patterns for Amazon & Google",
+        category: "placement",
+        time: "4 Mins Read",
+        examProb: "98% In Tech Rounds",
+        xp: "+50 XP",
+        points: ["0/1 Knapsack & Subset Sum", "Longest Common Subsequence (LCS)", "Kadane's Array Optimization"],
+        summary: "Over 85% of interview DP problems are variations of just 7 templates. Identify the base cases, memoize recurrence transitions, and invert to bottom-up tabular arrays.",
+        downloadText: "Top 7 DP Patterns Blueprint:\n1. 0/1 Knapsack\n2. Unbounded Knapsack\n3. Fibonacci Numbers\n4. Longest Common Substring\n5. Palindromic Subsequence\n6. Edit Distance\n7. Matrix Chain Multiplication"
+      },
+      "res_sql_cheatsheet": {
+        title: "SQL Joins, Window Functions & Indexing Quick-Cracker",
+        category: "placement",
+        time: "3 Mins Read",
+        examProb: "100% In DB Rounds",
+        xp: "+40 XP",
+        points: ["RANK() vs DENSE_RANK() vs ROW_NUMBER()", "B-Tree vs Hash Indexes", "GROUP BY & HAVING Gotchas"],
+        summary: "Understand execution order: FROM -> WHERE -> GROUP BY -> HAVING -> SELECT -> ORDER BY. Never write WHERE clauses on aggregated columns.",
+        downloadText: "SQL Interview Sheet:\nExecution Order: FROM -> WHERE -> GROUP BY -> HAVING -> SELECT -> ORDER BY\nIndexes: B-Tree for range scans, Hash for point equality."
+      },
+      "res_os_concurrency": {
+        title: "Deadlocks, Semaphores & Paging Formula Sheet",
+        category: "semester",
+        time: "5 Mins Read",
+        examProb: "95% In Semester Final",
+        xp: "+50 XP",
+        points: ["Banker's Algorithm 3-Step Safety Check", "TLB Hit Ratio & Effective Access Time", "Mutex vs Counting Semaphore"],
+        summary: "Banker's Algorithm: Need = Max - Allocation. Check if Available >= Need. EAT = Hit_Rate * (TLB_Time + Mem_Time) + (1 - Hit_Rate) * (TLB_Time + 2 * Mem_Time).",
+        downloadText: "OS Formula Sheet:\nEffective Access Time (EAT) = (h)(c + m) + (1-h)(c + 2m)\nBanker's Algorithm Safety Condition."
+      },
+      "res_networks_cidr": {
+        title: "Subnetting & CIDR Calculation in Under 15 Seconds",
+        category: "formulas",
+        time: "2 Mins Read",
+        examProb: "90% In GATE / Exams",
+        xp: "+35 XP",
+        points: ["256 - Last Octet Magic Number Trick", "Host Capacity Formula: 2^(32-n) - 2", "Network vs Broadcast Address"],
+        summary: "Take the prefix length /27. 32 - 27 = 5 host bits. Block size is 2^5 = 32. Subnets increment by 32: 0, 32, 64, 96, 128...",
+        downloadText: "Subnetting Magic Trick:\nFor /28: 32 - 28 = 4 host bits. 2^4 = 16 block size. Usable hosts = 14."
       }
     };
 
-    // LOCAL CACHE & OFFLINE PERSISTENCE SYSTEM
-    window.saveForOffline = function(title, url) {
-      let saved = JSON.parse(localStorage.getItem("offlineResources") || "[]");
-      if (saved.some(item => item.title === title)) {
-        alert("ℹ️ File is already saved for offline access!");
+    let allResources = {};
+    let activeCategory = 'all';
+
+    const deckContainer = document.getElementById('deckContainer');
+    const filterInput = document.getElementById('filterInput');
+
+    function renderCards() {
+      const q = filterInput.value.toLowerCase().trim();
+      const keys = Object.keys(allResources);
+      
+      const filtered = keys.filter(k => {
+        const item = allResources[k];
+        const matchText = (item.title || "").toLowerCase().includes(q) || (item.summary || "").toLowerCase().includes(q);
+        const matchCat = (activeCategory === 'all' || item.category === activeCategory);
+        return matchText && matchCat;
+      });
+
+      deckContainer.innerHTML = "";
+
+      if (filtered.length === 0) {
+        deckContainer.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 40px; color: var(--text-sub); border: 1px dashed var(--border); border-radius: 20px;">No high-yield notes matched your query. Click "Upload Class Notes" to share one!</div>`;
         return;
       }
-      
-      saved.push({ title, url, date: new Date().toLocaleDateString() });
-      localStorage.setItem("offlineResources", JSON.stringify(saved));
-      alert("✅ Saved for offline access! Viewable even without an active connection.");
-      updateOfflineUI();
-    };
 
-    function updateOfflineUI() {
-      const saved = JSON.parse(localStorage.getItem("offlineResources") || "[]");
-      document.getElementById("offlineCount").innerText = saved.length;
-      
-      const container = document.getElementById("offlineListContainer");
-      if (saved.length === 0) {
-        container.innerHTML = '<p style="color: #64748b; font-size: 13px;">No files saved for offline access yet.</p>';
-        return;
-      }
+      filtered.forEach(k => {
+        const item = allResources[k];
+        const card = document.createElement('div');
+        card.className = 'study-card';
 
-      container.innerHTML = saved.map((item, index) => `
-        <div class="offline-item">
+        const pointsHTML = (item.points || []).map(p => `<div class="point-item"><span>⚡</span> ${p}</div>`).join('');
+
+        card.innerHTML = `
           <div>
-            <strong>${item.title}</strong>
-            <span style="font-size: 11px; color: #64748b; margin-left: 8px;">Saved on: ${item.date}</span>
+            <div class="card-top">
+              <span class="prob-badge">🎯 ${item.examProb || 'High Yield'}</span>
+              <span class="time-badge">⏱ ${item.time || '3 Mins'}</span>
+            </div>
+            <div class="card-mid" style="margin-top: 12px;">
+              <h3>${item.title}</h3>
+              <p>${item.summary}</p>
+              <div class="key-points">${pointsHTML}</div>
+            </div>
           </div>
-          <div style="display: flex; gap: 8px;">
-            <a href="${item.url}" target="_blank" class="download-btn" style="padding: 4px 8px; font-size: 11px;">👁 View Offline</a>
-            <button onclick="removeOfflineItem(${index})" style="background: rgba(239, 68, 68, 0.2); border: none; color: #ef4444; border-radius: 6px; padding: 4px 8px; cursor: pointer;">🗑</button>
+          <div class="card-bottom">
+            <span class="xp-pill">${item.xp || '+50 XP'}</span>
+            <div class="card-actions">
+              <button class="btn-study-action primary" data-key="${k}">⚡ Instant Revision</button>
+            </div>
           </div>
-        </div>
-      `).join('');
+        `;
+        deckContainer.appendChild(card);
+      });
+
+      deckContainer.querySelectorAll('.btn-study-action.primary').forEach(btn => {
+        btn.addEventListener('click', () => {
+          openStudyModal(btn.getAttribute('data-key'));
+        });
+      });
     }
 
-    window.removeOfflineItem = function(index) {
-      let saved = JSON.parse(localStorage.getItem("offlineResources") || "[]");
-      saved.splice(index, 1);
-      localStorage.setItem("offlineResources", JSON.stringify(saved));
-      updateOfflineUI();
-    };
-
-    document.getElementById("toggleOfflineDrawerBtn").addEventListener("click", () => {
-      const drawer = document.getElementById("offlineDrawer");
-      drawer.style.display = drawer.style.display === "block" ? "none" : "block";
+    document.querySelectorAll('#filterTags .tag-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#filterTags .tag-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeCategory = btn.getAttribute('data-category');
+        renderCards();
+      });
     });
 
-    updateOfflineUI();
+    filterInput.addEventListener('input', renderCards);
 
-    // DYNAMIC RETRIEVAL ENGINE FROM FIREBASE DB
-    onValue(dbRef(db, "resources"), (snapshot) => {
-      document.querySelectorAll(".dynamic-resource-card").forEach(c => c.remove());
-      if (snapshot.exists()) {
-        Object.values(snapshot.val()).forEach(data => {
-          const card = document.createElement("div");
-          card.className = "resource-card dynamic-resource-card";
-          card.setAttribute("data-category", data.category || "cyan");
-          card.setAttribute("data-tags", `${data.title} ${data.fileType}`.toLowerCase());
+    let activeModalItem = null;
 
-          let label = data.category === "cyan" ? "C Programming" : data.category === "blue" ? "Python / ECE" : data.category === "orange" ? "Networks / EEE" : "Mathematics";
-          const downloadUrl = data.fileUrl || "#";
-          const fileName = data.fileName || (data.title + ".pdf");
+    function openStudyModal(key) {
+      const item = allResources[key];
+      if (!item) return;
+      activeModalItem = item;
 
-          card.innerHTML = `
-            <div class="card-top">
-              <span class="resource-badge badge-${data.category || 'cyan'}">${label}</span>
-              <span class="file-type">${data.fileType || 'Document'}</span>
-            </div>
-            <div class="card-mid">
-              <h3>${data.title}</h3>
-              <p>Uploaded study material available for online reading & direct offline download.</p>
-            </div>
-            <div class="card-bottom">
-              <span class="meta-size">${data.size || 'Cloud File'}</span>
-              <div class="action-group">
-                <button onclick="saveForOffline('${data.title}', '${downloadUrl}')" class="offline-save-btn">💾 Save</button>
-                <button onclick="downloadLocalPC('${downloadUrl}', '${fileName}')" class="download-btn">Download</button>
-              </div>
-            </div>
-          `;
-          resourcesDeck.insertBefore(card, searchFailureBlock);
-        });
+      document.getElementById('modalSheetTitle').innerText = item.title;
+      const takeaways = document.getElementById('modalTakeaways');
+
+      takeaways.innerHTML = `
+        <div class="takeaway-card">
+          <h4>💡 Core Concept Overview</h4>
+          <p>${item.summary}</p>
+        </div>
+        <div class="takeaway-card">
+          <h4>🎯 High-Yield Exam Takeaways & Tricks</h4>
+          ${(item.points || []).map(p => `<p style="margin-bottom: 6px;">• <strong>${p}</strong></p>`).join('')}
+        </div>
+      `;
+
+      document.getElementById('studyModal').classList.add('open');
+    }
+
+    document.getElementById('closeStudyModal').addEventListener('click', () => {
+      document.getElementById('studyModal').classList.remove('open');
+    });
+
+    document.getElementById('modalFinishBtn').addEventListener('click', () => {
+      addXP(50);
+      document.getElementById('studyModal').classList.remove('open');
+      document.getElementById('questStatus').innerText = "2/2 Completed 🎉";
+    });
+
+    document.getElementById('modalDownloadBtn').addEventListener('click', () => {
+      if (!activeModalItem) return;
+      const blob = new Blob([activeModalItem.downloadText || activeModalItem.summary], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${activeModalItem.title.replace(/\s+/g, '_')}_QuickSheet.txt`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      addXP(25);
+    });
+
+    const uploadModal = document.getElementById('uploadModal');
+    document.getElementById('openUploadBtn').addEventListener('click', () => uploadModal.classList.add('open'));
+    document.getElementById('closeUploadModal').addEventListener('click', () => uploadModal.classList.remove('open'));
+    document.getElementById('cancelUploadBtn').addEventListener('click', () => uploadModal.classList.remove('open'));
+
+    document.getElementById('uploadNotesForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const title = document.getElementById('newTitle').value.trim();
+      const category = document.getElementById('newCategory').value;
+      const keyPoint = document.getElementById('newKeyPoint').value.trim();
+      const summary = document.getElementById('newSummary').value.trim();
+
+      const newKey = "note_" + Date.now();
+      const payload = {
+        title,
+        category,
+        time: "3 Mins Read",
+        examProb: "95% High Yield",
+        xp: "+50 XP",
+        points: [keyPoint],
+        summary,
+        downloadText: `${title}\n\nKey Takeaway: ${keyPoint}\n\nSummary:\n${summary}`
+      };
+
+      try {
+        await set(ref(db, `resources/${newKey}`), payload);
+        uploadModal.classList.remove('open');
+        document.getElementById('uploadNotesForm').reset();
+        addXP(100);
+      } catch (err) {
+        allResources[newKey] = payload;
+        renderCards();
+        uploadModal.classList.remove('open');
+        addXP(100);
       }
     });
 
-    // SEARCH FILTER
-    const searchInput = document.getElementById("resourceSearch");
-    const catSelector = document.getElementById("categorySelector");
-
-    function filterSystem() {
-      const query = searchInput.value.toLowerCase().trim();
-      const selectedCat = catSelector.value;
-      const cards = document.querySelectorAll(".resource-card");
-      let visible = 0;
-
-      cards.forEach(card => {
-        const title = card.querySelector("h3").innerText.toLowerCase();
-        const cat = card.getAttribute("data-category");
-        const matchSearch = title.includes(query);
-        const matchCat = (selectedCat === "all" || cat === selectedCat);
-
-        if(matchSearch && matchCat) {
-          card.style.display = "flex";
-          visible++;
-        } else {
-          card.style.display = "none";
-        }
-      });
-      searchFailureBlock.style.display = visible === 0 ? "block" : "none";
-    }
-
-    searchInput.addEventListener("input", filterSystem);
-    catSelector.addEventListener("change", filterSystem);
+    onValue(ref(db, "resources"), (snapshot) => {
+      if (snapshot.exists()) {
+        allResources = snapshot.val();
+      } else {
+        set(ref(db, "resources"), seedVault);
+        allResources = seedVault;
+      }
+      renderCards();
+    });
   </script>
 </body>
 </html>
