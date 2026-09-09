@@ -1,1 +1,2515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <title>Feedback | CAPACITY CONNECT</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #3730a3;
+            --cyan: #0891b2;
+            --success: #16a34a;
+            --warning: #d97706;
+            --danger: #dc2626;
+            --dark: #111827;
+            --text: #374151;
+            --muted: #6b7280;
+            --light: #f5f7fb;
+            --white: #ffffff;
+            --border: #e5e7eb;
+        }
+
+        body {
+            background: var(--light);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* ================= HEADER ================= */
+
+        header {
+            height: 78px;
+            background: linear-gradient(135deg, #312e81, #4f46e5, #0891b2);
+            color: white;
+            padding: 0 5%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, .12);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .menu-btn {
+            display: none;
+            border: none;
+            background: white;
+            color: var(--primary);
+            border-radius: 7px;
+            padding: 7px 10px;
+            cursor: pointer;
+            font-size: 17px;
+        }
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 11px;
+            background: rgba(255, 255, 255, .16);
+            border: 1px solid rgba(255, 255, 255, .24);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 21px;
+        }
+
+        .brand h1 {
+            font-size: 20px;
+            letter-spacing: .4px;
+        }
+
+        .brand small {
+            display: block;
+            margin-top: 3px;
+            font-size: 10px;
+            opacity: .82;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+        }
+
+        .header-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .15);
+            color: white;
+            cursor: pointer;
+            font-size: 17px;
+        }
+
+        .header-btn:hover {
+            background: rgba(255, 255, 255, .24);
+        }
+
+        .profile-mini {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: white;
+            color: var(--primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .profile-text strong {
+            display: block;
+            font-size: 13px;
+        }
+
+        .profile-text span {
+            display: block;
+            font-size: 10px;
+            opacity: .8;
+            margin-top: 2px;
+        }
+
+        /* ================= LAYOUT ================= */
+
+        .layout {
+            display: flex;
+            min-height: calc(100vh - 78px);
+        }
+
+        /* ================= SIDEBAR ================= */
+
+        .sidebar {
+            width: 255px;
+            background: white;
+            border-right: 1px solid var(--border);
+            padding: 22px 14px;
+            position: sticky;
+            top: 78px;
+            height: calc(100vh - 78px);
+            overflow-y: auto;
+        }
+
+        .menu-title {
+            color: #9ca3af;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 8px 12px 12px;
+        }
+
+        .nav-link {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 11px 12px;
+            margin-bottom: 4px;
+            border-radius: 9px;
+            text-decoration: none;
+            color: var(--text);
+            font-size: 13px;
+            transition: .2s;
+        }
+
+        .nav-link:hover {
+            background: #eef2ff;
+            color: var(--primary);
+        }
+
+        .nav-link.active {
+            background: linear-gradient(90deg, #eef2ff, #e0e7ff);
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .nav-icon {
+            width: 21px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .sidebar-card {
+            margin: 25px 5px 0;
+            padding: 16px;
+            border-radius: 13px;
+            background: linear-gradient(145deg, #eef2ff, #ecfeff);
+            border: 1px solid #dbeafe;
+        }
+
+        .sidebar-card h4 {
+            color: var(--dark);
+            font-size: 12px;
+            margin-bottom: 6px;
+        }
+
+        .sidebar-card p {
+            color: var(--muted);
+            font-size: 10px;
+            line-height: 1.5;
+        }
+
+        /* ================= MAIN ================= */
+
+        .main {
+            flex: 1;
+            max-width: 1550px;
+            margin: auto;
+            padding: 28px;
+        }
+
+        .page-heading {
+            margin-bottom: 22px;
+        }
+
+        .page-heading h2 {
+            color: var(--dark);
+            font-size: 27px;
+            margin-bottom: 6px;
+        }
+
+        .page-heading p {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        /* ================= STATS ================= */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin-bottom: 22px;
+        }
+
+        .stat {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            padding: 17px;
+        }
+
+        .stat-icon {
+            width: 39px;
+            height: 39px;
+            border-radius: 10px;
+            background: #eef2ff;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 11px;
+            font-size: 17px;
+        }
+
+        .stat-label {
+            color: var(--muted);
+            font-size: 10px;
+        }
+
+        .stat-value {
+            color: var(--dark);
+            font-size: 23px;
+            font-weight: 800;
+            margin-top: 4px;
+        }
+
+        .stat-note {
+            color: var(--success);
+            font-size: 9px;
+            margin-top: 3px;
+        }
+
+        /* ================= CONTENT GRID ================= */
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.6fr) minmax(280px, .9fr);
+            gap: 20px;
+            align-items: start;
+        }
+
+        .panel {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 21px;
+        }
+
+        .panel-header {
+            margin-bottom: 18px;
+        }
+
+        .panel-header h3 {
+            color: var(--dark);
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .panel-header p {
+            color: var(--muted);
+            font-size: 10px;
+            line-height: 1.5;
+        }
+
+        /* ================= FORM ================= */
+
+        .form-group {
+            margin-bottom: 17px;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--dark);
+            font-size: 10px;
+            font-weight: 700;
+            margin-bottom: 7px;
+        }
+
+        .form-control {
+            width: 100%;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            background: white;
+            color: var(--text);
+            padding: 11px 12px;
+            font-size: 11px;
+            outline: none;
+            transition: .2s;
+        }
+
+        .form-control:focus {
+            border-color: #a5b4fc;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, .08);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 125px;
+            line-height: 1.55;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 13px;
+        }
+
+        /* ================= STAR RATING ================= */
+
+        .rating-box {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 13px;
+            background: #fcfcff;
+            margin-bottom: 13px;
+        }
+
+        .rating-title {
+            color: var(--dark);
+            font-size: 10px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .stars {
+            display: flex;
+            gap: 5px;
+        }
+
+        .star {
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            color: #d1d5db;
+            font-size: 25px;
+            line-height: 1;
+            padding: 0;
+            transition: .15s;
+        }
+
+        .star:hover,
+        .star.active {
+            color: #f59e0b;
+            transform: scale(1.08);
+        }
+
+        .rating-text {
+            margin-top: 6px;
+            color: var(--muted);
+            font-size: 9px;
+        }
+
+        /* ================= CATEGORY ================= */
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .category-option {
+            position: relative;
+        }
+
+        .category-option input {
+            display: none;
+        }
+
+        .category-option label {
+            display: block;
+            padding: 10px;
+            text-align: center;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 9px;
+            color: var(--text);
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .category-option input:checked + label {
+            background: #eef2ff;
+            border-color: #a5b4fc;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .checkbox-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin: 12px 0;
+        }
+
+        .checkbox-row input {
+            margin-top: 2px;
+            accent-color: var(--primary);
+        }
+
+        .checkbox-row label {
+            color: var(--muted);
+            font-size: 9px;
+            line-height: 1.5;
+        }
+
+        .submit-btn {
+            width: 100%;
+            border: none;
+            border-radius: 9px;
+            padding: 12px;
+            background: linear-gradient(135deg, var(--primary), var(--cyan));
+            color: white;
+            font-size: 11px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 18px rgba(79, 70, 229, .2);
+        }
+
+        /* ================= SIDEBAR INFO ================= */
+
+        .info-card {
+            border: 1px solid var(--border);
+            border-radius: 11px;
+            padding: 14px;
+            margin-bottom: 12px;
+        }
+
+        .info-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .info-card-head {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin-bottom: 8px;
+        }
+
+        .info-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            background: #eef2ff;
+            color: var(--primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 15px;
+        }
+
+        .info-card h4 {
+            color: var(--dark);
+            font-size: 11px;
+        }
+
+        .info-card p {
+            color: var(--muted);
+            font-size: 9px;
+            line-height: 1.6;
+        }
+
+        .rating-summary {
+            text-align: center;
+            background: linear-gradient(145deg, #eef2ff, #ecfeff);
+        }
+
+        .big-rating {
+            font-size: 31px;
+            font-weight: 800;
+            color: var(--primary);
+            margin: 6px 0;
+        }
+
+        .summary-stars {
+            color: #f59e0b;
+            font-size: 19px;
+            letter-spacing: 2px;
+        }
+
+        .rating-summary p {
+            margin-top: 5px;
+        }
+
+        /* ================= HISTORY ================= */
+
+        .history-panel {
+            margin-top: 20px;
+        }
+
+        .history-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 13px;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            min-width: 210px;
+        }
+
+        .search-box input {
+            width: 100%;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 9px 11px 9px 33px;
+            outline: none;
+            font-size: 10px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 11px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--muted);
+        }
+
+        .filter-select {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: white;
+            padding: 8px 10px;
+            font-size: 9px;
+            color: var(--text);
+            outline: none;
+        }
+
+        .feedback-list {
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+        }
+
+        .feedback-item {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 13px;
+            display: grid;
+            grid-template-columns: 1.5fr .7fr .7fr auto;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .feedback-course {
+            color: var(--dark);
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .feedback-date {
+            color: var(--muted);
+            font-size: 8px;
+            margin-top: 3px;
+        }
+
+        .item-rating {
+            color: #f59e0b;
+            font-size: 12px;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 5px 8px;
+            border-radius: 15px;
+            font-size: 8px;
+            font-weight: 700;
+        }
+
+        .status-submitted {
+            color: #166534;
+            background: #dcfce7;
+        }
+
+        .status-reviewed {
+            color: #1d4ed8;
+            background: #dbeafe;
+        }
+
+        .empty-history {
+            display: none;
+            padding: 28px;
+            text-align: center;
+            color: var(--muted);
+            border: 1px dashed #d1d5db;
+            border-radius: 10px;
+            font-size: 10px;
+        }
+
+        /* ================= MODAL ================= */
+
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 3000;
+            background: rgba(17, 24, 39, .62);
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-box {
+            width: 100%;
+            max-width: 440px;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, .25);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 19px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-header h3 {
+            color: var(--dark);
+            font-size: 15px;
+        }
+
+        .close-btn {
+            border: none;
+            background: transparent;
+            color: var(--muted);
+            font-size: 23px;
+            cursor: pointer;
+        }
+
+        .modal-body {
+            padding: 21px;
+            text-align: center;
+        }
+
+        .success-icon {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            margin: 0 auto 12px;
+            background: #dcfce7;
+            color: var(--success);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 28px;
+        }
+
+        .modal-body h4 {
+            color: var(--dark);
+            font-size: 17px;
+            margin-bottom: 7px;
+        }
+
+        .modal-body p {
+            color: var(--muted);
+            font-size: 10px;
+            line-height: 1.6;
+        }
+
+        .modal-btn {
+            border: none;
+            border-radius: 8px;
+            padding: 10px 16px;
+            background: var(--primary);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        /* ================= FOOTER ================= */
+
+        footer {
+            text-align: center;
+            color: #9ca3af;
+            font-size: 9px;
+            padding: 28px 10px 5px;
+        }
+
+        footer strong {
+            color: var(--primary);
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 1200px) {
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 820px) {
+
+            header {
+                padding: 0 4%;
+            }
+
+            .menu-btn {
+                display: block;
+            }
+
+            .profile-text {
+                display: none;
+            }
+
+            .sidebar {
+                position: fixed;
+                left: -275px;
+                top: 0;
+                height: 100vh;
+                z-index: 2000;
+                transition: .3s ease;
+                box-shadow: 8px 0 25px rgba(0, 0, 0, .12);
+            }
+
+            .sidebar.open {
+                left: 0;
+            }
+
+            .layout {
+                display: block;
+            }
+
+            .main {
+                padding: 20px 15px;
+            }
+        }
+
+        @media (max-width: 620px) {
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .category-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .feedback-item {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .feedback-item > :first-child {
+                grid-column: 1 / -1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ================= HEADER ================= -->
+
+    <header>
+
+        <div class="header-left">
+
+            <button
+                class="menu-btn"
+                onclick="toggleSidebar()">
+                ☰
+            </button>
+
+            <div class="brand-icon">
+                🎓
+            </div>
+
+            <div class="brand">
+                <h1>CAPACITY CONNECT</h1>
+                <small>Digital Capacity Building Portal</small>
+            </div>
+
+        </div>
+
+
+        <div class="header-right">
+
+            <button
+                class="header-btn"
+                onclick="goToPage('notifications.html')"
+                title="Notifications">
+                🔔
+            </button>
+
+            <div
+                class="profile-mini"
+                onclick="goToPage('trainee-dashboard.html')">
+
+                <div class="avatar">
+                    YR
+                </div>
+
+                <div class="profile-text">
+
+                    <strong>
+                        Yashodha Rani
+                    </strong>
+
+                    <span>
+                        Trainee
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- ================= LAYOUT ================= -->
+
+    <div class="layout">
+
+        <!-- ================= SIDEBAR ================= -->
+
+        <aside
+            class="sidebar"
+            id="sidebar">
+
+            <div class="menu-title">
+                Trainee Menu
+            </div>
+
+
+            <a
+                href="capacity-connect.html"
+                class="nav-link">
+
+                <span class="nav-icon">🏠</span>
+                Home
+
+            </a>
+
+
+            <a
+                href="trainee-dashboard.html"
+                class="nav-link">
+
+                <span class="nav-icon">📊</span>
+                Dashboard
+
+            </a>
+
+
+            <a
+                href="trainee-courses.html"
+                class="nav-link">
+
+                <span class="nav-icon">📚</span>
+                My Courses
+
+            </a>
+
+
+            <a
+                href="trainee-assessments.html"
+                class="nav-link">
+
+                <span class="nav-icon">📝</span>
+                Assessments
+
+            </a>
+
+
+            <a
+                href="certificates.html"
+                class="nav-link">
+
+                <span class="nav-icon">🏆</span>
+                Certificates
+
+            </a>
+
+
+            <div class="menu-title">
+                Learning
+            </div>
+
+
+            <a
+                href="trainer-library.html"
+                class="nav-link">
+
+                <span class="nav-icon">🗂️</span>
+                Learning Library
+
+            </a>
+
+
+            <a
+                href="competency-mapping.html"
+                class="nav-link">
+
+                <span class="nav-icon">🧠</span>
+                Find a Trainer
+
+            </a>
+
+
+            <a
+                href="feedback.html"
+                class="nav-link active">
+
+                <span class="nav-icon">💬</span>
+                Feedback
+
+            </a>
+
+
+            <a
+                href="notifications.html"
+                class="nav-link">
+
+                <span class="nav-icon">🔔</span>
+                Notifications
+
+            </a>
+
+
+            <div class="sidebar-card">
+
+                <h4>
+                    Your Voice Matters
+                </h4>
+
+                <p>
+                    Your feedback helps trainers and administrators
+                    improve courses, assessments, and learning resources.
+                </p>
+
+            </div>
+
+        </aside>
+
+
+        <!-- ================= MAIN ================= -->
+
+        <main class="main">
+
+            <!-- PAGE HEADING -->
+
+            <section class="page-heading">
+
+                <h2>
+                    Feedback & Reviews 💬
+                </h2>
+
+                <p>
+                    Share your learning experience and help us improve
+                    the quality of courses, trainers, and assessments.
+                </p>
+
+            </section>
+
+
+            <!-- STATS -->
+
+            <section class="stats">
+
+                <div class="stat">
+
+                    <div class="stat-icon">
+                        💬
+                    </div>
+
+                    <div class="stat-label">
+                        Feedback Submitted
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="feedbackCount">
+                        4
+                    </div>
+
+                    <div class="stat-note">
+                        Thank you for contributing
+                    </div>
+
+                </div>
+
+
+                <div class="stat">
+
+                    <div class="stat-icon">
+                        ⭐
+                    </div>
+
+                    <div class="stat-label">
+                        Average Rating
+                    </div>
+
+                    <div class="stat-value">
+                        4.6
+                    </div>
+
+                    <div class="stat-note">
+                        Excellent experience
+                    </div>
+
+                </div>
+
+
+                <div class="stat">
+
+                    <div class="stat-icon">
+                        📚
+                    </div>
+
+                    <div class="stat-label">
+                        Courses Reviewed
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="courseReviewedCount">
+                        3
+                    </div>
+
+                    <div class="stat-note">
+                        Learning programs
+                    </div>
+
+                </div>
+
+
+                <div class="stat">
+
+                    <div class="stat-icon">
+                        ✅
+                    </div>
+
+                    <div class="stat-label">
+                        Responses Reviewed
+                    </div>
+
+                    <div class="stat-value">
+                        3
+                    </div>
+
+                    <div class="stat-note">
+                        Admin reviewed
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ================= FORM + INFO ================= -->
+
+            <section class="content-grid">
+
+
+                <!-- FEEDBACK FORM -->
+
+                <div class="panel">
+
+                    <div class="panel-header">
+
+                        <h3>
+                            Submit New Feedback
+                        </h3>
+
+                        <p>
+                            Select a course and share your experience.
+                            Your feedback will be securely recorded.
+                        </p>
+
+                    </div>
+
+
+                    <form
+                        id="feedbackForm"
+                        onsubmit="submitFeedback(event)">
+
+
+                        <!-- COURSE -->
+
+                        <div class="form-group">
+
+                            <label>
+                                Course / Learning Program *
+                            </label>
+
+                            <select
+                                class="form-control"
+                                id="course"
+                                required>
+
+                                <option value="">
+                                    Select a course
+                                </option>
+
+                                <option>
+                                    Python Programming
+                                </option>
+
+                                <option>
+                                    Data Science Basics
+                                </option>
+
+                                <option>
+                                    Web Development Fundamentals
+                                </option>
+
+                                <option>
+                                    Data Visualization
+                                </option>
+
+                                <option>
+                                    Java Programming
+                                </option>
+
+                                <option>
+                                    Machine Learning Fundamentals
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- TRAINER -->
+
+                        <div class="form-group">
+
+                            <label>
+                                Trainer *
+                            </label>
+
+                            <select
+                                class="form-control"
+                                id="trainer"
+                                required>
+
+                                <option value="">
+                                    Select trainer
+                                </option>
+
+                                <option>
+                                    Dr. Ananya Sharma
+                                </option>
+
+                                <option>
+                                    Rahul Mehta
+                                </option>
+
+                                <option>
+                                    Priya Nair
+                                </option>
+
+                                <option>
+                                    Arjun Kumar
+                                </option>
+
+                                <option>
+                                    Sneha Reddy
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- RATINGS -->
+
+                        <div class="form-row">
+
+
+                            <div class="rating-box">
+
+                                <div class="rating-title">
+                                    Course Rating *
+                                </div>
+
+                                <div
+                                    class="stars"
+                                    id="courseStars">
+
+                                    <button
+                                        type="button"
+                                        class="star"
+                                        data-value="1">
+                                        ★
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        class="star"
+                                        data-value="2">
+                                        ★
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        class="star"
+                                        data-value="3">
+                                        ★
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        class="star"
+                                        data-value="4">
+                                        ★
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        class="star"
+                                        data-value="5">
+                                        ★
+                                    </button>
+
+                                </div>
+
+                                <div
+                                    class="rating-text"
+                                    id="courseRatingText">
+                                    Select rating
+                                </div>
+
+                                <input
+                                    type="hidden"
+                                    id="courseRating"
+                                    value="0">
+
+                            </div>
+
+
+                            <div class="rating-box">
+
+                                <div class="rating-title">
+                                    Trainer Rating *
+                                </div>
+
+                                <div
+                                    class="stars"
+                                    id="trainerStars">
+
+                                    <button
+                                        type="button"
+                                        class="star"
+                                        data-value="1">
+                                        ★
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        class="star"
+                                        data-value="2">
+                                        ★
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        class="star"
+                                        data-value="3">
+                                        ★
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        class="star"
+                                        data-value="4">
+                                        ★
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        class="star"
+                                        data-value="5">
+                                        ★
+                                    </button>
+
+                                </div>
+
+                                <div
+                                    class="rating-text"
+                                    id="trainerRatingText">
+                                    Select rating
+                                </div>
+
+                                <input
+                                    type="hidden"
+                                    id="trainerRating"
+                                    value="0">
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- CATEGORY -->
+
+                        <div class="form-group">
+
+                            <label>
+                                Feedback Category *
+                            </label>
+
+                            <div class="category-grid">
+
+
+                                <div class="category-option">
+
+                                    <input
+                                        type="radio"
+                                        name="category"
+                                        id="cat-course"
+                                        value="Course Content"
+                                        required>
+
+                                    <label for="cat-course">
+                                        📚 Course Content
+                                    </label>
+
+                                </div>
+
+
+                                <div class="category-option">
+
+                                    <input
+                                        type="radio"
+                                        name="category"
+                                        id="cat-trainer"
+                                        value="Trainer"
+                                        required>
+
+                                    <label for="cat-trainer">
+                                        👨‍🏫 Trainer
+                                    </label>
+
+                                </div>
+
+
+                                <div class="category-option">
+
+                                    <input
+                                        type="radio"
+                                        name="category"
+                                        id="cat-assessment"
+                                        value="Assessment"
+                                        required>
+
+                                    <label for="cat-assessment">
+                                        📝 Assessment
+                                    </label>
+
+                                </div>
+
+
+                                <div class="category-option">
+
+                                    <input
+                                        type="radio"
+                                        name="category"
+                                        id="cat-resource"
+                                        value="Learning Resources"
+                                        required>
+
+                                    <label for="cat-resource">
+                                        🗂️ Resources
+                                    </label>
+
+                                </div>
+
+
+                                <div class="category-option">
+
+                                    <input
+                                        type="radio"
+                                        name="category"
+                                        id="cat-platform"
+                                        value="Platform"
+                                        required>
+
+                                    <label for="cat-platform">
+                                        💻 Platform
+                                    </label>
+
+                                </div>
+
+
+                                <div class="category-option">
+
+                                    <input
+                                        type="radio"
+                                        name="category"
+                                        id="cat-other"
+                                        value="Other"
+                                        required>
+
+                                    <label for="cat-other">
+                                        💡 Other
+                                    </label>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- COMMENTS -->
+
+                        <div class="form-group">
+
+                            <label>
+                                Your Feedback *
+                            </label>
+
+                            <textarea
+                                class="form-control"
+                                id="comments"
+                                maxlength="500"
+                                required
+                                placeholder="Tell us about your learning experience..."></textarea>
+
+                            <div
+                                id="characterCount"
+                                style="text-align:right;margin-top:4px;color:#9ca3af;font-size:8px;">
+                                0 / 500
+                            </div>
+
+                        </div>
+
+
+                        <!-- RECOMMEND -->
+
+                        <div class="checkbox-row">
+
+                            <input
+                                type="checkbox"
+                                id="recommend">
+
+                            <label for="recommend">
+                                I would recommend this course to other learners.
+                            </label>
+
+                        </div>
+
+
+                        <!-- SUBMIT -->
+
+                        <button
+                            type="submit"
+                            class="submit-btn">
+
+                            🚀 Submit Feedback
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+
+                <!-- RIGHT INFO -->
+
+                <div>
+
+                    <div class="info-card rating-summary">
+
+                        <div class="info-icon" style="margin:auto;">
+                            ⭐
+                        </div>
+
+                        <div class="big-rating">
+                            4.6
+                        </div>
+
+                        <div class="summary-stars">
+                            ★★★★★
+                        </div>
+
+                        <p>
+                            Overall trainee satisfaction
+                        </p>
+
+                    </div>
+
+
+                    <div class="info-card">
+
+                        <div class="info-card-head">
+
+                            <div class="info-icon">
+                                🔐
+                            </div>
+
+                            <h4>
+                                Privacy
+                            </h4>
+
+                        </div>
+
+                        <p>
+                            Your feedback is securely associated with your
+                            trainee account and is used to improve the
+                            CAPACITY CONNECT learning experience.
+                        </p>
+
+                    </div>
+
+
+                    <div class="info-card">
+
+                        <div class="info-card-head">
+
+                            <div class="info-icon">
+                                💡
+                            </div>
+
+                            <h4>
+                                Helpful Feedback
+                            </h4>
+
+                        </div>
+
+                        <p>
+                            Mention specific strengths, areas for improvement,
+                            clarity of explanations, learning resources,
+                            and assessment difficulty.
+                        </p>
+
+                    </div>
+
+
+                    <div class="info-card">
+
+                        <div class="info-card-head">
+
+                            <div class="info-icon">
+                                📈
+                            </div>
+
+                            <h4>
+                                Impact
+                            </h4>
+
+                        </div>
+
+                        <p>
+                            Trainer feedback can help improve future courses,
+                            learning materials, assessments, and overall
+                            trainee performance.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ================= HISTORY ================= -->
+
+            <section class="panel history-panel">
+
+                <div class="panel-header">
+
+                    <h3>
+                        My Feedback History
+                    </h3>
+
+                    <p>
+                        Review feedback previously submitted through
+                        CAPACITY CONNECT.
+                    </p>
+
+                </div>
+
+
+                <div class="history-toolbar">
+
+                    <div class="search-box">
+
+                        <span class="search-icon">
+                            🔍
+                        </span>
+
+                        <input
+                            type="text"
+                            id="historySearch"
+                            placeholder="Search course or trainer..."
+                            oninput="filterHistory()">
+
+                    </div>
+
+
+                    <select
+                        class="filter-select"
+                        id="statusFilter"
+                        onchange="filterHistory()">
+
+                        <option value="all">
+                            All Status
+                        </option>
+
+                        <option value="submitted">
+                            Submitted
+                        </option>
+
+                        <option value="reviewed">
+                            Reviewed
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div
+                    class="feedback-list"
+                    id="feedbackList">
+
+
+                    <!-- ITEM 1 -->
+
+                    <div
+                        class="feedback-item"
+                        data-search="python programming dr ananya sharma"
+                        data-status="reviewed">
+
+                        <div>
+
+                            <div class="feedback-course">
+                                Python Programming
+                            </div>
+
+                            <div class="feedback-date">
+                                Submitted on 28 August 2026
+                            </div>
+
+                        </div>
+
+                        <div>
+
+                            <div class="item-rating">
+                                ★★★★★
+                            </div>
+
+                        </div>
+
+                        <div>
+
+                            <span class="status status-reviewed">
+                                Reviewed
+                            </span>
+
+                        </div>
+
+                        <div>
+                            📚 Course
+                        </div>
+
+                    </div>
+
+
+                    <!-- ITEM 2 -->
+
+                    <div
+                        class="feedback-item"
+                        data-search="data science basics rahul mehta"
+                        data-status="reviewed">
+
+                        <div>
+
+                            <div class="feedback-course">
+                                Data Science Basics
+                            </div>
+
+                            <div class="feedback-date">
+                                Submitted on 17 August 2026
+                            </div>
+
+                        </div>
+
+                        <div>
+
+                            <div class="item-rating">
+                                ★★★★★
+                            </div>
+
+                        </div>
+
+                        <div>
+
+                            <span class="status status-reviewed">
+                                Reviewed
+                            </span>
+
+                        </div>
+
+                        <div>
+                            👨‍🏫 Trainer
+                        </div>
+
+                    </div>
+
+
+                    <!-- ITEM 3 -->
+
+                    <div
+                        class="feedback-item"
+                        data-search="web development fundamentals priya nair"
+                        data-status="submitted">
+
+                        <div>
+
+                            <div class="feedback-course">
+                                Web Development Fundamentals
+                            </div>
+
+                            <div class="feedback-date">
+                                Submitted on 1 August 2026
+                            </div>
+
+                        </div>
+
+                        <div>
+
+                            <div class="item-rating">
+                                ★★★★☆
+                            </div>
+
+                        </div>
+
+                        <div>
+
+                            <span class="status status-submitted">
+                                Submitted
+                            </span>
+
+                        </div>
+
+                        <div>
+                            💻 Platform
+                        </div>
+
+                    </div>
+
+
+                    <!-- ITEM 4 -->
+
+                    <div
+                        class="feedback-item"
+                        data-search="data visualization arjun kumar"
+                        data-status="reviewed">
+
+                        <div>
+
+                            <div class="feedback-course">
+                                Data Visualization
+                            </div>
+
+                            <div class="feedback-date">
+                                Submitted on 20 July 2026
+                            </div>
+
+                        </div>
+
+                        <div>
+
+                            <div class="item-rating">
+                                ★★★★★
+                            </div>
+
+                        </div>
+
+                        <div>
+
+                            <span class="status status-reviewed">
+                                Reviewed
+                            </span>
+
+                        </div>
+
+                        <div>
+                            🗂️ Resources
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="empty-history"
+                    id="emptyHistory">
+
+                    🔍 No matching feedback found.
+
+                </div>
+
+            </section>
+
+
+            <footer>
+
+                © <span id="year"></span>
+                <strong>CAPACITY CONNECT</strong>.
+                Feedback & Learning Improvement Portal.
+
+            </footer>
+
+        </main>
+
+    </div>
+
+
+    <!-- ================= SUCCESS MODAL ================= -->
+
+    <div
+        class="modal"
+        id="successModal">
+
+        <div class="modal-box">
+
+            <div class="modal-header">
+
+                <h3>
+                    Feedback Submitted
+                </h3>
+
+                <button
+                    class="close-btn"
+                    onclick="closeModal()">
+                    ×
+                </button>
+
+            </div>
+
+
+            <div class="modal-body">
+
+                <div class="success-icon">
+                    ✓
+                </div>
+
+                <h4>
+                    Thank You! 🎉
+                </h4>
+
+                <p>
+                    Your feedback has been submitted successfully.
+                    It will help trainers and administrators improve
+                    the learning experience for future trainees.
+                </p>
+
+                <button
+                    class="modal-btn"
+                    onclick="closeModal()">
+                    Continue
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+
+    <script>
+
+        /* ================= NAVIGATION ================= */
+
+        function goToPage(page) {
+            window.location.href = page;
+        }
+
+
+        /* ================= SIDEBAR ================= */
+
+        function toggleSidebar() {
+
+            document
+                .getElementById("sidebar")
+                .classList
+                .toggle("open");
+
+        }
+
+
+        /* ================= STAR RATING ================= */
+
+        function setupRating(
+            containerId,
+            inputId,
+            textId
+        ) {
+
+            const container =
+                document.getElementById(containerId);
+
+            const stars =
+                container.querySelectorAll(".star");
+
+            const input =
+                document.getElementById(inputId);
+
+            const text =
+                document.getElementById(textId);
+
+
+            const labels = [
+                "",
+                "Poor",
+                "Fair",
+                "Good",
+                "Very Good",
+                "Excellent"
+            ];
+
+
+            stars.forEach(star => {
+
+                star.addEventListener(
+                    "mouseenter",
+                    function() {
+
+                        const value =
+                            Number(this.dataset.value);
+
+                        stars.forEach(s => {
+
+                            s.classList.toggle(
+                                "active",
+                                Number(s.dataset.value) <= value
+                            );
+
+                        });
+
+                    }
+                );
+
+
+                star.addEventListener(
+                    "click",
+                    function() {
+
+                        const value =
+                            Number(this.dataset.value);
+
+                        input.value = value;
+
+                        text.textContent =
+                            value + " / 5 - " + labels[value];
+
+                    }
+                );
+
+            });
+
+
+            container.addEventListener(
+                "mouseleave",
+                function() {
+
+                    const selected =
+                        Number(input.value);
+
+                    stars.forEach(s => {
+
+                        s.classList.toggle(
+                            "active",
+                            Number(s.dataset.value) <= selected
+                        );
+
+                    });
+
+                }
+            );
+
+        }
+
+
+        setupRating(
+            "courseStars",
+            "courseRating",
+            "courseRatingText"
+        );
+
+
+        setupRating(
+            "trainerStars",
+            "trainerRating",
+            "trainerRatingText"
+        );
+
+
+        /* ================= CHARACTER COUNT ================= */
+
+        const comments =
+            document.getElementById("comments");
+
+        const characterCount =
+            document.getElementById("characterCount");
+
+
+        comments.addEventListener(
+            "input",
+            function() {
+
+                characterCount.textContent =
+                    this.value.length + " / 500";
+
+            }
+        );
+
+
+        /* ================= FORM SUBMIT ================= */
+
+        function submitFeedback(event) {
+
+            event.preventDefault();
+
+
+            const course =
+                document
+                    .getElementById("course")
+                    .value;
+
+            const trainer =
+                document
+                    .getElementById("trainer")
+                    .value;
+
+            const courseRating =
+                Number(
+                    document
+                        .getElementById("courseRating")
+                        .value
+                );
+
+            const trainerRating =
+                Number(
+                    document
+                        .getElementById("trainerRating")
+                        .value
+                );
+
+
+            if (courseRating === 0) {
+
+                alert(
+                    "Please give a rating for the course."
+                );
+
+                return;
+
+            }
+
+
+            if (trainerRating === 0) {
+
+                alert(
+                    "Please give a rating for the trainer."
+                );
+
+                return;
+
+            }
+
+
+            if (!course || !trainer) {
+
+                alert(
+                    "Please select the course and trainer."
+                );
+
+                return;
+
+            }
+
+
+            const category =
+                document
+                    .querySelector(
+                        'input[name="category"]:checked'
+                    )
+                    .value;
+
+
+            const commentsValue =
+                document
+                    .getElementById("comments")
+                    .value
+                    .trim();
+
+
+            if (!commentsValue) {
+
+                alert(
+                    "Please enter your feedback."
+                );
+
+                return;
+
+            }
+
+
+            /* Store demo feedback locally */
+
+            const feedback = {
+
+                course: course,
+
+                trainer: trainer,
+
+                courseRating: courseRating,
+
+                trainerRating: trainerRating,
+
+                category: category,
+
+                comments: commentsValue,
+
+                date: new Date()
+                    .toLocaleDateString(
+                        "en-GB",
+                        {
+                            day: "2-digit",
+                            month: "long",
+                            year: "numeric"
+                        }
+                    )
+
+            };
+
+
+            const existing =
+                JSON.parse(
+                    localStorage.getItem(
+                        "capacityConnectFeedback"
+                    ) || "[]"
+                );
+
+
+            existing.push(feedback);
+
+
+            localStorage.setItem(
+                "capacityConnectFeedback",
+                JSON.stringify(existing)
+            );
+
+
+            document
+                .getElementById("feedbackCount")
+                .textContent =
+                Number(
+                    document
+                        .getElementById("feedbackCount")
+                        .textContent
+                ) + 1;
+
+
+            updateCourseCount(course);
+
+
+            document
+                .getElementById("successModal")
+                .classList
+                .add("show");
+
+
+            document
+                .getElementById("feedbackForm")
+                .reset();
+
+
+            resetRatings();
+
+            characterCount.textContent =
+                "0 / 500";
+
+        }
+
+
+        /* ================= COURSE COUNT ================= */
+
+        function updateCourseCount(course) {
+
+            const count =
+                Number(
+                    document
+                        .getElementById("courseReviewedCount")
+                        .textContent
+                );
+
+            document
+                .getElementById("courseReviewedCount")
+                .textContent =
+                count + 1;
+
+        }
+
+
+        /* ================= RESET RATINGS ================= */
+
+        function resetRatings() {
+
+            [
+                "courseStars",
+                "trainerStars"
+            ].forEach(id => {
+
+                document
+                    .getElementById(id)
+                    .querySelectorAll(".star")
+                    .forEach(star => {
+
+                        star.classList.remove(
+                            "active"
+                        );
+
+                    });
+
+            });
+
+
+            document
+                .getElementById("courseRating")
+                .value = "0";
+
+            document
+                .getElementById("trainerRating")
+                .value = "0";
+
+            document
+                .getElementById("courseRatingText")
+                .textContent =
+                "Select rating";
+
+            document
+                .getElementById("trainerRatingText")
+                .textContent =
+                "Select rating";
+
+        }
+
+
+        /* ================= MODAL ================= */
+
+        function closeModal() {
+
+            document
+                .getElementById("successModal")
+                .classList
+                .remove("show");
+
+        }
+
+
+        window.addEventListener(
+            "click",
+            function(event) {
+
+                const modal =
+                    document
+                        .getElementById("successModal");
+
+                if (event.target === modal) {
+
+                    closeModal();
+
+                }
+
+            }
+        );
+
+
+        /* ================= HISTORY FILTER ================= */
+
+        function filterHistory() {
+
+            const search =
+                document
+                    .getElementById("historySearch")
+                    .value
+                    .toLowerCase()
+                    .trim();
+
+            const status =
+                document
+                    .getElementById("statusFilter")
+                    .value;
+
+
+            const items =
+                document.querySelectorAll(
+                    ".feedback-item"
+                );
+
+
+            let visible = 0;
+
+
+            items.forEach(item => {
+
+                const itemSearch =
+                    item.dataset.search
+                    .toLowerCase();
+
+                const itemStatus =
+                    item.dataset.status;
+
+
+                const searchMatch =
+                    itemSearch.includes(search);
+
+                const statusMatch =
+                    status === "all" ||
+                    itemStatus === status;
+
+
+                if (
+                    searchMatch &&
+                    statusMatch
+                ) {
+
+                    item.style.display =
+                        "grid";
+
+                    visible++;
+
+                } else {
+
+                    item.style.display =
+                        "none";
+
+                }
+
+            });
+
+
+            document
+                .getElementById("emptyHistory")
+                .style.display =
+                visible === 0
+                ? "block"
+                : "none";
+
+        }
+
+
+        /* ================= MOBILE NAV ================= */
+
+        document
+            .querySelectorAll(".nav-link")
+            .forEach(link => {
+
+                link.addEventListener(
+                    "click",
+                    function() {
+
+                        if (
+                            window.innerWidth <= 820
+                        ) {
+
+                            document
+                                .getElementById("sidebar")
+                                .classList
+                                .remove("open");
+
+                        }
+
+                    }
+                );
+
+            });
+
+
+        /* ================= YEAR ================= */
+
+        document
+            .getElementById("year")
+            .textContent =
+            new Date().getFullYear();
+
+
+        /* ================= LOAD LOCAL FEEDBACK ================= */
+
+        function loadLocalFeedback() {
+
+            const feedbacks =
+                JSON.parse(
+                    localStorage.getItem(
+                        "capacityConnectFeedback"
+                    ) || "[]"
+                );
+
+
+            const feedbackCount =
+                document.getElementById(
+                    "feedbackCount"
+                );
+
+
+            if (feedbacks.length > 0) {
+
+                feedbackCount.textContent =
+                    4 + feedbacks.length;
+
+            }
+
+        }
+
+
+        loadLocalFeedback();
+
+    </script>
+
+</body>
+</html>
