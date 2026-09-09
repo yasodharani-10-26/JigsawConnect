@@ -1,11 +1,11 @@
-
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Trainer Assessments | CAPACITY CONNECT</title>
+    <title>Trainee Assessments | CAPACITY CONNECT</title>
 
     <style>
         * {
@@ -49,7 +49,7 @@
             position: sticky;
             top: 0;
             z-index: 1000;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.12);
+            box-shadow: 0 5px 20px rgba(0,0,0,.12);
         }
 
         .header-left {
@@ -73,8 +73,8 @@
             width: 42px;
             height: 42px;
             border-radius: 11px;
-            background: rgba(255,255,255,0.16);
-            border: 1px solid rgba(255,255,255,0.25);
+            background: rgba(255,255,255,.16);
+            border: 1px solid rgba(255,255,255,.25);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -83,14 +83,14 @@
 
         .brand h1 {
             font-size: 20px;
-            letter-spacing: 0.4px;
+            letter-spacing: .4px;
         }
 
         .brand small {
             display: block;
             font-size: 10px;
-            margin-top: 3px;
             opacity: .82;
+            margin-top: 3px;
         }
 
         .header-right {
@@ -104,14 +104,14 @@
             height: 40px;
             border: none;
             border-radius: 50%;
-            background: rgba(255,255,255,0.15);
+            background: rgba(255,255,255,.15);
             color: white;
             cursor: pointer;
             font-size: 17px;
         }
 
         .header-btn:hover {
-            background: rgba(255,255,255,0.25);
+            background: rgba(255,255,255,.25);
         }
 
         .profile-mini {
@@ -130,8 +130,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 800;
             font-size: 13px;
+            font-weight: 800;
         }
 
         .profile-text strong {
@@ -140,8 +140,10 @@
         }
 
         .profile-text span {
+            display: block;
             font-size: 10px;
             opacity: .8;
+            margin-top: 2px;
         }
 
         /* ================= LAYOUT ================= */
@@ -184,7 +186,7 @@
             text-decoration: none;
             color: var(--text);
             font-size: 13px;
-            transition: 0.2s;
+            transition: .2s;
         }
 
         .nav-link:hover {
@@ -213,8 +215,8 @@
         }
 
         .sidebar-card h4 {
-            font-size: 12px;
             color: var(--dark);
+            font-size: 12px;
             margin-bottom: 6px;
         }
 
@@ -237,7 +239,7 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            gap: 20px;
+            gap: 18px;
             margin-bottom: 23px;
         }
 
@@ -253,29 +255,22 @@
             line-height: 1.5;
         }
 
-        .create-btn {
+        .history-btn {
             border: none;
-            border-radius: 8px;
             background: var(--primary);
             color: white;
-            padding: 11px 16px;
-            cursor: pointer;
-            font-size: 11px;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 10px;
             font-weight: 700;
-            transition: .2s;
-            white-space: nowrap;
-        }
-
-        .create-btn:hover {
-            background: var(--primary-dark);
-            transform: translateY(-1px);
+            cursor: pointer;
         }
 
         /* ================= STATS ================= */
 
         .stats {
             display: grid;
-            grid-template-columns: repeat(5,1fr);
+            grid-template-columns: repeat(4,1fr);
             gap: 14px;
             margin-bottom: 22px;
         }
@@ -300,15 +295,15 @@
             background: #eef2ff;
             color: var(--primary);
             display: flex;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
             margin-bottom: 11px;
             font-size: 17px;
         }
 
         .stat-label {
-            font-size: 10px;
             color: var(--muted);
+            font-size: 10px;
         }
 
         .stat-value {
@@ -319,8 +314,8 @@
         }
 
         .stat-note {
-            font-size: 9px;
             color: var(--success);
+            font-size: 9px;
             margin-top: 3px;
         }
 
@@ -342,7 +337,7 @@
         .search-box {
             position: relative;
             flex: 1;
-            min-width: 220px;
+            min-width: 230px;
         }
 
         .search-box input {
@@ -350,8 +345,8 @@
             border: 1px solid var(--border);
             border-radius: 8px;
             padding: 10px 12px 10px 35px;
-            font-size: 11px;
             outline: none;
+            font-size: 11px;
         }
 
         .search-box input:focus {
@@ -378,9 +373,9 @@
             border: 1px solid var(--border);
             border-radius: 8px;
             padding: 9px 11px;
-            font-size: 10px;
-            color: var(--text);
             background: white;
+            color: var(--text);
+            font-size: 10px;
             outline: none;
         }
 
@@ -403,11 +398,11 @@
         .assessment-card:hover {
             transform: translateY(-4px);
             border-color: #c7d2fe;
-            box-shadow: 0 10px 27px rgba(0,0,0,.06);
+            box-shadow: 0 10px 26px rgba(0,0,0,.06);
         }
 
         .assessment-cover {
-            height: 92px;
+            height: 105px;
             padding: 16px;
             display: flex;
             justify-content: space-between;
@@ -440,24 +435,24 @@
         }
 
         .assessment-icon {
-            width: 43px;
-            height: 43px;
-            border-radius: 11px;
-            background: rgba(255,255,255,.16);
-            border: 1px solid rgba(255,255,255,.22);
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
             display: flex;
-            align-items: center;
             justify-content: center;
-            font-size: 20px;
+            align-items: center;
+            background: rgba(255,255,255,.16);
+            border: 1px solid rgba(255,255,255,.24);
+            font-size: 21px;
         }
 
         .status {
             padding: 5px 8px;
             border-radius: 15px;
+            background: rgba(255,255,255,.15);
+            border: 1px solid rgba(255,255,255,.22);
             font-size: 8px;
             font-weight: 700;
-            background: rgba(255,255,255,.15);
-            border: 1px solid rgba(255,255,255,.25);
         }
 
         .assessment-body {
@@ -467,8 +462,8 @@
         .assessment-category {
             color: var(--primary);
             font-size: 9px;
-            text-transform: uppercase;
             font-weight: 750;
+            text-transform: uppercase;
             letter-spacing: .4px;
             margin-bottom: 5px;
         }
@@ -478,7 +473,7 @@
             font-size: 14px;
             font-weight: 750;
             line-height: 1.4;
-            min-height: 38px;
+            min-height: 39px;
             margin-bottom: 6px;
         }
 
@@ -491,7 +486,7 @@
 
         .assessment-meta {
             display: grid;
-            grid-template-columns: repeat(2,1fr);
+            grid-template-columns: 1fr 1fr;
             gap: 8px;
             margin: 14px 0;
         }
@@ -519,22 +514,40 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            padding: 9px;
             border-radius: 8px;
+            padding: 9px;
             background: #fffbeb;
             border: 1px solid #fde68a;
             margin-bottom: 12px;
         }
 
-        .deadline-box.expired {
-            background: #fef2f2;
-            border-color: #fecaca;
+        .deadline-box.success {
+            background: #f0fdf4;
+            border-color: #bbf7d0;
+        }
+
+        .deadline-box.closed {
+            background: #f3f4f6;
+            border-color: #e5e7eb;
+        }
+
+        .deadline-icon {
+            font-size: 15px;
         }
 
         .deadline-box strong {
             display: block;
             color: #92400e;
             font-size: 9px;
+            margin-bottom: 2px;
+        }
+
+        .deadline-box.success strong {
+            color: #166534;
+        }
+
+        .deadline-box.closed strong {
+            color: var(--text);
         }
 
         .deadline-box span {
@@ -542,37 +555,34 @@
             font-size: 8px;
         }
 
-        .deadline-icon {
-            font-size: 15px;
-        }
-
-        .participation {
+        .score-section {
             border-top: 1px solid #f1f2f5;
             padding-top: 12px;
         }
 
-        .participation-row {
+        .score-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 6px;
+            margin-bottom: 7px;
         }
 
-        .participation-row span {
+        .score-row span {
             color: var(--muted);
             font-size: 8px;
         }
 
-        .participation-row strong {
-            color: var(--dark);
-            font-size: 9px;
+        .score-value {
+            color: var(--success) !important;
+            font-size: 10px !important;
+            font-weight: 800;
         }
 
         .progress-bar {
             width: 100%;
             height: 6px;
-            border-radius: 20px;
             background: #e5e7eb;
+            border-radius: 20px;
             overflow: hidden;
         }
 
@@ -592,44 +602,58 @@
             flex: 1;
             border: none;
             border-radius: 7px;
-            padding: 8px;
+            padding: 9px 8px;
             cursor: pointer;
             font-size: 9px;
             font-weight: 700;
         }
 
-        .manage-btn {
+        .details-btn {
             color: var(--primary);
             background: #eef2ff;
         }
 
-        .results-btn {
-            color: #0e7490;
-            background: #ecfeff;
+        .details-btn:hover {
+            background: #e0e7ff;
         }
 
-        .more-btn {
-            width: 34px;
-            flex: 0 0 34px;
+        .start-btn {
+            color: white;
+            background: var(--primary);
+        }
+
+        .start-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .completed-btn {
+            color: #166534;
+            background: #dcfce7;
+            cursor: default;
+        }
+
+        .locked-btn {
+            color: var(--muted);
             background: #f3f4f6;
-            color: var(--text);
+            cursor: not-allowed;
         }
 
-        /* ================= PERFORMANCE TABLE ================= */
+        /* ================= HISTORY ================= */
 
-        .panel {
+        .history-panel {
             background: white;
             border: 1px solid var(--border);
             border-radius: 14px;
+            margin-top: 22px;
             overflow: hidden;
         }
 
         .panel-header {
+            padding: 17px 19px;
+            border-bottom: 1px solid #f0f1f4;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 17px 19px;
-            border-bottom: 1px solid #f0f1f4;
         }
 
         .panel-header h3 {
@@ -637,16 +661,9 @@
             font-size: 15px;
         }
 
-        .panel-header span,
-        .panel-header a {
+        .panel-header span {
             color: var(--muted);
-            font-size: 10px;
-            text-decoration: none;
-        }
-
-        .panel-header a {
-            color: var(--primary);
-            font-weight: 700;
+            font-size: 9px;
         }
 
         .table-wrap {
@@ -660,58 +677,49 @@
 
         th,
         td {
-            text-align: left;
             padding: 13px 18px;
+            text-align: left;
             border-bottom: 1px solid #f1f2f5;
             font-size: 10px;
         }
 
         th {
             color: var(--muted);
-            background: #fafafa;
             font-size: 9px;
+            background: #fafafa;
             text-transform: uppercase;
         }
 
-        .trainee-name {
+        td {
+            color: var(--text);
+        }
+
+        .assessment-name {
             color: var(--dark);
             font-weight: 700;
         }
 
-        .score {
+        .score-green {
             color: var(--success);
             font-weight: 800;
         }
 
-        .small-status {
+        .passed {
+            color: #166534;
+            background: #dcfce7;
             padding: 4px 7px;
             border-radius: 12px;
             font-size: 8px;
             font-weight: 700;
         }
 
-        .passed {
-            background: #dcfce7;
-            color: #166534;
-        }
-
-        .pending {
-            background: #fef3c7;
+        .review {
             color: #92400e;
-        }
-
-        .progress-small {
-            width: 75px;
-            height: 6px;
-            background: #e5e7eb;
-            border-radius: 20px;
-            overflow: hidden;
-        }
-
-        .progress-small-fill {
-            height: 100%;
-            background: linear-gradient(90deg,#4f46e5,#06b6d4);
-            border-radius: 20px;
+            background: #fef3c7;
+            padding: 4px 7px;
+            border-radius: 12px;
+            font-size: 8px;
+            font-weight: 700;
         }
 
         /* ================= EMPTY ================= */
@@ -722,7 +730,6 @@
             border: 1px solid var(--border);
             border-radius: 14px;
             padding: 45px 20px;
-            margin-top: 15px;
             text-align: center;
         }
 
@@ -750,7 +757,7 @@
             font-size: 10px;
         }
 
-        /* ================= MODALS ================= */
+        /* ================= MODAL ================= */
 
         .modal {
             display: none;
@@ -769,7 +776,7 @@
 
         .modal-box {
             width: 100%;
-            max-width: 700px;
+            max-width: 760px;
             max-height: 92vh;
             overflow-y: auto;
             background: white;
@@ -778,11 +785,11 @@
         }
 
         .modal-header {
-            padding: 17px 20px;
-            border-bottom: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 17px 20px;
+            border-bottom: 1px solid var(--border);
         }
 
         .modal-header h3 {
@@ -791,8 +798,8 @@
         }
 
         .close-btn {
-            background: transparent;
             border: none;
+            background: transparent;
             color: var(--muted);
             font-size: 23px;
             cursor: pointer;
@@ -802,132 +809,244 @@
             padding: 20px;
         }
 
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 13px;
-        }
+        /* ================= TEST ================= */
 
-        .form-group {
+        .test-header {
             display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .full {
-            grid-column: 1 / -1;
-        }
-
-        label {
-            color: var(--dark);
-            font-size: 10px;
-            font-weight: 700;
-        }
-
-        input,
-        select,
-        textarea {
-            width: 100%;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 10px 11px;
-            background: white;
-            color: var(--text);
-            outline: none;
-            font-size: 10px;
-        }
-
-        textarea {
-            min-height: 80px;
-            resize: vertical;
-        }
-
-        input:focus,
-        select:focus,
-        textarea:focus {
-            border-color: #a5b4fc;
-            box-shadow: 0 0 0 3px rgba(79,70,229,.08);
-        }
-
-        .modal-footer {
-            display: flex;
-            justify-content: flex-end;
-            gap: 8px;
-            margin-top: 18px;
-        }
-
-        .modal-btn {
-            border: none;
-            border-radius: 8px;
-            padding: 10px 14px;
-            cursor: pointer;
-            font-size: 10px;
-            font-weight: 700;
-        }
-
-        .cancel-btn {
-            color: var(--text);
-            background: #f3f4f6;
-        }
-
-        .save-btn {
-            color: white;
-            background: var(--primary);
-        }
-
-        .save-btn:hover {
-            background: var(--primary-dark);
-        }
-
-        /* ================= QUESTION BUILDER ================= */
-
-        .question-list {
-            margin-top: 18px;
-        }
-
-        .question-item {
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 13px;
-            margin-bottom: 10px;
-            background: #fafafa;
-        }
-
-        .question-head {
-            display: flex;
+            align-items: center;
             justify-content: space-between;
-            gap: 10px;
-            margin-bottom: 8px;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .test-title-area h3 {
+            color: var(--dark);
+            font-size: 17px;
+            margin-bottom: 5px;
+        }
+
+        .test-title-area p {
+            color: var(--muted);
+            font-size: 9px;
+        }
+
+        .timer {
+            min-width: 96px;
+            padding: 9px 12px;
+            border-radius: 9px;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #b91c1c;
+            font-weight: 800;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        .question-progress {
+            height: 7px;
+            width: 100%;
+            background: #e5e7eb;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .question-progress-fill {
+            height: 100%;
+            border-radius: 20px;
+            background: linear-gradient(90deg,#4f46e5,#06b6d4);
+            width: 33%;
+            transition: width .25s;
         }
 
         .question-number {
-            font-size: 9px;
             color: var(--primary);
+            font-size: 10px;
+            font-weight: 800;
+            margin-bottom: 9px;
+        }
+
+        .question-text {
+            color: var(--dark);
+            font-size: 15px;
+            line-height: 1.5;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .options {
+            display: grid;
+            gap: 9px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .option:hover {
+            border-color: #a5b4fc;
+            background: #f8faff;
+        }
+
+        .option.selected {
+            border-color: var(--primary);
+            background: #eef2ff;
+        }
+
+        .option input {
+            display: none;
+        }
+
+        .option-letter {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            background: #f3f4f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text);
+            font-size: 10px;
             font-weight: 800;
         }
 
-        .remove-question {
+        .option.selected .option-letter {
+            background: var(--primary);
+            color: white;
+        }
+
+        .option-text {
+            color: var(--text);
+            font-size: 11px;
+        }
+
+        .test-actions {
+            display: flex;
+            justify-content: space-between;
+            gap: 9px;
+            margin-top: 20px;
+            padding-top: 14px;
+            border-top: 1px solid #f1f2f5;
+        }
+
+        .test-btn {
             border: none;
-            background: #fee2e2;
-            color: #b91c1c;
-            border-radius: 5px;
-            padding: 4px 7px;
+            border-radius: 8px;
+            padding: 10px 15px;
+            font-size: 10px;
+            font-weight: 700;
             cursor: pointer;
+        }
+
+        .prev-btn {
+            background: #f3f4f6;
+            color: var(--text);
+        }
+
+        .next-btn,
+        .submit-btn {
+            background: var(--primary);
+            color: white;
+        }
+
+        .submit-btn {
+            display: none;
+        }
+
+        /* ================= RESULT ================= */
+
+        .result-screen {
+            text-align: center;
+            padding: 12px 5px;
+        }
+
+        .result-icon {
+            width: 76px;
+            height: 76px;
+            border-radius: 50%;
+            background: #dcfce7;
+            color: var(--success);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 15px;
+            font-size: 31px;
+        }
+
+        .result-screen.fail .result-icon {
+            background: #fee2e2;
+            color: var(--danger);
+        }
+
+        .result-screen h2 {
+            color: var(--dark);
+            font-size: 22px;
+            margin-bottom: 6px;
+        }
+
+        .result-screen p {
+            color: var(--muted);
+            font-size: 10px;
+            line-height: 1.6;
+        }
+
+        .score-big {
+            color: var(--primary);
+            font-size: 38px;
+            font-weight: 850;
+            margin: 16px 0 4px;
+        }
+
+        .result-label {
+            color: var(--muted);
+            font-size: 9px;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(3,1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .result-box {
+            background: #fafafa;
+            border: 1px solid #f0f1f4;
+            border-radius: 9px;
+            padding: 12px;
+        }
+
+        .result-box strong {
+            display: block;
+            color: var(--dark);
+            font-size: 15px;
+            margin-bottom: 3px;
+        }
+
+        .result-box span {
+            color: var(--muted);
             font-size: 8px;
         }
 
-        .option-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+        .result-actions {
+            display: flex;
+            justify-content: center;
             gap: 8px;
-            margin-top: 8px;
+            margin-top: 20px;
         }
 
         /* ================= FOOTER ================= */
 
         footer {
-            padding: 28px 10px 5px;
             text-align: center;
+            padding: 28px 10px 5px;
             color: #9ca3af;
             font-size: 9px;
         }
@@ -939,12 +1058,13 @@
         /* ================= RESPONSIVE ================= */
 
         @media (max-width: 1200px) {
+
             .assessment-grid {
                 grid-template-columns: repeat(2,1fr);
             }
 
             .stats {
-                grid-template-columns: repeat(3,1fr);
+                grid-template-columns: repeat(2,1fr);
             }
         }
 
@@ -989,24 +1109,11 @@
             }
         }
 
-        @media (max-width: 650px) {
+        @media (max-width: 620px) {
 
             .stats,
             .assessment-grid {
                 grid-template-columns: 1fr;
-            }
-
-            .form-grid,
-            .option-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .full {
-                grid-column: auto;
-            }
-
-            .toolbar {
-                align-items: stretch;
             }
 
             .filters {
@@ -1015,6 +1122,24 @@
 
             .filter-select {
                 flex: 1;
+            }
+
+            .search-box {
+                width: 100%;
+                min-width: 0;
+            }
+
+            .test-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .timer {
+                width: 100%;
+            }
+
+            .result-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -1028,16 +1153,23 @@
 
         <div class="header-left">
 
-            <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+            <button
+                class="menu-btn"
+                onclick="toggleSidebar()">
+                ☰
+            </button>
 
-            <div class="brand-icon">🎓</div>
+            <div class="brand-icon">
+                🎓
+            </div>
 
             <div class="brand">
                 <h1>CAPACITY CONNECT</h1>
-                <small>Trainer Assessment Management</small>
+                <small>Trainee Assessment Portal</small>
             </div>
 
         </div>
+
 
         <div class="header-right">
 
@@ -1048,15 +1180,25 @@
                 🔔
             </button>
 
+
             <div
                 class="profile-mini"
-                onclick="goToPage('trainer-profile.html')">
+                onclick="goToPage('trainee-dashboard.html')">
 
-                <div class="avatar">TR</div>
+                <div class="avatar">
+                    YR
+                </div>
 
                 <div class="profile-text">
-                    <strong>Trainer</strong>
-                    <span>Professional Account</span>
+
+                    <strong>
+                        Yashodha Rani
+                    </strong>
+
+                    <span>
+                        Trainee
+                    </span>
+
                 </div>
 
             </div>
@@ -1072,64 +1214,120 @@
 
         <!-- ================= SIDEBAR ================= -->
 
-        <aside class="sidebar" id="sidebar">
+        <aside
+            class="sidebar"
+            id="sidebar">
 
-            <div class="menu-title">Trainer Menu</div>
+            <div class="menu-title">
+                Trainee Menu
+            </div>
 
-            <a href="capacity-connect.html" class="nav-link">
+
+            <a
+                href="capacity-connect.html"
+                class="nav-link">
+
                 <span class="nav-icon">🏠</span>
                 Home
+
             </a>
 
-            <a href="trainer-dashboard.html" class="nav-link">
+
+            <a
+                href="trainee-dashboard.html"
+                class="nav-link">
+
                 <span class="nav-icon">📊</span>
                 Dashboard
+
             </a>
 
-            <a href="trainer-profile.html" class="nav-link">
-                <span class="nav-icon">👤</span>
-                My Profile
-            </a>
 
-            <a href="trainer-courses.html" class="nav-link">
+            <a
+                href="trainee-courses.html"
+                class="nav-link">
+
                 <span class="nav-icon">📚</span>
-                Manage Courses
+                My Courses
+
             </a>
 
-            <a href="trainer-library.html" class="nav-link">
-                <span class="nav-icon">🗂️</span>
-                Trainer Library
-            </a>
 
-            <a href="trainer-assessments.html" class="nav-link active">
+            <a
+                href="trainee-assessments.html"
+                class="nav-link active">
+
                 <span class="nav-icon">📝</span>
                 Assessments
+
             </a>
 
-            <div class="menu-title">Training</div>
 
-            <a href="competency-mapping.html" class="nav-link">
+            <a
+                href="certificates.html"
+                class="nav-link">
+
+                <span class="nav-icon">🏆</span>
+                Certificates
+
+            </a>
+
+
+            <div class="menu-title">
+                Learning
+            </div>
+
+
+            <a
+                href="trainer-library.html"
+                class="nav-link">
+
+                <span class="nav-icon">🗂️</span>
+                Learning Library
+
+            </a>
+
+
+            <a
+                href="competency-mapping.html"
+                class="nav-link">
+
                 <span class="nav-icon">🧠</span>
-                Competency Mapping
+                Find a Trainer
+
             </a>
 
-            <a href="feedback.html" class="nav-link">
+
+            <a
+                href="feedback.html"
+                class="nav-link">
+
                 <span class="nav-icon">💬</span>
                 Feedback
+
             </a>
 
-            <a href="notifications.html" class="nav-link">
+
+            <a
+                href="notifications.html"
+                class="nav-link">
+
                 <span class="nav-icon">🔔</span>
                 Notifications
+
             </a>
+
 
             <div class="sidebar-card">
 
-                <h4>Assessment Management</h4>
+                <h4>
+                    Assessment Tip
+                </h4>
 
                 <p>
-                    Create MCQs, set deadlines, monitor participation,
-                    and evaluate trainee performance.
+                    Complete assessments before their deadlines.
+                    Your scores contribute to course completion
+                    and certification.
                 </p>
 
             </div>
@@ -1146,18 +1344,25 @@
             <section class="page-heading">
 
                 <div>
-                    <h2>Assessments & Questionnaires 📝</h2>
+
+                    <h2>
+                        My Assessments 📝
+                    </h2>
 
                     <p>
-                        Create assessments, set deadlines, monitor participation,
-                        and evaluate trainee performance.
+                        Test your knowledge, track your scores,
+                        and complete your training assessments.
                     </p>
+
                 </div>
 
+
                 <button
-                    class="create-btn"
-                    onclick="openCreateModal()">
-                    + Create Assessment
+                    class="history-btn"
+                    onclick="scrollToHistory()">
+
+                    📊 Assessment History
+
                 </button>
 
             </section>
@@ -1169,56 +1374,20 @@
 
                 <div class="stat">
 
-                    <div class="stat-icon">📝</div>
+                    <div class="stat-icon">
+                        📝
+                    </div>
 
                     <div class="stat-label">
-                        Total Assessments
-                    </div>
-
-                    <div class="stat-value" id="totalAssessments">
-                        6
-                    </div>
-
-                    <div class="stat-note">
-                        All created assessments
-                    </div>
-
-                </div>
-
-
-                <div class="stat">
-
-                    <div class="stat-icon">✅</div>
-
-                    <div class="stat-label">
-                        Active
-                    </div>
-
-                    <div class="stat-value" id="activeAssessments">
-                        4
-                    </div>
-
-                    <div class="stat-note">
-                        Currently available
-                    </div>
-
-                </div>
-
-
-                <div class="stat">
-
-                    <div class="stat-icon">⏰</div>
-
-                    <div class="stat-label">
-                        Upcoming Deadlines
+                        Available
                     </div>
 
                     <div class="stat-value">
-                        3
+                        5
                     </div>
 
                     <div class="stat-note">
-                        Within next 7 days
+                        Assessments to complete
                     </div>
 
                 </div>
@@ -1226,18 +1395,20 @@
 
                 <div class="stat">
 
-                    <div class="stat-icon">👨‍🎓</div>
+                    <div class="stat-icon">
+                        ✅
+                    </div>
 
                     <div class="stat-label">
-                        Submissions
+                        Completed
                     </div>
 
                     <div class="stat-value">
-                        428
+                        18
                     </div>
 
                     <div class="stat-note">
-                        Across all assessments
+                        Previous attempts
                     </div>
 
                 </div>
@@ -1245,18 +1416,41 @@
 
                 <div class="stat">
 
-                    <div class="stat-icon">📈</div>
+                    <div class="stat-icon">
+                        📈
+                    </div>
 
                     <div class="stat-label">
                         Average Score
                     </div>
 
                     <div class="stat-value">
-                        82%
+                        85%
                     </div>
 
                     <div class="stat-note">
-                        Overall trainee performance
+                        ↑ 6% improvement
+                    </div>
+
+                </div>
+
+
+                <div class="stat">
+
+                    <div class="stat-icon">
+                        🏆
+                    </div>
+
+                    <div class="stat-label">
+                        Passed
+                    </div>
+
+                    <div class="stat-value">
+                        16
+                    </div>
+
+                    <div class="stat-note">
+                        88.9% success rate
                     </div>
 
                 </div>
@@ -1270,11 +1464,13 @@
 
                 <div class="search-box">
 
-                    <span class="search-icon">🔍</span>
+                    <span class="search-icon">
+                        🔍
+                    </span>
 
                     <input
-                        id="searchInput"
                         type="text"
+                        id="searchInput"
                         placeholder="Search assessments..."
                         oninput="filterAssessments()">
 
@@ -1284,32 +1480,28 @@
                 <div class="filters">
 
                     <select
-                        id="statusFilter"
                         class="filter-select"
+                        id="statusFilter"
                         onchange="filterAssessments()">
 
                         <option value="all">
                             All Status
                         </option>
 
-                        <option value="active">
-                            Active
+                        <option value="available">
+                            Available
                         </option>
 
-                        <option value="draft">
-                            Draft
-                        </option>
-
-                        <option value="closed">
-                            Closed
+                        <option value="completed">
+                            Completed
                         </option>
 
                     </select>
 
 
                     <select
-                        id="courseFilter"
                         class="filter-select"
+                        id="courseFilter"
                         onchange="filterAssessments()">
 
                         <option value="all">
@@ -1351,20 +1543,23 @@
                 <article
                     class="assessment-card"
                     data-title="Python Fundamentals Assessment"
-                    data-status="active"
-                    data-course="python">
+                    data-status="available"
+                    data-course="python"
+                    data-assessment="python">
 
-                    <div class="assessment-cover cover-purple">
+                    <div
+                        class="assessment-cover cover-purple">
 
                         <div class="assessment-icon">
                             🐍
                         </div>
 
                         <span class="status">
-                            Active
+                            Available
                         </span>
 
                     </div>
+
 
                     <div class="assessment-body">
 
@@ -1377,37 +1572,64 @@
                         </h3>
 
                         <p class="assessment-description">
-                            Evaluate trainee understanding of Python basics,
-                            variables, functions, loops, and data structures.
+                            Test your knowledge of Python basics,
+                            loops, functions, collections, and OOP.
                         </p>
+
 
                         <div class="assessment-meta">
 
                             <div class="meta-box">
-                                <div class="meta-label">Questions</div>
-                                <div class="meta-value">30 MCQs</div>
+                                <div class="meta-label">
+                                    Questions
+                                </div>
+
+                                <div class="meta-value">
+                                    30 MCQs
+                                </div>
                             </div>
 
-                            <div class="meta-box">
-                                <div class="meta-label">Duration</div>
-                                <div class="meta-value">30 min</div>
-                            </div>
 
                             <div class="meta-box">
-                                <div class="meta-label">Assigned</div>
-                                <div class="meta-value">78 trainees</div>
+                                <div class="meta-label">
+                                    Duration
+                                </div>
+
+                                <div class="meta-value">
+                                    30 Minutes
+                                </div>
                             </div>
 
+
                             <div class="meta-box">
-                                <div class="meta-label">Passing</div>
-                                <div class="meta-value">60%</div>
+                                <div class="meta-label">
+                                    Passing Score
+                                </div>
+
+                                <div class="meta-value">
+                                    60%
+                                </div>
+                            </div>
+
+
+                            <div class="meta-box">
+                                <div class="meta-label">
+                                    Attempts
+                                </div>
+
+                                <div class="meta-value">
+                                    1 Attempt
+                                </div>
                             </div>
 
                         </div>
 
+
                         <div class="deadline-box">
 
-                            <span class="deadline-icon">⏰</span>
+                            <div class="deadline-icon">
+                                ⏰
+                            </div>
 
                             <div>
 
@@ -1416,49 +1638,52 @@
                                 </strong>
 
                                 <span>
-                                    Assessment is currently active
+                                    Complete before the deadline
                                 </span>
 
                             </div>
 
                         </div>
 
-                        <div class="participation">
 
-                            <div class="participation-row">
-                                <span>Participation</span>
-                                <strong>64 / 78</strong>
+                        <div class="score-section">
+
+                            <div class="score-row">
+
+                                <span>
+                                    Your Status
+                                </span>
+
+                                <span class="score-value">
+                                    Not Attempted
+                                </span>
+
                             </div>
 
                             <div class="progress-bar">
 
                                 <div
                                     class="progress-fill"
-                                    style="width:82%">
+                                    style="width:0%">
                                 </div>
 
                             </div>
 
                         </div>
 
+
                         <div class="card-actions">
 
                             <button
-                                class="action-btn manage-btn"
-                                onclick="manageAssessment(this)">
-                                ✏️ Manage
+                                class="action-btn details-btn"
+                                onclick="showAssessmentDetails(this)">
+                                👁 Details
                             </button>
 
                             <button
-                                class="action-btn results-btn"
-                                onclick="viewResults('Python Fundamentals Assessment')">
-                                📊 Results
-                            </button>
-
-                            <button
-                                class="action-btn more-btn"
-                                onclick="assessmentOptions('Python Fundamentals Assessment')">
-                                ⋮
+                                class="action-btn start-btn"
+                                onclick="startAssessment('python')">
+                                ▶ Start Test
                             </button>
 
                         </div>
@@ -1473,20 +1698,23 @@
                 <article
                     class="assessment-card"
                     data-title="Java OOP Questionnaire"
-                    data-status="active"
-                    data-course="java">
+                    data-status="available"
+                    data-course="java"
+                    data-assessment="java">
 
-                    <div class="assessment-cover cover-cyan">
+                    <div
+                        class="assessment-cover cover-cyan">
 
                         <div class="assessment-icon">
                             ☕
                         </div>
 
                         <span class="status">
-                            Active
+                            Available
                         </span>
 
                     </div>
+
 
                     <div class="assessment-body">
 
@@ -1499,39 +1727,68 @@
                         </h3>
 
                         <p class="assessment-description">
-                            Test knowledge of classes, objects, inheritance,
-                            polymorphism, abstraction, and encapsulation.
+                            Evaluate your understanding of classes,
+                            objects, inheritance, abstraction,
+                            and polymorphism.
                         </p>
+
 
                         <div class="assessment-meta">
 
                             <div class="meta-box">
-                                <div class="meta-label">Questions</div>
-                                <div class="meta-value">25 MCQs</div>
+                                <div class="meta-label">
+                                    Questions
+                                </div>
+
+                                <div class="meta-value">
+                                    25 MCQs
+                                </div>
                             </div>
 
-                            <div class="meta-box">
-                                <div class="meta-label">Duration</div>
-                                <div class="meta-value">25 min</div>
-                            </div>
 
                             <div class="meta-box">
-                                <div class="meta-label">Assigned</div>
-                                <div class="meta-value">61 trainees</div>
+                                <div class="meta-label">
+                                    Duration
+                                </div>
+
+                                <div class="meta-value">
+                                    25 Minutes
+                                </div>
                             </div>
 
+
                             <div class="meta-box">
-                                <div class="meta-label">Passing</div>
-                                <div class="meta-value">60%</div>
+                                <div class="meta-label">
+                                    Passing Score
+                                </div>
+
+                                <div class="meta-value">
+                                    60%
+                                </div>
+                            </div>
+
+
+                            <div class="meta-box">
+                                <div class="meta-label">
+                                    Attempts
+                                </div>
+
+                                <div class="meta-value">
+                                    1 Attempt
+                                </div>
                             </div>
 
                         </div>
 
+
                         <div class="deadline-box">
 
-                            <span class="deadline-icon">⏰</span>
+                            <div class="deadline-icon">
+                                ⏰
+                            </div>
 
                             <div>
+
                                 <strong>
                                     Deadline: 11 Sep 2026
                                 </strong>
@@ -1539,44 +1796,50 @@
                                 <span>
                                     2 days remaining
                                 </span>
+
                             </div>
 
                         </div>
 
-                        <div class="participation">
 
-                            <div class="participation-row">
-                                <span>Participation</span>
-                                <strong>49 / 61</strong>
+                        <div class="score-section">
+
+                            <div class="score-row">
+
+                                <span>
+                                    Your Status
+                                </span>
+
+                                <span class="score-value">
+                                    Not Attempted
+                                </span>
+
                             </div>
 
                             <div class="progress-bar">
+
                                 <div
                                     class="progress-fill"
-                                    style="width:80%">
+                                    style="width:0%">
                                 </div>
+
                             </div>
 
                         </div>
+
 
                         <div class="card-actions">
 
                             <button
-                                class="action-btn manage-btn"
-                                onclick="manageAssessment(this)">
-                                ✏️ Manage
+                                class="action-btn details-btn"
+                                onclick="showAssessmentDetails(this)">
+                                👁 Details
                             </button>
 
                             <button
-                                class="action-btn results-btn"
-                                onclick="viewResults('Java OOP Questionnaire')">
-                                📊 Results
-                            </button>
-
-                            <button
-                                class="action-btn more-btn"
-                                onclick="assessmentOptions('Java OOP Questionnaire')">
-                                ⋮
+                                class="action-btn start-btn"
+                                onclick="startAssessment('java')">
+                                ▶ Start Test
                             </button>
 
                         </div>
@@ -1591,20 +1854,23 @@
                 <article
                     class="assessment-card"
                     data-title="Machine Learning Basics"
-                    data-status="active"
-                    data-course="ml">
+                    data-status="available"
+                    data-course="ml"
+                    data-assessment="ml">
 
-                    <div class="assessment-cover cover-green">
+                    <div
+                        class="assessment-cover cover-green">
 
                         <div class="assessment-icon">
                             🤖
                         </div>
 
                         <span class="status">
-                            Active
+                            Available
                         </span>
 
                     </div>
+
 
                     <div class="assessment-body">
 
@@ -1617,37 +1883,65 @@
                         </h3>
 
                         <p class="assessment-description">
-                            Assess understanding of supervised learning,
-                            classification, regression, and model evaluation.
+                            Test concepts of supervised learning,
+                            regression, classification, datasets,
+                            and model evaluation.
                         </p>
+
 
                         <div class="assessment-meta">
 
                             <div class="meta-box">
-                                <div class="meta-label">Questions</div>
-                                <div class="meta-value">30 MCQs</div>
+                                <div class="meta-label">
+                                    Questions
+                                </div>
+
+                                <div class="meta-value">
+                                    30 MCQs
+                                </div>
                             </div>
 
-                            <div class="meta-box">
-                                <div class="meta-label">Duration</div>
-                                <div class="meta-value">30 min</div>
-                            </div>
 
                             <div class="meta-box">
-                                <div class="meta-label">Assigned</div>
-                                <div class="meta-value">54 trainees</div>
+                                <div class="meta-label">
+                                    Duration
+                                </div>
+
+                                <div class="meta-value">
+                                    30 Minutes
+                                </div>
                             </div>
 
+
                             <div class="meta-box">
-                                <div class="meta-label">Passing</div>
-                                <div class="meta-value">60%</div>
+                                <div class="meta-label">
+                                    Passing Score
+                                </div>
+
+                                <div class="meta-value">
+                                    60%
+                                </div>
+                            </div>
+
+
+                            <div class="meta-box">
+                                <div class="meta-label">
+                                    Attempts
+                                </div>
+
+                                <div class="meta-value">
+                                    1 Attempt
+                                </div>
                             </div>
 
                         </div>
 
+
                         <div class="deadline-box">
 
-                            <span class="deadline-icon">⏰</span>
+                            <div class="deadline-icon">
+                                ⏰
+                            </div>
 
                             <div>
 
@@ -1663,40 +1957,45 @@
 
                         </div>
 
-                        <div class="participation">
 
-                            <div class="participation-row">
-                                <span>Participation</span>
-                                <strong>35 / 54</strong>
+                        <div class="score-section">
+
+                            <div class="score-row">
+
+                                <span>
+                                    Your Status
+                                </span>
+
+                                <span class="score-value">
+                                    Not Attempted
+                                </span>
+
                             </div>
 
                             <div class="progress-bar">
+
                                 <div
                                     class="progress-fill"
-                                    style="width:65%">
+                                    style="width:0%">
                                 </div>
+
                             </div>
 
                         </div>
 
+
                         <div class="card-actions">
 
                             <button
-                                class="action-btn manage-btn"
-                                onclick="manageAssessment(this)">
-                                ✏️ Manage
+                                class="action-btn details-btn"
+                                onclick="showAssessmentDetails(this)">
+                                👁 Details
                             </button>
 
                             <button
-                                class="action-btn results-btn"
-                                onclick="viewResults('Machine Learning Basics')">
-                                📊 Results
-                            </button>
-
-                            <button
-                                class="action-btn more-btn"
-                                onclick="assessmentOptions('Machine Learning Basics')">
-                                ⋮
+                                class="action-btn start-btn"
+                                onclick="startAssessment('ml')">
+                                ▶ Start Test
                             </button>
 
                         </div>
@@ -1711,20 +2010,23 @@
                 <article
                     class="assessment-card"
                     data-title="Data Visualization Assessment"
-                    data-status="active"
-                    data-course="data">
+                    data-status="completed"
+                    data-course="data"
+                    data-assessment="data">
 
-                    <div class="assessment-cover cover-orange">
+                    <div
+                        class="assessment-cover cover-orange">
 
                         <div class="assessment-icon">
                             📊
                         </div>
 
                         <span class="status">
-                            Active
+                            Completed
                         </span>
 
                     </div>
+
 
                     <div class="assessment-body">
 
@@ -1737,86 +2039,119 @@
                         </h3>
 
                         <p class="assessment-description">
-                            Evaluate knowledge of charts, dashboards,
-                            visual hierarchy, and data storytelling.
+                            Evaluate your knowledge of charts,
+                            dashboards, visual hierarchy,
+                            and data storytelling.
                         </p>
+
 
                         <div class="assessment-meta">
 
                             <div class="meta-box">
-                                <div class="meta-label">Questions</div>
-                                <div class="meta-value">20 MCQs</div>
+                                <div class="meta-label">
+                                    Questions
+                                </div>
+
+                                <div class="meta-value">
+                                    20 MCQs
+                                </div>
                             </div>
 
-                            <div class="meta-box">
-                                <div class="meta-label">Duration</div>
-                                <div class="meta-value">20 min</div>
-                            </div>
 
                             <div class="meta-box">
-                                <div class="meta-label">Assigned</div>
-                                <div class="meta-value">43 trainees</div>
+                                <div class="meta-label">
+                                    Duration
+                                </div>
+
+                                <div class="meta-value">
+                                    20 Minutes
+                                </div>
                             </div>
 
+
                             <div class="meta-box">
-                                <div class="meta-label">Passing</div>
-                                <div class="meta-value">50%</div>
+                                <div class="meta-label">
+                                    Your Score
+                                </div>
+
+                                <div class="meta-value">
+                                    90%
+                                </div>
+                            </div>
+
+
+                            <div class="meta-box">
+                                <div class="meta-label">
+                                    Result
+                                </div>
+
+                                <div class="meta-value">
+                                    Passed
+                                </div>
                             </div>
 
                         </div>
 
-                        <div class="deadline-box">
 
-                            <span class="deadline-icon">⏰</span>
+                        <div class="deadline-box success">
+
+                            <div class="deadline-icon">
+                                ✅
+                            </div>
 
                             <div>
 
                                 <strong>
-                                    Deadline: 16 Sep 2026
+                                    Assessment Passed
                                 </strong>
 
                                 <span>
-                                    7 days remaining
+                                    Completed on 08 Sep 2026
                                 </span>
 
                             </div>
 
                         </div>
 
-                        <div class="participation">
 
-                            <div class="participation-row">
-                                <span>Participation</span>
-                                <strong>28 / 43</strong>
+                        <div class="score-section">
+
+                            <div class="score-row">
+
+                                <span>
+                                    Your Score
+                                </span>
+
+                                <span class="score-value">
+                                    90%
+                                </span>
+
                             </div>
 
                             <div class="progress-bar">
+
                                 <div
                                     class="progress-fill"
-                                    style="width:65%">
+                                    style="width:90%">
                                 </div>
+
                             </div>
 
                         </div>
 
+
                         <div class="card-actions">
 
                             <button
-                                class="action-btn manage-btn"
-                                onclick="manageAssessment(this)">
-                                ✏️ Manage
+                                class="action-btn details-btn"
+                                onclick="showAssessmentDetails(this)">
+                                👁 Details
                             </button>
 
                             <button
-                                class="action-btn results-btn"
-                                onclick="viewResults('Data Visualization Assessment')">
-                                📊 Results
-                            </button>
-
-                            <button
-                                class="action-btn more-btn"
-                                onclick="assessmentOptions('Data Visualization Assessment')">
-                                ⋮
+                                class="action-btn completed-btn"
+                                onclick="showResult('Data Visualization Assessment',90)">
+                                ✓ View Result
                             </button>
 
                         </div>
@@ -1830,107 +2165,148 @@
 
                 <article
                     class="assessment-card"
-                    data-title="Java Exception Handling Quiz"
-                    data-status="closed"
-                    data-course="java">
+                    data-title="Web Development Assessment"
+                    data-status="completed"
+                    data-course="web"
+                    data-assessment="web">
 
-                    <div class="assessment-cover cover-pink">
+                    <div
+                        class="assessment-cover cover-pink">
 
                         <div class="assessment-icon">
-                            ☕
+                            🌐
                         </div>
 
                         <span class="status">
-                            Closed
+                            Completed
                         </span>
 
                     </div>
 
+
                     <div class="assessment-body">
 
                         <div class="assessment-category">
-                            Java Full Stack
+                            Web Development
                         </div>
 
                         <h3 class="assessment-title">
-                            Java Exception Handling Quiz
+                            Web Development Assessment
                         </h3>
 
                         <p class="assessment-description">
-                            Quiz on checked and unchecked exceptions,
-                            custom exceptions, and exception handling.
+                            Test your understanding of HTML,
+                            CSS, JavaScript, and responsive design.
                         </p>
+
 
                         <div class="assessment-meta">
 
                             <div class="meta-box">
-                                <div class="meta-label">Questions</div>
-                                <div class="meta-value">20 MCQs</div>
+                                <div class="meta-label">
+                                    Questions
+                                </div>
+
+                                <div class="meta-value">
+                                    25 MCQs
+                                </div>
                             </div>
 
-                            <div class="meta-box">
-                                <div class="meta-label">Duration</div>
-                                <div class="meta-value">20 min</div>
-                            </div>
 
                             <div class="meta-box">
-                                <div class="meta-label">Submitted</div>
-                                <div class="meta-value">58 trainees</div>
+                                <div class="meta-label">
+                                    Duration
+                                </div>
+
+                                <div class="meta-value">
+                                    25 Minutes
+                                </div>
                             </div>
 
+
                             <div class="meta-box">
-                                <div class="meta-label">Average</div>
-                                <div class="meta-value">81%</div>
+                                <div class="meta-label">
+                                    Your Score
+                                </div>
+
+                                <div class="meta-value">
+                                    88%
+                                </div>
+                            </div>
+
+
+                            <div class="meta-box">
+                                <div class="meta-label">
+                                    Result
+                                </div>
+
+                                <div class="meta-value">
+                                    Passed
+                                </div>
                             </div>
 
                         </div>
 
-                        <div class="deadline-box">
 
-                            <span class="deadline-icon">✅</span>
+                        <div class="deadline-box success">
+
+                            <div class="deadline-icon">
+                                ✅
+                            </div>
 
                             <div>
 
                                 <strong>
-                                    Assessment Closed
+                                    Assessment Passed
                                 </strong>
 
                                 <span>
-                                    Results are available
+                                    Completed on 03 Sep 2026
                                 </span>
 
                             </div>
 
                         </div>
 
-                        <div class="participation">
 
-                            <div class="participation-row">
-                                <span>Submission Rate</span>
-                                <strong>58 / 61</strong>
+                        <div class="score-section">
+
+                            <div class="score-row">
+
+                                <span>
+                                    Your Score
+                                </span>
+
+                                <span class="score-value">
+                                    88%
+                                </span>
+
                             </div>
 
                             <div class="progress-bar">
+
                                 <div
                                     class="progress-fill"
-                                    style="width:95%">
+                                    style="width:88%">
                                 </div>
+
                             </div>
 
                         </div>
 
+
                         <div class="card-actions">
 
                             <button
-                                class="action-btn results-btn"
-                                onclick="viewResults('Java Exception Handling Quiz')">
-                                📊 Results
+                                class="action-btn details-btn"
+                                onclick="showAssessmentDetails(this)">
+                                👁 Details
                             </button>
 
                             <button
-                                class="action-btn more-btn"
-                                onclick="assessmentOptions('Java Exception Handling Quiz')">
-                                ⋮
+                                class="action-btn completed-btn"
+                                onclick="showResult('Web Development Assessment',88)">
+                                ✓ View Result
                             </button>
 
                         </div>
@@ -1944,109 +2320,148 @@
 
                 <article
                     class="assessment-card"
-                    data-title="Advanced Data Visualization"
-                    data-status="draft"
-                    data-course="data">
+                    data-title="SQL Fundamentals Assessment"
+                    data-status="available"
+                    data-course="sql"
+                    data-assessment="sql">
 
-                    <div class="assessment-cover cover-slate">
+                    <div
+                        class="assessment-cover cover-slate">
 
                         <div class="assessment-icon">
-                            📈
+                            🗄️
                         </div>
 
                         <span class="status">
-                            Draft
+                            Available
                         </span>
 
                     </div>
 
+
                     <div class="assessment-body">
 
                         <div class="assessment-category">
-                            Data Visualization
+                            Database
                         </div>
 
                         <h3 class="assessment-title">
-                            Advanced Data Visualization
+                            SQL Fundamentals Assessment
                         </h3>
 
                         <p class="assessment-description">
-                            Advanced questionnaire covering interactive
-                            dashboards, visual analytics, and storytelling.
+                            Evaluate your knowledge of SQL queries,
+                            joins, aggregation, filtering, and database concepts.
                         </p>
+
 
                         <div class="assessment-meta">
 
                             <div class="meta-box">
-                                <div class="meta-label">Questions</div>
-                                <div class="meta-value">15 MCQs</div>
+                                <div class="meta-label">
+                                    Questions
+                                </div>
+
+                                <div class="meta-value">
+                                    20 MCQs
+                                </div>
                             </div>
 
-                            <div class="meta-box">
-                                <div class="meta-label">Duration</div>
-                                <div class="meta-value">15 min</div>
-                            </div>
 
                             <div class="meta-box">
-                                <div class="meta-label">Status</div>
-                                <div class="meta-value">Draft</div>
+                                <div class="meta-label">
+                                    Duration
+                                </div>
+
+                                <div class="meta-value">
+                                    20 Minutes
+                                </div>
                             </div>
 
+
                             <div class="meta-box">
-                                <div class="meta-label">Questions Ready</div>
-                                <div class="meta-value">11 / 15</div>
+                                <div class="meta-label">
+                                    Passing Score
+                                </div>
+
+                                <div class="meta-value">
+                                    60%
+                                </div>
+                            </div>
+
+
+                            <div class="meta-box">
+                                <div class="meta-label">
+                                    Attempts
+                                </div>
+
+                                <div class="meta-value">
+                                    1 Attempt
+                                </div>
                             </div>
 
                         </div>
 
+
                         <div class="deadline-box">
 
-                            <span class="deadline-icon">📝</span>
+                            <div class="deadline-icon">
+                                ⏰
+                            </div>
 
                             <div>
 
                                 <strong>
-                                    Assessment not published
+                                    Deadline: 18 Sep 2026
                                 </strong>
 
                                 <span>
-                                    Complete the question set before publishing
+                                    Complete before the deadline
                                 </span>
 
                             </div>
 
                         </div>
 
-                        <div class="participation">
 
-                            <div class="participation-row">
-                                <span>Preparation</span>
-                                <strong>73%</strong>
+                        <div class="score-section">
+
+                            <div class="score-row">
+
+                                <span>
+                                    Your Status
+                                </span>
+
+                                <span class="score-value">
+                                    Not Attempted
+                                </span>
+
                             </div>
 
                             <div class="progress-bar">
 
                                 <div
                                     class="progress-fill"
-                                    style="width:73%">
+                                    style="width:0%">
                                 </div>
 
                             </div>
 
                         </div>
 
+
                         <div class="card-actions">
 
                             <button
-                                class="action-btn manage-btn"
-                                onclick="manageAssessment(this)">
-                                ✏️ Continue
+                                class="action-btn details-btn"
+                                onclick="showAssessmentDetails(this)">
+                                👁 Details
                             </button>
 
                             <button
-                                class="action-btn more-btn"
-                                onclick="assessmentOptions('Advanced Data Visualization')">
-                                ⋮
+                                class="action-btn start-btn"
+                                onclick="startAssessment('sql')">
+                                ▶ Start Test
                             </button>
 
                         </div>
@@ -2060,34 +2475,43 @@
 
             <!-- EMPTY STATE -->
 
-            <section class="empty-state" id="emptyState">
+            <section
+                class="empty-state"
+                id="emptyState">
 
                 <div class="empty-icon">
                     🔍
                 </div>
 
-                <h3>No assessments found</h3>
+                <h3>
+                    No assessments found
+                </h3>
 
                 <p>
-                    Try a different search term or filter.
+                    Try changing your search or filters.
                 </p>
 
             </section>
 
 
-            <!-- RECENT PERFORMANCE -->
+            <!-- HISTORY -->
 
-            <section class="panel" style="margin-top:22px;">
+            <section
+                class="history-panel"
+                id="historyPanel">
 
                 <div class="panel-header">
 
-                    <h3>Recent Trainee Performance</h3>
+                    <h3>
+                        Recent Assessment History
+                    </h3>
 
-                    <a href="trainer-dashboard.html">
-                        View Dashboard
-                    </a>
+                    <span>
+                        Your latest assessment results
+                    </span>
 
                 </div>
+
 
                 <div class="table-wrap">
 
@@ -2096,56 +2520,30 @@
                         <thead>
 
                             <tr>
-                                <th>Trainee</th>
                                 <th>Assessment</th>
+                                <th>Course</th>
                                 <th>Score</th>
-                                <th>Attempt Date</th>
-                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Result</th>
                             </tr>
 
                         </thead>
+
 
                         <tbody>
 
                             <tr>
 
-                                <td class="trainee-name">
-                                    Yashodha Rani
+                                <td class="assessment-name">
+                                    Data Visualization Assessment
                                 </td>
 
                                 <td>
-                                    Python Fundamentals
+                                    Data Visualization
                                 </td>
 
-                                <td class="score">
-                                    92%
-                                </td>
-
-                                <td>
-                                    09 Sep 2026
-                                </td>
-
-                                <td>
-                                    <span class="small-status passed">
-                                        Passed
-                                    </span>
-                                </td>
-
-                            </tr>
-
-
-                            <tr>
-
-                                <td class="trainee-name">
-                                    Priya Kumar
-                                </td>
-
-                                <td>
-                                    Java OOP Questionnaire
-                                </td>
-
-                                <td class="score">
-                                    86%
+                                <td class="score-green">
+                                    90%
                                 </td>
 
                                 <td>
@@ -2153,7 +2551,7 @@
                                 </td>
 
                                 <td>
-                                    <span class="small-status passed">
+                                    <span class="passed">
                                         Passed
                                     </span>
                                 </td>
@@ -2163,24 +2561,24 @@
 
                             <tr>
 
-                                <td class="trainee-name">
-                                    Rahul Sharma
+                                <td class="assessment-name">
+                                    Web Development Assessment
                                 </td>
 
                                 <td>
-                                    Machine Learning Basics
+                                    Web Development
                                 </td>
 
-                                <td class="score">
-                                    78%
-                                </td>
-
-                                <td>
-                                    08 Sep 2026
+                                <td class="score-green">
+                                    88%
                                 </td>
 
                                 <td>
-                                    <span class="small-status passed">
+                                    03 Sep 2026
+                                </td>
+
+                                <td>
+                                    <span class="passed">
                                         Passed
                                     </span>
                                 </td>
@@ -2190,12 +2588,39 @@
 
                             <tr>
 
-                                <td class="trainee-name">
-                                    Anjali Reddy
+                                <td class="assessment-name">
+                                    Python Functions Quiz
                                 </td>
 
                                 <td>
-                                    Python Fundamentals
+                                    Python Programming
+                                </td>
+
+                                <td class="score-green">
+                                    84%
+                                </td>
+
+                                <td>
+                                    30 Aug 2026
+                                </td>
+
+                                <td>
+                                    <span class="passed">
+                                        Passed
+                                    </span>
+                                </td>
+
+                            </tr>
+
+
+                            <tr>
+
+                                <td class="assessment-name">
+                                    SQL Basics Quiz
+                                </td>
+
+                                <td>
+                                    SQL
                                 </td>
 
                                 <td>
@@ -2203,11 +2628,11 @@
                                 </td>
 
                                 <td>
-                                    07 Sep 2026
+                                    25 Aug 2026
                                 </td>
 
                                 <td>
-                                    <span class="small-status pending">
+                                    <span class="review">
                                         Needs Review
                                     </span>
                                 </td>
@@ -2227,7 +2652,7 @@
 
                 © <span id="year"></span>
                 <strong>CAPACITY CONNECT</strong>.
-                Trainer Assessment Management Portal.
+                Trainee Assessment Portal.
 
             </footer>
 
@@ -2236,228 +2661,115 @@
     </div>
 
 
-    <!-- ================= CREATE ASSESSMENT MODAL ================= -->
+    <!-- ================= DETAILS MODAL ================= -->
 
-    <div class="modal" id="createModal">
+    <div
+        class="modal"
+        id="detailsModal">
 
         <div class="modal-box">
 
             <div class="modal-header">
 
-                <h3>Create New Assessment</h3>
+                <h3>
+                    Assessment Details
+                </h3>
 
                 <button
                     class="close-btn"
-                    onclick="closeCreateModal()">
+                    onclick="closeDetailsModal()">
                     ×
                 </button>
 
             </div>
 
+
             <div class="modal-body">
 
-                <form id="assessmentForm">
+                <div
+                    class="assessment-meta"
+                    style="margin-top:0;">
 
-                    <div class="form-grid">
-
-                        <div class="form-group full">
-
-                            <label>Assessment Title</label>
-
-                            <input
-                                type="text"
-                                id="assessmentTitle"
-                                placeholder="e.g. Python Fundamentals Assessment"
-                                required>
-
+                    <div class="meta-box">
+                        <div class="meta-label">
+                            Assessment
                         </div>
 
-
-                        <div class="form-group">
-
-                            <label>Course</label>
-
-                            <select
-                                id="assessmentCourse"
-                                required>
-
-                                <option value="">
-                                    Select Course
-                                </option>
-
-                                <option value="python">
-                                    Python Programming
-                                </option>
-
-                                <option value="java">
-                                    Java Full Stack
-                                </option>
-
-                                <option value="ml">
-                                    Machine Learning
-                                </option>
-
-                                <option value="data">
-                                    Data Visualization
-                                </option>
-
-                            </select>
-
+                        <div
+                            class="meta-value"
+                            id="detailTitle">
+                            -
                         </div>
-
-
-                        <div class="form-group">
-
-                            <label>Assessment Type</label>
-
-                            <select
-                                id="assessmentType"
-                                required>
-
-                                <option value="mcq">
-                                    MCQ Assessment
-                                </option>
-
-                                <option value="questionnaire">
-                                    Questionnaire
-                                </option>
-
-                            </select>
-
-                        </div>
-
-
-                        <div class="form-group">
-
-                            <label>Duration (Minutes)</label>
-
-                            <input
-                                type="number"
-                                id="assessmentDuration"
-                                min="1"
-                                value="30"
-                                required>
-
-                        </div>
-
-
-                        <div class="form-group">
-
-                            <label>Passing Percentage</label>
-
-                            <input
-                                type="number"
-                                id="passingPercentage"
-                                min="1"
-                                max="100"
-                                value="60"
-                                required>
-
-                        </div>
-
-
-                        <div class="form-group">
-
-                            <label>Deadline</label>
-
-                            <input
-                                type="date"
-                                id="assessmentDeadline"
-                                required>
-
-                        </div>
-
-
-                        <div class="form-group">
-
-                            <label>Target Trainees</label>
-
-                            <input
-                                type="number"
-                                id="targetTrainees"
-                                min="1"
-                                placeholder="e.g. 50"
-                                required>
-
-                        </div>
-
-
-                        <div class="form-group full">
-
-                            <label>Description</label>
-
-                            <textarea
-                                id="assessmentDescription"
-                                placeholder="Describe the purpose and topics covered..."
-                                required></textarea>
-
-                        </div>
-
                     </div>
 
 
-                    <!-- QUESTION BUILDER -->
-
-                    <div class="question-list">
-
-                        <div style="
-                            display:flex;
-                            justify-content:space-between;
-                            align-items:center;
-                            gap:10px;
-                            margin-bottom:10px;
-                        ">
-
-                            <div>
-                                <strong style="
-                                    color:#111827;
-                                    font-size:12px;
-                                ">
-                                    Questions
-                                </strong>
-
-                                <div style="
-                                    color:#6b7280;
-                                    font-size:9px;
-                                    margin-top:3px;
-                                ">
-                                    Add MCQs to your assessment.
-                                </div>
-
-                            </div>
-
-                            <button
-                                type="button"
-                                class="modal-btn save-btn"
-                                onclick="addQuestion()">
-                                + Add Question
-                            </button>
-
+                    <div class="meta-box">
+                        <div class="meta-label">
+                            Course
                         </div>
 
-                        <div id="questionsContainer"></div>
-
+                        <div
+                            class="meta-value"
+                            id="detailCourse">
+                            -
+                        </div>
                     </div>
 
 
-                    <div class="modal-footer">
+                    <div class="meta-box">
+                        <div class="meta-label">
+                            Questions
+                        </div>
 
-                        <button
-                            type="button"
-                            class="modal-btn cancel-btn"
-                            onclick="closeCreateModal()">
-                            Cancel
-                        </button>
-
-                        <button
-                            type="submit"
-                            class="modal-btn save-btn">
-                            Save Assessment
-                        </button>
-
+                        <div
+                            class="meta-value"
+                            id="detailQuestions">
+                            -
+                        </div>
                     </div>
 
-                </form>
+
+                    <div class="meta-box">
+                        <div class="meta-label">
+                            Duration
+                        </div>
+
+                        <div
+                            class="meta-value"
+                            id="detailDuration">
+                            -
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <p
+                    id="detailDescription"
+                    style="
+                        color:#6b7280;
+                        font-size:10px;
+                        line-height:1.7;
+                        margin-top:5px;
+                    ">
+                </p>
+
+
+                <div
+                    style="
+                        margin-top:15px;
+                        padding:12px;
+                        background:#eef2ff;
+                        border-radius:9px;
+                        color:#3730a3;
+                        font-size:10px;
+                        line-height:1.6;
+                    ">
+
+                    💡 Read each question carefully and submit
+                    your answers before the timer expires.
+
+                </div>
 
             </div>
 
@@ -2466,103 +2778,208 @@
     </div>
 
 
-    <!-- ================= RESULTS MODAL ================= -->
+    <!-- ================= TEST MODAL ================= -->
 
-    <div class="modal" id="resultsModal">
+    <div
+        class="modal"
+        id="testModal">
 
         <div class="modal-box">
 
             <div class="modal-header">
 
-                <h3>Assessment Results</h3>
+                <h3>
+                    Assessment Test
+                </h3>
 
                 <button
                     class="close-btn"
-                    onclick="closeResultsModal()">
+                    onclick="confirmCloseTest()">
                     ×
                 </button>
 
             </div>
 
+
             <div class="modal-body">
 
-                <h3
-                    id="resultsTitle"
-                    style="
-                        color:#111827;
-                        font-size:16px;
-                        margin-bottom:15px;
-                    ">
-                    Assessment
-                </h3>
+                <div id="testContent">
 
-                <div class="form-grid">
+                    <div class="test-header">
 
-                    <div class="meta-box">
-                        <div class="meta-label">
-                            Total Assigned
+                        <div class="test-title-area">
+
+                            <h3 id="testTitle">
+                                Assessment
+                            </h3>
+
+                            <p>
+                                Select the best answer for each question.
+                            </p>
+
                         </div>
+
 
                         <div
-                            class="meta-value"
-                            id="resultAssigned">
-                            0
+                            class="timer"
+                            id="timer">
+                            30:00
                         </div>
+
                     </div>
 
 
-                    <div class="meta-box">
-                        <div class="meta-label">
-                            Submissions
-                        </div>
+                    <div class="question-progress">
 
                         <div
-                            class="meta-value"
-                            id="resultSubmitted">
-                            0
+                            class="question-progress-fill"
+                            id="questionProgress">
                         </div>
+
                     </div>
 
 
-                    <div class="meta-box">
-                        <div class="meta-label">
-                            Average Score
-                        </div>
-
-                        <div
-                            class="meta-value"
-                            id="resultAverage">
-                            0%
-                        </div>
+                    <div
+                        class="question-number"
+                        id="questionNumber">
+                        Question 1
                     </div>
 
 
-                    <div class="meta-box">
-                        <div class="meta-label">
-                            Pass Rate
-                        </div>
+                    <div
+                        class="question-text"
+                        id="questionText">
+                        Question text
+                    </div>
 
-                        <div
-                            class="meta-value"
-                            id="resultPassRate">
-                            0%
-                        </div>
+
+                    <div
+                        class="options"
+                        id="optionsContainer">
+                    </div>
+
+
+                    <div class="test-actions">
+
+                        <button
+                            class="test-btn prev-btn"
+                            id="prevBtn"
+                            onclick="previousQuestion()">
+                            ← Previous
+                        </button>
+
+
+                        <button
+                            class="test-btn next-btn"
+                            id="nextBtn"
+                            onclick="nextQuestion()">
+                            Next →
+                        </button>
+
+
+                        <button
+                            class="test-btn submit-btn"
+                            id="submitBtn"
+                            onclick="submitTest()">
+                            Submit Test
+                        </button>
+
                     </div>
 
                 </div>
 
-                <div style="
-                    margin-top:15px;
-                    padding:13px;
-                    border-radius:9px;
-                    background:#eef2ff;
-                    color:#3730a3;
-                    font-size:10px;
-                    line-height:1.6;
-                ">
 
-                    📊 Detailed trainee-wise analytics can be
-                    connected to Firebase in the next stage.
+                <div
+                    id="resultContent"
+                    style="display:none;">
+
+                    <div
+                        class="result-screen"
+                        id="resultScreen">
+
+                        <div class="result-icon">
+                            ✓
+                        </div>
+
+                        <h2 id="resultHeading">
+                            Assessment Completed!
+                        </h2>
+
+                        <p id="resultMessage">
+                            Your assessment has been submitted successfully.
+                        </p>
+
+                        <div
+                            class="score-big"
+                            id="scoreBig">
+                            0%
+                        </div>
+
+                        <div class="result-label">
+                            Final Score
+                        </div>
+
+
+                        <div class="result-grid">
+
+                            <div class="result-box">
+
+                                <strong id="correctCount">
+                                    0
+                                </strong>
+
+                                <span>
+                                    Correct Answers
+                                </span>
+
+                            </div>
+
+
+                            <div class="result-box">
+
+                                <strong id="wrongCount">
+                                    0
+                                </strong>
+
+                                <span>
+                                    Incorrect Answers
+                                </span>
+
+                            </div>
+
+
+                            <div class="result-box">
+
+                                <strong id="totalQuestionsResult">
+                                    0
+                                </strong>
+
+                                <span>
+                                    Total Questions
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="result-actions">
+
+                            <button
+                                class="test-btn prev-btn"
+                                onclick="closeTestModal()">
+                                Close
+                            </button>
+
+                            <button
+                                class="test-btn next-btn"
+                                onclick="goToCertificates()">
+                                🏆 View Certificates
+                            </button>
+
+                        </div>
+
+                    </div>
 
                 </div>
 
@@ -2576,9 +2993,6 @@
     <!-- ================= JAVASCRIPT ================= -->
 
     <script>
-
-        let questionCount = 0;
-
 
         /* ================= NAVIGATION ================= */
 
@@ -2597,257 +3011,6 @@
                 .toggle("open");
 
         }
-
-
-        /* ================= CREATE MODAL ================= */
-
-        function openCreateModal() {
-
-            document
-                .getElementById("createModal")
-                .classList
-                .add("show");
-
-            if (questionCount === 0) {
-                addQuestion();
-            }
-
-        }
-
-
-        function closeCreateModal() {
-
-            document
-                .getElementById("createModal")
-                .classList
-                .remove("show");
-
-        }
-
-
-        /* ================= ADD QUESTION ================= */
-
-        function addQuestion() {
-
-            questionCount++;
-
-            const container =
-                document.getElementById("questionsContainer");
-
-
-            const question =
-                document.createElement("div");
-
-            question.className = "question-item";
-
-            question.dataset.question =
-                questionCount;
-
-
-            question.innerHTML = `
-
-                <div class="question-head">
-
-                    <span class="question-number">
-                        Question ${questionCount}
-                    </span>
-
-                    <button
-                        type="button"
-                        class="remove-question"
-                        onclick="removeQuestion(this)">
-                        Remove
-                    </button>
-
-                </div>
-
-                <div class="form-group">
-
-                    <label>Question</label>
-
-                    <input
-                        type="text"
-                        placeholder="Enter your question"
-                        required>
-
-                </div>
-
-                <div class="option-grid">
-
-                    <div class="form-group">
-
-                        <label>Option A</label>
-
-                        <input
-                            type="text"
-                            placeholder="Option A"
-                            required>
-
-                    </div>
-
-                    <div class="form-group">
-
-                        <label>Option B</label>
-
-                        <input
-                            type="text"
-                            placeholder="Option B"
-                            required>
-
-                    </div>
-
-                    <div class="form-group">
-
-                        <label>Option C</label>
-
-                        <input
-                            type="text"
-                            placeholder="Option C"
-                            required>
-
-                    </div>
-
-                    <div class="form-group">
-
-                        <label>Option D</label>
-
-                        <input
-                            type="text"
-                            placeholder="Option D"
-                            required>
-
-                    </div>
-
-                </div>
-
-                <div class="form-group" style="margin-top:10px;">
-
-                    <label>Correct Answer</label>
-
-                    <select required>
-
-                        <option value="">
-                            Select Correct Option
-                        </option>
-
-                        <option value="A">
-                            Option A
-                        </option>
-
-                        <option value="B">
-                            Option B
-                        </option>
-
-                        <option value="C">
-                            Option C
-                        </option>
-
-                        <option value="D">
-                            Option D
-                        </option>
-
-                    </select>
-
-                </div>
-
-            `;
-
-
-            container.appendChild(question);
-
-        }
-
-
-        /* ================= REMOVE QUESTION ================= */
-
-        function removeQuestion(button) {
-
-            const question =
-                button.closest(".question-item");
-
-            question.remove();
-
-            renumberQuestions();
-
-        }
-
-
-        function renumberQuestions() {
-
-            const questions =
-                document.querySelectorAll(
-                    ".question-item"
-                );
-
-            questions.forEach((question, index) => {
-
-                question.dataset.question =
-                    index + 1;
-
-                question
-                    .querySelector(".question-number")
-                    .textContent =
-                    "Question " + (index + 1);
-
-            });
-
-            questionCount =
-                questions.length;
-
-        }
-
-
-        /* ================= CREATE ASSESSMENT ================= */
-
-        document
-            .getElementById("assessmentForm")
-            .addEventListener("submit", function(event) {
-
-                event.preventDefault();
-
-
-                const title =
-                    document
-                    .getElementById("assessmentTitle")
-                    .value
-                    .trim();
-
-                const questions =
-                    document.querySelectorAll(
-                        ".question-item"
-                    );
-
-
-                if (questions.length === 0) {
-
-                    alert(
-                        "Please add at least one question."
-                    );
-
-                    return;
-
-                }
-
-
-                alert(
-                    "Assessment \"" +
-                    title +
-                    "\" created successfully.\n\n" +
-                    "Firebase integration can later save the assessment, questions, deadline, and trainee assignments permanently."
-                );
-
-
-                this.reset();
-
-                document
-                    .getElementById("questionsContainer")
-                    .innerHTML = "";
-
-                questionCount = 0;
-
-                closeCreateModal();
-
-            });
 
 
         /* ================= FILTER ================= */
@@ -2939,305 +3102,1137 @@
         }
 
 
-        /* ================= MANAGE ================= */
+        /* ================= DETAILS ================= */
 
-        function manageAssessment(button) {
+        function showAssessmentDetails(button) {
 
             const card =
                 button.closest(".assessment-card");
 
-            const title =
+
+            document
+                .getElementById("detailTitle")
+                .textContent =
                 card.dataset.title;
 
 
-            alert(
-                "Opening assessment editor for:\n\n" +
-                title +
-                "\n\nYou can connect this action to a dedicated edit form or Firebase document later."
-            );
-
-        }
-
-
-        /* ================= RESULTS ================= */
-
-        function viewResults(title) {
-
-            document
-                .getElementById("resultsTitle")
-                .textContent = title;
-
-
-            const demoData = {
-
-                "Python Fundamentals Assessment": {
-                    assigned: 78,
-                    submitted: 64,
-                    average: 84,
-                    passRate: 89
-                },
-
-                "Java OOP Questionnaire": {
-                    assigned: 61,
-                    submitted: 49,
-                    average: 81,
-                    passRate: 86
-                },
-
-                "Machine Learning Basics": {
-                    assigned: 54,
-                    submitted: 35,
-                    average: 78,
-                    passRate: 80
-                },
-
-                "Data Visualization Assessment": {
-                    assigned: 43,
-                    submitted: 28,
-                    average: 82,
-                    passRate: 91
-                },
-
-                "Java Exception Handling Quiz": {
-                    assigned: 61,
-                    submitted: 58,
-                    average: 81,
-                    passRate: 88
-                }
-
-            };
-
-
-            const data =
-                demoData[title] || {
-                    assigned: 0,
-                    submitted: 0,
-                    average: 0,
-                    passRate: 0
-                };
+            const category =
+                card
+                .querySelector(".assessment-category")
+                .textContent
+                .trim();
 
 
             document
-                .getElementById("resultAssigned")
+                .getElementById("detailCourse")
                 .textContent =
-                data.assigned;
+                category;
+
+
+            const meta =
+                card.querySelectorAll(".meta-value");
+
 
             document
-                .getElementById("resultSubmitted")
+                .getElementById("detailQuestions")
                 .textContent =
-                data.submitted;
+                meta[0]
+                ? meta[0].textContent.trim()
+                : "-";
+
 
             document
-                .getElementById("resultAverage")
+                .getElementById("detailDuration")
                 .textContent =
-                data.average + "%";
+                meta[1]
+                ? meta[1].textContent.trim()
+                : "-";
+
 
             document
-                .getElementById("resultPassRate")
+                .getElementById("detailDescription")
                 .textContent =
-                data.passRate + "%";
+                card
+                .querySelector(".assessment-description")
+                .textContent
+                .trim();
 
 
             document
-                .getElementById("resultsModal")
+                .getElementById("detailsModal")
                 .classList
                 .add("show");
 
         }
 
 
-        function closeResultsModal() {
+        function closeDetailsModal() {
 
             document
-                .getElementById("resultsModal")
+                .getElementById("detailsModal")
                 .classList
                 .remove("show");
 
         }
 
 
-        /* ================= ASSESSMENT OPTIONS ================= */
+        /* ================= ASSESSMENT DATA ================= */
 
-        function assessmentOptions(title) {
+        const assessmentData = {
 
-            const action =
-                prompt(
-                    "Assessment: " +
-                    title +
-                    "\n\nType one option:\n" +
-                    "publish - Publish assessment\n" +
-                    "close - Close assessment\n" +
-                    "delete - Delete assessment"
-                );
+            python: {
+
+                title: "Python Fundamentals Assessment",
+
+                duration: 30,
+
+                passing: 60,
+
+                questions: [
+
+                    {
+                        question:
+                            "Which keyword is used to define a function in Python?",
+
+                        options: [
+                            "function",
+                            "def",
+                            "define",
+                            "fun"
+                        ],
+
+                        answer: 1
+                    },
+
+                    {
+                        question:
+                            "Which of the following is mutable in Python?",
+
+                        options: [
+                            "Tuple",
+                            "String",
+                            "List",
+                            "Integer"
+                        ],
+
+                        answer: 2
+                    },
+
+                    {
+                        question:
+                            "What is the output of len([10, 20, 30])?",
+
+                        options: [
+                            "2",
+                            "3",
+                            "4",
+                            "30"
+                        ],
+
+                        answer: 1
+                    },
+
+                    {
+                        question:
+                            "Which symbol is used for comments in Python?",
+
+                        options: [
+                            "//",
+                            "/* */",
+                            "#",
+                            "--"
+                        ],
+
+                        answer: 2
+                    },
+
+                    {
+                        question:
+                            "Which data type stores key-value pairs?",
+
+                        options: [
+                            "List",
+                            "Tuple",
+                            "Set",
+                            "Dictionary"
+                        ],
+
+                        answer: 3
+                    }
+
+                ]
+
+            },
 
 
-            if (!action) {
-                return;
+            java: {
+
+                title: "Java OOP Questionnaire",
+
+                duration: 25,
+
+                passing: 60,
+
+                questions: [
+
+                    {
+                        question:
+                            "Which concept allows a class to inherit properties from another class?",
+
+                        options: [
+                            "Encapsulation",
+                            "Inheritance",
+                            "Abstraction",
+                            "Compilation"
+                        ],
+
+                        answer: 1
+                    },
+
+                    {
+                        question:
+                            "Which keyword is used to create an object in Java?",
+
+                        options: [
+                            "class",
+                            "object",
+                            "new",
+                            "create"
+                        ],
+
+                        answer: 2
+                    },
+
+                    {
+                        question:
+                            "Which OOP concept hides implementation details?",
+
+                        options: [
+                            "Abstraction",
+                            "Inheritance",
+                            "Polymorphism",
+                            "Compilation"
+                        ],
+
+                        answer: 0
+                    },
+
+                    {
+                        question:
+                            "Which method is the entry point of a Java program?",
+
+                        options: [
+                            "start()",
+                            "run()",
+                            "main()",
+                            "execute()"
+                        ],
+
+                        answer: 2
+                    },
+
+                    {
+                        question:
+                            "Which keyword prevents a class from being inherited?",
+
+                        options: [
+                            "static",
+                            "const",
+                            "final",
+                            "private"
+                        ],
+
+                        answer: 2
+                    }
+
+                ]
+
+            },
+
+
+            ml: {
+
+                title: "Machine Learning Basics",
+
+                duration: 30,
+
+                passing: 60,
+
+                questions: [
+
+                    {
+                        question:
+                            "Which type of learning uses labeled data?",
+
+                        options: [
+                            "Unsupervised Learning",
+                            "Supervised Learning",
+                            "Reinforcement Learning",
+                            "Random Learning"
+                        ],
+
+                        answer: 1
+                    },
+
+                    {
+                        question:
+                            "Which algorithm is commonly used for classification?",
+
+                        options: [
+                            "Linear Regression",
+                            "K-Means",
+                            "Logistic Regression",
+                            "PCA"
+                        ],
+
+                        answer: 2
+                    },
+
+                    {
+                        question:
+                            "What does a feature represent in a dataset?",
+
+                        options: [
+                            "An input variable",
+                            "Only the output",
+                            "The model itself",
+                            "An error"
+                        ],
+
+                        answer: 0
+                    },
+
+                    {
+                        question:
+                            "Which method is used to split data for evaluating a model?",
+
+                        options: [
+                            "Data joining",
+                            "Train-test split",
+                            "Data merging",
+                            "Feature deletion"
+                        ],
+
+                        answer: 1
+                    },
+
+                    {
+                        question:
+                            "Which metric is commonly used for classification accuracy?",
+
+                        options: [
+                            "Accuracy",
+                            "Mean",
+                            "Variance",
+                            "Standard deviation"
+                        ],
+
+                        answer: 0
+                    }
+
+                ]
+
+            },
+
+
+            sql: {
+
+                title: "SQL Fundamentals Assessment",
+
+                duration: 20,
+
+                passing: 60,
+
+                questions: [
+
+                    {
+                        question:
+                            "Which SQL command is used to retrieve data?",
+
+                        options: [
+                            "GET",
+                            "SELECT",
+                            "FETCH",
+                            "OPEN"
+                        ],
+
+                        answer: 1
+                    },
+
+                    {
+                        question:
+                            "Which clause is used to filter rows?",
+
+                        options: [
+                            "ORDER BY",
+                            "GROUP BY",
+                            "WHERE",
+                            "FROM"
+                        ],
+
+                        answer: 2
+                    },
+
+                    {
+                        question:
+                            "Which SQL function counts rows?",
+
+                        options: [
+                            "SUM()",
+                            "COUNT()",
+                            "TOTAL()",
+                            "ROWS()"
+                        ],
+
+                        answer: 1
+                    },
+
+                    {
+                        question:
+                            "Which clause is used to sort query results?",
+
+                        options: [
+                            "SORT BY",
+                            "ORDER BY",
+                            "ARRANGE BY",
+                            "GROUP BY"
+                        ],
+
+                        answer: 1
+                    },
+
+                    {
+                        question:
+                            "Which key uniquely identifies a row?",
+
+                        options: [
+                            "Foreign Key",
+                            "Primary Key",
+                            "Candidate Key",
+                            "Index"
+                        ],
+
+                        answer: 1
+                    }
+
+                ]
+
             }
 
-
-            const normalized =
-                action
-                .trim()
-                .toLowerCase();
+        };
 
 
-            const cards =
-                Array.from(
-                    document.querySelectorAll(
-                        ".assessment-card"
-                    )
-                );
+        /* ================= TEST STATE ================= */
+
+        let currentAssessment = null;
+
+        let currentQuestion = 0;
+
+        let userAnswers = [];
+
+        let timerInterval = null;
+
+        let timeRemaining = 0;
 
 
-            const card =
-                cards.find(
-                    item =>
-                        item.dataset.title === title
-                );
+        /* ================= START ASSESSMENT ================= */
+
+        function startAssessment(type) {
+
+            const assessment =
+                assessmentData[type];
 
 
-            if (!card) {
-                return;
-            }
-
-
-            if (normalized === "publish") {
-
-                card.dataset.status =
-                    "active";
-
-                card
-                    .querySelector(".status")
-                    .textContent =
-                    "Active";
+            if (!assessment) {
 
                 alert(
-                    "Assessment published successfully."
+                    "Assessment data is not available yet."
                 );
+
+                return;
 
             }
 
 
-            else if (normalized === "close") {
+            currentAssessment =
+                assessment;
 
-                card.dataset.status =
-                    "closed";
+            currentQuestion = 0;
 
-                card
-                    .querySelector(".status")
-                    .textContent =
-                    "Closed";
+            userAnswers =
+                new Array(
+                    assessment.questions.length
+                ).fill(null);
 
-                alert(
-                    "Assessment closed successfully."
+
+            timeRemaining =
+                assessment.duration * 60;
+
+
+            document
+                .getElementById("testTitle")
+                .textContent =
+                assessment.title;
+
+
+            document
+                .getElementById("testContent")
+                .style.display =
+                "block";
+
+
+            document
+                .getElementById("resultContent")
+                .style.display =
+                "none";
+
+
+            document
+                .getElementById("testModal")
+                .classList
+                .add("show");
+
+
+            updateTimer();
+
+            clearInterval(timerInterval);
+
+            timerInterval =
+                setInterval(
+                    updateTimer,
+                    1000
                 );
+
+
+            showQuestion();
+
+        }
+
+
+        /* ================= TIMER ================= */
+
+        function updateTimer() {
+
+            const minutes =
+                Math.floor(
+                    timeRemaining / 60
+                );
+
+            const seconds =
+                timeRemaining % 60;
+
+
+            document
+                .getElementById("timer")
+                .textContent =
+                String(minutes).padStart(2,"0") +
+                ":" +
+                String(seconds).padStart(2,"0");
+
+
+            if (timeRemaining <= 60) {
+
+                document
+                    .getElementById("timer")
+                    .style.background =
+                    "#fee2e2";
+
+                document
+                    .getElementById("timer")
+                    .style.color =
+                    "#b91c1c";
 
             }
 
 
-            else if (normalized === "delete") {
+            if (timeRemaining <= 0) {
 
-                const confirmed =
-                    confirm(
-                        "Delete this assessment?\n\n" +
-                        title
+                clearInterval(timerInterval);
+
+                submitTest(true);
+
+                return;
+
+            }
+
+
+            timeRemaining--;
+
+        }
+
+
+        /* ================= SHOW QUESTION ================= */
+
+        function showQuestion() {
+
+            const questions =
+                currentAssessment.questions;
+
+
+            const question =
+                questions[currentQuestion];
+
+
+            document
+                .getElementById("questionNumber")
+                .textContent =
+                "Question " +
+                (currentQuestion + 1) +
+                " of " +
+                questions.length;
+
+
+            document
+                .getElementById("questionText")
+                .textContent =
+                question.question;
+
+
+            const progress =
+                (
+                    (currentQuestion + 1) /
+                    questions.length
+                ) * 100;
+
+
+            document
+                .getElementById("questionProgress")
+                .style.width =
+                progress + "%";
+
+
+            const container =
+                document
+                .getElementById("optionsContainer");
+
+
+            container.innerHTML = "";
+
+
+            question.options.forEach(
+                (option, index) => {
+
+                    const label =
+                        document.createElement("label");
+
+
+                    label.className =
+                        "option";
+
+
+                    if (
+                        userAnswers[currentQuestion] ===
+                        index
+                    ) {
+
+                        label.classList.add("selected");
+
+                    }
+
+
+                    label.innerHTML = `
+
+                        <input
+                            type="radio"
+                            name="answer"
+                            value="${index}"
+                            ${userAnswers[currentQuestion] === index ? "checked" : ""}>
+
+                        <span class="option-letter">
+                            ${String.fromCharCode(65 + index)}
+                        </span>
+
+                        <span class="option-text">
+                            ${escapeHTML(option)}
+                        </span>
+
+                    `;
+
+
+                    label.addEventListener(
+                        "click",
+                        function() {
+
+                            userAnswers[currentQuestion] =
+                                index;
+
+
+                            document
+                                .querySelectorAll(".option")
+                                .forEach(
+                                    item =>
+                                    item.classList
+                                    .remove("selected")
+                                );
+
+
+                            label.classList.add("selected");
+
+                        }
                     );
 
 
-                if (confirmed) {
+                    container.appendChild(label);
 
-                    card.remove();
+                }
+            );
 
-                    alert(
-                        "Assessment deleted successfully."
-                    );
 
-                    filterAssessments();
+            document
+                .getElementById("prevBtn")
+                .style.visibility =
+                currentQuestion === 0
+                ? "hidden"
+                : "visible";
 
-                    updateAssessmentStats();
+
+            if (
+                currentQuestion ===
+                questions.length - 1
+            ) {
+
+                document
+                    .getElementById("nextBtn")
+                    .style.display =
+                    "none";
+
+
+                document
+                    .getElementById("submitBtn")
+                    .style.display =
+                    "block";
+
+            } else {
+
+                document
+                    .getElementById("nextBtn")
+                    .style.display =
+                    "block";
+
+
+                document
+                    .getElementById("submitBtn")
+                    .style.display =
+                    "none";
+
+            }
+
+        }
+
+
+        /* ================= NEXT ================= */
+
+        function nextQuestion() {
+
+            if (
+                userAnswers[currentQuestion] ===
+                null
+            ) {
+
+                alert(
+                    "Please select an answer before continuing."
+                );
+
+                return;
+
+            }
+
+
+            if (
+                currentQuestion <
+                currentAssessment.questions.length - 1
+            ) {
+
+                currentQuestion++;
+
+                showQuestion();
+
+            }
+
+        }
+
+
+        /* ================= PREVIOUS ================= */
+
+        function previousQuestion() {
+
+            if (currentQuestion > 0) {
+
+                currentQuestion--;
+
+                showQuestion();
+
+            }
+
+        }
+
+
+        /* ================= SUBMIT ================= */
+
+        function submitTest(autoSubmit = false) {
+
+            if (!autoSubmit) {
+
+                const unanswered =
+                    userAnswers.filter(
+                        answer =>
+                        answer === null
+                    ).length;
+
+
+                if (unanswered > 0) {
+
+                    const confirmed =
+                        confirm(
+                            "You have " +
+                            unanswered +
+                            " unanswered question(s). Submit anyway?"
+                        );
+
+
+                    if (!confirmed) {
+                        return;
+                    }
 
                 }
 
             }
 
 
-            else {
+            clearInterval(timerInterval);
 
-                alert(
-                    "Invalid option. Use publish, close, or delete."
+
+            let correct = 0;
+
+
+            currentAssessment.questions
+                .forEach(
+                    (question, index) => {
+
+                        if (
+                            userAnswers[index] ===
+                            question.answer
+                        ) {
+
+                            correct++;
+
+                        }
+
+                    }
                 );
+
+
+            const total =
+                currentAssessment.questions.length;
+
+
+            const score =
+                Math.round(
+                    (correct / total) *
+                    100
+                );
+
+
+            const wrong =
+                total - correct;
+
+
+            const passed =
+                score >=
+                currentAssessment.passing;
+
+
+            document
+                .getElementById("testContent")
+                .style.display =
+                "none";
+
+
+            document
+                .getElementById("resultContent")
+                .style.display =
+                "block";
+
+
+            const resultScreen =
+                document
+                .getElementById("resultScreen");
+
+
+            resultScreen
+                .classList
+                .toggle(
+                    "fail",
+                    !passed
+                );
+
+
+            document
+                .querySelector(".result-icon")
+                .textContent =
+                passed
+                ? "✓"
+                : "!" ;
+
+
+            document
+                .getElementById("resultHeading")
+                .textContent =
+                passed
+                ? "Congratulations! 🎉"
+                : "Keep Practicing 💪";
+
+
+            document
+                .getElementById("resultMessage")
+                .textContent =
+                passed
+                ? "You have successfully passed this assessment."
+                : "You did not reach the passing score. Review the learning material and try again when available.";
+
+
+            document
+                .getElementById("scoreBig")
+                .textContent =
+                score + "%";
+
+
+            document
+                .getElementById("correctCount")
+                .textContent =
+                correct;
+
+
+            document
+                .getElementById("wrongCount")
+                .textContent =
+                wrong;
+
+
+            document
+                .getElementById("totalQuestionsResult")
+                .textContent =
+                total;
+
+        }
+
+
+        /* ================= CLOSE TEST ================= */
+
+        function confirmCloseTest() {
+
+            const resultVisible =
+                document
+                .getElementById("resultContent")
+                .style.display ===
+                "block";
+
+
+            if (resultVisible) {
+
+                closeTestModal();
+
+                return;
+
+            }
+
+
+            const confirmed =
+                confirm(
+                    "Your current test progress will be lost. Close the test?"
+                );
+
+
+            if (confirmed) {
+
+                clearInterval(timerInterval);
+
+                closeTestModal();
 
             }
 
         }
 
 
-        /* ================= UPDATE STATISTICS ================= */
+        function closeTestModal() {
 
-        function updateAssessmentStats() {
+            clearInterval(timerInterval);
 
-            const cards =
-                Array.from(
-                    document.querySelectorAll(
-                        ".assessment-card"
-                    )
-                );
+            document
+                .getElementById("testModal")
+                .classList
+                .remove("show");
+
+        }
 
 
-            const active =
-                cards.filter(
-                    card =>
-                        card.dataset.status ===
-                        "active"
-                ).length;
+        /* ================= SHOW PREVIOUS RESULT ================= */
+
+        function showResult(title, score) {
+
+            currentAssessment = {
+
+                title: title,
+                passing: 60,
+                questions: []
+
+            };
 
 
             document
-                .getElementById("totalAssessments")
+                .getElementById("testTitle")
                 .textContent =
-                cards.length;
+                title;
+
 
             document
-                .getElementById("activeAssessments")
+                .getElementById("testContent")
+                .style.display =
+                "none";
+
+
+            document
+                .getElementById("resultContent")
+                .style.display =
+                "block";
+
+
+            document
+                .getElementById("resultScreen")
+                .classList
+                .remove("fail");
+
+
+            document
+                .querySelector(".result-icon")
                 .textContent =
-                active;
+                "✓";
+
+
+            document
+                .getElementById("resultHeading")
+                .textContent =
+                "Assessment Passed ✓";
+
+
+            document
+                .getElementById("resultMessage")
+                .textContent =
+                "This assessment was completed successfully.";
+
+
+            document
+                .getElementById("scoreBig")
+                .textContent =
+                score + "%";
+
+
+            document
+                .getElementById("correctCount")
+                .textContent =
+                "-";
+
+
+            document
+                .getElementById("wrongCount")
+                .textContent =
+                "-";
+
+
+            document
+                .getElementById("totalQuestionsResult")
+                .textContent =
+                "-";
+
+
+            document
+                .getElementById("testModal")
+                .classList
+                .add("show");
+
+        }
+
+
+        /* ================= HISTORY SCROLL ================= */
+
+        function scrollToHistory() {
+
+            document
+                .getElementById("historyPanel")
+                .scrollIntoView({
+                    behavior: "smooth",
+                    block: "start"
+                });
+
+        }
+
+
+        /* ================= CERTIFICATES ================= */
+
+        function goToCertificates() {
+
+            closeTestModal();
+
+            goToPage("certificates.html");
+
+        }
+
+
+        /* ================= SAFE HTML ================= */
+
+        function escapeHTML(value) {
+
+            return String(value)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
 
         }
 
 
         /* ================= MODAL OUTSIDE CLICK ================= */
 
-        window.addEventListener("click", function(event) {
+        window.addEventListener(
+            "click",
+            function(event) {
 
-            const createModal =
-                document.getElementById(
-                    "createModal"
-                );
+                const detailsModal =
+                    document.getElementById(
+                        "detailsModal"
+                    );
 
-            const resultsModal =
-                document.getElementById(
-                    "resultsModal"
-                );
+                const testModal =
+                    document.getElementById(
+                        "testModal"
+                    );
 
 
-            if (event.target === createModal) {
+                if (
+                    event.target ===
+                    detailsModal
+                ) {
 
-                closeCreateModal();
+                    closeDetailsModal();
+
+                }
+
+
+                if (
+                    event.target ===
+                    testModal
+                ) {
+
+                    confirmCloseTest();
+
+                }
 
             }
+        );
 
 
-            if (event.target === resultsModal) {
-
-                closeResultsModal();
-
-            }
-
-        });
-
-
-        /* ================= MOBILE SIDEBAR ================= */
+        /* ================= MOBILE NAV ================= */
 
         document
             .querySelectorAll(".nav-link")
@@ -3247,7 +4242,9 @@
                     "click",
                     function() {
 
-                        if (window.innerWidth <= 820) {
+                        if (
+                            window.innerWidth <= 820
+                        ) {
 
                             document
                                 .getElementById("sidebar")
@@ -3264,11 +4261,13 @@
 
         /* ================= YEAR ================= */
 
-        document.getElementById("year").textContent =
+        document
+            .getElementById("year")
+            .textContent =
             new Date().getFullYear();
 
     </script>
 
 </body>
 </html>
-
+```
