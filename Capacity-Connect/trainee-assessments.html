@@ -1,1 +1,3274 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Trainer Assessments | CAPACITY CONNECT</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #3730a3;
+            --cyan: #0891b2;
+            --success: #16a34a;
+            --warning: #d97706;
+            --danger: #dc2626;
+            --dark: #111827;
+            --text: #374151;
+            --muted: #6b7280;
+            --light: #f5f7fb;
+            --white: #ffffff;
+            --border: #e5e7eb;
+        }
+
+        body {
+            background: var(--light);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* ================= HEADER ================= */
+
+        header {
+            height: 78px;
+            background: linear-gradient(135deg, #312e81, #4f46e5, #0891b2);
+            color: white;
+            padding: 0 5%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .menu-btn {
+            display: none;
+            border: none;
+            background: white;
+            color: var(--primary);
+            border-radius: 7px;
+            padding: 7px 10px;
+            font-size: 17px;
+            cursor: pointer;
+        }
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 11px;
+            background: rgba(255,255,255,0.16);
+            border: 1px solid rgba(255,255,255,0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 21px;
+        }
+
+        .brand h1 {
+            font-size: 20px;
+            letter-spacing: 0.4px;
+        }
+
+        .brand small {
+            display: block;
+            font-size: 10px;
+            margin-top: 3px;
+            opacity: .82;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+        }
+
+        .header-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.15);
+            color: white;
+            cursor: pointer;
+            font-size: 17px;
+        }
+
+        .header-btn:hover {
+            background: rgba(255,255,255,0.25);
+        }
+
+        .profile-mini {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: white;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 13px;
+        }
+
+        .profile-text strong {
+            display: block;
+            font-size: 13px;
+        }
+
+        .profile-text span {
+            font-size: 10px;
+            opacity: .8;
+        }
+
+        /* ================= LAYOUT ================= */
+
+        .layout {
+            display: flex;
+            min-height: calc(100vh - 78px);
+        }
+
+        /* ================= SIDEBAR ================= */
+
+        .sidebar {
+            width: 255px;
+            background: white;
+            border-right: 1px solid var(--border);
+            padding: 22px 14px;
+            position: sticky;
+            top: 78px;
+            height: calc(100vh - 78px);
+            overflow-y: auto;
+        }
+
+        .menu-title {
+            color: #9ca3af;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 8px 12px 12px;
+        }
+
+        .nav-link {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 11px 12px;
+            margin-bottom: 4px;
+            border-radius: 9px;
+            text-decoration: none;
+            color: var(--text);
+            font-size: 13px;
+            transition: 0.2s;
+        }
+
+        .nav-link:hover {
+            background: #eef2ff;
+            color: var(--primary);
+        }
+
+        .nav-link.active {
+            background: linear-gradient(90deg,#eef2ff,#e0e7ff);
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .nav-icon {
+            width: 21px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .sidebar-card {
+            margin: 25px 5px 0;
+            padding: 16px;
+            border-radius: 13px;
+            background: linear-gradient(145deg,#eef2ff,#ecfeff);
+            border: 1px solid #dbeafe;
+        }
+
+        .sidebar-card h4 {
+            font-size: 12px;
+            color: var(--dark);
+            margin-bottom: 6px;
+        }
+
+        .sidebar-card p {
+            color: var(--muted);
+            font-size: 10px;
+            line-height: 1.5;
+        }
+
+        /* ================= MAIN ================= */
+
+        .main {
+            flex: 1;
+            max-width: 1550px;
+            margin: auto;
+            padding: 28px;
+        }
+
+        .page-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+            margin-bottom: 23px;
+        }
+
+        .page-heading h2 {
+            color: var(--dark);
+            font-size: 27px;
+            margin-bottom: 6px;
+        }
+
+        .page-heading p {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .create-btn {
+            border: none;
+            border-radius: 8px;
+            background: var(--primary);
+            color: white;
+            padding: 11px 16px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 700;
+            transition: .2s;
+            white-space: nowrap;
+        }
+
+        .create-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        /* ================= STATS ================= */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(5,1fr);
+            gap: 14px;
+            margin-bottom: 22px;
+        }
+
+        .stat {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            padding: 17px;
+            transition: .2s;
+        }
+
+        .stat:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 9px 22px rgba(0,0,0,.05);
+        }
+
+        .stat-icon {
+            width: 39px;
+            height: 39px;
+            border-radius: 10px;
+            background: #eef2ff;
+            color: var(--primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 11px;
+            font-size: 17px;
+        }
+
+        .stat-label {
+            font-size: 10px;
+            color: var(--muted);
+        }
+
+        .stat-value {
+            color: var(--dark);
+            font-size: 24px;
+            font-weight: 800;
+            margin-top: 4px;
+        }
+
+        .stat-note {
+            font-size: 9px;
+            color: var(--success);
+            margin-top: 3px;
+        }
+
+        /* ================= TOOLBAR ================= */
+
+        .toolbar {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            min-width: 220px;
+        }
+
+        .search-box input {
+            width: 100%;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 12px 10px 35px;
+            font-size: 11px;
+            outline: none;
+        }
+
+        .search-box input:focus {
+            border-color: #a5b4fc;
+            box-shadow: 0 0 0 3px rgba(79,70,229,.08);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .filters {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .filter-select {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 9px 11px;
+            font-size: 10px;
+            color: var(--text);
+            background: white;
+            outline: none;
+        }
+
+        /* ================= ASSESSMENT GRID ================= */
+
+        .assessment-grid {
+            display: grid;
+            grid-template-columns: repeat(3,1fr);
+            gap: 17px;
+        }
+
+        .assessment-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
+            transition: .25s;
+        }
+
+        .assessment-card:hover {
+            transform: translateY(-4px);
+            border-color: #c7d2fe;
+            box-shadow: 0 10px 27px rgba(0,0,0,.06);
+        }
+
+        .assessment-cover {
+            height: 92px;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            color: white;
+        }
+
+        .cover-purple {
+            background: linear-gradient(135deg,#4338ca,#6366f1);
+        }
+
+        .cover-cyan {
+            background: linear-gradient(135deg,#0e7490,#06b6d4);
+        }
+
+        .cover-green {
+            background: linear-gradient(135deg,#166534,#22c55e);
+        }
+
+        .cover-orange {
+            background: linear-gradient(135deg,#b45309,#f59e0b);
+        }
+
+        .cover-pink {
+            background: linear-gradient(135deg,#be185d,#ec4899);
+        }
+
+        .cover-slate {
+            background: linear-gradient(135deg,#334155,#64748b);
+        }
+
+        .assessment-icon {
+            width: 43px;
+            height: 43px;
+            border-radius: 11px;
+            background: rgba(255,255,255,.16);
+            border: 1px solid rgba(255,255,255,.22);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .status {
+            padding: 5px 8px;
+            border-radius: 15px;
+            font-size: 8px;
+            font-weight: 700;
+            background: rgba(255,255,255,.15);
+            border: 1px solid rgba(255,255,255,.25);
+        }
+
+        .assessment-body {
+            padding: 17px;
+        }
+
+        .assessment-category {
+            color: var(--primary);
+            font-size: 9px;
+            text-transform: uppercase;
+            font-weight: 750;
+            letter-spacing: .4px;
+            margin-bottom: 5px;
+        }
+
+        .assessment-title {
+            color: var(--dark);
+            font-size: 14px;
+            font-weight: 750;
+            line-height: 1.4;
+            min-height: 38px;
+            margin-bottom: 6px;
+        }
+
+        .assessment-description {
+            color: var(--muted);
+            font-size: 9px;
+            line-height: 1.55;
+            min-height: 42px;
+        }
+
+        .assessment-meta {
+            display: grid;
+            grid-template-columns: repeat(2,1fr);
+            gap: 8px;
+            margin: 14px 0;
+        }
+
+        .meta-box {
+            background: #fafafa;
+            border: 1px solid #f0f1f4;
+            border-radius: 8px;
+            padding: 8px;
+        }
+
+        .meta-label {
+            color: var(--muted);
+            font-size: 8px;
+            margin-bottom: 3px;
+        }
+
+        .meta-value {
+            color: var(--dark);
+            font-size: 9px;
+            font-weight: 700;
+        }
+
+        .deadline-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px;
+            border-radius: 8px;
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            margin-bottom: 12px;
+        }
+
+        .deadline-box.expired {
+            background: #fef2f2;
+            border-color: #fecaca;
+        }
+
+        .deadline-box strong {
+            display: block;
+            color: #92400e;
+            font-size: 9px;
+        }
+
+        .deadline-box span {
+            color: var(--muted);
+            font-size: 8px;
+        }
+
+        .deadline-icon {
+            font-size: 15px;
+        }
+
+        .participation {
+            border-top: 1px solid #f1f2f5;
+            padding-top: 12px;
+        }
+
+        .participation-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .participation-row span {
+            color: var(--muted);
+            font-size: 8px;
+        }
+
+        .participation-row strong {
+            color: var(--dark);
+            font-size: 9px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            border-radius: 20px;
+            background: #e5e7eb;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 20px;
+            background: linear-gradient(90deg,#4f46e5,#06b6d4);
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 7px;
+            margin-top: 12px;
+        }
+
+        .action-btn {
+            flex: 1;
+            border: none;
+            border-radius: 7px;
+            padding: 8px;
+            cursor: pointer;
+            font-size: 9px;
+            font-weight: 700;
+        }
+
+        .manage-btn {
+            color: var(--primary);
+            background: #eef2ff;
+        }
+
+        .results-btn {
+            color: #0e7490;
+            background: #ecfeff;
+        }
+
+        .more-btn {
+            width: 34px;
+            flex: 0 0 34px;
+            background: #f3f4f6;
+            color: var(--text);
+        }
+
+        /* ================= PERFORMANCE TABLE ================= */
+
+        .panel {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 17px 19px;
+            border-bottom: 1px solid #f0f1f4;
+        }
+
+        .panel-header h3 {
+            color: var(--dark);
+            font-size: 15px;
+        }
+
+        .panel-header span,
+        .panel-header a {
+            color: var(--muted);
+            font-size: 10px;
+            text-decoration: none;
+        }
+
+        .panel-header a {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 13px 18px;
+            border-bottom: 1px solid #f1f2f5;
+            font-size: 10px;
+        }
+
+        th {
+            color: var(--muted);
+            background: #fafafa;
+            font-size: 9px;
+            text-transform: uppercase;
+        }
+
+        .trainee-name {
+            color: var(--dark);
+            font-weight: 700;
+        }
+
+        .score {
+            color: var(--success);
+            font-weight: 800;
+        }
+
+        .small-status {
+            padding: 4px 7px;
+            border-radius: 12px;
+            font-size: 8px;
+            font-weight: 700;
+        }
+
+        .passed {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .progress-small {
+            width: 75px;
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .progress-small-fill {
+            height: 100%;
+            background: linear-gradient(90deg,#4f46e5,#06b6d4);
+            border-radius: 20px;
+        }
+
+        /* ================= EMPTY ================= */
+
+        .empty-state {
+            display: none;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 45px 20px;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .empty-icon {
+            width: 55px;
+            height: 55px;
+            background: #eef2ff;
+            color: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+            font-size: 23px;
+        }
+
+        .empty-state h3 {
+            color: var(--dark);
+            font-size: 15px;
+            margin-bottom: 5px;
+        }
+
+        .empty-state p {
+            color: var(--muted);
+            font-size: 10px;
+        }
+
+        /* ================= MODALS ================= */
+
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(17,24,39,.58);
+            z-index: 3000;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-box {
+            width: 100%;
+            max-width: 700px;
+            max-height: 92vh;
+            overflow-y: auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 25px 70px rgba(0,0,0,.22);
+        }
+
+        .modal-header {
+            padding: 17px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            color: var(--dark);
+            font-size: 16px;
+        }
+
+        .close-btn {
+            background: transparent;
+            border: none;
+            color: var(--muted);
+            font-size: 23px;
+            cursor: pointer;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 13px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            color: var(--dark);
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 11px;
+            background: white;
+            color: var(--text);
+            outline: none;
+            font-size: 10px;
+        }
+
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #a5b4fc;
+            box-shadow: 0 0 0 3px rgba(79,70,229,.08);
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-top: 18px;
+        }
+
+        .modal-btn {
+            border: none;
+            border-radius: 8px;
+            padding: 10px 14px;
+            cursor: pointer;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .cancel-btn {
+            color: var(--text);
+            background: #f3f4f6;
+        }
+
+        .save-btn {
+            color: white;
+            background: var(--primary);
+        }
+
+        .save-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        /* ================= QUESTION BUILDER ================= */
+
+        .question-list {
+            margin-top: 18px;
+        }
+
+        .question-item {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 13px;
+            margin-bottom: 10px;
+            background: #fafafa;
+        }
+
+        .question-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .question-number {
+            font-size: 9px;
+            color: var(--primary);
+            font-weight: 800;
+        }
+
+        .remove-question {
+            border: none;
+            background: #fee2e2;
+            color: #b91c1c;
+            border-radius: 5px;
+            padding: 4px 7px;
+            cursor: pointer;
+            font-size: 8px;
+        }
+
+        .option-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        /* ================= FOOTER ================= */
+
+        footer {
+            padding: 28px 10px 5px;
+            text-align: center;
+            color: #9ca3af;
+            font-size: 9px;
+        }
+
+        footer strong {
+            color: var(--primary);
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 1200px) {
+            .assessment-grid {
+                grid-template-columns: repeat(2,1fr);
+            }
+
+            .stats {
+                grid-template-columns: repeat(3,1fr);
+            }
+        }
+
+        @media (max-width: 820px) {
+
+            header {
+                padding: 0 4%;
+            }
+
+            .menu-btn {
+                display: block;
+            }
+
+            .profile-text {
+                display: none;
+            }
+
+            .sidebar {
+                position: fixed;
+                left: -275px;
+                top: 0;
+                height: 100vh;
+                z-index: 2000;
+                transition: .3s ease;
+                box-shadow: 8px 0 25px rgba(0,0,0,.12);
+            }
+
+            .sidebar.open {
+                left: 0;
+            }
+
+            .layout {
+                display: block;
+            }
+
+            .main {
+                padding: 20px 15px;
+            }
+
+            .page-heading {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 650px) {
+
+            .stats,
+            .assessment-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid,
+            .option-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .full {
+                grid-column: auto;
+            }
+
+            .toolbar {
+                align-items: stretch;
+            }
+
+            .filters {
+                width: 100%;
+            }
+
+            .filter-select {
+                flex: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ================= HEADER ================= -->
+
+    <header>
+
+        <div class="header-left">
+
+            <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+
+            <div class="brand-icon">🎓</div>
+
+            <div class="brand">
+                <h1>CAPACITY CONNECT</h1>
+                <small>Trainer Assessment Management</small>
+            </div>
+
+        </div>
+
+        <div class="header-right">
+
+            <button
+                class="header-btn"
+                onclick="goToPage('notifications.html')"
+                title="Notifications">
+                🔔
+            </button>
+
+            <div
+                class="profile-mini"
+                onclick="goToPage('trainer-profile.html')">
+
+                <div class="avatar">TR</div>
+
+                <div class="profile-text">
+                    <strong>Trainer</strong>
+                    <span>Professional Account</span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- ================= LAYOUT ================= -->
+
+    <div class="layout">
+
+        <!-- ================= SIDEBAR ================= -->
+
+        <aside class="sidebar" id="sidebar">
+
+            <div class="menu-title">Trainer Menu</div>
+
+            <a href="capacity-connect.html" class="nav-link">
+                <span class="nav-icon">🏠</span>
+                Home
+            </a>
+
+            <a href="trainer-dashboard.html" class="nav-link">
+                <span class="nav-icon">📊</span>
+                Dashboard
+            </a>
+
+            <a href="trainer-profile.html" class="nav-link">
+                <span class="nav-icon">👤</span>
+                My Profile
+            </a>
+
+            <a href="trainer-courses.html" class="nav-link">
+                <span class="nav-icon">📚</span>
+                Manage Courses
+            </a>
+
+            <a href="trainer-library.html" class="nav-link">
+                <span class="nav-icon">🗂️</span>
+                Trainer Library
+            </a>
+
+            <a href="trainer-assessments.html" class="nav-link active">
+                <span class="nav-icon">📝</span>
+                Assessments
+            </a>
+
+            <div class="menu-title">Training</div>
+
+            <a href="competency-mapping.html" class="nav-link">
+                <span class="nav-icon">🧠</span>
+                Competency Mapping
+            </a>
+
+            <a href="feedback.html" class="nav-link">
+                <span class="nav-icon">💬</span>
+                Feedback
+            </a>
+
+            <a href="notifications.html" class="nav-link">
+                <span class="nav-icon">🔔</span>
+                Notifications
+            </a>
+
+            <div class="sidebar-card">
+
+                <h4>Assessment Management</h4>
+
+                <p>
+                    Create MCQs, set deadlines, monitor participation,
+                    and evaluate trainee performance.
+                </p>
+
+            </div>
+
+        </aside>
+
+
+        <!-- ================= MAIN ================= -->
+
+        <main class="main">
+
+            <!-- PAGE HEADING -->
+
+            <section class="page-heading">
+
+                <div>
+                    <h2>Assessments & Questionnaires 📝</h2>
+
+                    <p>
+                        Create assessments, set deadlines, monitor participation,
+                        and evaluate trainee performance.
+                    </p>
+                </div>
+
+                <button
+                    class="create-btn"
+                    onclick="openCreateModal()">
+                    + Create Assessment
+                </button>
+
+            </section>
+
+
+            <!-- STATS -->
+
+            <section class="stats">
+
+                <div class="stat">
+
+                    <div class="stat-icon">📝</div>
+
+                    <div class="stat-label">
+                        Total Assessments
+                    </div>
+
+                    <div class="stat-value" id="totalAssessments">
+                        6
+                    </div>
+
+                    <div class="stat-note">
+                        All created assessments
+                    </div>
+
+                </div>
+
+
+                <div class="stat">
+
+                    <div class="stat-icon">✅</div>
+
+                    <div class="stat-label">
+                        Active
+                    </div>
+
+                    <div class="stat-value" id="activeAssessments">
+                        4
+                    </div>
+
+                    <div class="stat-note">
+                        Currently available
+                    </div>
+
+                </div>
+
+
+                <div class="stat">
+
+                    <div class="stat-icon">⏰</div>
+
+                    <div class="stat-label">
+                        Upcoming Deadlines
+                    </div>
+
+                    <div class="stat-value">
+                        3
+                    </div>
+
+                    <div class="stat-note">
+                        Within next 7 days
+                    </div>
+
+                </div>
+
+
+                <div class="stat">
+
+                    <div class="stat-icon">👨‍🎓</div>
+
+                    <div class="stat-label">
+                        Submissions
+                    </div>
+
+                    <div class="stat-value">
+                        428
+                    </div>
+
+                    <div class="stat-note">
+                        Across all assessments
+                    </div>
+
+                </div>
+
+
+                <div class="stat">
+
+                    <div class="stat-icon">📈</div>
+
+                    <div class="stat-label">
+                        Average Score
+                    </div>
+
+                    <div class="stat-value">
+                        82%
+                    </div>
+
+                    <div class="stat-note">
+                        Overall trainee performance
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- TOOLBAR -->
+
+            <section class="toolbar">
+
+                <div class="search-box">
+
+                    <span class="search-icon">🔍</span>
+
+                    <input
+                        id="searchInput"
+                        type="text"
+                        placeholder="Search assessments..."
+                        oninput="filterAssessments()">
+
+                </div>
+
+
+                <div class="filters">
+
+                    <select
+                        id="statusFilter"
+                        class="filter-select"
+                        onchange="filterAssessments()">
+
+                        <option value="all">
+                            All Status
+                        </option>
+
+                        <option value="active">
+                            Active
+                        </option>
+
+                        <option value="draft">
+                            Draft
+                        </option>
+
+                        <option value="closed">
+                            Closed
+                        </option>
+
+                    </select>
+
+
+                    <select
+                        id="courseFilter"
+                        class="filter-select"
+                        onchange="filterAssessments()">
+
+                        <option value="all">
+                            All Courses
+                        </option>
+
+                        <option value="python">
+                            Python
+                        </option>
+
+                        <option value="java">
+                            Java
+                        </option>
+
+                        <option value="ml">
+                            Machine Learning
+                        </option>
+
+                        <option value="data">
+                            Data Visualization
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </section>
+
+
+            <!-- ASSESSMENT GRID -->
+
+            <section
+                class="assessment-grid"
+                id="assessmentGrid">
+
+
+                <!-- ASSESSMENT 1 -->
+
+                <article
+                    class="assessment-card"
+                    data-title="Python Fundamentals Assessment"
+                    data-status="active"
+                    data-course="python">
+
+                    <div class="assessment-cover cover-purple">
+
+                        <div class="assessment-icon">
+                            🐍
+                        </div>
+
+                        <span class="status">
+                            Active
+                        </span>
+
+                    </div>
+
+                    <div class="assessment-body">
+
+                        <div class="assessment-category">
+                            Python Programming
+                        </div>
+
+                        <h3 class="assessment-title">
+                            Python Fundamentals Assessment
+                        </h3>
+
+                        <p class="assessment-description">
+                            Evaluate trainee understanding of Python basics,
+                            variables, functions, loops, and data structures.
+                        </p>
+
+                        <div class="assessment-meta">
+
+                            <div class="meta-box">
+                                <div class="meta-label">Questions</div>
+                                <div class="meta-value">30 MCQs</div>
+                            </div>
+
+                            <div class="meta-box">
+                                <div class="meta-label">Duration</div>
+                                <div class="meta-value">30 min</div>
+                            </div>
+
+                            <div class="meta-box">
+                                <div class="meta-label">Assigned</div>
+                                <div class="meta-value">78 trainees</div>
+                            </div>
+
+                            <div class="meta-box">
+                                <div class="meta-label">Passing</div>
+                                <div class="meta-value">60%</div>
+                            </div>
+
+                        </div>
+
+                        <div class="deadline-box">
+
+                            <span class="deadline-icon">⏰</span>
+
+                            <div>
+
+                                <strong>
+                                    Deadline: Today, 11:59 PM
+                                </strong>
+
+                                <span>
+                                    Assessment is currently active
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        <div class="participation">
+
+                            <div class="participation-row">
+                                <span>Participation</span>
+                                <strong>64 / 78</strong>
+                            </div>
+
+                            <div class="progress-bar">
+
+                                <div
+                                    class="progress-fill"
+                                    style="width:82%">
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="card-actions">
+
+                            <button
+                                class="action-btn manage-btn"
+                                onclick="manageAssessment(this)">
+                                ✏️ Manage
+                            </button>
+
+                            <button
+                                class="action-btn results-btn"
+                                onclick="viewResults('Python Fundamentals Assessment')">
+                                📊 Results
+                            </button>
+
+                            <button
+                                class="action-btn more-btn"
+                                onclick="assessmentOptions('Python Fundamentals Assessment')">
+                                ⋮
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- ASSESSMENT 2 -->
+
+                <article
+                    class="assessment-card"
+                    data-title="Java OOP Questionnaire"
+                    data-status="active"
+                    data-course="java">
+
+                    <div class="assessment-cover cover-cyan">
+
+                        <div class="assessment-icon">
+                            ☕
+                        </div>
+
+                        <span class="status">
+                            Active
+                        </span>
+
+                    </div>
+
+                    <div class="assessment-body">
+
+                        <div class="assessment-category">
+                            Java Full Stack
+                        </div>
+
+                        <h3 class="assessment-title">
+                            Java OOP Questionnaire
+                        </h3>
+
+                        <p class="assessment-description">
+                            Test knowledge of classes, objects, inheritance,
+                            polymorphism, abstraction, and encapsulation.
+                        </p>
+
+                        <div class="assessment-meta">
+
+                            <div class="meta-box">
+                                <div class="meta-label">Questions</div>
+                                <div class="meta-value">25 MCQs</div>
+                            </div>
+
+                            <div class="meta-box">
+                                <div class="meta-label">Duration</div>
+                                <div class="meta-value">25 min</div>
+                            </div>
+
+                            <div class="meta-box">
+                                <div class="meta-label">Assigned</div>
+                                <div class="meta-value">61 trainees</div>
+                            </div>
+
+                            <div class="meta-box">
+                                <div class="meta-label">Passing</div>
+                                <div class="meta-value">60%</div>
+                            </div>
+
+                        </div>
+
+                        <div class="deadline-box">
+
+                            <span class="deadline-icon">⏰</span>
+
+                            <div>
+                                <strong>
+                                    Deadline: 11 Sep 2026
+                                </strong>
+
+                                <span>
+                                    2 days remaining
+                                </span>
+                            </div>
+
+                        </div>
+
+                        <div class="participation">
+
+                            <div class="participation-row">
+                                <span>Participation</span>
+                                <strong>49 / 61</strong>
+                            </div>
+
+                            <div class="progress-bar">
+                                <div
+                                    class="progress-fill"
+                                    style="width:80%">
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="card-actions">
+
+                            <button
+                                class="action-btn manage-btn"
+                                onclick="manageAssessment(this)">
+                                ✏️ Manage
+                            </button>
+
+                            <button
+                                class="action-btn results-btn"
+                                onclick="viewResults('Java OOP Questionnaire')">
+                                📊 Results
+                            </button>
+
+                            <button
+                                class="action-btn more-btn"
+                                onclick="assessmentOptions('Java OOP Questionnaire')">
+                                ⋮
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- ASSESSMENT 3 -->
+
+                <article
+                    class="assessment-card"
+                    data-title="Machine Learning Basics"
+                    data-status="active"
+                    data-course="ml">
+
+                    <div class="assessment-cover cover-green">
+
+                        <div class="assessment-icon">
+                            🤖
+                        </div>
+
+                        <span class="status">
+                            Active
+                        </span>
+
+                    </div>
+
+                    <div class="assessment-body">
+
+                        <div class="assessment-category">
+                            Machine Learning
+                        </div>
+
+                        <h3 class="assessment-title">
+                            Machine Learning Basics
+                        </h3>
+
+                        <p class="assessment-description">
+                            Assess understanding of supervised learning,
+                            classification, regression, and model evaluation.
+                        </p>
+
+                        <div class="assessment-meta">
+
+                            <div class="meta-box">
+                                <div class="meta-label">Questions</div>
+                                <div class="meta-value">30 MCQs</div>
+                            </div>
+
+                            <div class="meta-box">
+                                <div class="meta-label">Duration</div>
+                                <div class="meta-value">30 min</div>
+                            </div>
+
+                            <div class="meta-box">
+                                <div class="meta-label">Assigned</div>
+                                <div class="meta-value">54 trainees</div>
+                            </div>
+
+                            <div class="meta-box">
+                                <div class="meta-label">Passing</div>
+                                <div class="meta-value">60%</div>
+                            </div>
+
+                        </div>
+
+                        <div class="deadline-box">
+
+                            <span class="deadline-icon">⏰</span>
+
+                            <div>
+
+                                <strong>
+                                    Deadline: 14 Sep 2026
+                                </strong>
+
+                                <span>
+                                    5 days remaining
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        <div class="participation">
+
+                            <div class="participation-row">
+                                <span>Participation</span>
+                                <strong>35 / 54</strong>
+                            </div>
+
+                            <div class="progress-bar">
+                                <div
+                                    class="progress-fill"
+                                    style="width:65%">
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="card-actions">
+
+                            <button
+                                class="action-btn manage-btn"
+                                onclick="manageAssessment(this)">
+                                ✏️ Manage
+                            </button>
+
+                            <button
+                                class="action-btn results-btn"
+                                onclick="viewResults('Machine Learning Basics')">
+                                📊 Results
+                            </button>
+
+                            <button
+                                class="action-btn more-btn"
+                                onclick="assessmentOptions('Machine Learning Basics')">
+                                ⋮
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- ASSESSMENT 4 -->
+
+                <article
+                    class="assessment-card"
+                    data-title="Data Visualization Assessment"
+                    data-status="active"
+                    data-course="data">
+
+                    <div class="assessment-cover cover-orange">
+
+                        <div class="assessment-icon">
+                            📊
+                        </div>
+
+                        <span class="status">
+                            Active
+                        </span>
+
+                    </div>
+
+                    <div class="assessment-body">
+
+                        <div class="assessment-category">
+                            Data Visualization
+                        </div>
+
+                        <h3 class="assessment-title">
+                            Data Visualization Assessment
+                        </h3>
+
+                        <p class="assessment-description">
+                            Evaluate knowledge of charts, dashboards,
+                            visual hierarchy, and data storytelling.
+                        </p>
+
+                        <div class="assessment-meta">
+
+                            <div class="meta-box">
+                                <div class="meta-label">Questions</div>
+                                <div class="meta-value">20 MCQs</div>
+                            </div>
+
+                            <div class="meta-box">
+                                <div class="meta-label">Duration</div>
+                                <div class="meta-value">20 min</div>
+                            </div>
+
+                            <div class="meta-box">
+                                <div class="meta-label">Assigned</div>
+                                <div class="meta-value">43 trainees</div>
+                            </div>
+
+                            <div class="meta-box">
+                                <div class="meta-label">Passing</div>
+                                <div class="meta-value">50%</div>
+                            </div>
+
+                        </div>
+
+                        <div class="deadline-box">
+
+                            <span class="deadline-icon">⏰</span>
+
+                            <div>
+
+                                <strong>
+                                    Deadline: 16 Sep 2026
+                                </strong>
+
+                                <span>
+                                    7 days remaining
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        <div class="participation">
+
+                            <div class="participation-row">
+                                <span>Participation</span>
+                                <strong>28 / 43</strong>
+                            </div>
+
+                            <div class="progress-bar">
+                                <div
+                                    class="progress-fill"
+                                    style="width:65%">
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="card-actions">
+
+                            <button
+                                class="action-btn manage-btn"
+                                onclick="manageAssessment(this)">
+                                ✏️ Manage
+                            </button>
+
+                            <button
+                                class="action-btn results-btn"
+                                onclick="viewResults('Data Visualization Assessment')">
+                                📊 Results
+                            </button>
+
+                            <button
+                                class="action-btn more-btn"
+                                onclick="assessmentOptions('Data Visualization Assessment')">
+                                ⋮
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- ASSESSMENT 5 -->
+
+                <article
+                    class="assessment-card"
+                    data-title="Java Exception Handling Quiz"
+                    data-status="closed"
+                    data-course="java">
+
+                    <div class="assessment-cover cover-pink">
+
+                        <div class="assessment-icon">
+                            ☕
+                        </div>
+
+                        <span class="status">
+                            Closed
+                        </span>
+
+                    </div>
+
+                    <div class="assessment-body">
+
+                        <div class="assessment-category">
+                            Java Full Stack
+                        </div>
+
+                        <h3 class="assessment-title">
+                            Java Exception Handling Quiz
+                        </h3>
+
+                        <p class="assessment-description">
+                            Quiz on checked and unchecked exceptions,
+                            custom exceptions, and exception handling.
+                        </p>
+
+                        <div class="assessment-meta">
+
+                            <div class="meta-box">
+                                <div class="meta-label">Questions</div>
+                                <div class="meta-value">20 MCQs</div>
+                            </div>
+
+                            <div class="meta-box">
+                                <div class="meta-label">Duration</div>
+                                <div class="meta-value">20 min</div>
+                            </div>
+
+                            <div class="meta-box">
+                                <div class="meta-label">Submitted</div>
+                                <div class="meta-value">58 trainees</div>
+                            </div>
+
+                            <div class="meta-box">
+                                <div class="meta-label">Average</div>
+                                <div class="meta-value">81%</div>
+                            </div>
+
+                        </div>
+
+                        <div class="deadline-box">
+
+                            <span class="deadline-icon">✅</span>
+
+                            <div>
+
+                                <strong>
+                                    Assessment Closed
+                                </strong>
+
+                                <span>
+                                    Results are available
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        <div class="participation">
+
+                            <div class="participation-row">
+                                <span>Submission Rate</span>
+                                <strong>58 / 61</strong>
+                            </div>
+
+                            <div class="progress-bar">
+                                <div
+                                    class="progress-fill"
+                                    style="width:95%">
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="card-actions">
+
+                            <button
+                                class="action-btn results-btn"
+                                onclick="viewResults('Java Exception Handling Quiz')">
+                                📊 Results
+                            </button>
+
+                            <button
+                                class="action-btn more-btn"
+                                onclick="assessmentOptions('Java Exception Handling Quiz')">
+                                ⋮
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- ASSESSMENT 6 -->
+
+                <article
+                    class="assessment-card"
+                    data-title="Advanced Data Visualization"
+                    data-status="draft"
+                    data-course="data">
+
+                    <div class="assessment-cover cover-slate">
+
+                        <div class="assessment-icon">
+                            📈
+                        </div>
+
+                        <span class="status">
+                            Draft
+                        </span>
+
+                    </div>
+
+                    <div class="assessment-body">
+
+                        <div class="assessment-category">
+                            Data Visualization
+                        </div>
+
+                        <h3 class="assessment-title">
+                            Advanced Data Visualization
+                        </h3>
+
+                        <p class="assessment-description">
+                            Advanced questionnaire covering interactive
+                            dashboards, visual analytics, and storytelling.
+                        </p>
+
+                        <div class="assessment-meta">
+
+                            <div class="meta-box">
+                                <div class="meta-label">Questions</div>
+                                <div class="meta-value">15 MCQs</div>
+                            </div>
+
+                            <div class="meta-box">
+                                <div class="meta-label">Duration</div>
+                                <div class="meta-value">15 min</div>
+                            </div>
+
+                            <div class="meta-box">
+                                <div class="meta-label">Status</div>
+                                <div class="meta-value">Draft</div>
+                            </div>
+
+                            <div class="meta-box">
+                                <div class="meta-label">Questions Ready</div>
+                                <div class="meta-value">11 / 15</div>
+                            </div>
+
+                        </div>
+
+                        <div class="deadline-box">
+
+                            <span class="deadline-icon">📝</span>
+
+                            <div>
+
+                                <strong>
+                                    Assessment not published
+                                </strong>
+
+                                <span>
+                                    Complete the question set before publishing
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        <div class="participation">
+
+                            <div class="participation-row">
+                                <span>Preparation</span>
+                                <strong>73%</strong>
+                            </div>
+
+                            <div class="progress-bar">
+
+                                <div
+                                    class="progress-fill"
+                                    style="width:73%">
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="card-actions">
+
+                            <button
+                                class="action-btn manage-btn"
+                                onclick="manageAssessment(this)">
+                                ✏️ Continue
+                            </button>
+
+                            <button
+                                class="action-btn more-btn"
+                                onclick="assessmentOptions('Advanced Data Visualization')">
+                                ⋮
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+            </section>
+
+
+            <!-- EMPTY STATE -->
+
+            <section class="empty-state" id="emptyState">
+
+                <div class="empty-icon">
+                    🔍
+                </div>
+
+                <h3>No assessments found</h3>
+
+                <p>
+                    Try a different search term or filter.
+                </p>
+
+            </section>
+
+
+            <!-- RECENT PERFORMANCE -->
+
+            <section class="panel" style="margin-top:22px;">
+
+                <div class="panel-header">
+
+                    <h3>Recent Trainee Performance</h3>
+
+                    <a href="trainer-dashboard.html">
+                        View Dashboard
+                    </a>
+
+                </div>
+
+                <div class="table-wrap">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+                                <th>Trainee</th>
+                                <th>Assessment</th>
+                                <th>Score</th>
+                                <th>Attempt Date</th>
+                                <th>Status</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            <tr>
+
+                                <td class="trainee-name">
+                                    Yashodha Rani
+                                </td>
+
+                                <td>
+                                    Python Fundamentals
+                                </td>
+
+                                <td class="score">
+                                    92%
+                                </td>
+
+                                <td>
+                                    09 Sep 2026
+                                </td>
+
+                                <td>
+                                    <span class="small-status passed">
+                                        Passed
+                                    </span>
+                                </td>
+
+                            </tr>
+
+
+                            <tr>
+
+                                <td class="trainee-name">
+                                    Priya Kumar
+                                </td>
+
+                                <td>
+                                    Java OOP Questionnaire
+                                </td>
+
+                                <td class="score">
+                                    86%
+                                </td>
+
+                                <td>
+                                    08 Sep 2026
+                                </td>
+
+                                <td>
+                                    <span class="small-status passed">
+                                        Passed
+                                    </span>
+                                </td>
+
+                            </tr>
+
+
+                            <tr>
+
+                                <td class="trainee-name">
+                                    Rahul Sharma
+                                </td>
+
+                                <td>
+                                    Machine Learning Basics
+                                </td>
+
+                                <td class="score">
+                                    78%
+                                </td>
+
+                                <td>
+                                    08 Sep 2026
+                                </td>
+
+                                <td>
+                                    <span class="small-status passed">
+                                        Passed
+                                    </span>
+                                </td>
+
+                            </tr>
+
+
+                            <tr>
+
+                                <td class="trainee-name">
+                                    Anjali Reddy
+                                </td>
+
+                                <td>
+                                    Python Fundamentals
+                                </td>
+
+                                <td>
+                                    55%
+                                </td>
+
+                                <td>
+                                    07 Sep 2026
+                                </td>
+
+                                <td>
+                                    <span class="small-status pending">
+                                        Needs Review
+                                    </span>
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+
+            <footer>
+
+                © <span id="year"></span>
+                <strong>CAPACITY CONNECT</strong>.
+                Trainer Assessment Management Portal.
+
+            </footer>
+
+        </main>
+
+    </div>
+
+
+    <!-- ================= CREATE ASSESSMENT MODAL ================= -->
+
+    <div class="modal" id="createModal">
+
+        <div class="modal-box">
+
+            <div class="modal-header">
+
+                <h3>Create New Assessment</h3>
+
+                <button
+                    class="close-btn"
+                    onclick="closeCreateModal()">
+                    ×
+                </button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <form id="assessmentForm">
+
+                    <div class="form-grid">
+
+                        <div class="form-group full">
+
+                            <label>Assessment Title</label>
+
+                            <input
+                                type="text"
+                                id="assessmentTitle"
+                                placeholder="e.g. Python Fundamentals Assessment"
+                                required>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>Course</label>
+
+                            <select
+                                id="assessmentCourse"
+                                required>
+
+                                <option value="">
+                                    Select Course
+                                </option>
+
+                                <option value="python">
+                                    Python Programming
+                                </option>
+
+                                <option value="java">
+                                    Java Full Stack
+                                </option>
+
+                                <option value="ml">
+                                    Machine Learning
+                                </option>
+
+                                <option value="data">
+                                    Data Visualization
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>Assessment Type</label>
+
+                            <select
+                                id="assessmentType"
+                                required>
+
+                                <option value="mcq">
+                                    MCQ Assessment
+                                </option>
+
+                                <option value="questionnaire">
+                                    Questionnaire
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>Duration (Minutes)</label>
+
+                            <input
+                                type="number"
+                                id="assessmentDuration"
+                                min="1"
+                                value="30"
+                                required>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>Passing Percentage</label>
+
+                            <input
+                                type="number"
+                                id="passingPercentage"
+                                min="1"
+                                max="100"
+                                value="60"
+                                required>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>Deadline</label>
+
+                            <input
+                                type="date"
+                                id="assessmentDeadline"
+                                required>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>Target Trainees</label>
+
+                            <input
+                                type="number"
+                                id="targetTrainees"
+                                min="1"
+                                placeholder="e.g. 50"
+                                required>
+
+                        </div>
+
+
+                        <div class="form-group full">
+
+                            <label>Description</label>
+
+                            <textarea
+                                id="assessmentDescription"
+                                placeholder="Describe the purpose and topics covered..."
+                                required></textarea>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- QUESTION BUILDER -->
+
+                    <div class="question-list">
+
+                        <div style="
+                            display:flex;
+                            justify-content:space-between;
+                            align-items:center;
+                            gap:10px;
+                            margin-bottom:10px;
+                        ">
+
+                            <div>
+                                <strong style="
+                                    color:#111827;
+                                    font-size:12px;
+                                ">
+                                    Questions
+                                </strong>
+
+                                <div style="
+                                    color:#6b7280;
+                                    font-size:9px;
+                                    margin-top:3px;
+                                ">
+                                    Add MCQs to your assessment.
+                                </div>
+
+                            </div>
+
+                            <button
+                                type="button"
+                                class="modal-btn save-btn"
+                                onclick="addQuestion()">
+                                + Add Question
+                            </button>
+
+                        </div>
+
+                        <div id="questionsContainer"></div>
+
+                    </div>
+
+
+                    <div class="modal-footer">
+
+                        <button
+                            type="button"
+                            class="modal-btn cancel-btn"
+                            onclick="closeCreateModal()">
+                            Cancel
+                        </button>
+
+                        <button
+                            type="submit"
+                            class="modal-btn save-btn">
+                            Save Assessment
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= RESULTS MODAL ================= -->
+
+    <div class="modal" id="resultsModal">
+
+        <div class="modal-box">
+
+            <div class="modal-header">
+
+                <h3>Assessment Results</h3>
+
+                <button
+                    class="close-btn"
+                    onclick="closeResultsModal()">
+                    ×
+                </button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <h3
+                    id="resultsTitle"
+                    style="
+                        color:#111827;
+                        font-size:16px;
+                        margin-bottom:15px;
+                    ">
+                    Assessment
+                </h3>
+
+                <div class="form-grid">
+
+                    <div class="meta-box">
+                        <div class="meta-label">
+                            Total Assigned
+                        </div>
+
+                        <div
+                            class="meta-value"
+                            id="resultAssigned">
+                            0
+                        </div>
+                    </div>
+
+
+                    <div class="meta-box">
+                        <div class="meta-label">
+                            Submissions
+                        </div>
+
+                        <div
+                            class="meta-value"
+                            id="resultSubmitted">
+                            0
+                        </div>
+                    </div>
+
+
+                    <div class="meta-box">
+                        <div class="meta-label">
+                            Average Score
+                        </div>
+
+                        <div
+                            class="meta-value"
+                            id="resultAverage">
+                            0%
+                        </div>
+                    </div>
+
+
+                    <div class="meta-box">
+                        <div class="meta-label">
+                            Pass Rate
+                        </div>
+
+                        <div
+                            class="meta-value"
+                            id="resultPassRate">
+                            0%
+                        </div>
+                    </div>
+
+                </div>
+
+                <div style="
+                    margin-top:15px;
+                    padding:13px;
+                    border-radius:9px;
+                    background:#eef2ff;
+                    color:#3730a3;
+                    font-size:10px;
+                    line-height:1.6;
+                ">
+
+                    📊 Detailed trainee-wise analytics can be
+                    connected to Firebase in the next stage.
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+
+    <script>
+
+        let questionCount = 0;
+
+
+        /* ================= NAVIGATION ================= */
+
+        function goToPage(page) {
+            window.location.href = page;
+        }
+
+
+        /* ================= SIDEBAR ================= */
+
+        function toggleSidebar() {
+
+            document
+                .getElementById("sidebar")
+                .classList
+                .toggle("open");
+
+        }
+
+
+        /* ================= CREATE MODAL ================= */
+
+        function openCreateModal() {
+
+            document
+                .getElementById("createModal")
+                .classList
+                .add("show");
+
+            if (questionCount === 0) {
+                addQuestion();
+            }
+
+        }
+
+
+        function closeCreateModal() {
+
+            document
+                .getElementById("createModal")
+                .classList
+                .remove("show");
+
+        }
+
+
+        /* ================= ADD QUESTION ================= */
+
+        function addQuestion() {
+
+            questionCount++;
+
+            const container =
+                document.getElementById("questionsContainer");
+
+
+            const question =
+                document.createElement("div");
+
+            question.className = "question-item";
+
+            question.dataset.question =
+                questionCount;
+
+
+            question.innerHTML = `
+
+                <div class="question-head">
+
+                    <span class="question-number">
+                        Question ${questionCount}
+                    </span>
+
+                    <button
+                        type="button"
+                        class="remove-question"
+                        onclick="removeQuestion(this)">
+                        Remove
+                    </button>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Question</label>
+
+                    <input
+                        type="text"
+                        placeholder="Enter your question"
+                        required>
+
+                </div>
+
+                <div class="option-grid">
+
+                    <div class="form-group">
+
+                        <label>Option A</label>
+
+                        <input
+                            type="text"
+                            placeholder="Option A"
+                            required>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>Option B</label>
+
+                        <input
+                            type="text"
+                            placeholder="Option B"
+                            required>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>Option C</label>
+
+                        <input
+                            type="text"
+                            placeholder="Option C"
+                            required>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>Option D</label>
+
+                        <input
+                            type="text"
+                            placeholder="Option D"
+                            required>
+
+                    </div>
+
+                </div>
+
+                <div class="form-group" style="margin-top:10px;">
+
+                    <label>Correct Answer</label>
+
+                    <select required>
+
+                        <option value="">
+                            Select Correct Option
+                        </option>
+
+                        <option value="A">
+                            Option A
+                        </option>
+
+                        <option value="B">
+                            Option B
+                        </option>
+
+                        <option value="C">
+                            Option C
+                        </option>
+
+                        <option value="D">
+                            Option D
+                        </option>
+
+                    </select>
+
+                </div>
+
+            `;
+
+
+            container.appendChild(question);
+
+        }
+
+
+        /* ================= REMOVE QUESTION ================= */
+
+        function removeQuestion(button) {
+
+            const question =
+                button.closest(".question-item");
+
+            question.remove();
+
+            renumberQuestions();
+
+        }
+
+
+        function renumberQuestions() {
+
+            const questions =
+                document.querySelectorAll(
+                    ".question-item"
+                );
+
+            questions.forEach((question, index) => {
+
+                question.dataset.question =
+                    index + 1;
+
+                question
+                    .querySelector(".question-number")
+                    .textContent =
+                    "Question " + (index + 1);
+
+            });
+
+            questionCount =
+                questions.length;
+
+        }
+
+
+        /* ================= CREATE ASSESSMENT ================= */
+
+        document
+            .getElementById("assessmentForm")
+            .addEventListener("submit", function(event) {
+
+                event.preventDefault();
+
+
+                const title =
+                    document
+                    .getElementById("assessmentTitle")
+                    .value
+                    .trim();
+
+                const questions =
+                    document.querySelectorAll(
+                        ".question-item"
+                    );
+
+
+                if (questions.length === 0) {
+
+                    alert(
+                        "Please add at least one question."
+                    );
+
+                    return;
+
+                }
+
+
+                alert(
+                    "Assessment \"" +
+                    title +
+                    "\" created successfully.\n\n" +
+                    "Firebase integration can later save the assessment, questions, deadline, and trainee assignments permanently."
+                );
+
+
+                this.reset();
+
+                document
+                    .getElementById("questionsContainer")
+                    .innerHTML = "";
+
+                questionCount = 0;
+
+                closeCreateModal();
+
+            });
+
+
+        /* ================= FILTER ================= */
+
+        function filterAssessments() {
+
+            const search =
+                document
+                .getElementById("searchInput")
+                .value
+                .toLowerCase()
+                .trim();
+
+            const status =
+                document
+                .getElementById("statusFilter")
+                .value;
+
+            const course =
+                document
+                .getElementById("courseFilter")
+                .value;
+
+
+            const cards =
+                Array.from(
+                    document.querySelectorAll(
+                        ".assessment-card"
+                    )
+                );
+
+
+            let visible = 0;
+
+
+            cards.forEach(card => {
+
+                const title =
+                    card.dataset.title
+                    .toLowerCase();
+
+                const cardStatus =
+                    card.dataset.status;
+
+                const cardCourse =
+                    card.dataset.course;
+
+
+                const searchMatch =
+                    title.includes(search);
+
+                const statusMatch =
+                    status === "all" ||
+                    cardStatus === status;
+
+                const courseMatch =
+                    course === "all" ||
+                    cardCourse === course;
+
+
+                if (
+                    searchMatch &&
+                    statusMatch &&
+                    courseMatch
+                ) {
+
+                    card.style.display =
+                        "block";
+
+                    visible++;
+
+                } else {
+
+                    card.style.display =
+                        "none";
+
+                }
+
+            });
+
+
+            document
+                .getElementById("emptyState")
+                .style.display =
+                visible === 0
+                ? "block"
+                : "none";
+
+        }
+
+
+        /* ================= MANAGE ================= */
+
+        function manageAssessment(button) {
+
+            const card =
+                button.closest(".assessment-card");
+
+            const title =
+                card.dataset.title;
+
+
+            alert(
+                "Opening assessment editor for:\n\n" +
+                title +
+                "\n\nYou can connect this action to a dedicated edit form or Firebase document later."
+            );
+
+        }
+
+
+        /* ================= RESULTS ================= */
+
+        function viewResults(title) {
+
+            document
+                .getElementById("resultsTitle")
+                .textContent = title;
+
+
+            const demoData = {
+
+                "Python Fundamentals Assessment": {
+                    assigned: 78,
+                    submitted: 64,
+                    average: 84,
+                    passRate: 89
+                },
+
+                "Java OOP Questionnaire": {
+                    assigned: 61,
+                    submitted: 49,
+                    average: 81,
+                    passRate: 86
+                },
+
+                "Machine Learning Basics": {
+                    assigned: 54,
+                    submitted: 35,
+                    average: 78,
+                    passRate: 80
+                },
+
+                "Data Visualization Assessment": {
+                    assigned: 43,
+                    submitted: 28,
+                    average: 82,
+                    passRate: 91
+                },
+
+                "Java Exception Handling Quiz": {
+                    assigned: 61,
+                    submitted: 58,
+                    average: 81,
+                    passRate: 88
+                }
+
+            };
+
+
+            const data =
+                demoData[title] || {
+                    assigned: 0,
+                    submitted: 0,
+                    average: 0,
+                    passRate: 0
+                };
+
+
+            document
+                .getElementById("resultAssigned")
+                .textContent =
+                data.assigned;
+
+            document
+                .getElementById("resultSubmitted")
+                .textContent =
+                data.submitted;
+
+            document
+                .getElementById("resultAverage")
+                .textContent =
+                data.average + "%";
+
+            document
+                .getElementById("resultPassRate")
+                .textContent =
+                data.passRate + "%";
+
+
+            document
+                .getElementById("resultsModal")
+                .classList
+                .add("show");
+
+        }
+
+
+        function closeResultsModal() {
+
+            document
+                .getElementById("resultsModal")
+                .classList
+                .remove("show");
+
+        }
+
+
+        /* ================= ASSESSMENT OPTIONS ================= */
+
+        function assessmentOptions(title) {
+
+            const action =
+                prompt(
+                    "Assessment: " +
+                    title +
+                    "\n\nType one option:\n" +
+                    "publish - Publish assessment\n" +
+                    "close - Close assessment\n" +
+                    "delete - Delete assessment"
+                );
+
+
+            if (!action) {
+                return;
+            }
+
+
+            const normalized =
+                action
+                .trim()
+                .toLowerCase();
+
+
+            const cards =
+                Array.from(
+                    document.querySelectorAll(
+                        ".assessment-card"
+                    )
+                );
+
+
+            const card =
+                cards.find(
+                    item =>
+                        item.dataset.title === title
+                );
+
+
+            if (!card) {
+                return;
+            }
+
+
+            if (normalized === "publish") {
+
+                card.dataset.status =
+                    "active";
+
+                card
+                    .querySelector(".status")
+                    .textContent =
+                    "Active";
+
+                alert(
+                    "Assessment published successfully."
+                );
+
+            }
+
+
+            else if (normalized === "close") {
+
+                card.dataset.status =
+                    "closed";
+
+                card
+                    .querySelector(".status")
+                    .textContent =
+                    "Closed";
+
+                alert(
+                    "Assessment closed successfully."
+                );
+
+            }
+
+
+            else if (normalized === "delete") {
+
+                const confirmed =
+                    confirm(
+                        "Delete this assessment?\n\n" +
+                        title
+                    );
+
+
+                if (confirmed) {
+
+                    card.remove();
+
+                    alert(
+                        "Assessment deleted successfully."
+                    );
+
+                    filterAssessments();
+
+                    updateAssessmentStats();
+
+                }
+
+            }
+
+
+            else {
+
+                alert(
+                    "Invalid option. Use publish, close, or delete."
+                );
+
+            }
+
+        }
+
+
+        /* ================= UPDATE STATISTICS ================= */
+
+        function updateAssessmentStats() {
+
+            const cards =
+                Array.from(
+                    document.querySelectorAll(
+                        ".assessment-card"
+                    )
+                );
+
+
+            const active =
+                cards.filter(
+                    card =>
+                        card.dataset.status ===
+                        "active"
+                ).length;
+
+
+            document
+                .getElementById("totalAssessments")
+                .textContent =
+                cards.length;
+
+            document
+                .getElementById("activeAssessments")
+                .textContent =
+                active;
+
+        }
+
+
+        /* ================= MODAL OUTSIDE CLICK ================= */
+
+        window.addEventListener("click", function(event) {
+
+            const createModal =
+                document.getElementById(
+                    "createModal"
+                );
+
+            const resultsModal =
+                document.getElementById(
+                    "resultsModal"
+                );
+
+
+            if (event.target === createModal) {
+
+                closeCreateModal();
+
+            }
+
+
+            if (event.target === resultsModal) {
+
+                closeResultsModal();
+
+            }
+
+        });
+
+
+        /* ================= MOBILE SIDEBAR ================= */
+
+        document
+            .querySelectorAll(".nav-link")
+            .forEach(link => {
+
+                link.addEventListener(
+                    "click",
+                    function() {
+
+                        if (window.innerWidth <= 820) {
+
+                            document
+                                .getElementById("sidebar")
+                                .classList
+                                .remove("open");
+
+                        }
+
+                    }
+                );
+
+            });
+
+
+        /* ================= YEAR ================= */
+
+        document.getElementById("year").textContent =
+            new Date().getFullYear();
+
+    </script>
+
+</body>
+</html>
+
