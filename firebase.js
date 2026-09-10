@@ -1,4 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+
 import {
   getDatabase,
   ref,
@@ -8,12 +9,15 @@ import {
   onValue,
   push
 } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
+
 import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  signOut
+  signOut,
+  onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
+
 
 const firebaseConfig = {
   apiKey: "AIzaSyCaCkliRZk8HmNtOsJpoA084YhNY7MeMWM",
@@ -26,23 +30,30 @@ const firebaseConfig = {
   measurementId: "G-D14L7VZRJM"
 };
 
-// Initialize Core App Engine Instance
+
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
+
 const db = getDatabase(app);
+
 const auth = getAuth(app);
 
-// Unified Module Export Grid
+
+// Export Firebase services
 export {
-  app, 
+  app,
   db,
   auth,
+
   ref,
   set,
   get,
   update,
   onValue,
   push,
+
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  signOut
+  signOut,
+  onAuthStateChanged
 };
