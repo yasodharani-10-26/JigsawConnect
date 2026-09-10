@@ -1,0 +1,68 @@
+{
+  "rewrites": [
+    {
+      "source": "/organization-register.html",
+      "destination": "/Capacity-Connect/organization-register.html"
+    },
+    {
+      "source": "/organization-login.html",
+      "destination": "/Capacity-Connect/organization-login.html"
+    },
+    {
+      "source": "/organization-dashboard.html",
+      "destination": "/Capacity-Connect/organization-dashboard.html"
+    },
+    {
+      "source": "/capacity-connect.html",
+      "destination": "/Capacity-Connect/capacity-connect.html"
+    },
+    {
+      "source": "/trainer-dashboard.html",
+      "destination": "/Capacity-Connect/trainer-dashboard.html"
+    },
+    {
+      "source": "/trainer-profile.html",
+      "destination": "/Capacity-Connect/trainer-profile.html"
+    },
+    {
+      "source": "/trainer-courses.html",
+      "destination": "/Capacity-Connect/trainer-courses.html"
+    },
+    {
+      "source": "/trainer-library.html",
+      "destination": "/Capacity-Connect/trainer-library.html"
+    },
+    {
+      "source": "/trainer-assessments.html",
+      "destination": "/Capacity-Connect/trainer-assessments.html"
+    },
+    {
+      "source": "/trainee-dashboard.html",
+      "destination": "/Capacity-Connect/trainee-dashboard.html"
+    },
+    {
+      "source": "/trainee-courses.html",
+      "destination": "/Capacity-Connect/trainee-courses.html"
+    },
+    {
+      "source": "/trainee-assessments.html",
+      "destination": "/Capacity-Connect/trainee-assessments.html"
+    },
+    {
+      "source": "/competency-mapping.html",
+      "destination": "/Capacity-Connect/competency-mapping.html"
+    },
+    {
+      "source": "/certificates.html",
+      "destination": "/Capacity-Connect/certificates.html"
+    },
+    {
+      "source": "/feedback.html",
+      "destination": "/Capacity-Connect/feedback.html"
+    },
+    {
+      "source": "/notifications.html",
+      "destination": "/Capacity-Connect/notifications.html"
+    }
+  ]
+}
