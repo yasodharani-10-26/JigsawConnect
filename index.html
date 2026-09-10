@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>JigsawConnect | Smart Student Collaboration Platform</title>
+  <title>JigsawConnect | Smart Learning & Capacity Platform</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -876,6 +876,211 @@ body {
     letter-spacing: 0.6px;
 }
 
+
+/* ================= PLATFORM ACCESS MODAL ================= */
+.platform-modal {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgba(2, 3, 8, 0.78);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    z-index: 10000;
+}
+
+.platform-modal.show {
+    display: flex;
+    animation: modalFade .25s ease;
+}
+
+.platform-modal-card {
+    width: min(820px, 100%);
+    position: relative;
+    padding: 34px;
+    border-radius: var(--radius-lg);
+    background: rgba(8, 14, 29, 0.92);
+    border: 1px solid rgba(255,255,255,.14);
+    box-shadow: 0 40px 120px rgba(0,0,0,.8), 0 0 60px rgba(0,242,254,.15);
+    overflow: hidden;
+}
+
+.platform-modal-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at top left, rgba(0,242,254,.10), transparent 35%),
+                radial-gradient(circle at bottom right, rgba(157,78,221,.12), transparent 35%);
+    pointer-events: none;
+}
+
+.platform-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,.12);
+    background: rgba(255,255,255,.05);
+    color: #fff;
+    cursor: pointer;
+    font-size: 1.15rem;
+    z-index: 2;
+}
+
+.platform-close:hover {
+    border-color: var(--neon-cyan);
+    background: rgba(0,242,254,.1);
+}
+
+.platform-modal-heading {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.platform-modal-heading .mini-label {
+    display: inline-block;
+    color: var(--neon-cyan);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .7rem;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    margin-bottom: 9px;
+}
+
+.platform-modal-heading h2 {
+    color: #fff;
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 900;
+    letter-spacing: -1px;
+    margin-bottom: 8px;
+}
+
+.platform-modal-heading p {
+    color: var(--text-sub);
+    font-size: .95rem;
+    line-height: 1.6;
+}
+
+.platform-options {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+.platform-option {
+    text-align: left;
+    border: 1px solid rgba(255,255,255,.11);
+    background: rgba(255,255,255,.035);
+    border-radius: 22px;
+    padding: 27px;
+    color: #fff;
+    cursor: pointer;
+    transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease, background .3s ease;
+}
+
+.platform-option:hover {
+    transform: translateY(-7px);
+    background: rgba(255,255,255,.06);
+    border-color: rgba(0,242,254,.55);
+    box-shadow: 0 20px 45px rgba(0,0,0,.45), 0 0 30px rgba(0,242,254,.14);
+}
+
+.platform-option.organization:hover {
+    border-color: rgba(157,78,221,.65);
+    box-shadow: 0 20px 45px rgba(0,0,0,.45), 0 0 30px rgba(157,78,221,.16);
+}
+
+.platform-option .option-icon {
+    width: 62px;
+    height: 62px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 17px;
+    font-size: 2rem;
+    background: linear-gradient(135deg, rgba(0,242,254,.12), rgba(79,172,254,.08));
+    border: 1px solid rgba(0,242,254,.2);
+    margin-bottom: 18px;
+}
+
+.platform-option.organization .option-icon {
+    background: linear-gradient(135deg, rgba(157,78,221,.15), rgba(247,37,133,.08));
+    border-color: rgba(157,78,221,.25);
+}
+
+.platform-option h3 {
+    font-size: 1.35rem;
+    font-weight: 800;
+    margin-bottom: 7px;
+}
+
+.platform-option p {
+    color: var(--text-sub);
+    font-size: .9rem;
+    line-height: 1.7;
+    min-height: 76px;
+}
+
+.option-points {
+    display: grid;
+    gap: 6px;
+    margin: 17px 0 20px;
+}
+
+.option-point {
+    color: #dbeafe;
+    font-size: .78rem;
+}
+
+.option-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-weight: 800;
+    font-size: .83rem;
+    color: var(--neon-cyan);
+}
+
+.platform-option.organization .option-cta {
+    color: #d8b4fe;
+}
+
+.platform-modal-note {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    margin-top: 20px;
+    color: var(--text-dim);
+    font-size: .72rem;
+}
+
+@keyframes modalFade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@media (max-width: 700px) {
+    .platform-modal-card {
+        padding: 27px 18px 22px;
+    }
+
+    .platform-options {
+        grid-template-columns: 1fr;
+    }
+
+    .platform-option p {
+        min-height: auto;
+    }
+}
+
 @media (max-width: 1100px) {
     .hero-container {
         grid-template-columns: 1fr;
@@ -941,14 +1146,73 @@ body {
     </a>
 
     <div class="nav-actions">
-      <a href="admin-login.html" class="btn btn-outline">
-        🔑 Admin Login
-      </a>
-      <a href="student-login.html" class="btn btn-primary">
-        🎓 Student Portal
-      </a>
+      <button type="button" class="btn btn-outline" onclick="openPlatformModal()">
+        🔐 Access Portal
+      </button>
+      <button type="button" class="btn btn-primary" onclick="openPlatformModal()">
+        🚀 Get Started
+      </button>
     </div>
   </nav>
+
+  <!-- ================= PLATFORM ACCESS MODAL ================= -->
+  <div class="platform-modal" id="platformModal" role="dialog" aria-modal="true" aria-labelledby="platformModalTitle">
+    <div class="platform-modal-card">
+      <button type="button" class="platform-close" onclick="closePlatformModal()" aria-label="Close">
+        ×
+      </button>
+
+      <div class="platform-modal-heading">
+        <span class="mini-label">JigsawConnect Gateway</span>
+        <h2 id="platformModalTitle">Choose Your Platform</h2>
+        <p>Select how you want to access the JigsawConnect ecosystem.</p>
+      </div>
+
+      <div class="platform-options">
+
+        <button type="button" class="platform-option organization" onclick="openPortal('organization')">
+          <div class="option-icon">🏢</div>
+          <h3>Organization</h3>
+          <p>
+            For organizations that manage training, trainers, learners,
+            capacity-building programs and performance.
+          </p>
+
+          <div class="option-points">
+            <span class="option-point">✓ Manage trainers & trainees</span>
+            <span class="option-point">✓ Create courses & assessments</span>
+            <span class="option-point">✓ Track performance & reports</span>
+            <span class="option-point">✓ Manage learning resources</span>
+          </div>
+
+          <span class="option-cta">Enter Organization Portal →</span>
+        </button>
+
+        <button type="button" class="platform-option" onclick="openPortal('institute')">
+          <div class="option-icon">🏫</div>
+          <h3>Institute</h3>
+          <p>
+            For colleges and institutes that coordinate students, trainers,
+            courses, assessments and academic skill development.
+          </p>
+
+          <div class="option-points">
+            <span class="option-point">✓ Manage students & trainers</span>
+            <span class="option-point">✓ Monitor courses & assessments</span>
+            <span class="option-point">✓ Track student performance</span>
+            <span class="option-point">✓ Training & competency mapping</span>
+          </div>
+
+          <span class="option-cta">Enter Institute Portal →</span>
+        </button>
+
+      </div>
+
+      <div class="platform-modal-note">
+        You will be taken to the registration/login flow for your selected platform.
+      </div>
+    </div>
+  </div>
 
   <div class="home-layout-container">
     <main class="main-content-stream">
@@ -974,35 +1238,7 @@ body {
           </p>
         </div>
 
-        <div class="hero-image-wrapper">
-          <div class="hud-video-frame" id="videoContainer">
-            <div class="hud-bracket b-tl"></div>
-            <div class="hud-bracket b-tr"></div>
-            <div class="hud-bracket b-bl"></div>
-            <div class="hud-bracket b-br"></div>
 
-            <div class="hud-header">
-              <div class="hud-telemetry">
-                <span>● LIVE STREAM</span>
-              </div>
-              <div class="freq-bars">
-                <span class="freq-bar"></span>
-                <span class="freq-bar"></span>
-                <span class="freq-bar"></span>
-                <span class="freq-bar"></span>
-              </div>
-            </div>
-
-            <div class="video-box-container">
-              <iframe
-                id="scrollVideo"
-                src="https://www.youtube-nocookie.com/embed/YwZZ-lqUHJI?enablejsapi=1&autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&loop=1&playlist=YwZZ-lqUHJI&showinfo=0&iv_load_policy=3"
-                title="JigsawConnect Overview Video"
-                allow="autoplay; encrypted-media">
-              </iframe>
-            </div>
-          </div>
-        </div>
       </section>
 
       <section class="student-arena-section">
@@ -1036,7 +1272,7 @@ body {
 
           <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.78rem; color: var(--text-dim); border-top: 1px solid rgba(255,255,255,0.06); padding-top: 14px;">
             <span>🟢 <strong>148 VIEW students</strong> coding right now</span>
-            <a href="student-login.html" style="color: var(--neon-cyan); text-decoration: none; font-weight: 700;">Claim Profile →</a>
+            <a href="#" onclick="openPlatformModal(); return false;" style="color: var(--neon-cyan); text-decoration: none; font-weight: 700;">Choose Portal →</a>
           </div>
         </div>
 
@@ -1177,12 +1413,12 @@ body {
         <h2>🚀 Ready to Connect, Learn & Grow?</h2>
         <p>
           Access the JigsawConnect ecosystem through
-          the Student Portal or manage the platform
-          through the Admin Portal.
+          the Organization or Institute portal and continue
+          to your role-based learning and management workspace.
         </p>
-        <a href="student-login.html" class="btn btn-primary">
-          🎓 Enter Student Portal
-        </a>
+        <button type="button" class="btn btn-primary" onclick="openPlatformModal()">
+          🚀 Choose Your Portal
+        </button>
       </section>
 
     </main>
@@ -1193,9 +1429,9 @@ body {
       <div class="footer-brand">
         <h3>📚 JigsawConnect</h3>
         <p>
-          Empowering students through collaborative
-          learning, coding practice, career preparation
-          and continuous skill development.
+          Connecting organizations and institutes with
+          learning, training, assessments, collaboration,
+          capacity building and career development.
         </p>
       </div>
     </div>
@@ -1205,7 +1441,47 @@ body {
     </div>
   </footer>
 
-  <script src="https://www.youtube.com/iframe_api"></script>
+  <script>
+    function openPlatformModal() {
+      const modal = document.getElementById('platformModal');
+      if (modal) {
+        modal.classList.add('show');
+        document.body.style.overflow = 'hidden';
+      }
+    }
+
+    function closePlatformModal() {
+      const modal = document.getElementById('platformModal');
+      if (modal) {
+        modal.classList.remove('show');
+        document.body.style.overflow = '';
+      }
+    }
+
+    function openPortal(type) {
+      if (type === 'organization') {
+        window.location.href = 'organization-register.html';
+        return;
+      }
+
+      if (type === 'institute') {
+        window.location.href = 'institute-register.html';
+      }
+    }
+
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        closePlatformModal();
+      }
+    });
+
+    document.getElementById('platformModal')?.addEventListener('click', function(event) {
+      if (event.target === this) {
+        closePlatformModal();
+      }
+    });
+  </script>
+
   <script>
     const canvas = document.getElementById('bg-canvas');
     const ctx = canvas.getContext('2d');
@@ -1327,25 +1603,6 @@ body {
         output.style.display = 'inline-flex';
       }, 650);
     }
-
-    let player;
-    function onYouTubeIframeAPIReady() {
-      player = new YT.Player('scrollVideo', {
-        events: {
-          'onReady': onPlayerReady
-        }
-      });
-    }
-
-    function onPlayerReady(event) {
-      event.target.mute();
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            player.playVideo();
-          } else {
-            player.pauseVideo();
-          }
         });
       }, { threshold: 0.5 });
 
