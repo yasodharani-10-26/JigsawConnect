@@ -34,8 +34,12 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
+
+// Initialize Realtime Database
 const db = getDatabase(app);
 
+
+// Initialize Firebase Authentication
 const auth = getAuth(app);
 
 
