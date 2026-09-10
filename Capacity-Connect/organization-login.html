@@ -1,0 +1,1251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Organization Login | CAPACITY CONNECT</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #3730a3;
+            --cyan: #0891b2;
+            --success: #16a34a;
+            --danger: #dc2626;
+            --warning: #d97706;
+            --dark: #111827;
+            --text: #374151;
+            --muted: #6b7280;
+            --light: #f5f7fb;
+            --white: #ffffff;
+            --border: #e5e7eb;
+        }
+
+        body {
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at top left, rgba(79,70,229,.18), transparent 35%),
+                radial-gradient(circle at bottom right, rgba(8,145,178,.16), transparent 35%),
+                var(--light);
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px 15px;
+            color: var(--text);
+        }
+
+        .orb {
+            position: fixed;
+            width: 260px;
+            height: 260px;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: .22;
+            pointer-events: none;
+        }
+
+        .orb-one {
+            background: #6366f1;
+            top: -100px;
+            left: -80px;
+        }
+
+        .orb-two {
+            background: #06b6d4;
+            bottom: -100px;
+            right: -80px;
+        }
+
+        .login-wrapper {
+            width: 100%;
+            max-width: 900px;
+            background: rgba(255,255,255,.94);
+            border: 1px solid rgba(229,231,235,.95);
+            border-radius: 22px;
+            box-shadow: 0 25px 70px rgba(17,24,39,.12);
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 1fr 1.05fr;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ================= LEFT PANEL ================= */
+
+        .intro-panel {
+            background: linear-gradient(145deg, #312e81, #4f46e5, #0891b2);
+            color: white;
+            padding: 42px 34px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .intro-panel::before {
+            content: "";
+            position: absolute;
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            border: 35px solid rgba(255,255,255,.06);
+            top: -120px;
+            right: -120px;
+        }
+
+        .intro-panel::after {
+            content: "";
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            border: 25px solid rgba(255,255,255,.05);
+            bottom: -100px;
+            left: -100px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .brand-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: rgba(255,255,255,.15);
+            border: 1px solid rgba(255,255,255,.22);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        .brand h2 {
+            font-size: 17px;
+            letter-spacing: .3px;
+        }
+
+        .brand span {
+            display: block;
+            font-size: 9px;
+            opacity: .8;
+            margin-top: 3px;
+        }
+
+        .intro-content {
+            position: relative;
+            z-index: 1;
+            margin-top: 65px;
+        }
+
+        .intro-content h1 {
+            font-size: 30px;
+            line-height: 1.2;
+            margin-bottom: 13px;
+        }
+
+        .intro-content p {
+            font-size: 11px;
+            line-height: 1.7;
+            opacity: .86;
+            margin-bottom: 24px;
+        }
+
+        .benefits {
+            display: flex;
+            flex-direction: column;
+            gap: 11px;
+        }
+
+        .benefit {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            font-size: 9px;
+        }
+
+        .benefit-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            background: rgba(255,255,255,.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+        }
+
+        .security-note {
+            margin-top: 30px;
+            padding: 11px;
+            border-radius: 9px;
+            background: rgba(255,255,255,.1);
+            border: 1px solid rgba(255,255,255,.15);
+            font-size: 8px;
+            line-height: 1.55;
+        }
+
+        /* ================= RIGHT PANEL ================= */
+
+        .form-panel {
+            padding: 42px 40px;
+            background: white;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .login-icon {
+            width: 58px;
+            height: 58px;
+            border-radius: 15px;
+            margin: 0 auto 12px;
+            background: #eef2ff;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+        }
+
+        .form-header h1 {
+            color: var(--dark);
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .form-header p {
+            color: var(--muted);
+            font-size: 10px;
+            line-height: 1.5;
+        }
+
+        /* ================= MESSAGE ================= */
+
+        #loginMessage {
+            display: none;
+            padding: 11px 12px;
+            border-radius: 9px;
+            border: 1px solid transparent;
+            font-size: 9px;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+
+        /* ================= FORM ================= */
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            color: var(--dark);
+            font-size: 9px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        input {
+            width: 100%;
+            padding: 11px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: white;
+            color: var(--text);
+            outline: none;
+            font-size: 10px;
+            transition: .2s;
+        }
+
+        input:focus {
+            border-color: #a5b4fc;
+            box-shadow: 0 0 0 3px rgba(79,70,229,.08);
+        }
+
+        .password-wrap {
+            position: relative;
+        }
+
+        .password-wrap input {
+            padding-right: 42px;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .login-options {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 4px 0 17px;
+        }
+
+        .remember {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .remember input {
+            width: auto;
+            accent-color: var(--primary);
+        }
+
+        .remember label {
+            margin: 0;
+            color: var(--muted);
+            font-size: 8px;
+            font-weight: 400;
+        }
+
+        .forgot-btn {
+            border: none;
+            background: transparent;
+            color: var(--primary);
+            font-size: 8px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .login-btn {
+            width: 100%;
+            border: none;
+            border-radius: 9px;
+            padding: 12px;
+            background: linear-gradient(135deg, var(--primary), var(--cyan));
+            color: white;
+            font-size: 10px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(79,70,229,.22);
+        }
+
+        .login-btn:disabled {
+            opacity: .65;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .register-link {
+            text-align: center;
+            color: var(--muted);
+            font-size: 9px;
+            margin-top: 17px;
+        }
+
+        .register-link a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 800;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 9px;
+        }
+
+        .back-link a {
+            color: #9ca3af;
+            text-decoration: none;
+            font-size: 8px;
+        }
+
+        .back-link a:hover {
+            color: var(--primary);
+        }
+
+        /* ================= INFO BOX ================= */
+
+        .status-info {
+            margin-top: 22px;
+            padding: 11px;
+            border-radius: 9px;
+            background: #f8fafc;
+            border: 1px solid var(--border);
+        }
+
+        .status-info h4 {
+            color: var(--dark);
+            font-size: 9px;
+            margin-bottom: 4px;
+        }
+
+        .status-info p {
+            color: var(--muted);
+            font-size: 8px;
+            line-height: 1.5;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 800px) {
+
+            .login-wrapper {
+                grid-template-columns: 1fr;
+                max-width: 560px;
+            }
+
+            .intro-panel {
+                padding: 28px;
+            }
+
+            .intro-content {
+                margin-top: 35px;
+            }
+
+            .intro-content h1 {
+                font-size: 24px;
+            }
+
+            .form-panel {
+                padding: 32px 25px;
+            }
+        }
+
+        @media (max-width: 500px) {
+
+            body {
+                padding: 15px;
+            }
+
+            .form-panel {
+                padding: 27px 19px;
+            }
+
+            .intro-panel {
+                padding: 25px 20px;
+            }
+
+            .login-options {
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="orb orb-one"></div>
+    <div class="orb orb-two"></div>
+
+
+    <div class="login-wrapper">
+
+        <!-- ================= INTRO ================= -->
+
+        <section class="intro-panel">
+
+            <div class="brand">
+
+                <div class="brand-icon">
+                    🎓
+                </div>
+
+                <div>
+
+                    <h2>
+                        CAPACITY CONNECT
+                    </h2>
+
+                    <span>
+                        Organization Capacity Building Portal
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="intro-content">
+
+                <h1>
+                    Welcome Back 👋
+                </h1>
+
+                <p>
+                    Sign in to manage your organization's training
+                    ecosystem, trainers, trainees, courses, assessments,
+                    resources, and performance.
+                </p>
+
+
+                <div class="benefits">
+
+                    <div class="benefit">
+
+                        <div class="benefit-icon">
+                            👥
+                        </div>
+
+                        <span>
+                            Manage trainees and trainers
+                        </span>
+
+                    </div>
+
+
+                    <div class="benefit">
+
+                        <div class="benefit-icon">
+                            📚
+                        </div>
+
+                        <span>
+                            Manage training programs
+                        </span>
+
+                    </div>
+
+
+                    <div class="benefit">
+
+                        <div class="benefit-icon">
+                            📝
+                        </div>
+
+                        <span>
+                            Monitor assessments and results
+                        </span>
+
+                    </div>
+
+
+                    <div class="benefit">
+
+                        <div class="benefit-icon">
+                            📊
+                        </div>
+
+                        <span>
+                            Track organizational performance
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="security-note">
+
+                    🔐 Your organization account is authenticated
+                    through Firebase and access is controlled using
+                    your organization role and account status.
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= LOGIN FORM ================= -->
+
+        <section class="form-panel">
+
+            <div class="form-header">
+
+                <div class="login-icon">
+                    🏢
+                </div>
+
+                <h1>
+                    Organization Login
+                </h1>
+
+                <p>
+                    Sign in to access your CAPACITY CONNECT workspace.
+                </p>
+
+            </div>
+
+
+            <div
+                id="loginMessage">
+            </div>
+
+
+            <form
+                id="organizationLoginForm">
+
+
+                <!-- EMAIL -->
+
+                <div class="form-group">
+
+                    <label for="email">
+                        Official Email
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="organization@example.com"
+                        autocomplete="email"
+                        required>
+
+                </div>
+
+
+                <!-- PASSWORD -->
+
+                <div class="form-group">
+
+                    <label for="password">
+                        Password
+                    </label>
+
+                    <div class="password-wrap">
+
+                        <input
+                            type="password"
+                            id="password"
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                            required>
+
+                        <button
+                            type="button"
+                            class="toggle-password"
+                            onclick="togglePassword()">
+
+                            👁
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- OPTIONS -->
+
+                <div class="login-options">
+
+                    <div class="remember">
+
+                        <input
+                            type="checkbox"
+                            id="rememberMe">
+
+                        <label for="rememberMe">
+                            Remember me
+                        </label>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        class="forgot-btn"
+                        onclick="forgotPassword()">
+
+                        Forgot password?
+
+                    </button>
+
+                </div>
+
+
+                <!-- LOGIN -->
+
+                <button
+                    type="submit"
+                    class="login-btn"
+                    id="loginButton">
+
+                    🔐 Sign In
+
+                </button>
+
+
+            </form>
+
+
+            <div class="register-link">
+
+                Don't have an organization account?
+
+                <a href="organization-register.html">
+                    Register Organization
+                </a>
+
+            </div>
+
+
+            <div class="back-link">
+
+                <a href="../index.html">
+                    ← Back to JigsawConnect
+
+                </a>
+
+            </div>
+
+
+            <!-- ACCOUNT STATUS -->
+
+            <div class="status-info">
+
+                <h4>
+                    Account Approval
+                </h4>
+
+                <p>
+                    Newly registered organizations may remain in
+                    <strong>pending</strong> status until approved.
+                    Approved organizations can access the full
+                    CAPACITY CONNECT workspace.
+                </p>
+
+            </div>
+
+        </section>
+
+    </div>
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+
+    <script type="module">
+
+        import {
+            auth,
+            db,
+            ref,
+            get,
+            signInWithEmailAndPassword
+        } from "../firebase.js";
+
+
+        const form =
+            document.getElementById(
+                "organizationLoginForm"
+            );
+
+
+        const message =
+            document.getElementById(
+                "loginMessage"
+            );
+
+
+        const loginButton =
+            document.getElementById(
+                "loginButton"
+            );
+
+
+        /* ================= MESSAGE ================= */
+
+        function showMessage(
+            text,
+            type
+        ) {
+
+            message.textContent =
+                text;
+
+            message.style.display =
+                "block";
+
+
+            if (
+                type === "success"
+            ) {
+
+                message.style.background =
+                    "#f0fdf4";
+
+                message.style.borderColor =
+                    "#bbf7d0";
+
+                message.style.color =
+                    "#166534";
+
+            } else if (
+                type === "warning"
+            ) {
+
+                message.style.background =
+                    "#fffbeb";
+
+                message.style.borderColor =
+                    "#fde68a";
+
+                message.style.color =
+                    "#92400e";
+
+            } else {
+
+                message.style.background =
+                    "#fef2f2";
+
+                message.style.borderColor =
+                    "#fecaca";
+
+                message.style.color =
+                    "#b91c1c";
+
+            }
+
+        }
+
+
+        /* ================= PASSWORD ================= */
+
+        window.togglePassword =
+            function() {
+
+                const input =
+                    document.getElementById(
+                        "password"
+                    );
+
+
+                const button =
+                    document.querySelector(
+                        ".toggle-password"
+                    );
+
+
+                if (
+                    input.type === "password"
+                ) {
+
+                    input.type =
+                        "text";
+
+                    button.textContent =
+                        "🙈";
+
+                } else {
+
+                    input.type =
+                        "password";
+
+                    button.textContent =
+                        "👁";
+
+                }
+
+            };
+
+
+        /* ================= FORGOT PASSWORD ================= */
+
+        window.forgotPassword =
+            function() {
+
+                showMessage(
+                    "Please contact the platform administrator to reset your organization account password.",
+                    "warning"
+                );
+
+            };
+
+
+        /* ================= LOGIN ================= */
+
+        form.addEventListener(
+            "submit",
+            async function(event) {
+
+                event.preventDefault();
+
+
+                message.style.display =
+                    "none";
+
+
+                const email =
+                    document
+                        .getElementById(
+                            "email"
+                        )
+                        .value
+                        .trim()
+                        .toLowerCase();
+
+
+                const password =
+                    document
+                        .getElementById(
+                            "password"
+                        )
+                        .value;
+
+
+                const rememberMe =
+                    document
+                        .getElementById(
+                            "rememberMe"
+                        )
+                        .checked;
+
+
+                if (
+                    !email ||
+                    !password
+                ) {
+
+                    showMessage(
+                        "Please enter your official email and password.",
+                        "warning"
+                    );
+
+                    return;
+
+                }
+
+
+                loginButton.disabled =
+                    true;
+
+                loginButton.textContent =
+                    "⏳ Signing In...";
+
+
+                try {
+
+                    /* ================= FIREBASE AUTH ================= */
+
+                    const credential =
+                        await signInWithEmailAndPassword(
+                            auth,
+                            email,
+                            password
+                        );
+
+
+                    const user =
+                        credential.user;
+
+
+                    /* ================= FETCH USER PROFILE ================= */
+
+                    const userRef =
+                        ref(
+                            db,
+                            "users/" +
+                            user.uid
+                        );
+
+
+                    const snapshot =
+                        await get(
+                            userRef
+                        );
+
+
+                    if (
+                        !snapshot.exists()
+                    ) {
+
+                        await auth.signOut();
+
+                        showMessage(
+                            "Organization profile not found in the database.",
+                            "error"
+                        );
+
+                        loginButton.disabled =
+                            false;
+
+                        loginButton.textContent =
+                            "🔐 Sign In";
+
+                        return;
+
+                    }
+
+
+                    const userData =
+                        snapshot.val();
+
+
+                    /* ================= ROLE CHECK ================= */
+
+                    if (
+                        userData.role !==
+                        "organization"
+                    ) {
+
+                        await auth.signOut();
+
+                        showMessage(
+                            "This account is not registered as an organization account.",
+                            "error"
+                        );
+
+                        loginButton.disabled =
+                            false;
+
+                        loginButton.textContent =
+                            "🔐 Sign In";
+
+                        return;
+
+                    }
+
+
+                    /* ================= STATUS CHECK ================= */
+
+                    const status =
+                        (
+                            userData.status ||
+                            "pending"
+                        ).toLowerCase();
+
+
+                    /* ================= SAVE SESSION INFO ================= */
+
+                    sessionStorage.setItem(
+                        "organizationUid",
+                        user.uid
+                    );
+
+
+                    sessionStorage.setItem(
+                        "organizationId",
+                        userData.organizationId ||
+                        ""
+                    );
+
+
+                    sessionStorage.setItem(
+                        "organizationName",
+                        userData.organizationName ||
+                        userData.name ||
+                        ""
+                    );
+
+
+                    sessionStorage.setItem(
+                        "organizationRole",
+                        userData.role
+                    );
+
+
+                    if (
+                        rememberMe
+                    ) {
+
+                        localStorage.setItem(
+                            "capacityConnectOrganizationEmail",
+                            email
+                        );
+
+                    } else {
+
+                        localStorage.removeItem(
+                            "capacityConnectOrganizationEmail"
+                        );
+
+                    }
+
+
+                    /* ================= STATUS DECISION ================= */
+
+                    if (
+                        status === "pending"
+                    ) {
+
+                        showMessage(
+                            "Login successful, but your organization account is awaiting administrator approval.",
+                            "warning"
+                        );
+
+
+                        loginButton.disabled =
+                            false;
+
+                        loginButton.textContent =
+                            "🔐 Sign In";
+
+                        return;
+
+                    }
+
+
+                    if (
+                        status === "rejected" ||
+                        status === "disabled"
+                    ) {
+
+                        await auth.signOut();
+
+
+                        sessionStorage.clear();
+
+
+                        showMessage(
+                            "Your organization account is not currently approved for access.",
+                            "error"
+                        );
+
+
+                        loginButton.disabled =
+                            false;
+
+                        loginButton.textContent =
+                            "🔐 Sign In";
+
+                        return;
+
+                    }
+
+
+                    /* ================= APPROVED ================= */
+
+                    showMessage(
+                        "Login successful. Opening your organization workspace... ✅",
+                        "success"
+                    );
+
+
+                    setTimeout(
+                        function() {
+
+                            window.location.href =
+                                "organization-dashboard.html";
+
+                        },
+                        900
+                    );
+
+                } catch (error) {
+
+                    console.error(
+                        "Organization Login Error:",
+                        error
+                    );
+
+
+                    let errorMessage =
+                        "Login failed. Please try again.";
+
+
+                    switch (
+                        error.code
+                    ) {
+
+                        case "auth/invalid-credential":
+                            errorMessage =
+                                "Invalid email or password.";
+                            break;
+
+                        case "auth/user-not-found":
+                            errorMessage =
+                                "No organization account was found with this email.";
+                            break;
+
+                        case "auth/wrong-password":
+                            errorMessage =
+                                "Incorrect password.";
+                            break;
+
+                        case "auth/invalid-email":
+                            errorMessage =
+                                "Please enter a valid email address.";
+                            break;
+
+                        case "auth/user-disabled":
+                            errorMessage =
+                                "This account has been disabled.";
+                            break;
+
+                        case "auth/too-many-requests":
+                            errorMessage =
+                                "Too many login attempts. Please try again later.";
+                            break;
+
+                        case "auth/network-request-failed":
+                            errorMessage =
+                                "Network error. Please check your internet connection.";
+                            break;
+
+                        default:
+                            errorMessage =
+                                error.message ||
+                                errorMessage;
+
+                    }
+
+
+                    showMessage(
+                        errorMessage,
+                        "error"
+                    );
+
+
+                    loginButton.disabled =
+                        false;
+
+                    loginButton.textContent =
+                        "🔐 Sign In";
+
+                }
+
+            }
+        );
+
+
+        /* ================= REMEMBERED EMAIL ================= */
+
+        const savedEmail =
+            localStorage.getItem(
+                "capacityConnectOrganizationEmail"
+            );
+
+
+        if (savedEmail) {
+
+            document
+                .getElementById("email")
+                .value =
+                savedEmail;
+
+            document
+                .getElementById("rememberMe")
+                .checked =
+                true;
+
+        }
+
+    </script>
+
+</body>
+</html>
