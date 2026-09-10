@@ -1,0 +1,1577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Organization Registration | CAPACITY CONNECT</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #3730a3;
+            --cyan: #0891b2;
+            --success: #16a34a;
+            --danger: #dc2626;
+            --warning: #d97706;
+            --dark: #111827;
+            --text: #374151;
+            --muted: #6b7280;
+            --light: #f5f7fb;
+            --white: #ffffff;
+            --border: #e5e7eb;
+        }
+
+        body {
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at top left, rgba(79,70,229,.18), transparent 35%),
+                radial-gradient(circle at bottom right, rgba(8,145,178,.16), transparent 35%),
+                var(--light);
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 15px;
+        }
+
+        /* ================= BACKGROUND ================= */
+
+        .background-orb {
+            position: fixed;
+            width: 260px;
+            height: 260px;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: .22;
+            pointer-events: none;
+        }
+
+        .orb-one {
+            background: #6366f1;
+            top: -100px;
+            left: -80px;
+        }
+
+        .orb-two {
+            background: #06b6d4;
+            bottom: -100px;
+            right: -80px;
+        }
+
+        /* ================= CONTAINER ================= */
+
+        .register-wrapper {
+            width: 100%;
+            max-width: 980px;
+            background: rgba(255,255,255,.92);
+            border: 1px solid rgba(229,231,235,.95);
+            border-radius: 22px;
+            box-shadow: 0 25px 70px rgba(17,24,39,.12);
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: .9fr 1.4fr;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ================= LEFT ================= */
+
+        .intro-panel {
+            background: linear-gradient(145deg,#312e81,#4f46e5,#0891b2);
+            color: white;
+            padding: 40px 32px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .intro-panel::before {
+            content: "";
+            position: absolute;
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            border: 35px solid rgba(255,255,255,.06);
+            top: -120px;
+            right: -120px;
+        }
+
+        .intro-panel::after {
+            content: "";
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            border: 25px solid rgba(255,255,255,.05);
+            bottom: -110px;
+            left: -100px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .brand-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: rgba(255,255,255,.15);
+            border: 1px solid rgba(255,255,255,.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        .brand-text h2 {
+            font-size: 17px;
+            letter-spacing: .3px;
+        }
+
+        .brand-text span {
+            display: block;
+            font-size: 9px;
+            opacity: .8;
+            margin-top: 3px;
+        }
+
+        .intro-content {
+            position: relative;
+            z-index: 1;
+            margin-top: 55px;
+        }
+
+        .intro-content h1 {
+            font-size: 30px;
+            line-height: 1.2;
+            margin-bottom: 13px;
+        }
+
+        .intro-content p {
+            font-size: 11px;
+            line-height: 1.7;
+            opacity: .86;
+            margin-bottom: 23px;
+        }
+
+        .feature-list {
+            display: flex;
+            flex-direction: column;
+            gap: 11px;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            font-size: 9px;
+        }
+
+        .feature-icon {
+            width: 29px;
+            height: 29px;
+            border-radius: 8px;
+            background: rgba(255,255,255,.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+        }
+
+        .approval-note {
+            margin-top: 30px;
+            padding: 11px;
+            border-radius: 9px;
+            background: rgba(255,255,255,.1);
+            border: 1px solid rgba(255,255,255,.15);
+            font-size: 8px;
+            line-height: 1.55;
+        }
+
+        /* ================= FORM PANEL ================= */
+
+        .form-panel {
+            padding: 38px 40px;
+            background: white;
+        }
+
+        .form-header {
+            margin-bottom: 22px;
+        }
+
+        .form-header h1 {
+            color: var(--dark);
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .form-header p {
+            color: var(--muted);
+            font-size: 10px;
+            line-height: 1.5;
+        }
+
+        /* ================= MESSAGE ================= */
+
+        #message {
+            display: none;
+            padding: 11px 12px;
+            border-radius: 9px;
+            font-size: 9px;
+            line-height: 1.5;
+            margin-bottom: 15px;
+            border: 1px solid transparent;
+        }
+
+        /* ================= FORM ================= */
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 13px;
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        .full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            display: block;
+            color: var(--dark);
+            font-size: 9px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .required {
+            color: var(--danger);
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px 11px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: white;
+            color: var(--text);
+            font-size: 10px;
+            outline: none;
+            transition: .2s;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #a5b4fc;
+            box-shadow: 0 0 0 3px rgba(79,70,229,.08);
+        }
+
+        textarea {
+            min-height: 82px;
+            resize: vertical;
+        }
+
+        .password-wrap {
+            position: relative;
+        }
+
+        .password-wrap input {
+            padding-right: 40px;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .field-note {
+            color: #9ca3af;
+            font-size: 7px;
+            margin-top: 4px;
+        }
+
+        /* ================= CHECKBOX ================= */
+
+        .terms-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 7px;
+            margin: 5px 0 16px;
+        }
+
+        .terms-row input {
+            width: auto;
+            margin-top: 2px;
+            accent-color: var(--primary);
+        }
+
+        .terms-row label {
+            font-size: 8px;
+            color: var(--muted);
+            line-height: 1.5;
+            font-weight: 400;
+        }
+
+        /* ================= BUTTON ================= */
+
+        .submit-btn {
+            width: 100%;
+            border: none;
+            border-radius: 9px;
+            padding: 12px;
+            background: linear-gradient(135deg,var(--primary),var(--cyan));
+            color: white;
+            font-size: 10px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(79,70,229,.22);
+        }
+
+        .submit-btn:disabled {
+            opacity: .65;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 16px;
+            color: var(--muted);
+            font-size: 9px;
+        }
+
+        .login-link a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 800;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 9px;
+        }
+
+        .back-link a {
+            color: #9ca3af;
+            text-decoration: none;
+            font-size: 8px;
+        }
+
+        .back-link a:hover {
+            color: var(--primary);
+        }
+
+        /* ================= SUCCESS ================= */
+
+        .success-screen {
+            display: none;
+            text-align: center;
+            padding: 25px 10px;
+        }
+
+        .success-icon {
+            width: 68px;
+            height: 68px;
+            margin: 0 auto 14px;
+            border-radius: 50%;
+            background: #dcfce7;
+            color: var(--success);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 29px;
+        }
+
+        .success-screen h2 {
+            color: var(--dark);
+            font-size: 20px;
+            margin-bottom: 7px;
+        }
+
+        .success-screen p {
+            color: var(--muted);
+            font-size: 9px;
+            line-height: 1.6;
+            max-width: 370px;
+            margin: auto;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 850px) {
+
+            .register-wrapper {
+                grid-template-columns: 1fr;
+                max-width: 620px;
+            }
+
+            .intro-panel {
+                padding: 28px;
+            }
+
+            .intro-content {
+                margin-top: 30px;
+            }
+
+            .intro-content h1 {
+                font-size: 24px;
+            }
+
+            .feature-list {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .approval-note {
+                margin-top: 20px;
+            }
+        }
+
+        @media (max-width: 550px) {
+
+            body {
+                padding: 15px;
+            }
+
+            .form-panel {
+                padding: 28px 20px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .full {
+                grid-column: auto;
+            }
+
+            .feature-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="background-orb orb-one"></div>
+    <div class="background-orb orb-two"></div>
+
+
+    <div class="register-wrapper">
+
+        <!-- ================= INTRO ================= -->
+
+        <section class="intro-panel">
+
+            <div class="brand">
+
+                <div class="brand-icon">
+                    🎓
+                </div>
+
+                <div class="brand-text">
+
+                    <h2>
+                        CAPACITY CONNECT
+                    </h2>
+
+                    <span>
+                        Organization Capacity Building Portal
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="intro-content">
+
+                <h1>
+                    Build, Train & Grow Together 🚀
+                </h1>
+
+                <p>
+                    Register your organization to manage trainers,
+                    trainees, courses, assessments, learning resources,
+                    certifications, and performance from one centralized
+                    platform.
+                </p>
+
+
+                <div class="feature-list">
+
+                    <div class="feature">
+
+                        <div class="feature-icon">
+                            👥
+                        </div>
+
+                        <span>
+                            Manage trainees and trainers
+                        </span>
+
+                    </div>
+
+
+                    <div class="feature">
+
+                        <div class="feature-icon">
+                            📚
+                        </div>
+
+                        <span>
+                            Create and manage training courses
+                        </span>
+
+                    </div>
+
+
+                    <div class="feature">
+
+                        <div class="feature-icon">
+                            📝
+                        </div>
+
+                        <span>
+                            Conduct assessments
+                        </span>
+
+                    </div>
+
+
+                    <div class="feature">
+
+                        <div class="feature-icon">
+                            🗂️
+                        </div>
+
+                        <span>
+                            Share learning resources
+                        </span>
+
+                    </div>
+
+
+                    <div class="feature">
+
+                        <div class="feature-icon">
+                            🏆
+                        </div>
+
+                        <span>
+                            Track certifications
+                        </span>
+
+                    </div>
+
+
+                    <div class="feature">
+
+                        <div class="feature-icon">
+                            📊
+                        </div>
+
+                        <span>
+                            Monitor performance
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="approval-note">
+                    🔐 Organization accounts are subject to platform
+                    verification/approval before full access is enabled.
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= FORM ================= -->
+
+        <section class="form-panel">
+
+            <div class="form-header">
+
+                <h1>
+                    Register Your Organization
+                </h1>
+
+                <p>
+                    Create an organization account to access
+                    CAPACITY CONNECT.
+                </p>
+
+            </div>
+
+
+            <div
+                id="message">
+            </div>
+
+
+            <!-- SUCCESS SCREEN -->
+
+            <div
+                class="success-screen"
+                id="successScreen">
+
+                <div class="success-icon">
+                    ✓
+                </div>
+
+                <h2>
+                    Registration Successful
+                </h2>
+
+                <p>
+                    Your organization account has been created successfully.
+                    Please continue to the organization login page.
+                </p>
+
+            </div>
+
+
+            <!-- REGISTRATION FORM -->
+
+            <form
+                id="organizationForm">
+
+
+                <div class="form-grid">
+
+
+                    <!-- ORGANIZATION NAME -->
+
+                    <div class="form-group">
+
+                        <label for="organizationName">
+                            Organization Name
+                            <span class="required">*</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            id="organizationName"
+                            placeholder="Enter organization name"
+                            required>
+
+                    </div>
+
+
+                    <!-- ORGANIZATION TYPE -->
+
+                    <div class="form-group">
+
+                        <label for="organizationType">
+                            Organization Type
+                            <span class="required">*</span>
+                        </label>
+
+                        <select
+                            id="organizationType"
+                            required>
+
+                            <option value="">
+                                Select type
+                            </option>
+
+                            <option value="Corporate">
+                                Corporate
+                            </option>
+
+                            <option value="Training Organization">
+                                Training Organization
+                            </option>
+
+                            <option value="NGO">
+                                NGO
+                            </option>
+
+                            <option value="Startup">
+                                Startup
+                            </option>
+
+                            <option value="Government Organization">
+                                Government Organization
+                            </option>
+
+                            <option value="Other">
+                                Other
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- CONTACT PERSON -->
+
+                    <div class="form-group">
+
+                        <label for="contactPerson">
+                            Contact Person
+                            <span class="required">*</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            id="contactPerson"
+                            placeholder="Full name"
+                            required>
+
+                    </div>
+
+
+                    <!-- DESIGNATION -->
+
+                    <div class="form-group">
+
+                        <label for="designation">
+                            Designation
+                            <span class="required">*</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            id="designation"
+                            placeholder="Example: HR Manager"
+                            required>
+
+                    </div>
+
+
+                    <!-- OFFICIAL EMAIL -->
+
+                    <div class="form-group">
+
+                        <label for="email">
+                            Official Email
+                            <span class="required">*</span>
+                        </label>
+
+                        <input
+                            type="email"
+                            id="email"
+                            placeholder="organization@example.com"
+                            autocomplete="email"
+                            required>
+
+                    </div>
+
+
+                    <!-- PHONE -->
+
+                    <div class="form-group">
+
+                        <label for="phone">
+                            Contact Number
+                            <span class="required">*</span>
+                        </label>
+
+                        <input
+                            type="tel"
+                            id="phone"
+                            placeholder="10-digit mobile number"
+                            maxlength="10"
+                            required>
+
+                    </div>
+
+
+                    <!-- WEBSITE -->
+
+                    <div class="form-group">
+
+                        <label for="website">
+                            Organization Website
+                        </label>
+
+                        <input
+                            type="url"
+                            id="website"
+                            placeholder="https://example.com">
+
+                    </div>
+
+
+                    <!-- CITY -->
+
+                    <div class="form-group">
+
+                        <label for="city">
+                            City
+                            <span class="required">*</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            id="city"
+                            placeholder="Enter city"
+                            required>
+
+                    </div>
+
+
+                    <!-- ADDRESS -->
+
+                    <div class="form-group full">
+
+                        <label for="address">
+                            Organization Address
+                            <span class="required">*</span>
+                        </label>
+
+                        <textarea
+                            id="address"
+                            placeholder="Enter complete organization address"
+                            required></textarea>
+
+                    </div>
+
+
+                    <!-- PASSWORD -->
+
+                    <div class="form-group">
+
+                        <label for="password">
+                            Password
+                            <span class="required">*</span>
+                        </label>
+
+                        <div class="password-wrap">
+
+                            <input
+                                type="password"
+                                id="password"
+                                placeholder="Minimum 6 characters"
+                                autocomplete="new-password"
+                                required>
+
+                            <button
+                                type="button"
+                                class="toggle-password"
+                                onclick="togglePassword('password', this)">
+                                👁
+                            </button>
+
+                        </div>
+
+                        <div class="field-note">
+                            Password must contain at least 6 characters.
+                        </div>
+
+                    </div>
+
+
+                    <!-- CONFIRM PASSWORD -->
+
+                    <div class="form-group">
+
+                        <label for="confirmPassword">
+                            Confirm Password
+                            <span class="required">*</span>
+                        </label>
+
+                        <div class="password-wrap">
+
+                            <input
+                                type="password"
+                                id="confirmPassword"
+                                placeholder="Re-enter password"
+                                autocomplete="new-password"
+                                required>
+
+                            <button
+                                type="button"
+                                class="toggle-password"
+                                onclick="togglePassword('confirmPassword', this)">
+                                👁
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- TERMS -->
+
+                <div class="terms-row">
+
+                    <input
+                        type="checkbox"
+                        id="terms"
+                        required>
+
+                    <label for="terms">
+                        I confirm that the information provided above is
+                        accurate and I agree to the CAPACITY CONNECT
+                        organization registration and platform usage terms.
+                    </label>
+
+                </div>
+
+
+                <!-- SUBMIT -->
+
+                <button
+                    type="submit"
+                    class="submit-btn"
+                    id="submitButton">
+
+                    🏢 Create Organization Account
+
+                </button>
+
+
+                <div class="login-link">
+
+                    Already registered?
+
+                    <a href="organization-login.html">
+                        Organization Login
+                    </a>
+
+                </div>
+
+
+                <div class="back-link">
+
+                    <a href="../index.html">
+                        ← Back to JigsawConnect
+
+                    </a>
+
+                </div>
+
+            </form>
+
+        </section>
+
+    </div>
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+
+    <script type="module">
+
+        import {
+            auth,
+            db,
+            ref,
+            set,
+            push,
+            createUserWithEmailAndPassword
+        } from "../firebase.js";
+
+
+        /* ================= ELEMENTS ================= */
+
+        const form =
+            document.getElementById(
+                "organizationForm"
+            );
+
+        const message =
+            document.getElementById(
+                "message"
+            );
+
+        const submitButton =
+            document.getElementById(
+                "submitButton"
+            );
+
+        const successScreen =
+            document.getElementById(
+                "successScreen"
+            );
+
+
+        /* ================= MESSAGE ================= */
+
+        function showMessage(
+            text,
+            type
+        ) {
+
+            message.textContent =
+                text;
+
+            message.style.display =
+                "block";
+
+
+            if (
+                type === "success"
+            ) {
+
+                message.style.background =
+                    "#f0fdf4";
+
+                message.style.borderColor =
+                    "#bbf7d0";
+
+                message.style.color =
+                    "#166534";
+
+            } else if (
+                type === "warning"
+            ) {
+
+                message.style.background =
+                    "#fffbeb";
+
+                message.style.borderColor =
+                    "#fde68a";
+
+                message.style.color =
+                    "#92400e";
+
+            } else {
+
+                message.style.background =
+                    "#fef2f2";
+
+                message.style.borderColor =
+                    "#fecaca";
+
+                message.style.color =
+                    "#b91c1c";
+
+            }
+
+        }
+
+
+        /* ================= PASSWORD TOGGLE ================= */
+
+        window.togglePassword =
+            function(
+                inputId,
+                button
+            ) {
+
+                const input =
+                    document.getElementById(
+                        inputId
+                    );
+
+
+                if (
+                    input.type === "password"
+                ) {
+
+                    input.type =
+                        "text";
+
+                    button.textContent =
+                        "🙈";
+
+                } else {
+
+                    input.type =
+                        "password";
+
+                    button.textContent =
+                        "👁";
+
+                }
+
+            };
+
+
+        /* ================= FORM ================= */
+
+        form.addEventListener(
+            "submit",
+            async function(event) {
+
+                event.preventDefault();
+
+
+                message.style.display =
+                    "none";
+
+
+                const organizationName =
+                    document
+                        .getElementById(
+                            "organizationName"
+                        )
+                        .value
+                        .trim();
+
+
+                const organizationType =
+                    document
+                        .getElementById(
+                            "organizationType"
+                        )
+                        .value;
+
+
+                const contactPerson =
+                    document
+                        .getElementById(
+                            "contactPerson"
+                        )
+                        .value
+                        .trim();
+
+
+                const designation =
+                    document
+                        .getElementById(
+                            "designation"
+                        )
+                        .value
+                        .trim();
+
+
+                const email =
+                    document
+                        .getElementById(
+                            "email"
+                        )
+                        .value
+                        .trim()
+                        .toLowerCase();
+
+
+                const phone =
+                    document
+                        .getElementById(
+                            "phone"
+                        )
+                        .value
+                        .trim();
+
+
+                const website =
+                    document
+                        .getElementById(
+                            "website"
+                        )
+                        .value
+                        .trim();
+
+
+                const city =
+                    document
+                        .getElementById(
+                            "city"
+                        )
+                        .value
+                        .trim();
+
+
+                const address =
+                    document
+                        .getElementById(
+                            "address"
+                        )
+                        .value
+                        .trim();
+
+
+                const password =
+                    document
+                        .getElementById(
+                            "password"
+                        )
+                        .value;
+
+
+                const confirmPassword =
+                    document
+                        .getElementById(
+                            "confirmPassword"
+                        )
+                        .value;
+
+
+                /* ================= VALIDATION ================= */
+
+                if (
+                    !organizationName ||
+                    !organizationType ||
+                    !contactPerson ||
+                    !designation ||
+                    !email ||
+                    !phone ||
+                    !city ||
+                    !address ||
+                    !password ||
+                    !confirmPassword
+                ) {
+
+                    showMessage(
+                        "Please fill all required fields.",
+                        "warning"
+                    );
+
+                    return;
+
+                }
+
+
+                if (
+                    !/^[0-9]{10}$/.test(phone)
+                ) {
+
+                    showMessage(
+                        "Please enter a valid 10-digit contact number.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                if (
+                    password.length < 6
+                ) {
+
+                    showMessage(
+                        "Password must contain at least 6 characters.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                if (
+                    password !==
+                    confirmPassword
+                ) {
+
+                    showMessage(
+                        "Passwords do not match.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                submitButton.disabled =
+                    true;
+
+                submitButton.textContent =
+                    "⏳ Creating Account...";
+
+
+                try {
+
+                    /* ================= FIREBASE AUTH ================= */
+
+                    const userCredential =
+                        await createUserWithEmailAndPassword(
+                            auth,
+                            email,
+                            password
+                        );
+
+
+                    const user =
+                        userCredential.user;
+
+
+                    /* ================= ORGANIZATION ID ================= */
+
+                    const organizationRef =
+                        push(
+                            ref(
+                                db,
+                                "organizations"
+                            )
+                        );
+
+
+                    const organizationId =
+                        organizationRef.key;
+
+
+                    /* ================= ORGANIZATION DATA ================= */
+
+                    const organizationData = {
+
+                        organizationId:
+                            organizationId,
+
+                        name:
+                            organizationName,
+
+                        type:
+                            organizationType,
+
+                        contactPerson:
+                            contactPerson,
+
+                        designation:
+                            designation,
+
+                        officialEmail:
+                            email,
+
+                        phone:
+                            phone,
+
+                        website:
+                            website || "",
+
+                        city:
+                            city,
+
+                        address:
+                            address,
+
+                        ownerUid:
+                            user.uid,
+
+                        status:
+                            "pending",
+
+                        createdOn:
+                            Date.now()
+
+                    };
+
+
+                    /* ================= SAVE ORGANIZATION ================= */
+
+                    await set(
+                        organizationRef,
+                        organizationData
+                    );
+
+
+                    /* ================= SAVE USER ================= */
+
+                    await set(
+                        ref(
+                            db,
+                            "users/" +
+                            user.uid
+                        ),
+                        {
+
+                            uid:
+                                user.uid,
+
+                            name:
+                                contactPerson,
+
+                            email:
+                                email,
+
+                            role:
+                                "organization",
+
+                            accountType:
+                                "organization",
+
+                            organizationId:
+                                organizationId,
+
+                            organizationName:
+                                organizationName,
+
+                            status:
+                                "pending",
+
+                            designation:
+                                designation,
+
+                            createdOn:
+                                Date.now()
+
+                        }
+                    );
+
+
+                    /* ================= SAVE ORGANIZATION META ================= */
+
+                    await set(
+                        ref(
+                            db,
+                            "organizationUsers/" +
+                            organizationId +
+                            "/" +
+                            user.uid
+                        ),
+                        {
+
+                            uid:
+                                user.uid,
+
+                            name:
+                                contactPerson,
+
+                            email:
+                                email,
+
+                            role:
+                                "organization",
+
+                            status:
+                                "pending",
+
+                            createdOn:
+                                Date.now()
+
+                        }
+                    );
+
+
+                    /* ================= SUCCESS ================= */
+
+                    showMessage(
+                        "Organization account created successfully.",
+                        "success"
+                    );
+
+
+                    form.style.display =
+                        "none";
+
+
+                    successScreen.style.display =
+                        "block";
+
+
+                    setTimeout(
+                        function() {
+
+                            window.location.href =
+                                "organization-login.html";
+
+                        },
+                        1800
+                    );
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Organization Registration Error:",
+                        error
+                    );
+
+
+                    let errorMessage =
+                        "Registration failed. Please try again.";
+
+
+                    switch (
+                        error.code
+                    ) {
+
+                        case "auth/email-already-in-use":
+
+                            errorMessage =
+                                "This official email is already registered.";
+
+                            break;
+
+
+                        case "auth/invalid-email":
+
+                            errorMessage =
+                                "Please enter a valid official email address.";
+
+                            break;
+
+
+                        case "auth/weak-password":
+
+                            errorMessage =
+                                "Password is too weak. Use at least 6 characters.";
+
+                            break;
+
+
+                        case "auth/network-request-failed":
+
+                            errorMessage =
+                                "Network error. Please check your internet connection.";
+
+                            break;
+
+
+                        default:
+
+                            errorMessage =
+                                error.message ||
+                                errorMessage;
+
+                    }
+
+
+                    showMessage(
+                        errorMessage,
+                        "error"
+                    );
+
+
+                    submitButton.disabled =
+                        false;
+
+                    submitButton.textContent =
+                        "🏢 Create Organization Account";
+
+                }
+
+            }
+
+        );
+
+    </script>
+
+</body>
+</html>
