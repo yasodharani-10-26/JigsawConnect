@@ -35,6 +35,49 @@
             min-height: 100vh;
         }
 
+        body.loading {
+            overflow: hidden;
+        }
+
+        /* ================= LOADER ================= */
+
+        .page-loader {
+            position: fixed;
+            inset: 0;
+            background: rgba(255,255,255,.97);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 9999;
+        }
+
+        .page-loader.hide {
+            display: none;
+        }
+
+        .loader-spinner {
+            width: 42px;
+            height: 42px;
+            border: 4px solid #e0e7ff;
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin .8s linear infinite;
+        }
+
+        .loader-text {
+            font-size: 12px;
+            color: var(--muted);
+            font-weight: 600;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
         /* ================= HEADER ================= */
 
         header {
@@ -493,7 +536,7 @@
             padding: 17px 19px;
         }
 
-        /* ================= COURSE CARDS ================= */
+        /* ================= COURSE ================= */
 
         .course-list {
             display: flex;
@@ -921,6 +964,31 @@
             margin-top: 5px;
         }
 
+        /* ================= TOAST ================= */
+
+        .toast {
+            position: fixed;
+            right: 22px;
+            bottom: 22px;
+            background: #111827;
+            color: white;
+            padding: 11px 14px;
+            border-radius: 8px;
+            font-size: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,.2);
+            transform: translateY(80px);
+            opacity: 0;
+            pointer-events: none;
+            transition: .3s;
+            z-index: 5000;
+            max-width: 320px;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
         /* ================= FOOTER ================= */
 
         footer {
@@ -937,14 +1005,12 @@
         /* ================= RESPONSIVE ================= */
 
         @media (max-width: 1250px) {
-
             .stats {
                 grid-template-columns: repeat(3, 1fr);
             }
         }
 
         @media (max-width: 1050px) {
-
             .grid {
                 grid-template-columns: 1fr;
             }
@@ -1029,6 +1095,21 @@
 
 <body>
 
+    <!-- ================= LOADER ================= -->
+
+    <div
+        class="page-loader"
+        id="pageLoader">
+
+        <div class="loader-spinner"></div>
+
+        <div class="loader-text">
+            Verifying account access...
+        </div>
+
+    </div>
+
+
     <!-- ================= HEADER ================= -->
 
     <header>
@@ -1046,8 +1127,15 @@
             </div>
 
             <div class="brand">
-                <h1>CAPACITY CONNECT</h1>
-                <small>Trainer Management Portal</small>
+
+                <h1>
+                    CAPACITY CONNECT
+                </h1>
+
+                <small id="headerSubtitle">
+                    Trainer Management Portal
+                </small>
+
             </div>
 
         </div>
@@ -1073,20 +1161,24 @@
 
             <div
                 class="profile-mini"
-                onclick="goToPage('trainer-profile.html')">
+                id="profileMini">
 
-                <div class="avatar">
+                <div
+                    class="avatar"
+                    id="headerAvatar">
                     TR
                 </div>
 
                 <div class="profile-text">
 
-                    <strong>
-                        Trainer
+                    <strong
+                        id="headerName">
+                        Loading...
                     </strong>
 
-                    <span>
-                        Instructor
+                    <span
+                        id="headerRole">
+                        Verifying...
                     </span>
 
                 </div>
@@ -1102,13 +1194,17 @@
 
     <div class="layout">
 
+
         <!-- ================= SIDEBAR ================= -->
 
         <aside
             class="sidebar"
             id="sidebar">
 
-            <div class="menu-title">
+
+            <div
+                class="menu-title"
+                id="menuHeading">
                 Trainer Menu
             </div>
 
@@ -1117,7 +1213,10 @@
                 href="capacity-connect.html"
                 class="nav-link">
 
-                <span class="nav-icon">🏠</span>
+                <span class="nav-icon">
+                    🏠
+                </span>
+
                 Home
 
             </a>
@@ -1127,8 +1226,13 @@
                 href="trainer-dashboard.html"
                 class="nav-link active">
 
-                <span class="nav-icon">📊</span>
-                Dashboard
+                <span class="nav-icon">
+                    📊
+                </span>
+
+                <span id="dashboardLinkText">
+                    Dashboard
+                </span>
 
             </a>
 
@@ -1137,8 +1241,13 @@
                 href="trainer-profile.html"
                 class="nav-link">
 
-                <span class="nav-icon">👤</span>
-                My Profile
+                <span class="nav-icon">
+                    👤
+                </span>
+
+                <span id="profileLinkText">
+                    My Profile
+                </span>
 
             </a>
 
@@ -1147,8 +1256,13 @@
                 href="trainer-courses.html"
                 class="nav-link">
 
-                <span class="nav-icon">📚</span>
-                My Courses
+                <span class="nav-icon">
+                    📚
+                </span>
+
+                <span id="coursesLinkText">
+                    My Courses
+                </span>
 
             </a>
 
@@ -1157,7 +1271,10 @@
                 href="trainer-library.html"
                 class="nav-link">
 
-                <span class="nav-icon">🗂️</span>
+                <span class="nav-icon">
+                    🗂️
+                </span>
+
                 Trainer Library
 
             </a>
@@ -1167,7 +1284,10 @@
                 href="trainer-assessments.html"
                 class="nav-link">
 
-                <span class="nav-icon">📝</span>
+                <span class="nav-icon">
+                    📝
+                </span>
+
                 Assessments
 
             </a>
@@ -1182,7 +1302,10 @@
                 href="competency-mapping.html"
                 class="nav-link">
 
-                <span class="nav-icon">🧠</span>
+                <span class="nav-icon">
+                    🧠
+                </span>
+
                 Competency Mapping
 
             </a>
@@ -1192,7 +1315,10 @@
                 href="feedback.html"
                 class="nav-link">
 
-                <span class="nav-icon">💬</span>
+                <span class="nav-icon">
+                    💬
+                </span>
+
                 Feedback
 
             </a>
@@ -1202,7 +1328,10 @@
                 href="notifications.html"
                 class="nav-link">
 
-                <span class="nav-icon">🔔</span>
+                <span class="nav-icon">
+                    🔔
+                </span>
+
                 Notifications
 
             </a>
@@ -1210,13 +1339,16 @@
 
             <div class="sidebar-card">
 
-                <h4>
+                <h4
+                    id="workspaceTitle">
                     Trainer Workspace
                 </h4>
 
-                <p>
-                    Manage courses, create assessments, upload learning
-                    resources, and monitor trainee performance.
+                <p
+                    id="workspaceText">
+                    Manage courses, create assessments,
+                    upload learning resources, and monitor
+                    trainee performance.
                 </p>
 
             </div>
@@ -1228,17 +1360,20 @@
 
         <main class="main">
 
-            <!-- PAGE HEADING -->
+
+            <!-- ================= PAGE HEADING ================= -->
 
             <section class="page-heading">
 
                 <div>
 
-                    <h2>
+                    <h2
+                        id="pageTitle">
                         Trainer Dashboard 👨‍🏫
                     </h2>
 
-                    <p>
+                    <p
+                        id="pageDescription">
                         Manage your training programs, monitor trainees,
                         and track learning outcomes from one workspace.
                     </p>
@@ -1250,14 +1385,21 @@
 
                     <button
                         class="top-btn"
-                        onclick="goToPage('trainer-profile.html')">
+                        onclick="goToPage('trainer-profile.html')"
+                        id="profileButton">
+
                         👤 My Profile
+
                     </button>
+
 
                     <button
                         class="top-btn primary"
-                        onclick="goToPage('trainer-courses.html')">
+                        onclick="goToPage('trainer-courses.html')"
+                        id="primaryButton">
+
                         + Create Course
+
                     </button>
 
                 </div>
@@ -1265,45 +1407,43 @@
             </section>
 
 
-            <!-- ================= PROFILE BANNER ================= -->
+            <!-- ================= PROFILE / ORGANIZATION BANNER ================= -->
 
             <section class="profile-banner">
 
+
                 <div class="profile-main">
 
-                    <div class="large-avatar">
+                    <div
+                        class="large-avatar"
+                        id="largeAvatar">
                         TR
                     </div>
 
+
                     <div>
 
-                        <h3>
-                            Professional Trainer
+                        <h3
+                            id="bannerName">
+                            Loading...
                         </h3>
 
-                        <p>
-                            Technology & Data Science Trainer
-                            <br>
-                            CAPACITY CONNECT Certified Instructor
+                        <p
+                            id="bannerDescription">
+                            Loading account information...
                         </p>
 
 
-                        <div class="profile-tags">
+                        <div
+                            class="profile-tags"
+                            id="profileTags">
 
                             <span class="profile-tag">
-                                Python
+                                CAPACITY CONNECT
                             </span>
 
                             <span class="profile-tag">
-                                Data Science
-                            </span>
-
-                            <span class="profile-tag">
-                                Machine Learning
-                            </span>
-
-                            <span class="profile-tag">
-                                Web Development
+                                Training
                             </span>
 
                         </div>
@@ -1319,11 +1459,11 @@
                         ★★★★★
                     </div>
 
-                    <strong>
+                    <strong id="ratingValue">
                         4.8
                     </strong>
 
-                    <span>
+                    <span id="ratingLabel">
                         Trainer Rating
                     </span>
 
@@ -1336,13 +1476,15 @@
 
             <section class="stats">
 
+
                 <div class="stat">
 
                     <div class="stat-icon">
                         📚
                     </div>
 
-                    <div class="stat-label">
+                    <div class="stat-label"
+                         id="stat1Label">
                         Active Courses
                     </div>
 
@@ -1352,8 +1494,10 @@
                         6
                     </div>
 
-                    <div class="stat-note">
-                        2 newly updated
+                    <div
+                        class="stat-note"
+                        id="stat1Note">
+                        Active training programs
                     </div>
 
                 </div>
@@ -1365,7 +1509,9 @@
                         👥
                     </div>
 
-                    <div class="stat-label">
+                    <div
+                        class="stat-label"
+                        id="stat2Label">
                         Total Trainees
                     </div>
 
@@ -1375,8 +1521,10 @@
                         142
                     </div>
 
-                    <div class="stat-note">
-                        +18 this month
+                    <div
+                        class="stat-note"
+                        id="stat2Note">
+                        Learners under training
                     </div>
 
                 </div>
@@ -1398,7 +1546,7 @@
                     </div>
 
                     <div class="stat-note">
-                        3 pending deadlines
+                        Assessment activities
                     </div>
 
                 </div>
@@ -1414,13 +1562,12 @@
                         Resources
                     </div>
 
-                    <div
-                        class="stat-value">
+                    <div class="stat-value">
                         38
                     </div>
 
                     <div class="stat-note">
-                        Library uploads
+                        Learning resources
                     </div>
 
                 </div>
@@ -1432,16 +1579,21 @@
                         ⭐
                     </div>
 
-                    <div class="stat-label">
+                    <div
+                        class="stat-label"
+                        id="stat5Label">
                         Average Rating
                     </div>
 
                     <div
-                        class="stat-value">
+                        class="stat-value"
+                        id="stat5Value">
                         4.8
                     </div>
 
-                    <div class="stat-note">
+                    <div
+                        class="stat-note"
+                        id="stat5Note">
                         Excellent feedback
                     </div>
 
@@ -1460,7 +1612,7 @@
                 <div>
 
 
-                    <!-- MY COURSES -->
+                    <!-- COURSES -->
 
                     <div class="panel">
 
@@ -1468,11 +1620,13 @@
 
                             <div>
 
-                                <h3>
+                                <h3
+                                    id="coursesHeading">
                                     My Active Courses
                                 </h3>
 
-                                <span>
+                                <span
+                                    id="coursesSubheading">
                                     Current training programs
                                 </span>
 
@@ -1494,8 +1648,6 @@
 
                             <div class="course-list">
 
-
-                                <!-- COURSE 1 -->
 
                                 <div class="course-item">
 
@@ -1545,8 +1697,6 @@
 
                                 </div>
 
-
-                                <!-- COURSE 2 -->
 
                                 <div class="course-item">
 
@@ -1599,8 +1749,6 @@
                                 </div>
 
 
-                                <!-- COURSE 3 -->
-
                                 <div class="course-item">
 
                                     <div
@@ -1651,8 +1799,6 @@
 
                                 </div>
 
-
-                                <!-- COURSE 4 -->
 
                                 <div class="course-item">
 
@@ -1778,7 +1924,6 @@
 
                                 <tbody>
 
-
                                     <tr>
 
                                         <td>
@@ -1829,7 +1974,8 @@
 
                                         <td>
 
-                                            <span class="performance-badge excellent">
+                                            <span
+                                                class="performance-badge excellent">
                                                 Excellent
                                             </span>
 
@@ -1888,7 +2034,8 @@
 
                                         <td>
 
-                                            <span class="performance-badge good-badge">
+                                            <span
+                                                class="performance-badge good-badge">
                                                 Good
                                             </span>
 
@@ -1947,7 +2094,8 @@
 
                                         <td>
 
-                                            <span class="performance-badge good-badge">
+                                            <span
+                                                class="performance-badge good-badge">
                                                 Good
                                             </span>
 
@@ -2006,7 +2154,8 @@
 
                                         <td>
 
-                                            <span class="performance-badge needs">
+                                            <span
+                                                class="performance-badge needs">
                                                 Needs Support
                                             </span>
 
@@ -2255,7 +2404,7 @@
                     </div>
 
 
-                    <!-- RECENT ACTIVITY -->
+                    <!-- ACTIVITY -->
 
                     <div
                         class="panel"
@@ -2400,7 +2549,11 @@
             <footer>
 
                 © <span id="year"></span>
-                <strong>CAPACITY CONNECT</strong>.
+
+                <strong>
+                    CAPACITY CONNECT
+                </strong>.
+
                 Trainer Management & Learning Portal.
 
             </footer>
@@ -2453,11 +2606,13 @@
                 <div class="modal-row">
 
                     <span class="modal-label">
-                        Enrolled Trainees
+                        Access
                     </span>
 
-                    <div class="modal-value">
-                        38 Trainees
+                    <div
+                        class="modal-value"
+                        id="modalAccess">
+                        Trainer Course Management
                     </div>
 
                 </div>
@@ -2466,20 +2621,7 @@
                 <div class="modal-row">
 
                     <span class="modal-label">
-                        Course Completion
-                    </span>
-
-                    <div class="modal-value">
-                        82%
-                    </div>
-
-                </div>
-
-
-                <div class="modal-row">
-
-                    <span class="modal-label">
-                        Current Status
+                        Status
                     </span>
 
                     <div class="modal-value">
@@ -2504,88 +2646,1120 @@
     </div>
 
 
-    <!-- ================= JAVASCRIPT ================= -->
+    <!-- ================= TOAST ================= -->
 
-    <script>
-
-        /* ================= NAVIGATION ================= */
-
-        function goToPage(page) {
-            window.location.href = page;
-        }
+    <div
+        class="toast"
+        id="toast">
+    </div>
 
 
-        /* ================= SIDEBAR ================= */
+    <!-- ================= FIREBASE + SECURITY ================= -->
 
-        function toggleSidebar() {
+    <script type="module">
 
-            document
-                .getElementById("sidebar")
-                .classList
-                .toggle("open");
+        import {
+            auth,
+            db,
+            ref,
+            get,
+            signOut,
+            onAuthStateChanged
+        } from "../firebase.js";
 
-        }
 
-
-        /* ================= COURSE ================= */
-
+        let currentRole = "";
+        let currentOrganizationId = "";
+        let currentUserData = {};
         let selectedCourse = "";
 
 
-        function openCourse(courseName) {
+        /* ================= HELPERS ================= */
 
-            selectedCourse =
-                courseName;
+        function createInitials(name) {
+
+            if (!name) {
+                return "CC";
+            }
+
+            const words =
+                name
+                    .trim()
+                    .split(/\s+/)
+                    .filter(Boolean);
 
 
-            document
-                .getElementById("modalCourse")
-                .textContent =
-                courseName;
+            if (words.length === 1) {
+
+                return words[0]
+                    .substring(0, 2)
+                    .toUpperCase();
+
+            }
 
 
-            document
-                .getElementById("courseModal")
-                .classList
-                .add("show");
+            return (
+                words[0][0] +
+                words[1][0]
+            ).toUpperCase();
 
         }
 
 
-        function closeCourseModal() {
+        function showToast(message) {
 
-            document
-                .getElementById("courseModal")
-                .classList
-                .remove("show");
+            const toast =
+                document.getElementById(
+                    "toast"
+                );
 
-        }
+            toast.textContent =
+                message;
+
+            toast.classList.add(
+                "show"
+            );
 
 
-        function openSelectedCourse() {
+            setTimeout(
+                function() {
 
-            closeCourseModal();
+                    toast.classList.remove(
+                        "show"
+                    );
 
-            goToPage(
-                "trainer-courses.html"
+                },
+                3000
             );
 
         }
 
 
-        /* ================= MODAL OUTSIDE CLICK ================= */
+        function hideLoader() {
+
+            const loader =
+                document.getElementById(
+                    "pageLoader"
+                );
+
+            loader.classList.add(
+                "hide"
+            );
+
+            document.body.classList.remove(
+                "loading"
+            );
+
+        }
+
+
+        function clearOrganizationSession() {
+
+            sessionStorage.removeItem(
+                "organizationUid"
+            );
+
+            sessionStorage.removeItem(
+                "organizationId"
+            );
+
+            sessionStorage.removeItem(
+                "organizationName"
+            );
+
+            sessionStorage.removeItem(
+                "organizationEmail"
+            );
+
+            sessionStorage.removeItem(
+                "organizationRole"
+            );
+
+        }
+
+
+        function goToLogin() {
+
+            clearOrganizationSession();
+
+            window.location.href =
+                "organization-login.html";
+
+        }
+
+
+        /* ================= GLOBAL NAVIGATION ================= */
+
+        window.goToPage =
+            function(page) {
+
+                window.location.href =
+                    page;
+
+            };
+
+
+        window.toggleSidebar =
+            function() {
+
+                document
+                    .getElementById(
+                        "sidebar"
+                    )
+                    .classList
+                    .toggle("open");
+
+            };
+
+
+        /* ================= ROLE UI ================= */
+
+        function applyTrainerMode(
+            userData
+        ) {
+
+            currentRole = "trainer";
+
+
+            const name =
+                userData.name ||
+                userData.fullName ||
+                "Trainer";
+
+
+            const designation =
+                userData.designation ||
+                "Professional Trainer";
+
+
+            const organizationName =
+                userData.organizationName ||
+                "CAPACITY CONNECT";
+
+
+            const email =
+                userData.email ||
+                "";
+
+
+            document.title =
+                "Trainer Dashboard | CAPACITY CONNECT";
+
+
+            document
+                .getElementById(
+                    "headerSubtitle"
+                )
+                .textContent =
+                "Trainer Management Portal";
+
+
+            document
+                .getElementById(
+                    "headerName"
+                )
+                .textContent =
+                name;
+
+
+            document
+                .getElementById(
+                    "headerRole"
+                )
+                .textContent =
+                "Trainer";
+
+
+            document
+                .getElementById(
+                    "headerAvatar"
+                )
+                .textContent =
+                createInitials(name);
+
+
+            document
+                .getElementById(
+                    "pageTitle"
+                )
+                .textContent =
+                "Trainer Dashboard 👨‍🏫";
+
+
+            document
+                .getElementById(
+                    "pageDescription"
+                )
+                .textContent =
+                "Manage your training programs, monitor trainees, and track learning outcomes from one workspace.";
+
+
+            document
+                .getElementById(
+                    "profileButton"
+                )
+                .textContent =
+                "👤 My Profile";
+
+
+            document
+                .getElementById(
+                    "primaryButton"
+                )
+                .textContent =
+                "+ Create Course";
+
+
+            document
+                .getElementById(
+                    "bannerName"
+                )
+                .textContent =
+                name;
+
+
+            document
+                .getElementById(
+                    "largeAvatar"
+                )
+                .textContent =
+                createInitials(name);
+
+
+            document
+                .getElementById(
+                    "bannerDescription"
+                )
+                .innerHTML =
+                designation +
+                "<br>" +
+                organizationName;
+
+
+            document
+                .getElementById(
+                    "profileLinkText"
+                )
+                .textContent =
+                "My Profile";
+
+
+            document
+                .getElementById(
+                    "coursesLinkText"
+                )
+                .textContent =
+                "My Courses";
+
+
+            document
+                .getElementById(
+                    "menuHeading"
+                )
+                .textContent =
+                "Trainer Menu";
+
+
+            document
+                .getElementById(
+                    "dashboardLinkText"
+                )
+                .textContent =
+                "Dashboard";
+
+
+            document
+                .getElementById(
+                    "workspaceTitle"
+                )
+                .textContent =
+                "Trainer Workspace";
+
+
+            document
+                .getElementById(
+                    "workspaceText"
+                )
+                .textContent =
+                "Manage courses, create assessments, upload learning resources, and monitor trainee performance.";
+
+
+            document
+                .getElementById(
+                    "coursesHeading"
+                )
+                .textContent =
+                "My Active Courses";
+
+
+            document
+                .getElementById(
+                    "coursesSubheading"
+                )
+                .textContent =
+                "Current training programs";
+
+
+            document
+                .getElementById(
+                    "ratingLabel"
+                )
+                .textContent =
+                "Trainer Rating";
+
+
+            document
+                .getElementById(
+                    "profileTags"
+                )
+                .innerHTML =
+                `
+                <span class="profile-tag">
+                    ${designation}
+                </span>
+
+                <span class="profile-tag">
+                    ${organizationName}
+                </span>
+
+                <span class="profile-tag">
+                    Trainer
+                </span>
+                `;
+
+
+            document
+                .getElementById(
+                    "ratingValue"
+                )
+                .textContent =
+                "4.8";
+
+        }
+
+
+        function applyOrganizationMode(
+            userData
+        ) {
+
+            currentRole =
+                "organization";
+
+
+            const organizationName =
+                userData.organizationName ||
+                userData.name ||
+                "Organization";
+
+
+            const organizationType =
+                userData.organizationType ||
+                "Organization";
+
+
+            const email =
+                userData.email ||
+                "";
+
+
+            document.title =
+                "Trainer Management | CAPACITY CONNECT";
+
+
+            document
+                .getElementById(
+                    "headerSubtitle"
+                )
+                .textContent =
+                "Organization Trainer Management";
+
+
+            document
+                .getElementById(
+                    "headerName"
+                )
+                .textContent =
+                organizationName;
+
+
+            document
+                .getElementById(
+                    "headerRole"
+                )
+                .textContent =
+                "Organization Admin";
+
+
+            document
+                .getElementById(
+                    "headerAvatar"
+                )
+                .textContent =
+                createInitials(
+                    organizationName
+                );
+
+
+            document
+                .getElementById(
+                    "pageTitle"
+                )
+                .textContent =
+                "Trainer Management 👨‍🏫";
+
+
+            document
+                .getElementById(
+                    "pageDescription"
+                )
+                .textContent =
+                "View and manage trainers belonging to your organization.";
+
+
+            document
+                .getElementById(
+                    "profileButton"
+                )
+                .textContent =
+                "🏢 Organization Dashboard";
+
+
+            document
+                .getElementById(
+                    "profileButton"
+                )
+                .onclick =
+                function() {
+                    goToPage(
+                        "organization-dashboard.html"
+                    );
+                };
+
+
+            document
+                .getElementById(
+                    "primaryButton"
+                )
+                .textContent =
+                "+ Manage Courses";
+
+
+            document
+                .getElementById(
+                    "bannerName"
+                )
+                .textContent =
+                organizationName;
+
+
+            document
+                .getElementById(
+                    "largeAvatar"
+                )
+                .textContent =
+                createInitials(
+                    organizationName
+                );
+
+
+            document
+                .getElementById(
+                    "bannerDescription"
+                )
+                .innerHTML =
+                organizationType +
+                "<br>" +
+                "Organization Trainer Management";
+
+
+            document
+                .getElementById(
+                    "profileLinkText"
+                )
+                .textContent =
+                "Organization Dashboard";
+
+
+            document
+                .getElementById(
+                    "profileLinkText"
+                )
+                .parentElement
+                .setAttribute(
+                    "href",
+                    "organization-dashboard.html"
+                );
+
+
+            document
+                .getElementById(
+                    "coursesLinkText"
+                )
+                .textContent =
+                "Manage Courses";
+
+
+            document
+                .getElementById(
+                    "menuHeading"
+                )
+                .textContent =
+                "Organization";
+
+
+            document
+                .getElementById(
+                    "dashboardLinkText"
+                )
+                .textContent =
+                "Trainer Management";
+
+
+            document
+                .getElementById(
+                    "workspaceTitle"
+                )
+                .textContent =
+                "Organization Workspace";
+
+
+            document
+                .getElementById(
+                    "workspaceText"
+                )
+                .textContent =
+                "View organization trainers, monitor training activity, manage courses, and review trainer performance.";
+
+
+            document
+                .getElementById(
+                    "coursesHeading"
+                )
+                .textContent =
+                "Organization Trainers";
+
+
+            document
+                .getElementById(
+                    "coursesSubheading"
+                )
+                .textContent =
+                "Trainers associated with your organization";
+
+
+            document
+                .getElementById(
+                    "ratingLabel"
+                )
+                .textContent =
+                "Organization Workspace";
+
+
+            document
+                .getElementById(
+                    "ratingValue"
+                )
+                .textContent =
+                "ORG";
+
+
+            document
+                .getElementById(
+                    "profileTags"
+                )
+                .innerHTML =
+                `
+                <span class="profile-tag">
+                    Organization
+                </span>
+
+                <span class="profile-tag">
+                    ${organizationType}
+                </span>
+
+                <span class="profile-tag">
+                    Trainer Management
+                </span>
+                `;
+
+
+            document
+                .getElementById(
+                    "ratingStars"
+                );
+
+
+            document
+                .getElementById(
+                    "stat1Label"
+                )
+                .textContent =
+                "Active Training Programs";
+
+
+            document
+                .getElementById(
+                    "stat1Note"
+                )
+                .textContent =
+                "Organization programs";
+
+
+            document
+                .getElementById(
+                    "stat2Label"
+                )
+                .textContent =
+                "Organization Trainees";
+
+
+            document
+                .getElementById(
+                    "stat2Note"
+                )
+                .textContent =
+                "Learners under training";
+
+
+            document
+                .getElementById(
+                    "stat5Label"
+                )
+                .textContent =
+                "Organization";
+
+
+            document
+                .getElementById(
+                    "stat5Value"
+                )
+                .textContent =
+                "ACTIVE";
+
+
+            document
+                .getElementById(
+                    "stat5Note"
+                )
+                .textContent =
+                email || "Active organization account";
+
+        }
+
+
+        /* ================= LOAD USER ================= */
+
+        async function loadUserAccount(
+            user
+        ) {
+
+            const snapshot =
+                await get(
+                    ref(
+                        db,
+                        "users/" +
+                        user.uid
+                    )
+                );
+
+
+            if (
+                !snapshot.exists()
+            ) {
+
+                throw new Error(
+                    "User profile was not found."
+                );
+
+            }
+
+
+            const userData =
+                snapshot.val();
+
+
+            currentUserData =
+                userData;
+
+
+            /* STATUS */
+
+            if (
+                userData.status &&
+                userData.status !==
+                "approved"
+            ) {
+
+                throw new Error(
+                    "Your account is not approved."
+                );
+
+            }
+
+
+            /* ORGANIZATION ID */
+
+            currentOrganizationId =
+                userData.organizationId ||
+                "";
+
+
+            if (!currentOrganizationId) {
+
+                throw new Error(
+                    "Organization ID is missing from your account."
+                );
+
+            }
+
+
+            sessionStorage.setItem(
+                "organizationUid",
+                user.uid
+            );
+
+
+            sessionStorage.setItem(
+                "organizationId",
+                currentOrganizationId
+            );
+
+
+            sessionStorage.setItem(
+                "organizationRole",
+                userData.role || ""
+            );
+
+
+            sessionStorage.setItem(
+                "organizationName",
+                userData.organizationName ||
+                userData.name ||
+                ""
+            );
+
+
+            sessionStorage.setItem(
+                "organizationEmail",
+                userData.email ||
+                user.email ||
+                ""
+            );
+
+
+            /* ROLE DIFFERENCE */
+
+            if (
+                userData.role ===
+                "trainer"
+            ) {
+
+                applyTrainerMode(
+                    userData
+                );
+
+                return;
+
+            }
+
+
+            if (
+                userData.role ===
+                "organization"
+            ) {
+
+                applyOrganizationMode(
+                    userData
+                );
+
+                return;
+
+            }
+
+
+            throw new Error(
+                "This account does not have access to Trainer Management."
+            );
+
+        }
+
+
+        /* ================= COUNT ORGANIZATION PEOPLE ================= */
+
+        async function loadOrganizationCounts() {
+
+            if (!currentOrganizationId) {
+                return;
+            }
+
+
+            try {
+
+                const snapshot =
+                    await get(
+                        ref(
+                            db,
+                            "users"
+                        )
+                    );
+
+
+                if (
+                    !snapshot.exists()
+                ) {
+
+                    return;
+
+                }
+
+
+                const users =
+                    snapshot.val();
+
+
+                let trainers = 0;
+                let trainees = 0;
+
+
+                Object
+                    .values(users)
+                    .forEach(
+                        function(user) {
+
+                            if (
+                                !user ||
+                                user.organizationId !==
+                                currentOrganizationId
+                            ) {
+
+                                return;
+
+                            }
+
+
+                            if (
+                                user.role ===
+                                "trainer" &&
+                                user.status ===
+                                "approved"
+                            ) {
+
+                                trainers++;
+
+                            }
+
+
+                            if (
+                                user.role ===
+                                "trainee" &&
+                                user.status ===
+                                "approved"
+                            ) {
+
+                                trainees++;
+
+                            }
+
+                        }
+                    );
+
+
+                if (
+                    currentRole ===
+                    "organization"
+                ) {
+
+                    document
+                        .getElementById(
+                            "activeCourses"
+                        )
+                        .textContent =
+                        "6";
+
+
+                    document
+                        .getElementById(
+                            "totalTrainees"
+                        )
+                        .textContent =
+                        trainees;
+
+
+                    document
+                        .getElementById(
+                            "coursesHeading"
+                        )
+                        .textContent =
+                        "Organization Trainers";
+
+
+                    document
+                        .getElementById(
+                            "coursesSubheading"
+                        )
+                        .textContent =
+                        trainers +
+                        " approved trainer" +
+                        (
+                            trainers === 1
+                            ? ""
+                            : "s"
+                        );
+
+                } else {
+
+                    document
+                        .getElementById(
+                            "totalTrainees"
+                        )
+                        .textContent =
+                        trainees ||
+                        "142";
+
+                }
+
+            } catch (error) {
+
+                console.warn(
+                    "Organization count error:",
+                    error
+                );
+
+            }
+
+        }
+
+
+        /* ================= LOGOUT ================= */
+
+        async function logoutUser() {
+
+            const confirmLogout =
+                confirm(
+                    "Do you want to logout?"
+                );
+
+
+            if (!confirmLogout) {
+                return;
+            }
+
+
+            try {
+
+                await signOut(
+                    auth
+                );
+
+
+                clearOrganizationSession();
+
+
+                window.location.href =
+                    "organization-login.html";
+
+            } catch (error) {
+
+                console.error(
+                    error
+                );
+
+
+                showToast(
+                    "Logout failed. Please try again."
+                );
+
+            }
+
+        }
+
+
+        document
+            .getElementById(
+                "profileMini"
+            )
+            .addEventListener(
+                "click",
+                logoutUser
+            );
+
+
+        /* ================= COURSE MODAL ================= */
+
+        window.openCourse =
+            function(courseName) {
+
+                selectedCourse =
+                    courseName;
+
+
+                document
+                    .getElementById(
+                        "modalCourse"
+                    )
+                    .textContent =
+                    courseName;
+
+
+                document
+                    .getElementById(
+                        "modalAccess"
+                    )
+                    .textContent =
+                    currentRole ===
+                    "organization"
+                    ? "Organization Course Management"
+                    : "Trainer Course Management";
+
+
+                document
+                    .getElementById(
+                        "courseModal"
+                    )
+                    .classList
+                    .add("show");
+
+            };
+
+
+        window.closeCourseModal =
+            function() {
+
+                document
+                    .getElementById(
+                        "courseModal"
+                    )
+                    .classList
+                    .remove("show");
+
+            };
+
+
+        window.openSelectedCourse =
+            function() {
+
+                closeCourseModal();
+
+                goToPage(
+                    "trainer-courses.html"
+                );
+
+            };
+
 
         window.addEventListener(
             "click",
             function(event) {
 
                 const modal =
-                    document
-                    .getElementById("courseModal");
+                    document.getElementById(
+                        "courseModal"
+                    );
 
 
                 if (
-                    event.target === modal
+                    event.target ===
+                    modal
                 ) {
 
                     closeCourseModal();
@@ -2599,36 +3773,115 @@
         /* ================= MOBILE SIDEBAR ================= */
 
         document
-            .querySelectorAll(".nav-link")
-            .forEach(link => {
+            .querySelectorAll(
+                ".nav-link"
+            )
+            .forEach(
+                function(link) {
 
-                link.addEventListener(
-                    "click",
-                    function() {
+                    link.addEventListener(
+                        "click",
+                        function() {
 
-                        if (
-                            window.innerWidth <= 820
-                        ) {
+                            if (
+                                window.innerWidth <=
+                                820
+                            ) {
 
-                            document
-                                .getElementById("sidebar")
-                                .classList
-                                .remove("open");
+                                document
+                                    .getElementById(
+                                        "sidebar"
+                                    )
+                                    .classList
+                                    .remove(
+                                        "open"
+                                    );
+
+                            }
 
                         }
+                    );
 
-                    }
-                );
-
-            });
+                }
+            );
 
 
         /* ================= YEAR ================= */
 
         document
-            .getElementById("year")
+            .getElementById(
+                "year"
+            )
             .textContent =
             new Date().getFullYear();
+
+
+        /* ================= AUTH LISTENER ================= */
+
+        onAuthStateChanged(
+            auth,
+            async function(user) {
+
+                try {
+
+                    if (!user) {
+
+                        goToLogin();
+
+                        return;
+
+                    }
+
+
+                    await loadUserAccount(
+                        user
+                    );
+
+
+                    await loadOrganizationCounts();
+
+
+                    hideLoader();
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Access denied:",
+                        error
+                    );
+
+
+                    await signOut(
+                        auth
+                    );
+
+
+                    clearOrganizationSession();
+
+
+                    hideLoader();
+
+
+                    showToast(
+                        error.message ||
+                        "Access denied."
+                    );
+
+
+                    setTimeout(
+                        function() {
+
+                            goToLogin();
+
+                        },
+                        1200
+                    );
+
+                }
+
+            }
+        );
 
     </script>
 
