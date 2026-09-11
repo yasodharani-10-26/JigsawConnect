@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -36,6 +35,49 @@
             min-height: 100vh;
         }
 
+        body.loading {
+            overflow: hidden;
+        }
+
+        /* ================= LOADER ================= */
+
+        .page-loader {
+            position: fixed;
+            inset: 0;
+            background: rgba(255,255,255,.97);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 9999;
+        }
+
+        .page-loader.hide {
+            display: none;
+        }
+
+        .loader-spinner {
+            width: 42px;
+            height: 42px;
+            border: 4px solid #e0e7ff;
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin .8s linear infinite;
+        }
+
+        .loader-text {
+            font-size: 12px;
+            color: var(--muted);
+            font-weight: 600;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
         /* ================= HEADER ================= */
 
         header {
@@ -56,6 +98,17 @@
             display: flex;
             align-items: center;
             gap: 12px;
+        }
+
+        .menu-btn {
+            display: none;
+            border: none;
+            background: white;
+            color: var(--primary);
+            border-radius: 7px;
+            padding: 7px 10px;
+            cursor: pointer;
+            font-size: 17px;
         }
 
         .brand-icon {
@@ -98,10 +151,28 @@
             font-size: 17px;
             cursor: pointer;
             transition: 0.2s;
+            position: relative;
         }
 
         .header-btn:hover {
             background: rgba(255,255,255,0.24);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -3px;
+            right: -3px;
+            min-width: 17px;
+            height: 17px;
+            padding: 0 4px;
+            border-radius: 20px;
+            background: #ef4444;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8px;
+            font-weight: 800;
         }
 
         .header-profile {
@@ -122,6 +193,7 @@
             align-items: center;
             justify-content: center;
             font-weight: 800;
+            font-size: 12px;
         }
 
         .header-profile-info strong {
@@ -289,7 +361,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 27px;
+            font-size: 22px;
             font-weight: 800;
         }
 
@@ -302,6 +374,7 @@
             font-size: 11px;
             opacity: 0.82;
             margin-bottom: 9px;
+            line-height: 1.5;
         }
 
         .profile-tags {
@@ -428,6 +501,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            gap: 10px;
         }
 
         .panel-header h3 {
@@ -659,6 +733,12 @@
 
         /* ================= QUICK ACTIONS ================= */
 
+        .quick-title {
+            font-size: 17px;
+            color: #111827;
+            margin: 25px 0 14px;
+        }
+
         .quick-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -703,6 +783,31 @@
             line-height: 1.5;
         }
 
+        /* ================= TOAST ================= */
+
+        .toast {
+            position: fixed;
+            right: 22px;
+            bottom: 22px;
+            background: #111827;
+            color: white;
+            padding: 11px 14px;
+            border-radius: 8px;
+            font-size: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,.2);
+            transform: translateY(80px);
+            opacity: 0;
+            pointer-events: none;
+            transition: .3s;
+            z-index: 5000;
+            max-width: 320px;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
         /* ================= FOOTER ================= */
 
         footer {
@@ -716,18 +821,7 @@
             color: var(--primary);
         }
 
-        /* ================= MOBILE ================= */
-
-        .menu-btn {
-            display: none;
-            border: none;
-            color: var(--primary);
-            background: white;
-            border-radius: 7px;
-            padding: 7px 10px;
-            font-size: 17px;
-            cursor: pointer;
-        }
+        /* ================= RESPONSIVE ================= */
 
         @media (max-width: 1100px) {
 
@@ -809,7 +903,7 @@
             .profile-avatar {
                 width: 60px;
                 height: 60px;
-                font-size: 22px;
+                font-size: 20px;
             }
 
             .welcome h2 {
@@ -827,7 +921,22 @@
     </style>
 </head>
 
-<body>
+<body class="loading">
+
+    <!-- ================= LOADER ================= -->
+
+    <div
+        class="page-loader"
+        id="pageLoader">
+
+        <div class="loader-spinner"></div>
+
+        <div class="loader-text">
+            Verifying trainee account...
+        </div>
+
+    </div>
+
 
     <!-- ================= HEADER ================= -->
 
@@ -835,33 +944,71 @@
 
         <div class="header-left">
 
-            <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+            <button
+                class="menu-btn"
+                onclick="toggleSidebar()">
+                ☰
+            </button>
 
-            <div class="brand-icon">🎓</div>
+            <div class="brand-icon">
+                🎓
+            </div>
 
             <div class="brand">
-                <h1>CAPACITY CONNECT</h1>
-                <small>Trainee Learning Portal</small>
+
+                <h1>
+                    CAPACITY CONNECT
+                </h1>
+
+                <small>
+                    Trainee Learning Portal
+                </small>
+
             </div>
 
         </div>
 
+
         <div class="header-right">
 
-            <button class="header-btn"
-                    onclick="openPage('notifications.html')"
-                    title="Notifications">
+            <button
+                class="header-btn"
+                onclick="openPage('notifications.html')"
+                title="Notifications">
+
                 🔔
+
+                <span
+                    class="notification-badge"
+                    id="notificationBadge">
+                    0
+                </span>
+
             </button>
 
-            <div class="header-profile"
-                 onclick="openPage('profile.html')">
 
-                <div class="avatar">Y</div>
+            <div
+                class="header-profile"
+                id="headerProfile"
+                title="Logout">
+
+                <div
+                    class="avatar"
+                    id="headerAvatar">
+                    TR
+                </div>
 
                 <div class="header-profile-info">
-                    <strong>Yashodha Rani</strong>
-                    <span>Trainee</span>
+
+                    <strong
+                        id="headerName">
+                        Trainee
+                    </strong>
+
+                    <span>
+                        Trainee
+                    </span>
+
                 </div>
 
             </div>
@@ -875,68 +1022,150 @@
 
     <div class="layout">
 
+
         <!-- ================= SIDEBAR ================= -->
 
-        <aside class="sidebar" id="sidebar">
+        <aside
+            class="sidebar"
+            id="sidebar">
 
-            <div class="menu-title">Trainee Menu</div>
+            <div class="menu-title">
+                Trainee Menu
+            </div>
 
-            <a href="capacity-connect.html" class="nav-link">
-                <span class="nav-icon">🏠</span>
+
+            <a
+                href="capacity-connect.html"
+                class="nav-link">
+
+                <span class="nav-icon">
+                    🏠
+                </span>
+
                 Home
+
             </a>
 
-            <a href="trainee-dashboard.html" class="nav-link active">
-                <span class="nav-icon">📊</span>
+
+            <a
+                href="trainee-dashboard.html"
+                class="nav-link active">
+
+                <span class="nav-icon">
+                    📊
+                </span>
+
                 Dashboard
+
             </a>
 
-            <a href="trainee-courses.html" class="nav-link">
-                <span class="nav-icon">📚</span>
+
+            <a
+                href="trainee-courses.html"
+                class="nav-link">
+
+                <span class="nav-icon">
+                    📚
+                </span>
+
                 My Courses
+
             </a>
 
-            <a href="trainee-assessments.html" class="nav-link">
-                <span class="nav-icon">📝</span>
+
+            <a
+                href="trainee-assessments.html"
+                class="nav-link">
+
+                <span class="nav-icon">
+                    📝
+                </span>
+
                 Assessments
+
             </a>
 
-            <a href="certificates.html" class="nav-link">
-                <span class="nav-icon">🏆</span>
+
+            <a
+                href="certificates.html"
+                class="nav-link">
+
+                <span class="nav-icon">
+                    🏆
+                </span>
+
                 Certificates
+
             </a>
 
-            <a href="feedback.html" class="nav-link">
-                <span class="nav-icon">💬</span>
+
+            <a
+                href="feedback.html"
+                class="nav-link">
+
+                <span class="nav-icon">
+                    💬
+                </span>
+
                 Feedback
+
             </a>
 
 
-            <div class="menu-title">Explore</div>
+            <div class="menu-title">
+                Explore
+            </div>
 
-            <a href="competency-mapping.html" class="nav-link">
-                <span class="nav-icon">🧠</span>
+
+            <a
+                href="competency-mapping.html"
+                class="nav-link">
+
+                <span class="nav-icon">
+                    🧠
+                </span>
+
                 Find Trainer
+
             </a>
 
-            <a href="trainer-library.html" class="nav-link">
-                <span class="nav-icon">🗂️</span>
+
+            <a
+                href="trainer-library.html"
+                class="nav-link">
+
+                <span class="nav-icon">
+                    🗂️
+                </span>
+
                 Learning Library
+
             </a>
 
-            <a href="notifications.html" class="nav-link">
-                <span class="nav-icon">🔔</span>
+
+            <a
+                href="notifications.html"
+                class="nav-link">
+
+                <span class="nav-icon">
+                    🔔
+                </span>
+
                 Notifications
+
             </a>
 
 
             <div class="sidebar-card">
 
-                <h4>Need a suitable trainer?</h4>
+                <h4>
+                    Your Learning Space
+                </h4>
 
                 <p>
-                    Find trainers based on subject, skills,
-                    qualification and experience.
+                    Track your courses, assessments,
+                    certificates, skills and learning progress
+                    from one place.
                 </p>
 
                 <a href="competency-mapping.html">
@@ -952,13 +1181,16 @@
 
         <main class="main">
 
-            <!-- WELCOME -->
+
+            <!-- ================= WELCOME ================= -->
 
             <section class="welcome">
 
                 <div>
 
-                    <h2>Welcome back, Yashodha! 👋</h2>
+                    <h2 id="welcomeTitle">
+                        Welcome back! 👋
+                    </h2>
 
                     <p>
                         Continue your learning journey and build
@@ -967,37 +1199,55 @@
 
                 </div>
 
-                <div class="date" id="currentDate">
+
+                <div
+                    class="date"
+                    id="currentDate">
                     Loading date...
                 </div>
 
             </section>
 
 
-            <!-- PROFILE SUMMARY -->
+            <!-- ================= PROFILE SUMMARY ================= -->
 
             <section class="profile-banner">
 
                 <div class="profile-main">
 
-                    <div class="profile-avatar">
-                        YR
+
+                    <div
+                        class="profile-avatar"
+                        id="profileAvatar">
+                        TR
                     </div>
+
 
                     <div class="profile-info">
 
-                        <h3>Yashodha Rani</h3>
+                        <h3
+                            id="profileName">
+                            Loading...
+                        </h3>
 
-                        <p>
-                            Computer Science • Data Science • Trainee
+
+                        <p
+                            id="profileDescription">
+                            Loading trainee information...
                         </p>
 
-                        <div class="profile-tags">
 
-                            <span class="tag">Python</span>
-                            <span class="tag">Data Science</span>
-                            <span class="tag">Web Development</span>
-                            <span class="tag">Java</span>
+                        <div
+                            class="profile-tags"
+                            id="profileTags">
+
+                            <span class="tag">
+                                Trainee
+                            </span>
+
+                            <span class="tag">
+                                CAPACITY CONNECT
+                            </span>
 
                         </div>
 
@@ -1005,14 +1255,24 @@
 
                 </div>
 
+
                 <div class="profile-actions">
 
-                    <a href="profile.html" class="btn btn-light">
-                        👤 Edit Profile
+                    <a
+                        href="profile.html"
+                        class="btn btn-light">
+
+                        👤 My Profile
+
                     </a>
 
-                    <a href="certificates.html" class="btn btn-outline">
+
+                    <a
+                        href="certificates.html"
+                        class="btn btn-outline">
+
                         🏆 My Certificates
+
                     </a>
 
                 </div>
@@ -1020,17 +1280,24 @@
             </section>
 
 
-            <!-- STATISTICS -->
+            <!-- ================= STATISTICS ================= -->
 
             <section class="stats">
 
+
                 <div class="stat">
 
-                    <div class="stat-icon">📚</div>
+                    <div class="stat-icon">
+                        📚
+                    </div>
 
-                    <div class="stat-label">Enrolled Courses</div>
+                    <div class="stat-label">
+                        Enrolled Courses
+                    </div>
 
-                    <div class="stat-value">6</div>
+                    <div class="stat-value">
+                        6
+                    </div>
 
                     <div class="stat-note">
                         2 completed
@@ -1041,11 +1308,17 @@
 
                 <div class="stat">
 
-                    <div class="stat-icon">📈</div>
+                    <div class="stat-icon">
+                        📈
+                    </div>
 
-                    <div class="stat-label">Average Progress</div>
+                    <div class="stat-label">
+                        Average Progress
+                    </div>
 
-                    <div class="stat-value">72%</div>
+                    <div class="stat-value">
+                        72%
+                    </div>
 
                     <div class="stat-note">
                         ↑ 8% this month
@@ -1056,11 +1329,17 @@
 
                 <div class="stat">
 
-                    <div class="stat-icon">📝</div>
+                    <div class="stat-icon">
+                        📝
+                    </div>
 
-                    <div class="stat-label">Assessments</div>
+                    <div class="stat-label">
+                        Assessments
+                    </div>
 
-                    <div class="stat-value">18</div>
+                    <div class="stat-value">
+                        18
+                    </div>
 
                     <div class="stat-note">
                         85% average score
@@ -1071,11 +1350,17 @@
 
                 <div class="stat">
 
-                    <div class="stat-icon">🏆</div>
+                    <div class="stat-icon">
+                        🏆
+                    </div>
 
-                    <div class="stat-label">Certificates</div>
+                    <div class="stat-label">
+                        Certificates
+                    </div>
 
-                    <div class="stat-value">4</div>
+                    <div class="stat-value">
+                        4
+                    </div>
 
                     <div class="stat-note">
                         +1 this month
@@ -1086,9 +1371,10 @@
             </section>
 
 
-            <!-- COURSE + ASSESSMENTS -->
+            <!-- ================= COURSE + ASSESSMENTS ================= -->
 
             <section class="content-grid">
+
 
                 <!-- COURSES -->
 
@@ -1096,7 +1382,9 @@
 
                     <div class="panel-header">
 
-                        <h3>Continue Learning</h3>
+                        <h3>
+                            Continue Learning
+                        </h3>
 
                         <a href="trainee-courses.html">
                             View All Courses
@@ -1105,9 +1393,8 @@
                     </div>
 
 
-                    <!-- COURSE 1 -->
-
                     <div class="course">
+
 
                         <div class="course-top">
 
@@ -1117,7 +1404,9 @@
                                     🐍
                                 </div>
 
+
                                 <div>
+
                                     <div class="course-name">
                                         Python Programming
                                     </div>
@@ -1125,9 +1414,11 @@
                                     <div class="course-meta">
                                         8 Modules • Intermediate
                                     </div>
+
                                 </div>
 
                             </div>
+
 
                             <div class="percentage">
                                 85%
@@ -1135,9 +1426,16 @@
 
                         </div>
 
+
                         <div class="progress-bar">
-                            <div class="progress" style="width:85%"></div>
+
+                            <div
+                                class="progress"
+                                style="width:85%">
+                            </div>
+
                         </div>
+
 
                         <div class="course-bottom">
 
@@ -1145,9 +1443,12 @@
                                 7 of 8 modules completed
                             </span>
 
-                            <button class="continue-btn"
-                                    onclick="openPage('trainee-courses.html')">
+                            <button
+                                class="continue-btn"
+                                onclick="openPage('trainee-courses.html')">
+
                                 Continue
+
                             </button>
 
                         </div>
@@ -1155,19 +1456,21 @@
                     </div>
 
 
-                    <!-- COURSE 2 -->
-
                     <div class="course">
 
                         <div class="course-top">
 
                             <div class="course-left">
 
-                                <div class="course-icon">
+                                <div
+                                    class="course-icon"
+                                    style="background:#fef3c7; color:#d97706;">
                                     ☕
                                 </div>
 
+
                                 <div>
+
                                     <div class="course-name">
                                         Java Full Stack Development
                                     </div>
@@ -1175,9 +1478,11 @@
                                     <div class="course-meta">
                                         12 Modules • Advanced
                                     </div>
+
                                 </div>
 
                             </div>
+
 
                             <div class="percentage">
                                 62%
@@ -1185,9 +1490,16 @@
 
                         </div>
 
+
                         <div class="progress-bar">
-                            <div class="progress" style="width:62%"></div>
+
+                            <div
+                                class="progress"
+                                style="width:62%">
+                            </div>
+
                         </div>
+
 
                         <div class="course-bottom">
 
@@ -1195,9 +1507,12 @@
                                 7 of 12 modules completed
                             </span>
 
-                            <button class="continue-btn"
-                                    onclick="openPage('trainee-courses.html')">
+                            <button
+                                class="continue-btn"
+                                onclick="openPage('trainee-courses.html')">
+
                                 Continue
+
                             </button>
 
                         </div>
@@ -1205,19 +1520,21 @@
                     </div>
 
 
-                    <!-- COURSE 3 -->
-
                     <div class="course">
 
                         <div class="course-top">
 
                             <div class="course-left">
 
-                                <div class="course-icon">
+                                <div
+                                    class="course-icon"
+                                    style="background:#eff6ff; color:#2563eb;">
                                     📊
                                 </div>
 
+
                                 <div>
+
                                     <div class="course-name">
                                         Data Visualization
                                     </div>
@@ -1225,9 +1542,11 @@
                                     <div class="course-meta">
                                         6 Modules • Beginner
                                     </div>
+
                                 </div>
 
                             </div>
+
 
                             <div class="percentage">
                                 48%
@@ -1235,9 +1554,16 @@
 
                         </div>
 
+
                         <div class="progress-bar">
-                            <div class="progress" style="width:48%"></div>
+
+                            <div
+                                class="progress"
+                                style="width:48%">
+                            </div>
+
                         </div>
+
 
                         <div class="course-bottom">
 
@@ -1245,9 +1571,12 @@
                                 3 of 6 modules completed
                             </span>
 
-                            <button class="continue-btn"
-                                    onclick="openPage('trainee-courses.html')">
+                            <button
+                                class="continue-btn"
+                                onclick="openPage('trainee-courses.html')">
+
                                 Continue
+
                             </button>
 
                         </div>
@@ -1255,19 +1584,21 @@
                     </div>
 
 
-                    <!-- COURSE 4 -->
-
                     <div class="course">
 
                         <div class="course-top">
 
                             <div class="course-left">
 
-                                <div class="course-icon">
+                                <div
+                                    class="course-icon"
+                                    style="background:#fdf4ff; color:#9333ea;">
                                     🤖
                                 </div>
 
+
                                 <div>
+
                                     <div class="course-name">
                                         Machine Learning Fundamentals
                                     </div>
@@ -1275,9 +1606,11 @@
                                     <div class="course-meta">
                                         10 Modules • Intermediate
                                     </div>
+
                                 </div>
 
                             </div>
+
 
                             <div class="percentage">
                                 35%
@@ -1285,9 +1618,16 @@
 
                         </div>
 
+
                         <div class="progress-bar">
-                            <div class="progress" style="width:35%"></div>
+
+                            <div
+                                class="progress"
+                                style="width:35%">
+                            </div>
+
                         </div>
+
 
                         <div class="course-bottom">
 
@@ -1295,9 +1635,12 @@
                                 3 of 10 modules completed
                             </span>
 
-                            <button class="continue-btn"
-                                    onclick="openPage('trainee-courses.html')">
+                            <button
+                                class="continue-btn"
+                                onclick="openPage('trainee-courses.html')">
+
                                 Continue
+
                             </button>
 
                         </div>
@@ -1313,7 +1656,9 @@
 
                     <div class="panel-header">
 
-                        <h3>Upcoming Assessments</h3>
+                        <h3>
+                            Upcoming Assessments
+                        </h3>
 
                         <a href="trainee-assessments.html">
                             View All
@@ -1326,7 +1671,9 @@
 
                         <div class="assessment-top">
 
-                            <h4>Python Fundamentals</h4>
+                            <h4>
+                                Python Fundamentals
+                            </h4>
 
                             <span class="due">
                                 Due Today
@@ -1334,13 +1681,18 @@
 
                         </div>
 
+
                         <p>
                             30 MCQs • 30 Minutes • Passing: 60%
                         </p>
 
-                        <a href="trainee-assessments.html"
-                           class="assessment-action">
+
+                        <a
+                            href="trainee-assessments.html"
+                            class="assessment-action">
+
                             Start Assessment
+
                         </a>
 
                     </div>
@@ -1350,7 +1702,9 @@
 
                         <div class="assessment-top">
 
-                            <h4>Java OOP Concepts</h4>
+                            <h4>
+                                Java OOP Concepts
+                            </h4>
 
                             <span class="due">
                                 2 Days
@@ -1358,13 +1712,18 @@
 
                         </div>
 
+
                         <p>
                             25 MCQs • 25 Minutes • Passing: 60%
                         </p>
 
-                        <a href="trainee-assessments.html"
-                           class="assessment-action">
+
+                        <a
+                            href="trainee-assessments.html"
+                            class="assessment-action">
+
                             View Details
+
                         </a>
 
                     </div>
@@ -1374,7 +1733,9 @@
 
                         <div class="assessment-top">
 
-                            <h4>Data Visualization</h4>
+                            <h4>
+                                Data Visualization
+                            </h4>
 
                             <span class="due">
                                 5 Days
@@ -1382,13 +1743,18 @@
 
                         </div>
 
+
                         <p>
                             20 MCQs • 20 Minutes • Passing: 50%
                         </p>
 
-                        <a href="trainee-assessments.html"
-                           class="assessment-action">
+
+                        <a
+                            href="trainee-assessments.html"
+                            class="assessment-action">
+
                             View Details
+
                         </a>
 
                     </div>
@@ -1398,7 +1764,9 @@
 
                         <div class="assessment-top">
 
-                            <h4>Machine Learning Basics</h4>
+                            <h4>
+                                Machine Learning Basics
+                            </h4>
 
                             <span class="due">
                                 7 Days
@@ -1406,13 +1774,18 @@
 
                         </div>
 
+
                         <p>
                             30 MCQs • 30 Minutes • Passing: 60%
                         </p>
 
-                        <a href="trainee-assessments.html"
-                           class="assessment-action">
+
+                        <a
+                            href="trainee-assessments.html"
+                            class="assessment-action">
+
                             View Details
+
                         </a>
 
                     </div>
@@ -1422,25 +1795,36 @@
             </section>
 
 
-            <!-- PERFORMANCE + CERTIFICATES -->
+            <!-- ================= PERFORMANCE + CERTIFICATES ================= -->
 
             <section class="content-grid">
+
+
+                <!-- PERFORMANCE -->
 
                 <div class="panel">
 
                     <div class="panel-header">
-                        <h3>My Performance</h3>
+
+                        <h3>
+                            My Performance
+                        </h3>
 
                         <a href="trainee-assessments.html">
                             View Results
                         </a>
+
                     </div>
+
 
                     <div class="performance">
 
+
                         <div class="performance-card">
 
-                            <h4>Average Score</h4>
+                            <h4>
+                                Average Score
+                            </h4>
 
                             <div class="performance-value">
                                 85%
@@ -1452,9 +1836,12 @@
 
                         </div>
 
+
                         <div class="performance-card">
 
-                            <h4>Assessments Passed</h4>
+                            <h4>
+                                Assessments Passed
+                            </h4>
 
                             <div class="performance-value">
                                 16/18
@@ -1466,9 +1853,12 @@
 
                         </div>
 
+
                         <div class="performance-card">
 
-                            <h4>Learning Hours</h4>
+                            <h4>
+                                Learning Hours
+                            </h4>
 
                             <div class="performance-value">
                                 42h
@@ -1480,9 +1870,12 @@
 
                         </div>
 
+
                         <div class="performance-card">
 
-                            <h4>Skill Level</h4>
+                            <h4>
+                                Skill Level
+                            </h4>
 
                             <div class="performance-value">
                                 Advanced
@@ -1494,16 +1887,21 @@
 
                         </div>
 
+
                     </div>
 
                 </div>
 
 
+                <!-- CERTIFICATES -->
+
                 <div class="panel">
 
                     <div class="panel-header">
 
-                        <h3>Recent Certificates</h3>
+                        <h3>
+                            Recent Certificates
+                        </h3>
 
                         <a href="certificates.html">
                             View All
@@ -1511,7 +1909,9 @@
 
                     </div>
 
+
                     <div class="certificate-list">
+
 
                         <div class="certificate">
 
@@ -1520,13 +1920,19 @@
                             </div>
 
                             <div>
-                                <h4>Python Programming</h4>
+
+                                <h4>
+                                    Python Programming
+                                </h4>
+
                                 <p>
                                     Issued on 28 Aug 2026
                                 </p>
+
                             </div>
 
                         </div>
+
 
                         <div class="certificate">
 
@@ -1535,13 +1941,19 @@
                             </div>
 
                             <div>
-                                <h4>Data Science Basics</h4>
+
+                                <h4>
+                                    Data Science Basics
+                                </h4>
+
                                 <p>
                                     Issued on 16 Aug 2026
                                 </p>
+
                             </div>
 
                         </div>
+
 
                         <div class="certificate">
 
@@ -1550,13 +1962,19 @@
                             </div>
 
                             <div>
-                                <h4>Web Development</h4>
+
+                                <h4>
+                                    Web Development
+                                </h4>
+
                                 <p>
                                     Issued on 30 Jul 2026
                                 </p>
+
                             </div>
 
                         </div>
+
 
                     </div>
 
@@ -1565,24 +1983,27 @@
             </section>
 
 
-            <!-- QUICK ACTIONS -->
+            <!-- ================= QUICK ACTIONS ================= -->
 
-            <h3 style="
-                font-size:17px;
-                color:#111827;
-                margin:25px 0 14px;
-            ">
+            <h3 class="quick-title">
                 Quick Actions
             </h3>
 
+
             <section class="quick-grid">
 
-                <a href="trainee-courses.html"
-                   class="quick-action">
 
-                    <div class="quick-icon">📚</div>
+                <a
+                    href="trainee-courses.html"
+                    class="quick-action">
 
-                    <h4>Explore Courses</h4>
+                    <div class="quick-icon">
+                        📚
+                    </div>
+
+                    <h4>
+                        Explore Courses
+                    </h4>
 
                     <p>
                         Browse and enroll in new learning programs.
@@ -1591,12 +2012,17 @@
                 </a>
 
 
-                <a href="trainer-library.html"
-                   class="quick-action">
+                <a
+                    href="trainer-library.html"
+                    class="quick-action">
 
-                    <div class="quick-icon">🗂️</div>
+                    <div class="quick-icon">
+                        🗂️
+                    </div>
 
-                    <h4>Learning Library</h4>
+                    <h4>
+                        Learning Library
+                    </h4>
 
                     <p>
                         Access lectures, presentations and study materials.
@@ -1605,12 +2031,17 @@
                 </a>
 
 
-                <a href="competency-mapping.html"
-                   class="quick-action">
+                <a
+                    href="competency-mapping.html"
+                    class="quick-action">
 
-                    <div class="quick-icon">🧠</div>
+                    <div class="quick-icon">
+                        🧠
+                    </div>
 
-                    <h4>Find a Trainer</h4>
+                    <h4>
+                        Find a Trainer
+                    </h4>
 
                     <p>
                         Search for trainers based on competencies.
@@ -1619,12 +2050,17 @@
                 </a>
 
 
-                <a href="feedback.html"
-                   class="quick-action">
+                <a
+                    href="feedback.html"
+                    class="quick-action">
 
-                    <div class="quick-icon">💬</div>
+                    <div class="quick-icon">
+                        💬
+                    </div>
 
-                    <h4>Give Feedback</h4>
+                    <h4>
+                        Give Feedback
+                    </h4>
 
                     <p>
                         Share your feedback about courses and training.
@@ -1632,15 +2068,21 @@
 
                 </a>
 
+
             </section>
 
 
-            <!-- FOOTER -->
+            <!-- ================= FOOTER ================= -->
 
             <footer>
 
-                © <span id="year"></span>
-                <strong>CAPACITY CONNECT</strong>.
+                ©
+                <span id="year"></span>
+
+                <strong>
+                    CAPACITY CONNECT
+                </strong>.
+
                 Trainee Learning Portal.
 
             </footer>
@@ -1650,25 +2092,173 @@
     </div>
 
 
-    <!-- ================= JAVASCRIPT ================= -->
+    <!-- ================= TOAST ================= -->
 
-    <script>
+    <div
+        class="toast"
+        id="toast">
+    </div>
 
-        /* ================= NAVIGATION ================= */
+
+    <!-- ================= FIREBASE SECURITY ================= -->
+
+    <script type="module">
+
+        import {
+            auth,
+            db,
+            ref,
+            get,
+            signOut,
+            onAuthStateChanged
+        } from "../firebase.js";
+
+
+        /* ================= GLOBAL DATA ================= */
+
+        let currentUserData = {};
+        let currentOrganizationData = {};
+        let currentOrganizationId = "";
+
+
+        /* ================= BASIC FUNCTIONS ================= */
 
         function openPage(page) {
+
             window.location.href = page;
+
         }
 
 
-        /* ================= SIDEBAR ================= */
+        window.openPage =
+            openPage;
+
 
         function toggleSidebar() {
 
-            const sidebar =
-                document.getElementById("sidebar");
+            document
+                .getElementById("sidebar")
+                .classList
+                .toggle("open");
 
-            sidebar.classList.toggle("open");
+        }
+
+
+        window.toggleSidebar =
+            toggleSidebar;
+
+
+        function createInitials(name) {
+
+            if (!name) {
+                return "TR";
+            }
+
+
+            const words =
+                name
+                    .trim()
+                    .split(/\s+/)
+                    .filter(Boolean);
+
+
+            if (words.length === 1) {
+
+                return words[0]
+                    .substring(0, 2)
+                    .toUpperCase();
+
+            }
+
+
+            return (
+                words[0][0] +
+                words[1][0]
+            ).toUpperCase();
+
+        }
+
+
+        function showToast(message) {
+
+            const toast =
+                document.getElementById(
+                    "toast"
+                );
+
+
+            toast.textContent =
+                message;
+
+
+            toast.classList.add(
+                "show"
+            );
+
+
+            setTimeout(
+                function() {
+
+                    toast.classList.remove(
+                        "show"
+                    );
+
+                },
+                3000
+            );
+
+        }
+
+
+        function hideLoader() {
+
+            document
+                .getElementById(
+                    "pageLoader"
+                )
+                .classList
+                .add("hide");
+
+
+            document.body.classList.remove(
+                "loading"
+            );
+
+        }
+
+
+        function clearSession() {
+
+            sessionStorage.removeItem(
+                "organizationUid"
+            );
+
+            sessionStorage.removeItem(
+                "organizationId"
+            );
+
+            sessionStorage.removeItem(
+                "organizationName"
+            );
+
+            sessionStorage.removeItem(
+                "organizationEmail"
+            );
+
+            sessionStorage.removeItem(
+                "organizationRole"
+            );
+
+        }
+
+
+        function redirectToLogin() {
+
+            clearSession();
+
+            window.location.href =
+                "organization-login.html";
+
         }
 
 
@@ -1677,9 +2267,14 @@
         function setDate() {
 
             const element =
-                document.getElementById("currentDate");
+                document.getElementById(
+                    "currentDate"
+                );
 
-            const today = new Date();
+
+            const today =
+                new Date();
+
 
             const options = {
                 weekday: "long",
@@ -1688,47 +2283,529 @@
                 year: "numeric"
             };
 
+
             element.textContent =
-                today.toLocaleDateString("en-IN", options);
-        }
-
-
-        /* ================= YEAR ================= */
-
-        function setYear() {
-
-            document.getElementById("year").textContent =
-                new Date().getFullYear();
+                today.toLocaleDateString(
+                    "en-IN",
+                    options
+                );
 
         }
 
 
-        /* ================= CLOSE MOBILE SIDEBAR ================= */
+        /* ================= UPDATE UI ================= */
 
-        document.querySelectorAll(".nav-link").forEach(link => {
+        function updateTraineeUI(
+            userData,
+            organizationData
+        ) {
 
-            link.addEventListener("click", function () {
+            const name =
+                userData.name ||
+                userData.fullName ||
+                "Trainee";
 
-                if (window.innerWidth <= 820) {
 
-                    document
-                        .getElementById("sidebar")
-                        .classList.remove("open");
+            const email =
+                userData.email ||
+                "";
+
+
+            const branch =
+                userData.branch ||
+                "";
+
+
+            const section =
+                userData.section ||
+                "";
+
+
+            const year =
+                userData.year ||
+                "";
+
+
+            const organizationName =
+                organizationData?.name ||
+                userData.organizationName ||
+                "Organization";
+
+
+            const organizationType =
+                organizationData?.type ||
+                "Organization";
+
+
+            const city =
+                organizationData?.city ||
+                "";
+
+
+            document.title =
+                name +
+                " | Trainee Dashboard | CAPACITY CONNECT";
+
+
+            document
+                .getElementById(
+                    "welcomeTitle"
+                )
+                .textContent =
+                "Welcome back, " +
+                name +
+                "! 👋";
+
+
+            document
+                .getElementById(
+                    "headerName"
+                )
+                .textContent =
+                name;
+
+
+            document
+                .getElementById(
+                    "headerAvatar"
+                )
+                .textContent =
+                createInitials(name);
+
+
+            document
+                .getElementById(
+                    "profileAvatar"
+                )
+                .textContent =
+                createInitials(name);
+
+
+            document
+                .getElementById(
+                    "profileName"
+                )
+                .textContent =
+                name;
+
+
+            let description =
+                "Trainee";
+
+
+            if (branch) {
+
+                description +=
+                    " • " +
+                    branch;
+
+            }
+
+
+            if (section) {
+
+                description +=
+                    " • Section " +
+                    section;
+
+            }
+
+
+            if (year) {
+
+                description +=
+                    " • Year " +
+                    year;
+
+            }
+
+
+            document
+                .getElementById(
+                    "profileDescription"
+                )
+                .innerHTML =
+                description +
+                "<br>" +
+                organizationName;
+
+
+            let tags = "";
+
+
+            if (branch) {
+
+                tags +=
+                    `
+                    <span class="tag">
+                        ${branch}
+                    </span>
+                    `;
+
+            }
+
+
+            if (section) {
+
+                tags +=
+                    `
+                    <span class="tag">
+                        Section ${section}
+                    </span>
+                    `;
+
+            }
+
+
+            if (year) {
+
+                tags +=
+                    `
+                    <span class="tag">
+                        Year ${year}
+                    </span>
+                    `;
+
+            }
+
+
+            tags +=
+                `
+                <span class="tag">
+                    ${organizationType}
+                </span>
+                `;
+
+
+            document
+                .getElementById(
+                    "profileTags"
+                )
+                .innerHTML =
+                tags;
+
+
+            sessionStorage.setItem(
+                "organizationUid",
+                auth.currentUser.uid
+            );
+
+
+            sessionStorage.setItem(
+                "organizationId",
+                currentOrganizationId
+            );
+
+
+            sessionStorage.setItem(
+                "organizationName",
+                organizationName
+            );
+
+
+            sessionStorage.setItem(
+                "organizationEmail",
+                email
+            );
+
+
+            sessionStorage.setItem(
+                "organizationRole",
+                "trainee"
+            );
+
+        }
+
+
+        /* ================= LOAD TRAINEE ================= */
+
+        async function loadTrainee(
+            user
+        ) {
+
+            const userSnapshot =
+                await get(
+                    ref(
+                        db,
+                        "users/" +
+                        user.uid
+                    )
+                );
+
+
+            if (
+                !userSnapshot.exists()
+            ) {
+
+                throw new Error(
+                    "Trainee profile was not found."
+                );
+
+            }
+
+
+            currentUserData =
+                userSnapshot.val();
+
+
+            /* ================= ROLE CHECK ================= */
+
+            if (
+                currentUserData.role !==
+                "trainee"
+            ) {
+
+                throw new Error(
+                    "This account does not have trainee access."
+                );
+
+            }
+
+
+            /* ================= STATUS CHECK ================= */
+
+            if (
+                currentUserData.status &&
+                currentUserData.status !==
+                "approved"
+            ) {
+
+                throw new Error(
+                    "Your trainee account is not approved."
+                );
+
+            }
+
+
+            /* ================= ORGANIZATION CHECK ================= */
+
+            currentOrganizationId =
+                currentUserData.organizationId ||
+                "";
+
+
+            if (!currentOrganizationId) {
+
+                throw new Error(
+                    "Your organization information is missing."
+                );
+
+            }
+
+
+            /* ================= ORGANIZATION DATA ================= */
+
+            try {
+
+                const organizationSnapshot =
+                    await get(
+                        ref(
+                            db,
+                            "organizations/" +
+                            currentOrganizationId
+                        )
+                    );
+
+
+                if (
+                    organizationSnapshot.exists()
+                ) {
+
+                    currentOrganizationData =
+                        organizationSnapshot.val();
 
                 }
 
-            });
+            } catch (error) {
 
-        });
+                console.warn(
+                    "Organization information could not be loaded:",
+                    error
+                );
+
+            }
 
 
-        /* ================= INITIALIZE ================= */
+            /* ================= UPDATE UI ================= */
+
+            updateTraineeUI(
+                currentUserData,
+                currentOrganizationData
+            );
+
+        }
+
+
+        /* ================= LOGOUT ================= */
+
+        async function logoutTrainee() {
+
+            const confirmation =
+                confirm(
+                    "Do you want to logout?"
+                );
+
+
+            if (!confirmation) {
+                return;
+            }
+
+
+            try {
+
+                await signOut(
+                    auth
+                );
+
+
+                clearSession();
+
+
+                window.location.href =
+                    "organization-login.html";
+
+
+            } catch (error) {
+
+                console.error(
+                    "Logout error:",
+                    error
+                );
+
+
+                showToast(
+                    "Logout failed. Please try again."
+                );
+
+            }
+
+        }
+
+
+        document
+            .getElementById(
+                "headerProfile"
+            )
+            .addEventListener(
+                "click",
+                logoutTrainee
+            );
+
+
+        /* ================= MOBILE SIDEBAR ================= */
+
+        document
+            .querySelectorAll(
+                ".nav-link"
+            )
+            .forEach(
+                function(link) {
+
+                    link.addEventListener(
+                        "click",
+                        function() {
+
+                            if (
+                                window.innerWidth <=
+                                820
+                            ) {
+
+                                document
+                                    .getElementById(
+                                        "sidebar"
+                                    )
+                                    .classList
+                                    .remove(
+                                        "open"
+                                    );
+
+                            }
+
+                        }
+                    );
+
+                }
+            );
+
+
+        /* ================= INITIALIZATION ================= */
 
         setDate();
-        setYear();
+
+
+        document
+            .getElementById(
+                "year"
+            )
+            .textContent =
+            new Date().getFullYear();
+
+
+        /* ================= AUTH PROTECTION ================= */
+
+        onAuthStateChanged(
+            auth,
+            async function(user) {
+
+                try {
+
+                    if (!user) {
+
+                        redirectToLogin();
+
+                        return;
+
+                    }
+
+
+                    await loadTrainee(
+                        user
+                    );
+
+
+                    hideLoader();
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Trainee access denied:",
+                        error
+                    );
+
+
+                    await signOut(
+                        auth
+                    );
+
+
+                    clearSession();
+
+
+                    hideLoader();
+
+
+                    showToast(
+                        error.message ||
+                        "Access denied."
+                    );
+
+
+                    setTimeout(
+                        function() {
+
+                            redirectToLogin();
+
+                        },
+                        1200
+                    );
+
+                }
+
+            }
+        );
 
     </script>
 
 </body>
 </html>
-
