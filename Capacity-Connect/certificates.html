@@ -1006,6 +1006,7 @@
             }
         }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 
 <body>
@@ -1962,11 +1963,21 @@
                             </button>
 
 
-                            <button
-                                class="action-btn download-btn"
-                                onclick="downloadCertificate('Data Visualization','CC-DV-2026-00061')">
-                                ⬇ Download
-                            </button>
+                          <button
+    onclick="
+        downloadCertificate(
+            'Data Visualization',
+            'CC-DV-2026-00061',
+            '18 July 2026',
+            '90%',
+            'Beginner',
+            '4 Weeks',
+            'Excellent'
+        )
+    "
+>
+    ⬇ Download
+</button>
 
 
                             <button
