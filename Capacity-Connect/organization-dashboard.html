@@ -35,6 +35,51 @@
             min-height: 100vh;
         }
 
+        body.loading {
+            overflow: hidden;
+        }
+
+        /* ================= AUTH LOADER ================= */
+
+        .page-loader {
+            position: fixed;
+            inset: 0;
+            background: rgba(255,255,255,.96);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 9999;
+            transition: opacity .3s ease;
+        }
+
+        .page-loader.hide {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loader-spinner {
+            width: 42px;
+            height: 42px;
+            border: 4px solid #e0e7ff;
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin .8s linear infinite;
+        }
+
+        .loader-text {
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
         /* ================= HEADER ================= */
 
         header {
@@ -153,6 +198,10 @@
         .profile-text strong {
             display: block;
             font-size: 12px;
+            max-width: 180px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .profile-text span {
@@ -398,6 +447,8 @@
             margin-top: 7px;
             opacity: .8;
             font-size: 8px;
+            max-width: 250px;
+            word-break: break-word;
         }
 
         /* ================= STATS ================= */
@@ -772,6 +823,7 @@
             pointer-events: none;
             transition: .3s;
             z-index: 4000;
+            max-width: 320px;
         }
 
         .toast.show {
@@ -885,7 +937,20 @@
     </style>
 </head>
 
-<body>
+<body class="loading">
+
+    <!-- ================= PAGE LOADER ================= -->
+
+    <div class="page-loader" id="pageLoader">
+
+        <div class="loader-spinner"></div>
+
+        <div class="loader-text">
+            Verifying organization account...
+        </div>
+
+    </div>
+
 
     <!-- ================= HEADER ================= -->
 
@@ -1217,12 +1282,12 @@
 
                         <h3
                             id="organizationName">
-                            Your Organization
+                            Loading organization...
                         </h3>
 
                         <p
                             id="organizationDetails">
-                            Organization Management Workspace
+                            Loading organization information...
                         </p>
 
 
@@ -1254,7 +1319,7 @@
                     </div>
 
                     <small id="organizationEmail">
-                        Organization Account
+                        Loading email...
                     </small>
 
                 </div>
@@ -1277,12 +1342,14 @@
                         Total Trainees
                     </div>
 
-                    <div class="stat-value">
+                    <div
+                        class="stat-value"
+                        id="traineeCount">
                         142
                     </div>
 
                     <div class="stat-note">
-                        +18 this month
+                        Organization learners
                     </div>
 
                 </div>
@@ -1298,12 +1365,14 @@
                         Trainers
                     </div>
 
-                    <div class="stat-value">
+                    <div
+                        class="stat-value"
+                        id="trainerCount">
                         18
                     </div>
 
                     <div class="stat-note">
-                        2 new trainers
+                        Organization trainers
                     </div>
 
                 </div>
@@ -1319,12 +1388,13 @@
                         Courses
                     </div>
 
-                    <div class="stat-value">
+                    <div
+                        class="stat-value">
                         12
                     </div>
 
                     <div class="stat-note">
-                        9 active
+                        Training programs
                     </div>
 
                 </div>
@@ -1340,12 +1410,13 @@
                         Assessments
                     </div>
 
-                    <div class="stat-value">
+                    <div
+                        class="stat-value">
                         24
                     </div>
 
                     <div class="stat-note">
-                        5 upcoming
+                        Organization assessments
                     </div>
 
                 </div>
@@ -1361,12 +1432,13 @@
                         Certificates
                     </div>
 
-                    <div class="stat-value">
+                    <div
+                        class="stat-value">
                         186
                     </div>
 
                     <div class="stat-note">
-                        +24 this month
+                        Certificates issued
                     </div>
 
                 </div>
@@ -1382,12 +1454,13 @@
                         Avg Performance
                     </div>
 
-                    <div class="stat-value">
+                    <div
+                        class="stat-value">
                         84%
                     </div>
 
                     <div class="stat-note">
-                        Excellent growth
+                        Overall performance
                     </div>
 
                 </div>
@@ -1808,7 +1881,7 @@
                     </div>
 
 
-                    <!-- RECENT PEOPLE -->
+                    <!-- RECENT ACTIVITY -->
 
                     <div
                         class="panel"
@@ -2235,16 +2308,16 @@
                                 <div class="activity-content">
 
                                     <strong>
-                                        6 new trainees enrolled
+                                        Organization training activity
                                     </strong>
 
                                     <p>
-                                        New learners joined active
-                                        organization courses.
+                                        Monitor enrollment, course progress
+                                        and learner participation.
                                     </p>
 
                                     <span class="activity-time">
-                                        2 hours ago
+                                        Live workspace
                                     </span>
 
                                 </div>
@@ -2261,16 +2334,16 @@
                                 <div class="activity-content">
 
                                     <strong>
-                                        Course content updated
+                                        Course management
                                     </strong>
 
                                     <p>
-                                        Python Programming received
-                                        a new learning module.
+                                        Create and maintain organization
+                                        training programs.
                                     </p>
 
                                     <span class="activity-time">
-                                        5 hours ago
+                                        Training workspace
                                     </span>
 
                                 </div>
@@ -2287,16 +2360,16 @@
                                 <div class="activity-content">
 
                                     <strong>
-                                        Assessment results updated
+                                        Assessment monitoring
                                     </strong>
 
                                     <p>
-                                        34 trainee submissions are now
-                                        available for review.
+                                        Review assessment participation
+                                        and learning results.
                                     </p>
 
                                     <span class="activity-time">
-                                        Yesterday
+                                        Assessment center
                                     </span>
 
                                 </div>
@@ -2313,16 +2386,16 @@
                                 <div class="activity-content">
 
                                     <strong>
-                                        12 certificates issued
+                                        Certificate tracking
                                     </strong>
 
                                     <p>
-                                        Successful trainees received
-                                        completion certificates.
+                                        Monitor training completion and
+                                        certification progress.
                                     </p>
 
                                     <span class="activity-time">
-                                        2 days ago
+                                        Certification center
                                     </span>
 
                                 </div>
@@ -2477,7 +2550,11 @@
             <footer>
 
                 © <span id="year"></span>
-                <strong>CAPACITY CONNECT</strong>.
+
+                <strong>
+                    CAPACITY CONNECT
+                </strong>.
+
                 Organization Training Management Portal.
 
             </footer>
@@ -2504,43 +2581,61 @@
             db,
             ref,
             get,
-            signOut
+            signOut,
+            onAuthStateChanged
         } from "../firebase.js";
 
 
-        /* ================= HELPERS ================= */
+        /* ================= ELEMENTS ================= */
+
+        const loader =
+            document.getElementById(
+                "pageLoader"
+            );
+
+
+        document
+            .getElementById("year")
+            .textContent =
+            new Date().getFullYear();
+
+
+        /* ================= TOAST ================= */
 
         function showToast(message) {
 
             const toast =
-                document.getElementById("toast");
-
+                document.getElementById(
+                    "toast"
+                );
 
             toast.textContent =
                 message;
 
-
-            toast.classList.add("show");
-
+            toast.classList.add(
+                "show"
+            );
 
             setTimeout(
                 function() {
 
-                    toast.classList.remove("show");
+                    toast.classList.remove(
+                        "show"
+                    );
 
                 },
-                2500
+                3000
             );
-
         }
 
+
+        /* ================= INITIALS ================= */
 
         function createInitials(name) {
 
             if (!name) {
                 return "OR";
             }
-
 
             const words =
                 name
@@ -2552,7 +2647,7 @@
             if (words.length === 1) {
 
                 return words[0]
-                    .substring(0,2)
+                    .substring(0, 2)
                     .toUpperCase();
 
             }
@@ -2566,7 +2661,7 @@
         }
 
 
-        /* ================= PAGE NAVIGATION ================= */
+        /* ================= NAVIGATION ================= */
 
         window.goToPage =
             function(page) {
@@ -2590,130 +2685,42 @@
             };
 
 
-        /* ================= LOAD ORGANIZATION ================= */
-
-        async function loadOrganizationData() {
-
-            const uid =
-                sessionStorage.getItem(
-                    "organizationUid"
-                );
-
-
-            const savedName =
-                sessionStorage.getItem(
-                    "organizationName"
-                );
-
-
-            const savedEmail =
-                sessionStorage.getItem(
-                    "organizationEmail"
-                );
-
-
-            if (
-                savedName
-            ) {
-
-                updateOrganizationUI(
-                    savedName,
-                    savedEmail || ""
-                );
-
-            }
-
-
-            if (!uid) {
-
-                showToast(
-                    "Organization session not found. Redirecting to login..."
-                );
-
-
-                setTimeout(
-                    function() {
-
-                        window.location.href =
-                            "organization-login.html";
-
-                    },
-                    1200
-                );
-
-                return;
-
-            }
-
-
-            try {
-
-                const snapshot =
-                    await get(
-                        ref(
-                            db,
-                            "users/" + uid
-                        )
-                    );
-
-
-                if (
-                    snapshot.exists()
-                ) {
-
-                    const user =
-                        snapshot.val();
-
-
-                    const name =
-                        user.organizationName ||
-                        user.name ||
-                        "Organization";
-
-
-                    const email =
-                        user.email ||
-                        "";
-
-
-                    updateOrganizationUI(
-                        name,
-                        email
-                    );
-
-
-                    sessionStorage.setItem(
-                        "organizationName",
-                        name
-                    );
-
-                }
-
-            } catch (error) {
-
-                console.error(
-                    "Failed to load organization:",
-                    error
-                );
-
-            }
-
-        }
-
-
-        /* ================= UPDATE UI ================= */
+        /* ================= UI UPDATE ================= */
 
         function updateOrganizationUI(
-            name,
-            email
+            userData,
+            organizationData
         ) {
+
+            const organizationName =
+                organizationData?.name ||
+                userData?.organizationName ||
+                userData?.name ||
+                "Organization";
+
+
+            const organizationType =
+                organizationData?.type ||
+                "Organization";
+
+
+            const city =
+                organizationData?.city ||
+                "";
+
+
+            const email =
+                organizationData?.officialEmail ||
+                userData?.email ||
+                "";
+
 
             document
                 .getElementById(
                     "organizationName"
                 )
                 .textContent =
-                name;
+                organizationName;
 
 
             document
@@ -2721,7 +2728,7 @@
                     "headerName"
                 )
                 .textContent =
-                name;
+                organizationName;
 
 
             document
@@ -2729,19 +2736,24 @@
                     "headerAvatar"
                 )
                 .textContent =
-                createInitials(name);
+                createInitials(
+                    organizationName
+                );
 
 
-            if (email) {
+            let details =
+                organizationType;
 
-                document
-                    .getElementById(
-                        "organizationEmail"
-                    )
-                    .textContent =
-                    email;
 
+            if (city) {
+                details +=
+                    " • " +
+                    city;
             }
+
+
+            details +=
+                " • CAPACITY CONNECT";
 
 
             document
@@ -2749,7 +2761,304 @@
                     "organizationDetails"
                 )
                 .textContent =
-                "Organization Management Workspace • CAPACITY CONNECT";
+                details;
+
+
+            document
+                .getElementById(
+                    "organizationEmail"
+                )
+                .textContent =
+                email;
+
+
+            sessionStorage.setItem(
+                "organizationName",
+                organizationName
+            );
+
+
+            sessionStorage.setItem(
+                "organizationEmail",
+                email
+            );
+
+        }
+
+
+        /* ================= LOAD ORGANIZATION ================= */
+
+        async function loadOrganization(
+            user
+        ) {
+
+            const userRef =
+                ref(
+                    db,
+                    "users/" + user.uid
+                );
+
+
+            const userSnapshot =
+                await get(
+                    userRef
+                );
+
+
+            if (
+                !userSnapshot.exists()
+            ) {
+
+                throw new Error(
+                    "Organization user record not found."
+                );
+
+            }
+
+
+            const userData =
+                userSnapshot.val();
+
+
+            /* ROLE CHECK */
+
+            if (
+                userData.role !==
+                "organization"
+            ) {
+
+                throw new Error(
+                    "This account is not an organization account."
+                );
+
+            }
+
+
+            /* STATUS CHECK */
+
+            if (
+                userData.status !==
+                "approved"
+            ) {
+
+                throw new Error(
+                    "Your organization account is not approved."
+                );
+
+            }
+
+
+            const organizationId =
+                userData.organizationId;
+
+
+            if (!organizationId) {
+
+                throw new Error(
+                    "Organization ID is missing from your account."
+                );
+
+            }
+
+
+            sessionStorage.setItem(
+                "organizationUid",
+                user.uid
+            );
+
+
+            sessionStorage.setItem(
+                "organizationId",
+                organizationId
+            );
+
+
+            sessionStorage.setItem(
+                "organizationRole",
+                "organization"
+            );
+
+
+            /* LOAD ORGANIZATION RECORD */
+
+            let organizationData = null;
+
+
+            try {
+
+                const organizationSnapshot =
+                    await get(
+                        ref(
+                            db,
+                            "organizations/" +
+                            organizationId
+                        )
+                    );
+
+
+                if (
+                    organizationSnapshot.exists()
+                ) {
+
+                    organizationData =
+                        organizationSnapshot.val();
+
+                }
+
+            } catch (error) {
+
+                console.warn(
+                    "Organization record could not be loaded:",
+                    error
+                );
+
+            }
+
+
+            /* VERIFY ORGANIZATION STATUS IF AVAILABLE */
+
+            if (
+                organizationData &&
+                organizationData.status &&
+                organizationData.status !==
+                "approved"
+            ) {
+
+                throw new Error(
+                    "Your organization account is not approved."
+                );
+
+            }
+
+
+            updateOrganizationUI(
+                userData,
+                organizationData
+            );
+
+
+            /* LOAD ORGANIZATION PEOPLE COUNTS */
+
+            await loadOrganizationPeople(
+                organizationId
+            );
+
+        }
+
+
+        /* ================= PEOPLE COUNTS ================= */
+
+        async function loadOrganizationPeople(
+            organizationId
+        ) {
+
+            try {
+
+                const usersSnapshot =
+                    await get(
+                        ref(
+                            db,
+                            "users"
+                        )
+                    );
+
+
+                if (
+                    !usersSnapshot.exists()
+                ) {
+
+                    return;
+
+                }
+
+
+                const allUsers =
+                    usersSnapshot.val();
+
+
+                let traineeCount = 0;
+                let trainerCount = 0;
+
+
+                Object
+                    .values(allUsers)
+                    .forEach(
+                        function(user) {
+
+                            if (
+                                !user ||
+                                user.organizationId !==
+                                organizationId
+                            ) {
+
+                                return;
+
+                            }
+
+
+                            if (
+                                user.role ===
+                                "trainee" &&
+                                user.status ===
+                                "approved"
+                            ) {
+
+                                traineeCount++;
+
+                            }
+
+
+                            if (
+                                user.role ===
+                                "trainer" &&
+                                user.status ===
+                                "approved"
+                            ) {
+
+                                trainerCount++;
+
+                            }
+
+                        }
+                    );
+
+
+                /*
+                 * Only replace demo values when
+                 * real organization users are found.
+                 */
+
+                if (traineeCount > 0) {
+
+                    document
+                        .getElementById(
+                            "traineeCount"
+                        )
+                        .textContent =
+                        traineeCount;
+
+                }
+
+
+                if (trainerCount > 0) {
+
+                    document
+                        .getElementById(
+                            "trainerCount"
+                        )
+                        .textContent =
+                        trainerCount;
+
+                }
+
+            } catch (error) {
+
+                console.warn(
+                    "People count could not be loaded:",
+                    error
+                );
+
+            }
 
         }
 
@@ -2772,7 +3081,10 @@
 
                 try {
 
-                    await signOut(auth);
+                    await signOut(
+                        auth
+                    );
+
 
                     sessionStorage.removeItem(
                         "organizationUid"
@@ -2787,12 +3099,22 @@
                     );
 
                     sessionStorage.removeItem(
+                        "organizationEmail"
+                    );
+
+                    sessionStorage.removeItem(
                         "organizationRole"
+                    );
+
+
+                    localStorage.removeItem(
+                        "organizationEmail"
                     );
 
 
                     window.location.href =
                         "organization-login.html";
+
 
                 } catch (error) {
 
@@ -2814,16 +3136,19 @@
         /* ================= MOBILE NAV ================= */
 
         document
-            .querySelectorAll(".nav-link")
+            .querySelectorAll(
+                ".nav-link"
+            )
             .forEach(
-                link => {
+                function(link) {
 
                     link.addEventListener(
                         "click",
                         function() {
 
                             if (
-                                window.innerWidth <= 820
+                                window.innerWidth <=
+                                820
                             ) {
 
                                 document
@@ -2831,7 +3156,9 @@
                                         "sidebar"
                                     )
                                     .classList
-                                    .remove("open");
+                                    .remove(
+                                        "open"
+                                    );
 
                             }
 
@@ -2842,17 +3169,97 @@
             );
 
 
-        /* ================= YEAR ================= */
+        /* ================= AUTH PROTECTION ================= */
 
-        document
-            .getElementById("year")
-            .textContent =
-            new Date().getFullYear();
+        onAuthStateChanged(
+            auth,
+            async function(user) {
+
+                try {
+
+                    if (!user) {
+
+                        window.location.href =
+                            "organization-login.html";
+
+                        return;
+
+                    }
 
 
-        /* ================= INIT ================= */
+                    await loadOrganization(
+                        user
+                    );
 
-        loadOrganizationData();
+
+                    loader.classList.add(
+                        "hide"
+                    );
+
+                    document.body.classList.remove(
+                        "loading"
+                    );
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Organization access error:",
+                        error
+                    );
+
+
+                    await signOut(
+                        auth
+                    );
+
+
+                    sessionStorage.removeItem(
+                        "organizationUid"
+                    );
+
+                    sessionStorage.removeItem(
+                        "organizationId"
+                    );
+
+                    sessionStorage.removeItem(
+                        "organizationName"
+                    );
+
+                    sessionStorage.removeItem(
+                        "organizationEmail"
+                    );
+
+                    sessionStorage.removeItem(
+                        "organizationRole"
+                    );
+
+
+                    loader.classList.add(
+                        "hide"
+                    );
+
+
+                    showToast(
+                        error.message ||
+                        "Organization access denied."
+                    );
+
+
+                    setTimeout(
+                        function() {
+
+                            window.location.href =
+                                "organization-login.html";
+
+                        },
+                        1200
+                    );
+
+                }
+
+            }
+        );
 
     </script>
 
