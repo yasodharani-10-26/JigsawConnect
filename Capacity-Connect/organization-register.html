@@ -42,8 +42,6 @@
             padding: 30px 15px;
         }
 
-        /* ================= BACKGROUND ================= */
-
         .background-orb {
             position: fixed;
             width: 260px;
@@ -66,8 +64,6 @@
             right: -80px;
         }
 
-        /* ================= CONTAINER ================= */
-
         .register-wrapper {
             width: 100%;
             max-width: 980px;
@@ -81,8 +77,6 @@
             position: relative;
             z-index: 1;
         }
-
-        /* ================= LEFT ================= */
 
         .intro-panel {
             background: linear-gradient(145deg,#312e81,#4f46e5,#0891b2);
@@ -199,8 +193,6 @@
             line-height: 1.55;
         }
 
-        /* ================= FORM PANEL ================= */
-
         .form-panel {
             padding: 38px 40px;
             background: white;
@@ -222,8 +214,6 @@
             line-height: 1.5;
         }
 
-        /* ================= MESSAGE ================= */
-
         #message {
             display: none;
             padding: 11px 12px;
@@ -233,8 +223,6 @@
             margin-bottom: 15px;
             border: 1px solid transparent;
         }
-
-        /* ================= FORM ================= */
 
         .form-grid {
             display: grid;
@@ -312,9 +300,8 @@
             color: #9ca3af;
             font-size: 7px;
             margin-top: 4px;
+            line-height: 1.5;
         }
-
-        /* ================= CHECKBOX ================= */
 
         .terms-row {
             display: flex;
@@ -335,8 +322,6 @@
             line-height: 1.5;
             font-weight: 400;
         }
-
-        /* ================= BUTTON ================= */
 
         .submit-btn {
             width: 100%;
@@ -394,8 +379,6 @@
             color: var(--primary);
         }
 
-        /* ================= SUCCESS ================= */
-
         .success-screen {
             display: none;
             text-align: center;
@@ -429,7 +412,20 @@
             margin: auto;
         }
 
-        /* ================= RESPONSIVE ================= */
+        .success-actions {
+            margin-top: 18px;
+        }
+
+        .success-actions a {
+            display: inline-block;
+            text-decoration: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            background: var(--primary);
+            color: white;
+            font-size: 9px;
+            font-weight: 800;
+        }
 
         @media (max-width: 850px) {
 
@@ -536,88 +532,42 @@
                 <div class="feature-list">
 
                     <div class="feature">
-
-                        <div class="feature-icon">
-                            👥
-                        </div>
-
-                        <span>
-                            Manage trainees and trainers
-                        </span>
-
+                        <div class="feature-icon">👥</div>
+                        <span>Manage trainees and trainers</span>
                     </div>
 
-
                     <div class="feature">
-
-                        <div class="feature-icon">
-                            📚
-                        </div>
-
-                        <span>
-                            Create and manage training courses
-                        </span>
-
+                        <div class="feature-icon">📚</div>
+                        <span>Create and manage training courses</span>
                     </div>
 
-
                     <div class="feature">
-
-                        <div class="feature-icon">
-                            📝
-                        </div>
-
-                        <span>
-                            Conduct assessments
-                        </span>
-
+                        <div class="feature-icon">📝</div>
+                        <span>Conduct assessments</span>
                     </div>
 
-
                     <div class="feature">
-
-                        <div class="feature-icon">
-                            🗂️
-                        </div>
-
-                        <span>
-                            Share learning resources
-                        </span>
-
+                        <div class="feature-icon">🗂️</div>
+                        <span>Share learning resources</span>
                     </div>
 
-
                     <div class="feature">
-
-                        <div class="feature-icon">
-                            🏆
-                        </div>
-
-                        <span>
-                            Track certifications
-                        </span>
-
+                        <div class="feature-icon">🏆</div>
+                        <span>Track certifications</span>
                     </div>
 
-
                     <div class="feature">
-
-                        <div class="feature-icon">
-                            📊
-                        </div>
-
-                        <span>
-                            Monitor performance
-                        </span>
-
+                        <div class="feature-icon">📊</div>
+                        <span>Monitor performance</span>
                     </div>
 
                 </div>
 
 
                 <div class="approval-note">
-                    🔐 Organization accounts are subject to platform
-                    verification/approval before full access is enabled.
+                    🔐 Use an official organization email containing the
+                    organization name and at least one number.
+                    Valid organizations receive immediate access.
                 </div>
 
             </div>
@@ -643,12 +593,10 @@
             </div>
 
 
-            <div
-                id="message">
-            </div>
+            <div id="message"></div>
 
 
-            <!-- SUCCESS SCREEN -->
+            <!-- SUCCESS -->
 
             <div
                 class="success-screen"
@@ -663,21 +611,27 @@
                 </h2>
 
                 <p>
-                    Your organization account has been created successfully.
-                    Please continue to the organization login page.
+                    Your organization account has been created and
+                    activated successfully. You can now login and
+                    access the CAPACITY CONNECT organization workspace.
                 </p>
+
+                <div class="success-actions">
+
+                    <a href="organization-login.html">
+                        Go to Organization Login
+                    </a>
+
+                </div>
 
             </div>
 
 
-            <!-- REGISTRATION FORM -->
+            <!-- FORM -->
 
-            <form
-                id="organizationForm">
-
+            <form id="organizationForm">
 
                 <div class="form-grid">
-
 
                     <!-- ORGANIZATION NAME -->
 
@@ -692,6 +646,7 @@
                             type="text"
                             id="organizationName"
                             placeholder="Enter organization name"
+                            maxlength="100"
                             required>
 
                     </div>
@@ -756,6 +711,7 @@
                             type="text"
                             id="contactPerson"
                             placeholder="Full name"
+                            maxlength="80"
                             required>
 
                     </div>
@@ -774,12 +730,13 @@
                             type="text"
                             id="designation"
                             placeholder="Example: HR Manager"
+                            maxlength="80"
                             required>
 
                     </div>
 
 
-                    <!-- OFFICIAL EMAIL -->
+                    <!-- EMAIL -->
 
                     <div class="form-group">
 
@@ -791,9 +748,13 @@
                         <input
                             type="email"
                             id="email"
-                            placeholder="organization@example.com"
+                            placeholder="organizationname12@gmail.com"
                             autocomplete="email"
                             required>
+
+                        <div class="field-note">
+                            Email must contain the organization name and at least one number.
+                        </div>
 
                     </div>
 
@@ -812,6 +773,7 @@
                             id="phone"
                             placeholder="10-digit mobile number"
                             maxlength="10"
+                            inputmode="numeric"
                             required>
 
                     </div>
@@ -846,6 +808,7 @@
                             type="text"
                             id="city"
                             placeholder="Enter city"
+                            maxlength="80"
                             required>
 
                     </div>
@@ -863,6 +826,7 @@
                         <textarea
                             id="address"
                             placeholder="Enter complete organization address"
+                            maxlength="300"
                             required></textarea>
 
                     </div>
@@ -896,7 +860,7 @@
                         </div>
 
                         <div class="field-note">
-                            Password must contain at least 6 characters.
+                            Use at least 6 characters.
                         </div>
 
                     </div>
@@ -944,9 +908,11 @@
                         required>
 
                     <label for="terms">
+
                         I confirm that the information provided above is
                         accurate and I agree to the CAPACITY CONNECT
                         organization registration and platform usage terms.
+
                     </label>
 
                 </div>
@@ -979,7 +945,6 @@
 
                     <a href="../index.html">
                         ← Back to JigsawConnect
-
                     </a>
 
                 </div>
@@ -1001,7 +966,8 @@
             ref,
             set,
             push,
-            createUserWithEmailAndPassword
+            createUserWithEmailAndPassword,
+            deleteUser
         } from "../firebase.js";
 
 
@@ -1084,7 +1050,7 @@
         }
 
 
-        /* ================= PASSWORD TOGGLE ================= */
+        /* ================= PASSWORD ================= */
 
         window.togglePassword =
             function(
@@ -1099,7 +1065,8 @@
 
 
                 if (
-                    input.type === "password"
+                    input.type ===
+                    "password"
                 ) {
 
                     input.type =
@@ -1119,6 +1086,235 @@
                 }
 
             };
+
+
+        /* ================= NORMALIZE ORGANIZATION ================= */
+
+        function normalizeOrganizationName(
+            name
+        ) {
+
+            return name
+                .toLowerCase()
+                .replace(
+                    /[^a-z0-9]/g,
+                    ""
+                );
+
+        }
+
+
+        /* ================= EMAIL VALIDATION ================= */
+
+        function validateOrganizationEmail(
+            organizationName,
+            email
+        ) {
+
+            const atIndex =
+                email.indexOf("@");
+
+
+            if (atIndex === -1) {
+                return false;
+            }
+
+
+            const localPart =
+                email
+                    .substring(
+                        0,
+                        atIndex
+                    )
+                    .toLowerCase();
+
+
+            const normalizedName =
+                normalizeOrganizationName(
+                    organizationName
+                );
+
+
+            const hasOrganizationName =
+                normalizedName.length >= 3 &&
+                localPart.includes(
+                    normalizedName
+                );
+
+
+            const hasNumber =
+                /\d/.test(
+                    localPart
+                );
+
+
+            return (
+                hasOrganizationName &&
+                hasNumber
+            );
+
+        }
+
+
+        /* ================= SAFE EMAIL DISPLAY ================= */
+
+        function maskEmail(
+            email
+        ) {
+
+            const parts =
+                email.split("@");
+
+
+            if (
+                parts.length !== 2
+            ) {
+                return email;
+            }
+
+
+            const local =
+                parts[0];
+
+
+            const domain =
+                parts[1];
+
+
+            if (
+                local.length <= 3
+            ) {
+
+                return (
+                    local[0] +
+                    "***@" +
+                    domain
+                );
+
+            }
+
+
+            return (
+                local.substring(
+                    0,
+                    2
+                ) +
+                "***@" +
+                domain
+            );
+
+        }
+
+
+        /* ================= ROLLBACK ================= */
+
+        async function rollbackOrganization(
+            user,
+            organizationRefPath,
+            userRefPath,
+            organizationUserRefPath
+        ) {
+
+            try {
+
+                if (
+                    organizationRefPath
+                ) {
+
+                    await set(
+                        ref(
+                            db,
+                            organizationRefPath
+                        ),
+                        null
+                    );
+
+                }
+
+            } catch (error) {
+
+                console.warn(
+                    "Organization rollback failed:",
+                    error
+                );
+
+            }
+
+
+            try {
+
+                if (
+                    userRefPath
+                ) {
+
+                    await set(
+                        ref(
+                            db,
+                            userRefPath
+                        ),
+                        null
+                    );
+
+                }
+
+            } catch (error) {
+
+                console.warn(
+                    "User rollback failed:",
+                    error
+                );
+
+            }
+
+
+            try {
+
+                if (
+                    organizationUserRefPath
+                ) {
+
+                    await set(
+                        ref(
+                            db,
+                            organizationUserRefPath
+                        ),
+                        null
+                    );
+
+                }
+
+            } catch (error) {
+
+                console.warn(
+                    "Organization user rollback failed:",
+                    error
+                );
+
+            }
+
+
+            try {
+
+                if (
+                    user
+                ) {
+
+                    await deleteUser(
+                        user
+                    );
+
+                }
+
+            } catch (error) {
+
+                console.warn(
+                    "Firebase Auth rollback failed:",
+                    error
+                );
+
+            }
+
+        }
 
 
         /* ================= FORM ================= */
@@ -1231,7 +1427,7 @@
                         .value;
 
 
-                /* ================= VALIDATION ================= */
+                /* ================= BASIC VALIDATION ================= */
 
                 if (
                     !organizationName ||
@@ -1256,13 +1452,15 @@
                 }
 
 
+                /* ================= NAME VALIDATION ================= */
+
                 if (
-                    !/^[0-9]{10}$/.test(phone)
+                    organizationName.length < 3
                 ) {
 
                     showMessage(
-                        "Please enter a valid 10-digit contact number.",
-                        "error"
+                        "Organization name must contain at least 3 characters.",
+                        "warning"
                     );
 
                     return;
@@ -1270,13 +1468,52 @@
                 }
 
 
+                /* ================= PHONE ================= */
+
+                if (
+                    !/^[0-9]{10}$/.test(
+                        phone
+                    )
+                ) {
+
+                    showMessage(
+                        "Please enter a valid 10-digit contact number.",
+                        "warning"
+                    );
+
+                    return;
+
+                }
+
+
+                /* ================= EMAIL ================= */
+
+                if (
+                    !validateOrganizationEmail(
+                        organizationName,
+                        email
+                    )
+                ) {
+
+                    showMessage(
+                        "Invalid official email. The email must contain your organization name and at least one number. Example: organizationname12@gmail.com",
+                        "warning"
+                    );
+
+                    return;
+
+                }
+
+
+                /* ================= PASSWORD ================= */
+
                 if (
                     password.length < 6
                 ) {
 
                     showMessage(
                         "Password must contain at least 6 characters.",
-                        "error"
+                        "warning"
                     );
 
                     return;
@@ -1291,13 +1528,34 @@
 
                     showMessage(
                         "Passwords do not match.",
-                        "error"
+                        "warning"
                     );
 
                     return;
 
                 }
 
+
+                /* ================= WEBSITE ================= */
+
+                if (
+                    website &&
+                    !/^https?:\/\/.+/i.test(
+                        website
+                    )
+                ) {
+
+                    showMessage(
+                        "Website must start with http:// or https://",
+                        "warning"
+                    );
+
+                    return;
+
+                }
+
+
+                /* ================= BUTTON ================= */
 
                 submitButton.disabled =
                     true;
@@ -1306,9 +1564,22 @@
                     "⏳ Creating Account...";
 
 
+                let createdUser =
+                    null;
+
+                let organizationPath =
+                    null;
+
+                let userPath =
+                    null;
+
+                let organizationUserPath =
+                    null;
+
+
                 try {
 
-                    /* ================= FIREBASE AUTH ================= */
+                    /* ================= CREATE AUTH ================= */
 
                     const userCredential =
                         await createUserWithEmailAndPassword(
@@ -1318,11 +1589,11 @@
                         );
 
 
-                    const user =
+                    createdUser =
                         userCredential.user;
 
 
-                    /* ================= ORGANIZATION ID ================= */
+                    /* ================= CREATE ORGANIZATION ID ================= */
 
                     const organizationRef =
                         push(
@@ -1335,6 +1606,38 @@
 
                     const organizationId =
                         organizationRef.key;
+
+
+                    if (
+                        !organizationId
+                    ) {
+
+                        throw new Error(
+                            "Could not generate organization ID."
+                        );
+
+                    }
+
+
+                    organizationPath =
+                        "organizations/" +
+                        organizationId;
+
+
+                    userPath =
+                        "users/" +
+                        createdUser.uid;
+
+
+                    organizationUserPath =
+                        "organizationUsers/" +
+                        organizationId +
+                        "/" +
+                        createdUser.uid;
+
+
+                    const timestamp =
+                        Date.now();
 
 
                     /* ================= ORGANIZATION DATA ================= */
@@ -1372,13 +1675,90 @@
                             address,
 
                         ownerUid:
-                            user.uid,
+                            createdUser.uid,
+
+                        role:
+                            "organization",
+
+                        accountType:
+                            "organization",
 
                         status:
-                            "pending",
+                            "approved",
 
                         createdOn:
-                            Date.now()
+                            timestamp
+
+                    };
+
+
+                    /* ================= USER DATA ================= */
+
+                    const userData = {
+
+                        uid:
+                            createdUser.uid,
+
+                        name:
+                            contactPerson,
+
+                        email:
+                            email,
+
+                        role:
+                            "organization",
+
+                        accountType:
+                            "organization",
+
+                        organizationId:
+                            organizationId,
+
+                        organizationName:
+                            organizationName,
+
+                        organizationType:
+                            organizationType,
+
+                        designation:
+                            designation,
+
+                        status:
+                            "approved",
+
+                        createdOn:
+                            timestamp
+
+                    };
+
+
+                    /* ================= ORGANIZATION USER DATA ================= */
+
+                    const organizationUserData = {
+
+                        uid:
+                            createdUser.uid,
+
+                        name:
+                            contactPerson,
+
+                        email:
+                            email,
+
+                        role:
+                            "organization",
+
+                        organizationId:
+                            organizationId,
+
+                        organizationName:
+                            organizationName,
+
+                        status:
+                            "approved",
+
+                        createdOn:
+                            timestamp
 
                     };
 
@@ -1386,7 +1766,10 @@
                     /* ================= SAVE ORGANIZATION ================= */
 
                     await set(
-                        organizationRef,
+                        ref(
+                            db,
+                            organizationPath
+                        ),
                         organizationData
                     );
 
@@ -1396,83 +1779,55 @@
                     await set(
                         ref(
                             db,
-                            "users/" +
-                            user.uid
+                            userPath
                         ),
-                        {
-
-                            uid:
-                                user.uid,
-
-                            name:
-                                contactPerson,
-
-                            email:
-                                email,
-
-                            role:
-                                "organization",
-
-                            accountType:
-                                "organization",
-
-                            organizationId:
-                                organizationId,
-
-                            organizationName:
-                                organizationName,
-
-                            status:
-                                "pending",
-
-                            designation:
-                                designation,
-
-                            createdOn:
-                                Date.now()
-
-                        }
+                        userData
                     );
 
 
-                    /* ================= SAVE ORGANIZATION META ================= */
+                    /* ================= SAVE ORGANIZATION USER ================= */
 
                     await set(
                         ref(
                             db,
-                            "organizationUsers/" +
-                            organizationId +
-                            "/" +
-                            user.uid
+                            organizationUserPath
                         ),
-                        {
+                        organizationUserData
+                    );
 
-                            uid:
-                                user.uid,
 
-                            name:
-                                contactPerson,
+                    /* ================= SESSION ================= */
 
-                            email:
-                                email,
+                    sessionStorage.setItem(
+                        "organizationUid",
+                        createdUser.uid
+                    );
 
-                            role:
-                                "organization",
+                    sessionStorage.setItem(
+                        "organizationId",
+                        organizationId
+                    );
 
-                            status:
-                                "pending",
+                    sessionStorage.setItem(
+                        "organizationName",
+                        organizationName
+                    );
 
-                            createdOn:
-                                Date.now()
+                    sessionStorage.setItem(
+                        "organizationEmail",
+                        email
+                    );
 
-                        }
+                    sessionStorage.setItem(
+                        "organizationRole",
+                        "organization"
                     );
 
 
                     /* ================= SUCCESS ================= */
 
                     showMessage(
-                        "Organization account created successfully.",
+                        "Organization account created and activated successfully.",
                         "success"
                     );
 
@@ -1483,6 +1838,26 @@
 
                     successScreen.style.display =
                         "block";
+
+
+                    /*
+                     * Don't keep the newly created
+                     * organization logged in on the
+                     * registration page.
+                     */
+
+                    try {
+
+                        await auth.signOut();
+
+                    } catch (signOutError) {
+
+                        console.warn(
+                            "Post-registration sign out:",
+                            signOutError
+                        );
+
+                    }
 
 
                     setTimeout(
@@ -1504,6 +1879,26 @@
                     );
 
 
+                    /*
+                     * Rollback is important.
+                     * If Auth account was created but
+                     * database save failed, delete it.
+                     */
+
+                    if (
+                        createdUser
+                    ) {
+
+                        await rollbackOrganization(
+                            createdUser,
+                            organizationPath,
+                            userPath,
+                            organizationUserPath
+                        );
+
+                    }
+
+
                     let errorMessage =
                         "Registration failed. Please try again.";
 
@@ -1515,7 +1910,7 @@
                         case "auth/email-already-in-use":
 
                             errorMessage =
-                                "This official email is already registered.";
+                                "This email is already registered in Firebase Authentication. Please use another email or login with this email.";
 
                             break;
 
@@ -1544,6 +1939,14 @@
                             break;
 
 
+                        case "PERMISSION_DENIED":
+
+                            errorMessage =
+                                "Firebase database permission denied. Check your Realtime Database Rules.";
+
+                            break;
+
+
                         default:
 
                             errorMessage =
@@ -1568,7 +1971,6 @@
                 }
 
             }
-
         );
 
     </script>
