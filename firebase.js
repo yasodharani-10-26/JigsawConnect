@@ -10,15 +10,15 @@ import {
   push
 } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
 
-import { 
-  getAuth, 
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged,
-  deleteUser
+import {
+    getAuth,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged,
+    deleteUser,
+    sendPasswordResetEmail
 } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
-
 const firebaseConfig = {
   apiKey: "AIzaSyCaCkliRZk8HmNtOsJpoA084YhNY7MeMWM",
   authDomain: "jigsawconnect-677da.firebaseapp.com",
@@ -45,20 +45,19 @@ const auth = getAuth(app);
 
 // Export Firebase services
 export {
-  app,
-  db,
-  auth,
-
-  ref,
-  set,
-  get,
-  update,
-  onValue,
-  push,
-
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged,
-  deleteUser
+    app,
+    db,
+    auth,
+    ref,
+    set,
+    get,
+    update,
+    onValue,
+    push,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged,
+    deleteUser,
+    sendPasswordResetEmail
 };
