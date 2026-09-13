@@ -10,14 +10,14 @@ import {
   push
 } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
 
-import {
-  getAuth,
+import { 
+  getAuth, 
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
-  onAuthStateChanged
+  onAuthStateChanged,
+  deleteUser
 } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
-
 
 const firebaseConfig = {
   apiKey: "AIzaSyCaCkliRZk8HmNtOsJpoA084YhNY7MeMWM",
@@ -59,5 +59,6 @@ export {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
-  onAuthStateChanged
+  onAuthStateChanged,
+  deleteUser
 };
