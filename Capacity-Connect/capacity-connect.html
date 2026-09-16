@@ -732,7 +732,7 @@
                 <span class="notification-count">4</span>
             </button>
 
-            <div class="profile-mini" onclick="openPage('trainee-dashboard.html')">
+            <div class="profile-mini" onclick="openPage('/trainee-dashboard.html')">
                 <div class="avatar">Y</div>
                 <span>My Dashboard</span>
             </div>
@@ -1245,22 +1245,161 @@
 
     <!-- ================= JAVASCRIPT ================= -->
 
-    <script>
+    <script type="module">
 
-        /* ================= PAGE NAVIGATION ================= */
+        import {
+            auth,
+            db,
+            ref,
+            get,
+            onAuthStateChanged
+        } from "../firebase.js";
 
-        function openPage(page) {
-            window.location.href = page;
+
+        /* ================= ROLE ROUTING ================= */
+
+        const ROLE_PAGES = {
+            organization: "/organization-dashboard.html",
+            trainer: "/trainer-dashboard.html",
+            trainee: "/trainee-dashboard.html"
+        };
+
+
+        function normalizeRole(value) {
+            return String(value || "").trim().toLowerCase();
         }
+
+
+        async function getCurrentRole() {
+
+            const user = auth.currentUser;
+
+            if (!user) {
+                return null;
+            }
+
+            try {
+
+                const snapshot = await get(
+                    ref(db, "users/" + user.uid)
+                );
+
+                if (!snapshot.exists()) {
+                    return null;
+                }
+
+                const userData = snapshot.val();
+
+                const status = normalizeRole(userData.status);
+
+                if (status !== "approved") {
+                    return null;
+                }
+
+                return normalizeRole(userData.role);
+
+            } catch (error) {
+
+                console.error("Role lookup error:", error);
+                return null;
+
+            }
+
+        }
+
+
+        async function openRolePage(requestedPage) {
+
+            const user = auth.currentUser;
+
+            /*
+             * No login: allow the destination page to perform
+             * its own authentication check.
+             */
+            if (!user) {
+                window.location.href = requestedPage;
+                return;
+            }
+
+            const role = await getCurrentRole();
+
+            /*
+             * Valid logged-in role: always keep the user inside
+             * the dashboard belonging to that role.
+             */
+            if (role && ROLE_PAGES[role]) {
+                window.location.href = ROLE_PAGES[role];
+                return;
+            }
+
+            /*
+             * Authenticated account without a valid approved
+             * profile: let the destination's protection handle it.
+             */
+            window.location.href = requestedPage;
+
+        }
+
+
+        window.openPage = function(page) {
+
+            const cleanPage =
+                page.startsWith("/")
+                    ? page
+                    : "/" + page;
+
+            openRolePage(cleanPage);
+
+        };
+
+
+        /* ================= ROLE-AWARE DASHBOARD LINKS ================= */
+
+        document.addEventListener("click", function(event) {
+
+            const link = event.target.closest("a");
+
+            if (!link) {
+                return;
+            }
+
+            const href = link.getAttribute("href");
+
+            if (!href) {
+                return;
+            }
+
+            const cleanHref =
+                href.startsWith("/")
+                    ? href
+                    : "/" + href;
+
+            const dashboardPages = [
+                "/organization-dashboard.html",
+                "/trainer-dashboard.html",
+                "/trainee-dashboard.html"
+            ];
+
+            if (dashboardPages.includes(cleanHref)) {
+
+                event.preventDefault();
+
+                openRolePage(cleanHref);
+
+            }
+
+        });
 
 
         /* ================= MOBILE SIDEBAR ================= */
 
-        function toggleSidebar() {
+        window.toggleSidebar = function() {
+
             const sidebar = document.getElementById("sidebar");
 
             sidebar.classList.toggle("open");
-        }
+
+        };
 
 
         /* ================= CURRENT DATE ================= */
@@ -1281,6 +1420,7 @@
 
             dateElement.textContent =
                 now.toLocaleDateString("en-IN", options);
+
         }
 
 
@@ -1298,13 +1438,14 @@
 
         document.querySelectorAll(".nav-link").forEach(link => {
 
-            link.addEventListener("click", function () {
+            link.addEventListener("click", function() {
 
                 if (window.innerWidth <= 820) {
 
                     document
                         .getElementById("sidebar")
-                        .classList.remove("open");
+                        .classList
+                        .remove("open");
 
                 }
 
@@ -1317,6 +1458,30 @@
 
         updateDate();
         updateYear();
+
+
+        /* ================= MY DASHBOARD ================= */
+
+        onAuthStateChanged(auth, async function(user) {
+
+            if (!user) {
+                return;
+            }
+
+            const role = await getCurrentRole();
+
+            const profileMini =
+                document.querySelector(".profile-mini");
+
+            if (profileMini && role && ROLE_PAGES[role]) {
+
+                profileMini.onclick = function() {
+                    window.location.href = ROLE_PAGES[role];
+                };
+
+            }
+
+        });
 
     </script>
 
