@@ -1722,7 +1722,16 @@
                 true;
 
         }
-
+if (
+    selectedRole !== userData.role
+) {
+    showMessage(
+        "Selected role does not match this account.",
+        "error"
+    );
+    await signOut(auth);
+    return;
+}
     </script>
 
 </body>
