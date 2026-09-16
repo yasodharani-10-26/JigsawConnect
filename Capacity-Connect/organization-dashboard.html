@@ -3260,7 +3260,17 @@
 
             }
         );
+if (userData.role === "organization") {
+    window.location.href = "/organization-dashboard.html";
+}
 
+else if (userData.role === "trainer") {
+    window.location.href = "/trainer-dashboard.html";
+}
+
+else if (userData.role === "trainee") {
+    window.location.href = "/trainee-dashboard.html";
+}
     </script>
 
 </body>
