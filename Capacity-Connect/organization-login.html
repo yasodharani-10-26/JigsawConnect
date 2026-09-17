@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Organization Login | CAPACITY CONNECT</title>
+    <title>CAPACITY CONNECT Login</title>
 
     <style>
 
@@ -90,20 +90,25 @@
             width: 100%;
             max-width: 900px;
 
-            background: rgba(255,255,255,.94);
+            background:
+                rgba(255,255,255,.94);
 
-            border: 1px solid rgba(229,231,235,.95);
+            border:
+                1px solid
+                rgba(229,231,235,.95);
 
             border-radius: 22px;
 
             box-shadow:
-                0 25px 70px rgba(17,24,39,.12);
+                0 25px 70px
+                rgba(17,24,39,.12);
 
             overflow: hidden;
 
             display: grid;
 
-            grid-template-columns: 1fr 1.05fr;
+            grid-template-columns:
+                1fr 1.05fr;
 
             position: relative;
 
@@ -113,6 +118,7 @@
         /* ================= LEFT PANEL ================= */
 
         .intro-panel {
+
             background:
                 linear-gradient(
                     145deg,
@@ -131,6 +137,7 @@
         }
 
         .intro-panel::before {
+
             content: "";
 
             position: absolute;
@@ -140,13 +147,16 @@
 
             border-radius: 50%;
 
-            border: 35px solid rgba(255,255,255,.06);
+            border:
+                35px solid
+                rgba(255,255,255,.06);
 
             top: -120px;
             right: -120px;
         }
 
         .intro-panel::after {
+
             content: "";
 
             position: absolute;
@@ -156,13 +166,16 @@
 
             border-radius: 50%;
 
-            border: 25px solid rgba(255,255,255,.05);
+            border:
+                25px solid
+                rgba(255,255,255,.05);
 
             bottom: -100px;
             left: -100px;
         }
 
         .brand {
+
             display: flex;
 
             align-items: center;
@@ -175,14 +188,18 @@
         }
 
         .brand-icon {
+
             width: 44px;
             height: 44px;
 
             border-radius: 12px;
 
-            background: rgba(255,255,255,.15);
+            background:
+                rgba(255,255,255,.15);
 
-            border: 1px solid rgba(255,255,255,.22);
+            border:
+                1px solid
+                rgba(255,255,255,.22);
 
             display: flex;
 
@@ -194,12 +211,14 @@
         }
 
         .brand h2 {
+
             font-size: 17px;
 
             letter-spacing: .3px;
         }
 
         .brand span {
+
             display: block;
 
             font-size: 9px;
@@ -210,6 +229,7 @@
         }
 
         .intro-content {
+
             position: relative;
 
             z-index: 1;
@@ -218,6 +238,7 @@
         }
 
         .intro-content h1 {
+
             font-size: 30px;
 
             line-height: 1.2;
@@ -226,6 +247,7 @@
         }
 
         .intro-content p {
+
             font-size: 11px;
 
             line-height: 1.7;
@@ -236,6 +258,7 @@
         }
 
         .benefits {
+
             display: flex;
 
             flex-direction: column;
@@ -244,6 +267,7 @@
         }
 
         .benefit {
+
             display: flex;
 
             align-items: center;
@@ -254,12 +278,14 @@
         }
 
         .benefit-icon {
+
             width: 30px;
             height: 30px;
 
             border-radius: 8px;
 
-            background: rgba(255,255,255,.12);
+            background:
+                rgba(255,255,255,.12);
 
             display: flex;
 
@@ -271,15 +297,19 @@
         }
 
         .security-note {
+
             margin-top: 30px;
 
             padding: 11px;
 
             border-radius: 9px;
 
-            background: rgba(255,255,255,.1);
+            background:
+                rgba(255,255,255,.1);
 
-            border: 1px solid rgba(255,255,255,.15);
+            border:
+                1px solid
+                rgba(255,255,255,.15);
 
             font-size: 8px;
 
@@ -289,28 +319,34 @@
         /* ================= RIGHT PANEL ================= */
 
         .form-panel {
+
             padding: 42px 40px;
 
             background: white;
         }
 
         .form-header {
+
             text-align: center;
 
-            margin-bottom: 25px;
+            margin-bottom: 24px;
         }
 
         .login-icon {
+
             width: 58px;
             height: 58px;
 
             border-radius: 15px;
 
-            margin: 0 auto 12px;
+            margin:
+                0 auto 12px;
 
-            background: #eef2ff;
+            background:
+                #eef2ff;
 
-            color: var(--primary);
+            color:
+                var(--primary);
 
             display: flex;
 
@@ -322,6 +358,7 @@
         }
 
         .form-header h1 {
+
             color: var(--dark);
 
             font-size: 24px;
@@ -330,6 +367,7 @@
         }
 
         .form-header p {
+
             color: var(--muted);
 
             font-size: 10px;
@@ -340,13 +378,16 @@
         /* ================= MESSAGE ================= */
 
         #loginMessage {
+
             display: none;
 
             padding: 11px 12px;
 
             border-radius: 9px;
 
-            border: 1px solid transparent;
+            border:
+                1px solid
+                transparent;
 
             font-size: 9px;
 
@@ -358,10 +399,12 @@
         /* ================= FORM ================= */
 
         .form-group {
+
             margin-bottom: 16px;
         }
 
         label {
+
             display: block;
 
             color: var(--dark);
@@ -373,12 +416,16 @@
             margin-bottom: 6px;
         }
 
-        input {
+        input,
+        select {
+
             width: 100%;
 
             padding: 11px 12px;
 
-            border: 1px solid var(--border);
+            border:
+                1px solid
+                var(--border);
 
             border-radius: 8px;
 
@@ -393,29 +440,55 @@
             transition: .2s;
         }
 
-        input:focus {
-            border-color: #a5b4fc;
+        input:focus,
+        select:focus {
+
+            border-color:
+                #a5b4fc;
 
             box-shadow:
-                0 0 0 3px rgba(79,70,229,.08);
+                0 0 0 3px
+                rgba(79,70,229,.08);
+        }
+
+        select {
+
+            cursor: pointer;
+
+            font-weight: 600;
+        }
+
+        .role-help {
+
+            color: #9ca3af;
+
+            font-size: 7px;
+
+            margin-top: 5px;
+
+            line-height: 1.5;
         }
 
         .password-wrap {
+
             position: relative;
         }
 
         .password-wrap input {
+
             padding-right: 42px;
         }
 
         .toggle-password {
+
             position: absolute;
 
             right: 10px;
 
             top: 50%;
 
-            transform: translateY(-50%);
+            transform:
+                translateY(-50%);
 
             border: none;
 
@@ -429,16 +502,19 @@
         }
 
         .login-options {
+
             display: flex;
 
             align-items: center;
 
             justify-content: space-between;
 
-            margin: 4px 0 17px;
+            margin:
+                4px 0 17px;
         }
 
         .remember {
+
             display: flex;
 
             align-items: center;
@@ -447,12 +523,15 @@
         }
 
         .remember input {
+
             width: auto;
 
-            accent-color: var(--primary);
+            accent-color:
+                var(--primary);
         }
 
         .remember label {
+
             margin: 0;
 
             color: var(--muted);
@@ -463,11 +542,13 @@
         }
 
         .forgot-btn {
+
             border: none;
 
             background: transparent;
 
-            color: var(--primary);
+            color:
+                var(--primary);
 
             font-size: 8px;
 
@@ -477,6 +558,7 @@
         }
 
         .login-btn {
+
             width: 100%;
 
             border: none;
@@ -504,13 +586,17 @@
         }
 
         .login-btn:hover {
-            transform: translateY(-1px);
+
+            transform:
+                translateY(-1px);
 
             box-shadow:
-                0 8px 20px rgba(79,70,229,.22);
+                0 8px 20px
+                rgba(79,70,229,.22);
         }
 
         .login-btn:disabled {
+
             opacity: .65;
 
             cursor: not-allowed;
@@ -519,6 +605,7 @@
         }
 
         .register-link {
+
             text-align: center;
 
             color: var(--muted);
@@ -529,7 +616,9 @@
         }
 
         .register-link a {
-            color: var(--primary);
+
+            color:
+                var(--primary);
 
             text-decoration: none;
 
@@ -537,55 +626,77 @@
         }
 
         .register-link a:hover {
-            text-decoration: underline;
+
+            text-decoration:
+                underline;
         }
 
         .back-link {
+
             text-align: center;
 
             margin-top: 9px;
         }
 
         .back-link a {
-            color: #9ca3af;
 
-            text-decoration: none;
+            color:
+                #9ca3af;
+
+            text-decoration:
+                none;
 
             font-size: 8px;
         }
 
         .back-link a:hover {
-            color: var(--primary);
+
+            color:
+                var(--primary);
         }
 
-        /* ================= INFO BOX ================= */
+        /* ================= INFO ================= */
 
         .status-info {
+
             margin-top: 22px;
 
-            padding: 11px;
+            padding: 12px;
 
             border-radius: 9px;
 
-            background: #f8fafc;
+            background:
+                #f8fafc;
 
-            border: 1px solid var(--border);
+            border:
+                1px solid
+                var(--border);
         }
 
         .status-info h4 {
-            color: var(--dark);
+
+            color:
+                var(--dark);
 
             font-size: 9px;
 
-            margin-bottom: 4px;
+            margin-bottom: 5px;
         }
 
         .status-info p {
-            color: var(--muted);
+
+            color:
+                var(--muted);
 
             font-size: 8px;
 
-            line-height: 1.5;
+            line-height: 1.7;
+        }
+
+        .status-info strong {
+
+            color:
+                var(--primary);
         }
 
         /* ================= RESPONSIVE ================= */
@@ -593,44 +704,58 @@
         @media (max-width: 800px) {
 
             .login-wrapper {
-                grid-template-columns: 1fr;
+
+                grid-template-columns:
+                    1fr;
 
                 max-width: 560px;
             }
 
             .intro-panel {
+
                 padding: 28px;
             }
 
             .intro-content {
+
                 margin-top: 35px;
             }
 
             .intro-content h1 {
+
                 font-size: 24px;
             }
 
             .form-panel {
-                padding: 32px 25px;
+
+                padding:
+                    32px 25px;
             }
         }
 
         @media (max-width: 500px) {
 
             body {
+
                 padding: 15px;
             }
 
             .form-panel {
-                padding: 27px 19px;
+
+                padding:
+                    27px 19px;
             }
 
             .intro-panel {
-                padding: 25px 20px;
+
+                padding:
+                    25px 20px;
             }
 
             .login-options {
-                align-items: flex-start;
+
+                align-items:
+                    flex-start;
 
                 gap: 10px;
             }
@@ -643,16 +768,19 @@
 
 <body>
 
+
     <div class="orb orb-one"></div>
+
     <div class="orb orb-two"></div>
 
 
     <div class="login-wrapper">
 
 
-        <!-- ================= INTRO ================= -->
+        <!-- ================= LEFT PANEL ================= -->
 
         <section class="intro-panel">
+
 
             <div class="brand">
 
@@ -667,7 +795,7 @@
                     </h2>
 
                     <span>
-                        Organization Capacity Building Portal
+                        Digital Capacity Building & Learning Portal
                     </span>
 
                 </div>
@@ -677,14 +805,16 @@
 
             <div class="intro-content">
 
+
                 <h1>
                     Welcome Back 👋
                 </h1>
 
+
                 <p>
-                    Sign in to manage your organization's training
-                    ecosystem, trainers, trainees, courses, assessments,
-                    resources, and performance.
+                    Sign in to access your role-based CAPACITY CONNECT
+                    workspace. Every account is directed to its own
+                    dashboard according to the registered role.
                 </p>
 
 
@@ -694,11 +824,37 @@
                     <div class="benefit">
 
                         <div class="benefit-icon">
-                            👥
+                            🏢
                         </div>
 
                         <span>
-                            Manage trainees and trainers
+                            Organization Management
+                        </span>
+
+                    </div>
+
+
+                    <div class="benefit">
+
+                        <div class="benefit-icon">
+                            👨‍🏫
+                        </div>
+
+                        <span>
+                            Trainer Workspace
+                        </span>
+
+                    </div>
+
+
+                    <div class="benefit">
+
+                        <div class="benefit-icon">
+                            👨‍🎓
+                        </div>
+
+                        <span>
+                            Trainee Learning Workspace
                         </span>
 
                     </div>
@@ -711,7 +867,7 @@
                         </div>
 
                         <span>
-                            Manage training programs
+                            Courses & Assessments
                         </span>
 
                     </div>
@@ -720,24 +876,11 @@
                     <div class="benefit">
 
                         <div class="benefit-icon">
-                            📝
+                            🏆
                         </div>
 
                         <span>
-                            Monitor assessments and results
-                        </span>
-
-                    </div>
-
-
-                    <div class="benefit">
-
-                        <div class="benefit-icon">
-                            📊
-                        </div>
-
-                        <span>
-                            Track organizational performance
+                            Certificates & Progress
                         </span>
 
                     </div>
@@ -748,113 +891,204 @@
 
                 <div class="security-note">
 
-                    🔐 Your organization account is authenticated
-                    through Firebase. Access is controlled using
-                    your organization role, account status, and
-                    organization membership.
+                    🔐 Firebase verifies your email, password,
+                    selected role, account status, and organization
+                    membership before opening your dashboard.
 
                 </div>
 
+
             </div>
+
 
         </section>
 
 
-        <!-- ================= LOGIN FORM ================= -->
+        <!-- ================= RIGHT PANEL ================= -->
 
         <section class="form-panel">
 
 
             <div class="form-header">
 
-                <div class="login-icon">
-                    🏢
+
+                <div
+                    class="login-icon"
+                    id="loginIcon">
+
+                    🔐
+
                 </div>
 
+
                 <h1>
-                    Organization Login
+                    CAPACITY CONNECT Login
                 </h1>
 
+
                 <p>
-                    Sign in to access your CAPACITY CONNECT workspace.
+                    Select your role and sign in to open your
+                    individual dashboard.
                 </p>
 
+
             </div>
 
 
-            <div id="loginMessage">
+            <div
+                id="loginMessage">
             </div>
 
 
-            <form id="organizationLoginForm">
+            <form
+                id="loginForm">
 
 
-                <!-- EMAIL -->
+                <!-- ================= ROLE ================= -->
 
                 <div class="form-group">
 
-                    <label for="email">
-                        Official Email
+
+                    <label for="role">
+
+                        Select Role
+
                     </label>
+
+
+                    <select
+                        id="role"
+                        required>
+
+
+                        <option value="">
+
+                            Choose your role
+
+                        </option>
+
+
+                        <option value="organization">
+
+                            Organization
+
+                        </option>
+
+
+                        <option value="trainer">
+
+                            Trainer
+
+                        </option>
+
+
+                        <option value="trainee">
+
+                            Trainee
+
+                        </option>
+
+
+                    </select>
+
+
+                    <div
+                        class="role-help"
+                        id="roleHelp">
+
+                        Select the same role you selected
+                        during registration.
+
+                    </div>
+
+
+                </div>
+
+
+                <!-- ================= EMAIL ================= -->
+
+                <div class="form-group">
+
+
+                    <label for="email">
+
+                        Email
+
+                    </label>
+
 
                     <input
                         type="email"
                         id="email"
-                        placeholder="organization@example.com"
+                        placeholder="Enter your registered email"
                         autocomplete="email"
-                        required
-                    >
+                        required>
+
 
                 </div>
 
 
-                <!-- PASSWORD -->
+                <!-- ================= PASSWORD ================= -->
 
                 <div class="form-group">
 
+
                     <label for="password">
+
                         Password
+
                     </label>
 
 
                     <div class="password-wrap">
+
 
                         <input
                             type="password"
                             id="password"
                             placeholder="Enter your password"
                             autocomplete="current-password"
-                            required
-                        >
+                            required>
 
 
                         <button
                             type="button"
                             class="toggle-password"
-                            onclick="togglePassword()"
-                        >
+                            onclick="togglePassword()">
+
                             👁
+
                         </button>
 
+
                     </div>
+
 
                 </div>
 
 
-                <!-- OPTIONS -->
+                <!-- ================= OPTIONS ================= -->
 
-                <div class="login-options">
+                <div
+                    class="login-options">
 
-                    <div class="remember">
+
+                    <div
+                        class="remember">
+
 
                         <input
                             type="checkbox"
-                            id="rememberMe"
-                        >
+                            id="rememberMe">
 
-                        <label for="rememberMe">
+
+                        <label
+                            for="rememberMe">
+
                             Remember me
+
                         </label>
+
 
                     </div>
 
@@ -862,67 +1096,96 @@
                     <button
                         type="button"
                         class="forgot-btn"
-                        onclick="forgotPassword()"
-                    >
+                        onclick="forgotPassword()">
+
                         Forgot password?
+
                     </button>
+
 
                 </div>
 
 
-                <!-- LOGIN -->
+                <!-- ================= LOGIN ================= -->
 
                 <button
                     type="submit"
                     class="login-btn"
-                    id="loginButton"
-                >
+                    id="loginButton">
+
                     🔐 Sign In
+
                 </button>
 
 
             </form>
 
 
+            <!-- ================= REGISTER ================= -->
+
             <div class="register-link">
 
-                Don't have an organization account?
 
-                <a href="/organization-register.html">
-                    Register Organization
+                New to CAPACITY CONNECT?
+
+
+                <a
+                    href="/organization-register.html">
+
+                    Create Account
+
                 </a>
+
 
             </div>
 
+
+            <!-- ================= BACK ================= -->
 
             <div class="back-link">
 
+
                 <a href="/">
+
                     ← Back to JigsawConnect
+
                 </a>
+
 
             </div>
 
 
-            <!-- ACCOUNT STATUS -->
+            <!-- ================= INFO ================= -->
 
             <div class="status-info">
 
+
                 <h4>
-                    Organization Account
+
+                    Individual Dashboard Access
+
                 </h4>
 
+
                 <p>
-                    Organization accounts that satisfy the registration
-                    requirements are activated automatically. Use the
-                    same official email and password you entered during
-                    registration.
+
+                    <strong>Organization</strong>
+                    → Organization Dashboard<br>
+
+                    <strong>Trainer</strong>
+                    → Trainer Dashboard<br>
+
+                    <strong>Trainee</strong>
+                    → Trainee Dashboard
+
                 </p>
+
 
             </div>
 
 
         </section>
+
 
     </div>
 
@@ -931,20 +1194,32 @@
 
     <script type="module">
 
+
         import {
+
             auth,
+
             db,
+
             ref,
+
             get,
+
             signInWithEmailAndPassword,
+
             signOut,
+
             sendPasswordResetEmail
+
         } from "../firebase.js";
+
+
+        /* ================= ELEMENTS ================= */
 
 
         const form =
             document.getElementById(
-                "organizationLoginForm"
+                "loginForm"
             );
 
 
@@ -960,48 +1235,126 @@
             );
 
 
+        const roleSelect =
+            document.getElementById(
+                "role"
+            );
+
+
+        const emailInput =
+            document.getElementById(
+                "email"
+            );
+
+
+        const passwordInput =
+            document.getElementById(
+                "password"
+            );
+
+
+        const rememberMe =
+            document.getElementById(
+                "rememberMe"
+            );
+
+
+        const loginIcon =
+            document.getElementById(
+                "loginIcon"
+            );
+
+
+        const roleHelp =
+            document.getElementById(
+                "roleHelp"
+            );
+
+
+        /* ================= DASHBOARD ROUTES ================= */
+
+
+        const ROLE_DASHBOARDS = {
+
+            organization:
+                "/organization-dashboard.html",
+
+            trainer:
+                "/trainer-dashboard.html",
+
+            trainee:
+                "/trainee-dashboard.html"
+
+        };
+
+
         /* ================= MESSAGE ================= */
 
-        function showMessage(text, type) {
 
-            message.textContent = text;
+        function showMessage(
+            text,
+            type
+        ) {
 
-            message.style.display = "block";
+
+            message.textContent =
+                text;
 
 
-            if (type === "success") {
+            message.style.display =
+                "block";
+
+
+            if (
+                type ===
+                "success"
+            ) {
+
 
                 message.style.background =
                     "#f0fdf4";
 
+
                 message.style.borderColor =
                     "#bbf7d0";
+
 
                 message.style.color =
                     "#166534";
 
+
             }
 
-            else if (type === "warning") {
+            else if (
+                type ===
+                "warning"
+            ) {
+
 
                 message.style.background =
                     "#fffbeb";
 
+
                 message.style.borderColor =
                     "#fde68a";
 
+
                 message.style.color =
                     "#92400e";
+
 
             }
 
             else {
 
+
                 message.style.background =
                     "#fef2f2";
 
+
                 message.style.borderColor =
                     "#fecaca";
+
 
                 message.style.color =
                     "#b91c1c";
@@ -1011,636 +1364,273 @@
         }
 
 
+        function hideMessage() {
+
+            message.style.display =
+                "none";
+
+        }
+
+
+        /* ================= NORMALIZE ================= */
+
+
+        function normalize(
+            value
+        ) {
+
+            return String(
+                value || ""
+            )
+                .trim()
+                .toLowerCase();
+
+        }
+
+
         /* ================= CLEAR SESSION ================= */
 
-        function clearOrganizationSession() {
 
-            sessionStorage.removeItem(
-                "organizationUid"
-            );
+        function clearSessions() {
 
-            sessionStorage.removeItem(
-                "organizationId"
-            );
 
-            sessionStorage.removeItem(
-                "organizationName"
-            );
+            const sessionKeys = [
 
-            sessionStorage.removeItem(
-                "organizationEmail"
-            );
+                "uid",
 
-            sessionStorage.removeItem(
-                "organizationRole"
+                "role",
+
+                "organizationUid",
+
+                "organizationId",
+
+                "organizationName",
+
+                "organizationEmail",
+
+                "organizationRole",
+
+                "trainerUid",
+
+                "trainerOrganizationId",
+
+                "trainerName",
+
+                "traineeUid",
+
+                "traineeOrganizationId",
+
+                "traineeName"
+
+            ];
+
+
+            sessionKeys.forEach(
+                function(key) {
+
+                    sessionStorage.removeItem(
+                        key
+                    );
+
+                }
             );
 
         }
 
 
-        /* ================= PASSWORD ================= */
+        /* ================= PASSWORD TOGGLE ================= */
 
-        window.togglePassword = function() {
 
-            const input =
-                document.getElementById(
+        window.togglePassword =
+            function() {
+
+
+                const toggleButton =
+                    document.querySelector(
+                        ".toggle-password"
+                    );
+
+
+                if (
+                    passwordInput.type ===
                     "password"
-                );
+                ) {
 
 
-            const button =
-                document.querySelector(
-                    ".toggle-password"
-                );
+                    passwordInput.type =
+                        "text";
 
 
-            if (input.type === "password") {
+                    toggleButton.textContent =
+                        "🙈";
 
-                input.type = "text";
 
-                button.textContent =
-                    "🙈";
+                }
+
+                else {
+
+
+                    passwordInput.type =
+                        "password";
+
+
+                    toggleButton.textContent =
+                        "👁";
+
+                }
+
+            };
+
+
+        /* ================= ROLE UI ================= */
+
+
+        roleSelect.addEventListener(
+            "change",
+            function() {
+
+
+                hideMessage();
+
+
+                const selectedRole =
+                    normalize(
+                        roleSelect.value
+                    );
+
+
+                if (
+                    selectedRole ===
+                    "organization"
+                ) {
+
+
+                    loginIcon.textContent =
+                        "🏢";
+
+
+                    roleHelp.textContent =
+                        "Organization accounts can manage their organization's training ecosystem, trainers, trainees, courses and assessments.";
+
+
+                }
+
+                else if (
+                    selectedRole ===
+                    "trainer"
+                ) {
+
+
+                    loginIcon.textContent =
+                        "👨‍🏫";
+
+
+                    roleHelp.textContent =
+                        "Trainer accounts access the trainer workspace and work with trainees belonging to their organization.";
+
+
+                }
+
+                else if (
+                    selectedRole ===
+                    "trainee"
+                ) {
+
+
+                    loginIcon.textContent =
+                        "👨‍🎓";
+
+
+                    roleHelp.textContent =
+                        "Trainee accounts access their own courses, assessments, certificates, feedback and progress.";
+
+
+                }
+
+                else {
+
+
+                    loginIcon.textContent =
+                        "🔐";
+
+
+                    roleHelp.textContent =
+                        "Select the same role you selected during registration.";
+
+                }
 
             }
-
-            else {
-
-                input.type = "password";
-
-                button.textContent =
-                    "👁";
-
-            }
-
-        };
+        );
 
 
         /* ================= FORGOT PASSWORD ================= */
 
-        window.forgotPassword = async function() {
 
-            const email =
-                document
-                    .getElementById("email")
-                    .value
-                    .trim()
-                    .toLowerCase();
-
-
-            if (!email) {
-
-                showMessage(
-                    "Please enter your organization email first.",
-                    "warning"
-                );
-
-                document
-                    .getElementById("email")
-                    .focus();
-
-                return;
-            }
-
-
-            try {
-
-                await sendPasswordResetEmail(
-                    auth,
-                    email
-                );
-
-
-                showMessage(
-                    "Password reset email sent. Please check your inbox and follow the instructions.",
-                    "success"
-                );
-
-            }
-
-            catch (error) {
-
-                console.error(
-                    "Password Reset Error:",
-                    error
-                );
-
-
-                let errorMessage =
-                    "Unable to send password reset email.";
-
-
-                switch (error.code) {
-
-                    case "auth/invalid-email":
-
-                        errorMessage =
-                            "Please enter a valid email address.";
-
-                        break;
-
-
-                    case "auth/user-not-found":
-
-                        errorMessage =
-                            "No account was found with this email.";
-
-                        break;
-
-
-                    case "auth/too-many-requests":
-
-                        errorMessage =
-                            "Too many requests. Please try again later.";
-
-                        break;
-
-
-                    case "auth/network-request-failed":
-
-                        errorMessage =
-                            "Network error. Please check your internet connection.";
-
-                        break;
-
-
-                    default:
-
-                        errorMessage =
-                            error.message ||
-                            errorMessage;
-
-                }
-
-
-                showMessage(
-                    errorMessage,
-                    "error"
-                );
-
-            }
-
-        };
-
-
-        /* ================= LOGIN ================= */
-
-        form.addEventListener(
-            "submit",
-            async function(event) {
-
-                event.preventDefault();
-
-
-                message.style.display =
-                    "none";
+        window.forgotPassword =
+            async function() {
 
 
                 const email =
-                    document
-                        .getElementById("email")
-                        .value
+                    emailInput.value
                         .trim()
                         .toLowerCase();
 
 
-                const password =
-                    document
-                        .getElementById("password")
-                        .value;
+                if (!email) {
 
-
-                const rememberMe =
-                    document
-                        .getElementById("rememberMe")
-                        .checked;
-
-
-                if (!email || !password) {
 
                     showMessage(
-                        "Please enter your organization email and password.",
+                        "Please enter your registered email first.",
                         "warning"
                     );
+
+
+                    emailInput.focus();
+
 
                     return;
 
                 }
 
 
-                loginButton.disabled =
-                    true;
-
-
-                loginButton.textContent =
-                    "⏳ Signing In...";
-
-
                 try {
 
 
-                    /* ================= FIREBASE AUTH ================= */
-
-                    const credential =
-                        await signInWithEmailAndPassword(
-                            auth,
-                            email,
-                            password
-                        );
-
-
-                    const user =
-                        credential.user;
-
-
-                    /* ================= FETCH USER PROFILE ================= */
-
-                    const userRef =
-                        ref(
-                            db,
-                            "users/" + user.uid
-                        );
-
-
-                    const userSnapshot =
-                        await get(
-                            userRef
-                        );
-
-
-                    if (!userSnapshot.exists()) {
-
-                        await signOut(auth);
-
-                        clearOrganizationSession();
-
-
-                        showMessage(
-                            "Organization profile was not found in the database.",
-                            "error"
-                        );
-
-
-                        loginButton.disabled =
-                            false;
-
-                        loginButton.textContent =
-                            "🔐 Sign In";
-
-                        return;
-
-                    }
-
-
-                    const userData =
-                        userSnapshot.val();
-
-
-                    /* ================= ROLE CHECK ================= */
-
-                    const role =
-                        String(
-                            userData.role || ""
-                        )
-                        .toLowerCase();
-
-
-                    if (role !== "organization") {
-
-                        await signOut(auth);
-
-                        clearOrganizationSession();
-
-
-                        showMessage(
-                            "This account is not registered as an organization account.",
-                            "error"
-                        );
-
-
-                        loginButton.disabled =
-                            false;
-
-                        loginButton.textContent =
-                            "🔐 Sign In";
-
-                        return;
-
-                    }
-
-
-                    /* ================= STATUS CHECK ================= */
-
-                    const status =
-                        String(
-                            userData.status ||
-                            ""
-                        )
-                        .toLowerCase();
-
-
-                    if (
-                        status !== "approved"
-                    ) {
-
-                        await signOut(auth);
-
-                        clearOrganizationSession();
-
-
-                        if (
-                            status === "pending"
-                        ) {
-
-                            showMessage(
-                                "Your organization account is still pending approval.",
-                                "warning"
-                            );
-
-                        }
-
-                        else if (
-                            status === "rejected"
-                        ) {
-
-                            showMessage(
-                                "Your organization account has been rejected.",
-                                "error"
-                            );
-
-                        }
-
-                        else if (
-                            status === "disabled"
-                        ) {
-
-                            showMessage(
-                                "Your organization account has been disabled.",
-                                "error"
-                            );
-
-                        }
-
-                        else {
-
-                            showMessage(
-                                "Your organization account is not approved for access.",
-                                "error"
-                            );
-
-                        }
-
-
-                        loginButton.disabled =
-                            false;
-
-                        loginButton.textContent =
-                            "🔐 Sign In";
-
-                        return;
-
-                    }
-
-
-                    /* ================= ORGANIZATION ID CHECK ================= */
-
-                    const organizationId =
-                        String(
-                            userData.organizationId ||
-                            ""
-                        ).trim();
-
-
-                    if (!organizationId) {
-
-                        await signOut(auth);
-
-                        clearOrganizationSession();
-
-
-                        showMessage(
-                            "Organization ID is missing from your account profile.",
-                            "error"
-                        );
-
-
-                        loginButton.disabled =
-                            false;
-
-                        loginButton.textContent =
-                            "🔐 Sign In";
-
-                        return;
-
-                    }
-
-
-                    /* ================= FETCH ORGANIZATION ================= */
-
-                    const organizationRef =
-                        ref(
-                            db,
-                            "organizations/" +
-                            organizationId
-                        );
-
-
-                    const organizationSnapshot =
-                        await get(
-                            organizationRef
-                        );
-
-
-                    if (
-                        !organizationSnapshot.exists()
-                    ) {
-
-                        await signOut(auth);
-
-                        clearOrganizationSession();
-
-
-                        showMessage(
-                            "Organization record was not found.",
-                            "error"
-                        );
-
-
-                        loginButton.disabled =
-                            false;
-
-                        loginButton.textContent =
-                            "🔐 Sign In";
-
-                        return;
-
-                    }
-
-
-                    const organizationData =
-                        organizationSnapshot.val();
-
-
-                    /* ================= ORGANIZATION STATUS ================= */
-
-                    const organizationStatus =
-                        String(
-                            organizationData.status ||
-                            ""
-                        )
-                        .toLowerCase();
-
-
-                    if (
-                        organizationStatus &&
-                        organizationStatus !== "approved"
-                    ) {
-
-                        await signOut(auth);
-
-                        clearOrganizationSession();
-
-
-                        showMessage(
-                            "Your organization is not approved for workspace access.",
-                            "error"
-                        );
-
-
-                        loginButton.disabled =
-                            false;
-
-                        loginButton.textContent =
-                            "🔐 Sign In";
-
-                        return;
-
-                    }
-
-
-                    /* ================= SAVE SESSION ================= */
-
-                    sessionStorage.setItem(
-                        "organizationUid",
-                        user.uid
-                    );
-
-
-                    sessionStorage.setItem(
-                        "organizationId",
-                        organizationId
-                    );
-
-
-                    sessionStorage.setItem(
-                        "organizationName",
-                        userData.organizationName ||
-                        organizationData.organizationName ||
-                        userData.name ||
-                        organizationData.name ||
-                        ""
-                    );
-
-
-                    sessionStorage.setItem(
-                        "organizationEmail",
-                        userData.email ||
+                    await
+                    sendPasswordResetEmail(
+                        auth,
                         email
                     );
 
 
-                    sessionStorage.setItem(
-                        "organizationRole",
-                        "organization"
-                    );
-
-
-                    /* ================= REMEMBER EMAIL ================= */
-
-                    if (rememberMe) {
-
-                        localStorage.setItem(
-                            "capacityConnectOrganizationEmail",
-                            email
-                        );
-
-                    }
-
-                    else {
-
-                        localStorage.removeItem(
-                            "capacityConnectOrganizationEmail"
-                        );
-
-                    }
-
-
-                    /* ================= SUCCESS ================= */
-
                     showMessage(
-                        "Login successful. Opening your organization workspace... ✅",
+                        "Password reset email sent. Please check your inbox.",
                         "success"
                     );
 
 
-                    setTimeout(
-                        function() {
-
-                            /*
-                             * Clean Vercel URL
-                             */
-
-                            window.location.href =
-                                "/organization-dashboard.html";
-
-                        },
-                        700
-                    );
-
                 }
-
 
                 catch (error) {
 
+
                     console.error(
-                        "Organization Login Error:",
+                        "Password Reset Error:",
                         error
                     );
 
 
-                    clearOrganizationSession();
-
-
                     let errorMessage =
-                        "Login failed. Please try again.";
+                        "Unable to send password reset email.";
 
 
-                    switch (error.code) {
-
-                        case "auth/invalid-credential":
-
-                            errorMessage =
-                                "Invalid email or password.";
-
-                            break;
+                    switch (
+                        error.code
+                    ) {
 
 
-                        case "auth/user-not-found":
-
-                            errorMessage =
-                                "No organization account was found with this email.";
-
-                            break;
-
-
-                        case "auth/wrong-password":
-
-                            errorMessage =
-                                "Incorrect password.";
-
-                            break;
-
-
-                        case "auth/invalid-email":
+                        case
+                        "auth/invalid-email":
 
                             errorMessage =
                                 "Please enter a valid email address.";
@@ -1648,23 +1638,26 @@
                             break;
 
 
-                        case "auth/user-disabled":
+                        case
+                        "auth/user-not-found":
 
                             errorMessage =
-                                "This account has been disabled.";
+                                "No account was found with this email.";
 
                             break;
 
 
-                        case "auth/too-many-requests":
+                        case
+                        "auth/too-many-requests":
 
                             errorMessage =
-                                "Too many login attempts. Please try again later.";
+                                "Too many requests. Please try again later.";
 
                             break;
 
 
-                        case "auth/network-request-failed":
+                        case
+                        "auth/network-request-failed":
 
                             errorMessage =
                                 "Network error. Please check your internet connection.";
@@ -1686,6 +1679,718 @@
                         "error"
                     );
 
+                }
+
+            };
+
+
+        /* ================= LOGIN ================= */
+
+
+        form.addEventListener(
+            "submit",
+            async function(event) {
+
+
+                event.preventDefault();
+
+
+                hideMessage();
+
+
+                const selectedRole =
+                    normalize(
+                        roleSelect.value
+                    );
+
+
+                const email =
+                    emailInput.value
+                        .trim()
+                        .toLowerCase();
+
+
+                const password =
+                    passwordInput.value;
+
+
+                /* ================= VALIDATION ================= */
+
+
+                if (!selectedRole) {
+
+
+                    showMessage(
+                        "Please select your role.",
+                        "warning"
+                    );
+
+
+                    roleSelect.focus();
+
+
+                    return;
+
+                }
+
+
+                if (
+                    !email ||
+                    !password
+                ) {
+
+
+                    showMessage(
+                        "Please enter your email and password.",
+                        "warning"
+                    );
+
+
+                    return;
+
+                }
+
+
+                /* ================= BUTTON ================= */
+
+
+                loginButton.disabled =
+                    true;
+
+
+                loginButton.textContent =
+                    "⏳ Signing In...";
+
+
+                try {
+
+
+                    /* ================= FIREBASE AUTH ================= */
+
+
+                    const credential =
+                        await
+                        signInWithEmailAndPassword(
+                            auth,
+                            email,
+                            password
+                        );
+
+
+                    const user =
+                        credential.user;
+
+
+                    /* ================= GET USER ================= */
+
+
+                    const userSnapshot =
+                        await get(
+                            ref(
+                                db,
+                                "users/" +
+                                user.uid
+                            )
+                        );
+
+
+                    if (
+                        !userSnapshot.exists()
+                    ) {
+
+
+                        await signOut(
+                            auth
+                        );
+
+
+                        clearSessions();
+
+
+                        showMessage(
+                            "User profile was not found in the database.",
+                            "error"
+                        );
+
+
+                        return;
+
+                    }
+
+
+                    const userData =
+                        userSnapshot.val();
+
+
+                    /* ================= STORED ROLE ================= */
+
+
+                    const storedRole =
+                        normalize(
+                            userData.role
+                        );
+
+
+                    /* ================= ROLE VALIDATION ================= */
+
+
+                    if (
+                        storedRole !==
+                        selectedRole
+                    ) {
+
+
+                        await signOut(
+                            auth
+                        );
+
+
+                        clearSessions();
+
+
+                        showMessage(
+                            "Selected role does not match this account. Please select the correct role.",
+                            "error"
+                        );
+
+
+                        return;
+
+                    }
+
+
+                    /* ================= STATUS ================= */
+
+
+                    const status =
+                        normalize(
+                            userData.status
+                        );
+
+
+                    if (
+                        status !==
+                        "approved"
+                    ) {
+
+
+                        await signOut(
+                            auth
+                        );
+
+
+                        clearSessions();
+
+
+                        if (
+                            status ===
+                            "pending"
+                        ) {
+
+
+                            showMessage(
+                                "Your account is still pending approval.",
+                                "warning"
+                            );
+
+
+                        }
+
+                        else if (
+                            status ===
+                            "rejected"
+                        ) {
+
+
+                            showMessage(
+                                "Your account has been rejected.",
+                                "error"
+                            );
+
+
+                        }
+
+                        else if (
+                            status ===
+                            "disabled"
+                        ) {
+
+
+                            showMessage(
+                                "Your account has been disabled.",
+                                "error"
+                            );
+
+
+                        }
+
+                        else {
+
+
+                            showMessage(
+                                "Your account is not approved for access.",
+                                "error"
+                            );
+
+                        }
+
+
+                        return;
+
+                    }
+
+
+                    /* ================= ORGANIZATION ID ================= */
+
+
+                    const organizationId =
+                        String(
+                            userData.organizationId ||
+                            ""
+                        ).trim();
+
+
+                    if (
+                        !organizationId
+                    ) {
+
+
+                        await signOut(
+                            auth
+                        );
+
+
+                        clearSessions();
+
+
+                        showMessage(
+                            "Organization membership is missing from this account.",
+                            "error"
+                        );
+
+
+                        return;
+
+                    }
+
+
+                    /* ================= GET ORGANIZATION ================= */
+
+
+                    const organizationSnapshot =
+                        await get(
+                            ref(
+                                db,
+                                "organizations/" +
+                                organizationId
+                            )
+                        );
+
+
+                    if (
+                        !organizationSnapshot.exists()
+                    ) {
+
+
+                        await signOut(
+                            auth
+                        );
+
+
+                        clearSessions();
+
+
+                        showMessage(
+                            "The linked organization was not found.",
+                            "error"
+                        );
+
+
+                        return;
+
+                    }
+
+
+                    const organizationData =
+                        organizationSnapshot.val();
+
+
+                    /* ================= ORGANIZATION STATUS ================= */
+
+
+                    const organizationStatus =
+                        normalize(
+                            organizationData.status
+                        );
+
+
+                    if (
+                        organizationStatus &&
+                        organizationStatus !==
+                        "approved"
+                    ) {
+
+
+                        await signOut(
+                            auth
+                        );
+
+
+                        clearSessions();
+
+
+                        showMessage(
+                            "The linked organization is not approved for access.",
+                            "error"
+                        );
+
+
+                        return;
+
+                    }
+
+
+                    /* ================= CLEAR OLD SESSION ================= */
+
+
+                    clearSessions();
+
+
+                    /* ================= COMMON SESSION ================= */
+
+
+                    sessionStorage.setItem(
+                        "uid",
+                        user.uid
+                    );
+
+
+                    sessionStorage.setItem(
+                        "role",
+                        storedRole
+                    );
+
+
+                    sessionStorage.setItem(
+                        "organizationId",
+                        organizationId
+                    );
+
+
+                    sessionStorage.setItem(
+                        "organizationEmail",
+                        userData.email ||
+                        email
+                    );
+
+
+                    /* ==================================================
+                       ORGANIZATION SESSION
+                       ================================================== */
+
+
+                    if (
+                        storedRole ===
+                        "organization"
+                    ) {
+
+
+                        sessionStorage.setItem(
+                            "organizationUid",
+                            user.uid
+                        );
+
+
+                        sessionStorage.setItem(
+                            "organizationId",
+                            organizationId
+                        );
+
+
+                        sessionStorage.setItem(
+                            "organizationName",
+                            userData.organizationName ||
+                            organizationData.name ||
+                            organizationData.organizationName ||
+                            userData.name ||
+                            ""
+                        );
+
+
+                        sessionStorage.setItem(
+                            "organizationEmail",
+                            userData.email ||
+                            email
+                        );
+
+
+                        sessionStorage.setItem(
+                            "organizationRole",
+                            "organization"
+                        );
+
+                    }
+
+
+                    /* ==================================================
+                       TRAINER SESSION
+                       ================================================== */
+
+
+                    else if (
+                        storedRole ===
+                        "trainer"
+                    ) {
+
+
+                        sessionStorage.setItem(
+                            "trainerUid",
+                            user.uid
+                        );
+
+
+                        sessionStorage.setItem(
+                            "trainerOrganizationId",
+                            organizationId
+                        );
+
+
+                        sessionStorage.setItem(
+                            "trainerName",
+                            userData.name ||
+                            userData.fullName ||
+                            ""
+                        );
+
+                    }
+
+
+                    /* ==================================================
+                       TRAINEE SESSION
+                       ================================================== */
+
+
+                    else if (
+                        storedRole ===
+                        "trainee"
+                    ) {
+
+
+                        sessionStorage.setItem(
+                            "traineeUid",
+                            user.uid
+                        );
+
+
+                        sessionStorage.setItem(
+                            "traineeOrganizationId",
+                            organizationId
+                        );
+
+
+                        sessionStorage.setItem(
+                            "traineeName",
+                            userData.name ||
+                            userData.fullName ||
+                            ""
+                        );
+
+                    }
+
+
+                    /* ================= REMEMBER EMAIL ================= */
+
+
+                    if (
+                        rememberMe.checked
+                    ) {
+
+
+                        localStorage.setItem(
+                            "capacityConnectLoginEmail",
+                            email
+                        );
+
+
+                    }
+
+                    else {
+
+
+                        localStorage.removeItem(
+                            "capacityConnectLoginEmail"
+                        );
+
+                    }
+
+
+                    /* ================= SUCCESS ================= */
+
+
+                    const roleName =
+                        storedRole
+                            .charAt(0)
+                            .toUpperCase() +
+                        storedRole.slice(1);
+
+
+                    showMessage(
+                        roleName +
+                        " login successful. Opening your dashboard... ✅",
+                        "success"
+                    );
+
+
+                    /* ================= ROLE DASHBOARD ================= */
+
+
+                    const dashboard =
+                        ROLE_DASHBOARDS[
+                            storedRole
+                        ];
+
+
+                    if (!dashboard) {
+
+
+                        await signOut(
+                            auth
+                        );
+
+
+                        clearSessions();
+
+
+                        showMessage(
+                            "Invalid account role.",
+                            "error"
+                        );
+
+
+                        return;
+
+                    }
+
+
+                    setTimeout(
+                        function() {
+
+
+                            window.location.href =
+                                dashboard;
+
+
+                        },
+                        700
+                    );
+
+
+                }
+
+
+                catch (error) {
+
+
+                    console.error(
+                        "CAPACITY CONNECT Login Error:",
+                        error
+                    );
+
+
+                    clearSessions();
+
+
+                    let errorMessage =
+                        "Login failed. Please try again.";
+
+
+                    switch (
+                        error.code
+                    ) {
+
+
+                        case
+                        "auth/invalid-credential":
+
+                            errorMessage =
+                                "Invalid email or password.";
+
+                            break;
+
+
+                        case
+                        "auth/user-not-found":
+
+                            errorMessage =
+                                "No account was found with this email.";
+
+                            break;
+
+
+                        case
+                        "auth/wrong-password":
+
+                            errorMessage =
+                                "Incorrect password.";
+
+                            break;
+
+
+                        case
+                        "auth/invalid-email":
+
+                            errorMessage =
+                                "Please enter a valid email address.";
+
+                            break;
+
+
+                        case
+                        "auth/user-disabled":
+
+                            errorMessage =
+                                "This account has been disabled.";
+
+                            break;
+
+
+                        case
+                        "auth/too-many-requests":
+
+                            errorMessage =
+                                "Too many login attempts. Please try again later.";
+
+                            break;
+
+
+                        case
+                        "auth/network-request-failed":
+
+                            errorMessage =
+                                "Network error. Please check your internet connection.";
+
+                            break;
+
+
+                        default:
+
+                            errorMessage =
+                                error.message ||
+                                errorMessage;
+
+                    }
+
+
+                    showMessage(
+                        errorMessage,
+                        "error"
+                    );
+
+                }
+
+
+                finally {
+
 
                     loginButton.disabled =
                         false;
@@ -1702,37 +2407,30 @@
 
         /* ================= REMEMBERED EMAIL ================= */
 
+
         const savedEmail =
             localStorage.getItem(
-                "capacityConnectOrganizationEmail"
+                "capacityConnectLoginEmail"
             );
 
 
-        if (savedEmail) {
+        if (
+            savedEmail
+        ) {
 
-            document
-                .getElementById("email")
-                .value =
+
+            emailInput.value =
                 savedEmail;
 
 
-            document
-                .getElementById("rememberMe")
-                .checked =
+            rememberMe.checked =
                 true;
 
         }
-if (
-    selectedRole !== userData.role
-) {
-    showMessage(
-        "Selected role does not match this account.",
-        "error"
-    );
-    await signOut(auth);
-    return;
-}
+
+
     </script>
+
 
 </body>
 
