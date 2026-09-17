@@ -1268,8 +1268,8 @@
                             type="text"
                             id="designation"
                             placeholder="Example: HR Manager"
-                            maxlength="80"
-                            required>
+                            maxlength="80">
+                           
 
                     </div>
 
@@ -1721,1974 +1721,736 @@
     <script type="module">
 
         import {
-
             auth,
-
             db,
-
             ref,
-
             set,
-
             push,
-
             get,
-
             createUserWithEmailAndPassword,
-
             deleteUser
-
         } from "../firebase.js";
 
 
-        /* ================= ELEMENTS ================= */
-
-        const form =
-            document.getElementById(
-                "registrationForm"
-            );
-
-        const roleSelect =
-            document.getElementById(
-                "role"
-            );
-
-        const message =
-            document.getElementById(
-                "message"
-            );
-
-        const submitButton =
-            document.getElementById(
-                "submitButton"
-            );
-
-        const successScreen =
-            document.getElementById(
-                "successScreen"
-            );
-
-        const successText =
-            document.getElementById(
-                "successText"
-            );
-
-        const roleDescription =
-            document.getElementById(
-                "roleDescription"
-            );
-
-        const organizationIdBox =
-            document.getElementById(
-                "organizationIdBox"
-            );
-
-        const generatedOrganizationId =
-            document.getElementById(
-                "generatedOrganizationId"
-            );
+        const form = document.getElementById("registrationForm");
+        const roleSelect = document.getElementById("role");
+        const message = document.getElementById("message");
+        const submitButton = document.getElementById("submitButton");
+        const successScreen = document.getElementById("successScreen");
+        const successText = document.getElementById("successText");
+        const organizationIdBox = document.getElementById("organizationIdBox");
+        const generatedOrganizationId = document.getElementById("generatedOrganizationId");
+        const roleDescription = document.getElementById("roleDescription");
+        const fullNameLabel = document.getElementById("fullNameLabel");
+        const emailNote = document.getElementById("emailNote");
 
 
-        /* ================= GROUPS ================= */
-
-        const organizationNameGroup =
-            document.getElementById(
-                "organizationNameGroup"
-            );
-
-        const organizationTypeGroup =
-            document.getElementById(
-                "organizationTypeGroup"
-            );
-
-        const websiteGroup =
-            document.getElementById(
-                "websiteGroup"
-            );
-
-        const cityGroup =
-            document.getElementById(
-                "cityGroup"
-            );
-
-        const addressGroup =
-            document.getElementById(
-                "addressGroup"
-            );
-
-        const organizationIdGroup =
-            document.getElementById(
-                "organizationIdGroup"
-            );
-
-        const qualificationGroup =
-            document.getElementById(
-                "qualificationGroup"
-            );
-
-        const experienceGroup =
-            document.getElementById(
-                "experienceGroup"
-            );
-
-        const traineeIdGroup =
-            document.getElementById(
-                "traineeIdGroup"
-            );
-
-        const branchGroup =
-            document.getElementById(
-                "branchGroup"
-            );
-
-        const sectionGroup =
-            document.getElementById(
-                "sectionGroup"
-            );
-
-        const yearGroup =
-            document.getElementById(
-                "yearGroup"
-            );
-
-        const skillsGroup =
-            document.getElementById(
-                "skillsGroup"
-            );
-
-        const designationGroup =
-            document.getElementById(
-                "designationGroup"
-            );
-
-
-        /* ================= HELPERS ================= */
-
-        function showElement(element) {
-
-            element.classList.remove(
-                "hidden"
-            );
-        }
-
-
-        function hideElement(element) {
-
-            element.classList.add(
-                "hidden"
-            );
-        }
-
-
-        function setRequired(
-            id,
-            value
-        ) {
-
-            const element =
-                document.getElementById(
-                    id
-                );
-
-            if (element) {
-
-                element.required =
-                    value;
-            }
-        }
+        const groups = {
+            organizationName: document.getElementById("organizationNameGroup"),
+            organizationType: document.getElementById("organizationTypeGroup"),
+            designation: document.getElementById("designationGroup"),
+            website: document.getElementById("websiteGroup"),
+            city: document.getElementById("cityGroup"),
+            address: document.getElementById("addressGroup"),
+            organizationId: document.getElementById("organizationIdGroup"),
+            qualification: document.getElementById("qualificationGroup"),
+            experience: document.getElementById("experienceGroup"),
+            traineeId: document.getElementById("traineeIdGroup"),
+            branch: document.getElementById("branchGroup"),
+            section: document.getElementById("sectionGroup"),
+            studyYear: document.getElementById("yearGroup"),
+            skills: document.getElementById("skillsGroup")
+        };
 
 
         function clean(value) {
-
-            return String(
-                value || ""
-            ).trim();
+            return String(value || "").trim();
         }
 
 
         function normalize(value) {
-
-            return String(
-                value || ""
-            )
-                .trim()
-                .toLowerCase();
+            return clean(value).toLowerCase();
         }
 
 
-        /* ================= MESSAGE ================= */
+        function showMessage(text, type) {
 
-        function showMessage(
-            text,
-            type
-        ) {
+            message.textContent = text;
+            message.style.display = "block";
 
-            message.textContent =
-                text;
-
-            message.style.display =
-                "block";
-
-
-            if (
-                type === "success"
-            ) {
-
-                message.style.background =
-                    "#f0fdf4";
-
-                message.style.borderColor =
-                    "#bbf7d0";
-
-                message.style.color =
-                    "#166534";
-
-            } else if (
-                type === "warning"
-            ) {
-
-                message.style.background =
-                    "#fffbeb";
-
-                message.style.borderColor =
-                    "#fde68a";
-
-                message.style.color =
-                    "#92400e";
-
+            if (type === "success") {
+                message.style.background = "#f0fdf4";
+                message.style.borderColor = "#bbf7d0";
+                message.style.color = "#166534";
+            } else if (type === "warning") {
+                message.style.background = "#fffbeb";
+                message.style.borderColor = "#fde68a";
+                message.style.color = "#92400e";
             } else {
-
-                message.style.background =
-                    "#fef2f2";
-
-                message.style.borderColor =
-                    "#fecaca";
-
-                message.style.color =
-                    "#b91c1c";
+                message.style.background = "#fef2f2";
+                message.style.borderColor = "#fecaca";
+                message.style.color = "#b91c1c";
             }
         }
 
 
-        /* ================= ROLE FORM ================= */
+        function showElement(element) {
+            element.classList.remove("hidden");
+        }
+
+
+        function hideElement(element) {
+            element.classList.add("hidden");
+        }
+
+
+        function setFieldState(id, enabled, required = false) {
+
+            const element = document.getElementById(id);
+
+            if (!element) {
+                return;
+            }
+
+            element.disabled = !enabled;
+            element.required = enabled && required;
+
+            if (!enabled) {
+                element.setCustomValidity("");
+            }
+        }
+
+
+        function resetRoleFields() {
+
+            Object.entries(groups).forEach(function([key, group]) {
+
+                hideElement(group);
+
+                const element = document.getElementById(key);
+
+                if (element) {
+                    element.disabled = true;
+                    element.required = false;
+                    element.setCustomValidity("");
+                }
+            });
+        }
+
 
         function updateRoleForm() {
 
-            const role =
-                roleSelect.value;
+            const selectedRole = normalize(roleSelect.value);
+
+            resetRoleFields();
+
+            setFieldState("fullName", true, true);
+            setFieldState("email", true, true);
+            setFieldState("phone", true, true);
+            setFieldState("password", true, true);
+            setFieldState("confirmPassword", true, true);
+
+            fullNameLabel.innerHTML =
+                'Full Name <span class="required">*</span>';
+
+            emailNote.textContent =
+                "Enter your registered email.";
+
+            roleDescription.textContent =
+                "Select Organization, Trainer, or Trainee to display the appropriate registration fields.";
+
+            submitButton.textContent =
+                "📝 Create Account";
+
+            organizationIdBox.style.display = "none";
 
 
-            /*
-             * Hide all role-specific fields first.
-             */
-
-            hideElement(
-                organizationNameGroup
-            );
-
-            hideElement(
-                organizationTypeGroup
-            );
-
-            hideElement(
-                websiteGroup
-            );
-
-            hideElement(
-                cityGroup
-            );
-
-            hideElement(
-                addressGroup
-            );
-
-            hideElement(
-                organizationIdGroup
-            );
-
-            hideElement(
-                qualificationGroup
-            );
-
-            hideElement(
-                experienceGroup
-            );
-
-            hideElement(
-                traineeIdGroup
-            );
-
-            hideElement(
-                branchGroup
-            );
-
-            hideElement(
-                sectionGroup
-            );
-
-            hideElement(
-                yearGroup
-            );
-
-            hideElement(
-                skillsGroup
-            );
-
-
-            /*
-             * Common fields.
-             */
-
-            showElement(
-                designationGroup
-            );
-
-
-            setRequired(
-                "organizationName",
-                false
-            );
-
-            setRequired(
-                "organizationType",
-                false
-            );
-
-            setRequired(
-                "city",
-                false
-            );
-
-            setRequired(
-                "address",
-                false
-            );
-
-            setRequired(
-                "organizationId",
-                false
-            );
-
-            setRequired(
-                "qualification",
-                false
-            );
-
-            setRequired(
-                "experience",
-                false
-            );
-
-            setRequired(
-                "traineeId",
-                false
-            );
-
-
-            const fullNameLabel =
-                document.getElementById(
-                    "fullNameLabel"
-                );
-
-            const emailNote =
-                document.getElementById(
-                    "emailNote"
-                );
-
-
-            /* ================= ORGANIZATION ================= */
-
-            if (
-                role === "organization"
-            ) {
+            if (selectedRole === "organization") {
 
                 roleDescription.textContent =
-                    "Organization accounts can manage trainers, trainees, courses, assessments, resources, certificates, and performance.";
-
+                    "Organization accounts can manage trainers, trainees, courses, assessments, resources, certificates and performance.";
 
                 fullNameLabel.innerHTML =
                     'Contact Person <span class="required">*</span>';
 
-
                 emailNote.textContent =
                     "Organization email must contain the organization name and at least one number.";
 
+                showElement(groups.organizationName);
+                showElement(groups.organizationType);
+                showElement(groups.designation);
+                showElement(groups.website);
+                showElement(groups.city);
+                showElement(groups.address);
 
-                showElement(
-                    organizationNameGroup
-                );
-
-                showElement(
-                    organizationTypeGroup
-                );
-
-                showElement(
-                    websiteGroup
-                );
-
-                showElement(
-                    cityGroup
-                );
-
-                showElement(
-                    addressGroup
-                );
-
-
-                setRequired(
-                    "organizationName",
-                    true
-                );
-
-                setRequired(
-                    "organizationType",
-                    true
-                );
-
-                setRequired(
-                    "city",
-                    true
-                );
-
-                setRequired(
-                    "address",
-                    true
-                );
-
+                setFieldState("organizationName", true, true);
+                setFieldState("organizationType", true, true);
+                setFieldState("designation", true, true);
+                setFieldState("website", true, false);
+                setFieldState("city", true, true);
+                setFieldState("address", true, true);
 
                 submitButton.textContent =
                     "🏢 Create Organization Account";
             }
 
-
-            /* ================= TRAINER ================= */
-
-            else if (
-                role === "trainer"
-            ) {
+            else if (selectedRole === "trainer") {
 
                 roleDescription.textContent =
-                    "Trainer accounts can manage learning content, courses, assessments, and work with trainees belonging to their organization.";
-
+                    "Trainer accounts can manage courses, learning resources, assessments and work with trainees in their organization.";
 
                 fullNameLabel.innerHTML =
                     'Full Name <span class="required">*</span>';
 
-
                 emailNote.textContent =
                     "Use the email that you want to use for trainer login.";
 
+                showElement(groups.organizationId);
+                showElement(groups.designation);
+                showElement(groups.qualification);
+                showElement(groups.experience);
+                showElement(groups.skills);
 
-                showElement(
-                    organizationIdGroup
-                );
-
-                showElement(
-                    qualificationGroup
-                );
-
-                showElement(
-                    experienceGroup
-                );
-
-                showElement(
-                    skillsGroup
-                );
-
-
-                setRequired(
-                    "organizationId",
-                    true
-                );
-
-                setRequired(
-                    "qualification",
-                    true
-                );
-
-                setRequired(
-                    "experience",
-                    true
-                );
-
+                setFieldState("organizationId", true, true);
+                setFieldState("designation", true, true);
+                setFieldState("qualification", true, true);
+                setFieldState("experience", true, true);
+                setFieldState("skills", true, false);
 
                 submitButton.textContent =
                     "👨‍🏫 Create Trainer Account";
             }
 
-
-            /* ================= TRAINEE ================= */
-
-            else if (
-                role === "trainee"
-            ) {
+            else if (selectedRole === "trainee") {
 
                 roleDescription.textContent =
-                    "Trainee accounts can access courses, assessments, certificates, feedback, and their own learning workspace.";
-
+                    "Trainee accounts can access courses, assessments, certificates, feedback and their own learning progress.";
 
                 fullNameLabel.innerHTML =
                     'Full Name <span class="required">*</span>';
-
 
                 emailNote.textContent =
                     "Use the email that you want to use for trainee login.";
 
+                showElement(groups.organizationId);
+                showElement(groups.traineeId);
+                showElement(groups.branch);
+                showElement(groups.section);
+                showElement(groups.studyYear);
+                showElement(groups.skills);
 
-                hideElement(
-                    designationGroup
-                );
-
-
-                showElement(
-                    organizationIdGroup
-                );
-
-                showElement(
-                    traineeIdGroup
-                );
-
-                showElement(
-                    branchGroup
-                );
-
-                showElement(
-                    sectionGroup
-                );
-
-                showElement(
-                    yearGroup
-                );
-
-                showElement(
-                    skillsGroup
-                );
-
-
-                setRequired(
-                    "organizationId",
-                    true
-                );
-
-                setRequired(
-                    "traineeId",
-                    true
-                );
-
+                setFieldState("organizationId", true, true);
+                setFieldState("traineeId", true, true);
+                setFieldState("branch", true, false);
+                setFieldState("section", true, false);
+                setFieldState("studyYear", true, false);
+                setFieldState("skills", true, false);
 
                 submitButton.textContent =
                     "👨‍🎓 Create Trainee Account";
             }
-
-
-            /* ================= NOTHING SELECTED ================= */
-
-            else {
-
-                roleDescription.textContent =
-                    "Select Organization, Trainer, or Trainee to display the appropriate registration fields.";
-
-
-                fullNameLabel.innerHTML =
-                    'Full Name <span class="required">*</span>';
-
-
-                emailNote.textContent =
-                    "Enter your registered email.";
-
-
-                submitButton.textContent =
-                    "📝 Create Account";
-            }
-
         }
 
 
-        roleSelect.addEventListener(
-            "change",
-            updateRoleForm
-        );
+        roleSelect.addEventListener("change", updateRoleForm);
 
 
-        /* ================= PASSWORD ================= */
+        window.togglePassword = function(inputId, button) {
 
-        window.togglePassword =
-            function(
-                inputId,
-                button
-            ) {
+            const input = document.getElementById(inputId);
 
-                const input =
-                    document.getElementById(
-                        inputId
-                    );
-
-
-                if (
-                    input.type ===
-                    "password"
-                ) {
-
-                    input.type =
-                        "text";
-
-                    button.textContent =
-                        "🙈";
-
-                } else {
-
-                    input.type =
-                        "password";
-
-                    button.textContent =
-                        "👁";
-                }
-            };
+            if (input.type === "password") {
+                input.type = "text";
+                button.textContent = "🙈";
+            } else {
+                input.type = "password";
+                button.textContent = "👁";
+            }
+        };
 
 
-        /* ================= ORGANIZATION EMAIL ================= */
-
-        function normalizeOrganizationName(
-            name
-        ) {
-
+        function normalizeOrganizationName(name) {
             return clean(name)
                 .toLowerCase()
-                .replace(
-                    /[^a-z0-9]/g,
-                    ""
-                );
+                .replace(/[^a-z0-9]/g, "");
         }
 
 
-        function validateOrganizationEmail(
-            organizationName,
-            email
-        ) {
+        function validateOrganizationEmail(organizationName, email) {
 
             const normalizedName =
-                normalizeOrganizationName(
-                    organizationName
-                );
-
+                normalizeOrganizationName(organizationName);
 
             const localPart =
-                email
-                    .split("@")[0]
-                    .toLowerCase();
-
+                email.split("@")[0].toLowerCase();
 
             return (
                 normalizedName.length >= 3 &&
-                localPart.includes(
-                    normalizedName
-                ) &&
-                /\d/.test(
-                    localPart
-                )
+                localPart.includes(normalizedName) &&
+                /\d/.test(localPart)
             );
         }
 
 
-        /* ================= DELETE DATABASE PATH ================= */
-
-        async function deletePath(
-            path
-        ) {
+        async function deletePath(path) {
 
             if (!path) {
                 return;
             }
 
-
             try {
-
-                await set(
-                    ref(
-                        db,
-                        path
-                    ),
-                    null
-                );
-
+                await set(ref(db, path), null);
             } catch (error) {
-
-                console.warn(
-                    "Rollback failed:",
-                    path,
-                    error
-                );
+                console.warn("Rollback failed:", path, error);
             }
         }
 
 
-        /* ================= FORM SUBMIT ================= */
-
-        form.addEventListener(
-            "submit",
-            async function(event) {
-
-                event.preventDefault();
-
-
-                message.style.display =
-                    "none";
-
-
-                const selectedRole =
-                    normalize(
-                        roleSelect.value
-                    );
-
-
-                const fullName =
-                    clean(
-                        document
-                            .getElementById(
-                                "fullName"
-                            )
-                            .value
-                    );
-
-
-                const designation =
-                    clean(
-                        document
-                            .getElementById(
-                                "designation"
-                            )
-                            .value
-                    );
-
-
-                const email =
-                    clean(
-                        document
-                            .getElementById(
-                                "email"
-                            )
-                            .value
-                    )
-                        .toLowerCase();
-
-
-                const phone =
-                    clean(
-                        document
-                            .getElementById(
-                                "phone"
-                            )
-                            .value
-                    );
-
-
-                const password =
-                    document
-                        .getElementById(
-                            "password"
-                        )
-                        .value;
-
-
-                const confirmPassword =
-                    document
-                        .getElementById(
-                            "confirmPassword"
-                        )
-                        .value;
-
-
-                const organizationName =
-                    clean(
-                        document
-                            .getElementById(
-                                "organizationName"
-                            )
-                            .value
-                    );
-
-
-                const organizationType =
-                    document
-                        .getElementById(
-                            "organizationType"
-                        )
-                        .value;
-
-
-                const website =
-                    clean(
-                        document
-                            .getElementById(
-                                "website"
-                            )
-                            .value
-                    );
-
-
-                const city =
-                    clean(
-                        document
-                            .getElementById(
-                                "city"
-                            )
-                            .value
-                    );
-
-
-                const address =
-                    clean(
-                        document
-                            .getElementById(
-                                "address"
-                            )
-                            .value
-                    );
-
-
-                const organizationId =
-                    clean(
-                        document
-                            .getElementById(
-                                "organizationId"
-                            )
-                            .value
-                    );
-
-
-                const qualification =
-                    clean(
-                        document
-                            .getElementById(
-                                "qualification"
-                            )
-                            .value
-                    );
-
-
-                const experience =
-                    clean(
-                        document
-                            .getElementById(
-                                "experience"
-                            )
-                            .value
-                    );
-
-
-                const traineeId =
-                    clean(
-                        document
-                            .getElementById(
-                                "traineeId"
-                            )
-                            .value
-                    );
-
-
-                const branch =
-                    clean(
-                        document
-                            .getElementById(
-                                "branch"
-                            )
-                            .value
-                    );
-
-
-                const section =
-                    clean(
-                        document
-                            .getElementById(
-                                "section"
-                            )
-                            .value
-                    );
-
-
-                const studyYear =
-                    document
-                        .getElementById(
-                            "studyYear"
-                        )
-                        .value;
-
-
-                const skills =
-                    clean(
-                        document
-                            .getElementById(
-                                "skills"
-                            )
-                            .value
-                    );
-
-
-                /* ================= COMMON VALIDATION ================= */
-
-                if (
-                    !selectedRole
-                ) {
-
-                    showMessage(
-                        "Please select your role.",
-                        "warning"
-                    );
-
-                    roleSelect.focus();
-
-                    return;
-                }
-
-
-                if (
-                    !fullName ||
-                    !email ||
-                    !phone ||
-                    !password ||
-                    !confirmPassword
-                ) {
-
-                    showMessage(
-                        "Please fill all required fields.",
-                        "warning"
-                    );
-
-                    return;
-                }
-
-
-                if (
-                    !/^[0-9]{10}$/.test(
-                        phone
-                    )
-                ) {
-
-                    showMessage(
-                        "Please enter a valid 10-digit contact number.",
-                        "warning"
-                    );
-
-                    return;
-                }
-
-
-                if (
-                    password.length < 6
-                ) {
-
-                    showMessage(
-                        "Password must contain at least 6 characters.",
-                        "warning"
-                    );
-
-                    return;
-                }
-
-
-                if (
-                    password !==
-                    confirmPassword
-                ) {
-
-                    showMessage(
-                        "Passwords do not match.",
-                        "warning"
-                    );
-
-                    return;
-                }
-
-
-                /* ================= ORGANIZATION VALIDATION ================= */
-
-                if (
-                    selectedRole ===
-                    "organization"
-                ) {
-
-                    if (
-                        organizationName.length < 3
-                    ) {
-
-                        showMessage(
-                            "Organization name must contain at least 3 characters.",
-                            "warning"
-                        );
-
-                        return;
-                    }
-
-
-                    if (
-                        !organizationType
-                    ) {
-
-                        showMessage(
-                            "Please select organization type.",
-                            "warning"
-                        );
-
-                        return;
-                    }
-
-
-                    if (
-                        !designation
-                    ) {
-
-                        showMessage(
-                            "Please enter contact person's designation.",
-                            "warning"
-                        );
-
-                        return;
-                    }
-
-
-                    if (
-                        !city ||
-                        !address
-                    ) {
-
-                        showMessage(
-                            "Please enter city and organization address.",
-                            "warning"
-                        );
-
-                        return;
-                    }
-
-
-                    if (
-                        !validateOrganizationEmail(
-                            organizationName,
-                            email
-                        )
-                    ) {
-
-                        showMessage(
-                            "Organization email must contain the organization name and at least one number. Example: hippocloud12@gmail.com",
-                            "warning"
-                        );
-
-                        return;
-                    }
-
-
-                    if (
-                        website &&
-                        !/^https?:\/\/.+/i.test(
-                            website
-                        )
-                    ) {
-
-                        showMessage(
-                            "Website must start with http:// or https://",
-                            "warning"
-                        );
-
-                        return;
-                    }
-                }
-
-
-                /* ================= TRAINER VALIDATION ================= */
-
-                if (
-                    selectedRole ===
-                    "trainer"
-                ) {
-
-                    if (
-                        !organizationId
-                    ) {
-
-                        showMessage(
-                            "Please enter your Organization ID.",
-                            "warning"
-                        );
-
-                        return;
-                    }
-
-
-                    if (
-                        !designation
-                    ) {
-
-                        showMessage(
-                            "Please enter your designation.",
-                            "warning"
-                        );
-
-                        return;
-                    }
-
-
-                    if (
-                        !qualification
-                    ) {
-
-                        showMessage(
-                            "Please enter your qualification.",
-                            "warning"
-                        );
-
-                        return;
-                    }
-
-
-                    if (
-                        !experience
-                    ) {
-
-                        showMessage(
-                            "Please enter your experience.",
-                            "warning"
-                        );
-
-                        return;
-                    }
-                }
-
-
-                /* ================= TRAINEE VALIDATION ================= */
-
-                if (
-                    selectedRole ===
-                    "trainee"
-                ) {
-
-                    if (
-                        !organizationId
-                    ) {
-
-                        showMessage(
-                            "Please enter your Organization ID.",
-                            "warning"
-                        );
-
-                        return;
-                    }
-
-
-                    if (
-                        !traineeId
-                    ) {
-
-                        showMessage(
-                            "Please enter your Roll Number / Employee ID.",
-                            "warning"
-                        );
-
-                        return;
-                    }
-                }
-
-
-                /* ================= START ================= */
-
-                submitButton.disabled =
-                    true;
-
-                submitButton.textContent =
-                    "⏳ Creating Account...";
-
-
-                let createdUser =
-                    null;
-
-                let organizationPath =
-                    null;
-
-                let userPath =
-                    null;
-
-                let organizationUserPath =
-                    null;
-
-
-                try {
-
-                    /* ================= FIREBASE AUTH ================= */
-
-                    const credential =
-                        await
-                        createUserWithEmailAndPassword(
-                            auth,
-                            email,
-                            password
-                        );
-
-
-                    createdUser =
-                        credential.user;
-
-
-                    const timestamp =
-                        Date.now();
-
-
-                    /* ==================================================
-                       ORGANIZATION REGISTRATION
-                       ================================================== */
-
-                    if (
-                        selectedRole ===
-                        "organization"
-                    ) {
-
-                        const organizationRef =
-                            push(
-                                ref(
-                                    db,
-                                    "organizations"
-                                )
-                            );
-
-
-                        const newOrganizationId =
-                            organizationRef.key;
-
-
-                        if (
-                            !newOrganizationId
-                        ) {
-
-                            throw new Error(
-                                "Could not generate Organization ID."
-                            );
-                        }
-
-
-                        organizationPath =
-                            "organizations/" +
-                            newOrganizationId;
-
-
-                        userPath =
-                            "users/" +
-                            createdUser.uid;
-
-
-                        organizationUserPath =
-                            "organizationUsers/" +
-                            newOrganizationId +
-                            "/" +
-                            createdUser.uid;
-
-
-                        const organizationData = {
-
-                            organizationId:
-                                newOrganizationId,
-
-                            name:
-                                organizationName,
-
-                            type:
-                                organizationType,
-
-                            contactPerson:
-                                fullName,
-
-                            designation:
-                                designation,
-
-                            officialEmail:
-                                email,
-
-                            phone:
-                                phone,
-
-                            website:
-                                website || "",
-
-                            city:
-                                city,
-
-                            address:
-                                address,
-
-                            ownerUid:
-                                createdUser.uid,
-
-                            role:
-                                "organization",
-
-                            accountType:
-                                "organization",
-
-                            status:
-                                "approved",
-
-                            createdOn:
-                                timestamp
-
-                        };
-
-
-                        const userData = {
-
-                            uid:
-                                createdUser.uid,
-
-                            name:
-                                fullName,
-
-                            email:
-                                email,
-
-                            role:
-                                "organization",
-
-                            accountType:
-                                "organization",
-
-                            organizationId:
-                                newOrganizationId,
-
-                            organizationName:
-                                organizationName,
-
-                            organizationType:
-                                organizationType,
-
-                            designation:
-                                designation,
-
-                            status:
-                                "approved",
-
-                            createdOn:
-                                timestamp
-
-                        };
-
-
-                        const organizationUserData = {
-
-                            uid:
-                                createdUser.uid,
-
-                            name:
-                                fullName,
-
-                            email:
-                                email,
-
-                            role:
-                                "organization",
-
-                            organizationId:
-                                newOrganizationId,
-
-                            organizationName:
-                                organizationName,
-
-                            status:
-                                "approved",
-
-                            createdOn:
-                                timestamp
-
-                        };
-
-
-                        await set(
-                            ref(
-                                db,
-                                organizationPath
-                            ),
-                            organizationData
-                        );
-
-
-                        await set(
-                            ref(
-                                db,
-                                userPath
-                            ),
-                            userData
-                        );
-
-
-                        await set(
-                            ref(
-                                db,
-                                organizationUserPath
-                            ),
-                            organizationUserData
-                        );
-
-
-                        generatedOrganizationId.textContent =
-                            newOrganizationId;
-
-
-                        organizationIdBox.style.display =
-                            "block";
-
-
-                        successText.textContent =
-                            "Your organization account has been created and activated successfully. Save your Organization ID because trainers and trainees will use it to join your organization.";
-
-                    }
-
-
-                    /* ==================================================
-                       TRAINER REGISTRATION
-                       ================================================== */
-
-                    else if (
-                        selectedRole ===
-                        "trainer"
-                    ) {
-
-                        userPath =
-                            "users/" +
-                            createdUser.uid;
-
-
-                        organizationUserPath =
-                            "organizationUsers/" +
-                            organizationId +
-                            "/" +
-                            createdUser.uid;
-
-
-                        const userData = {
-
-                            uid:
-                                createdUser.uid,
-
-                            name:
-                                fullName,
-
-                            email:
-                                email,
-
-                            phone:
-                                phone,
-
-                            role:
-                                "trainer",
-
-                            accountType:
-                                "trainer",
-
-                            organizationId:
-                                organizationId,
-
-                            designation:
-                                designation,
-
-                            qualification:
-                                qualification,
-
-                            experience:
-                                experience,
-
-                            skills:
-                                skills,
-
-                            status:
-                                "approved",
-
-                            createdOn:
-                                timestamp
-
-                        };
-
-
-                        /*
-                         * First create the user profile.
-                         * This allows the organization membership
-                         * to be validated by Firebase rules.
-                         */
-
-                        await set(
-                            ref(
-                                db,
-                                userPath
-                            ),
-                            userData
-                        );
-
-
-                        /*
-                         * Verify linked organization.
-                         */
-
-                        const organizationSnapshot =
-                            await get(
-                                ref(
-                                    db,
-                                    "organizations/" +
-                                    organizationId
-                                )
-                            );
-
-
-                        if (
-                            !organizationSnapshot.exists()
-                        ) {
-
-                            throw new Error(
-                                "Organization ID not found. Please enter the correct Organization ID."
-                            );
-                        }
-
-
-                        const organizationData =
-                            organizationSnapshot.val();
-
-
-                        const organizationStatus =
-                            normalize(
-                                organizationData.status
-                            );
-
-
-                        if (
-                            organizationStatus &&
-                            organizationStatus !==
-                            "approved"
-                        ) {
-
-                            throw new Error(
-                                "The organization is not approved for access."
-                            );
-                        }
-
-
-                        const organizationUserData = {
-
-                            uid:
-                                createdUser.uid,
-
-                            name:
-                                fullName,
-
-                            email:
-                                email,
-
-                            role:
-                                "trainer",
-
-                            organizationId:
-                                organizationId,
-
-                            organizationName:
-                                organizationData.name ||
-                                organizationData.organizationName ||
-                                "",
-
-                            status:
-                                "approved",
-
-                            createdOn:
-                                timestamp
-
-                        };
-
-
-                        await set(
-                            ref(
-                                db,
-                                organizationUserPath
-                            ),
-                            organizationUserData
-                        );
-
-
-                        successText.textContent =
-                            "Your trainer account has been created successfully. Use the Trainer role on the CAPACITY CONNECT Login page.";
-
-                    }
-
-
-                    /* ==================================================
-                       TRAINEE REGISTRATION
-                       ================================================== */
-
-                    else if (
-                        selectedRole ===
-                        "trainee"
-                    ) {
-
-                        userPath =
-                            "users/" +
-                            createdUser.uid;
-
-
-                        organizationUserPath =
-                            "organizationUsers/" +
-                            organizationId +
-                            "/" +
-                            createdUser.uid;
-
-
-                        const userData = {
-
-                            uid:
-                                createdUser.uid,
-
-                            name:
-                                fullName,
-
-                            email:
-                                email,
-
-                            phone:
-                                phone,
-
-                            role:
-                                "trainee",
-
-                            accountType:
-                                "trainee",
-
-                            organizationId:
-                                organizationId,
-
-                            traineeId:
-                                traineeId,
-
-                            branch:
-                                branch,
-
-                            section:
-                                section,
-
-                            year:
-                                studyYear,
-
-                            skills:
-                                skills,
-
-                            status:
-                                "approved",
-
-                            createdOn:
-                                timestamp
-
-                        };
-
-
-                        await set(
-                            ref(
-                                db,
-                                userPath
-                            ),
-                            userData
-                        );
-
-
-                        /*
-                         * Verify linked organization.
-                         */
-
-                        const organizationSnapshot =
-                            await get(
-                                ref(
-                                    db,
-                                    "organizations/" +
-                                    organizationId
-                                )
-                            );
-
-
-                        if (
-                            !organizationSnapshot.exists()
-                        ) {
-
-                            throw new Error(
-                                "Organization ID not found. Please enter the correct Organization ID."
-                            );
-                        }
-
-
-                        const organizationData =
-                            organizationSnapshot.val();
-
-
-                        const organizationStatus =
-                            normalize(
-                                organizationData.status
-                            );
-
-
-                        if (
-                            organizationStatus &&
-                            organizationStatus !==
-                            "approved"
-                        ) {
-
-                            throw new Error(
-                                "The organization is not approved for access."
-                            );
-                        }
-
-
-                        const organizationUserData = {
-
-                            uid:
-                                createdUser.uid,
-
-                            name:
-                                fullName,
-
-                            email:
-                                email,
-
-                            role:
-                                "trainee",
-
-                            organizationId:
-                                organizationId,
-
-                            organizationName:
-                                organizationData.name ||
-                                organizationData.organizationName ||
-                                "",
-
-                            traineeId:
-                                traineeId,
-
-                            status:
-                                "approved",
-
-                            createdOn:
-                                timestamp
-
-                        };
-
-
-                        await set(
-                            ref(
-                                db,
-                                organizationUserPath
-                            ),
-                            organizationUserData
-                        );
-
-
-                        successText.textContent =
-                            "Your trainee account has been created successfully. Use the Trainee role on the CAPACITY CONNECT Login page.";
-
-                    }
-
-
-                    else {
-
-                        throw new Error(
-                            "Please select a valid role."
-                        );
-                    }
-
-
-                    /* ================= SIGN OUT ================= */
-
-                    try {
-
-                        await auth.signOut();
-
-                    } catch (error) {
-
-                        console.warn(
-                            "Sign out after registration:",
-                            error
-                        );
-                    }
-
-
-                    /* ================= SUCCESS UI ================= */
-
-                    form.style.display =
-                        "none";
-
-
-                    successScreen.style.display =
-                        "block";
-
-
-                    showMessage(
-                        "Account created successfully.",
-                        "success"
-                    );
-
-
-                    /*
-                     * Always go to COMMON LOGIN page.
-                     */
-
-                    setTimeout(
-                        function() {
-
-                            window.location.href =
-                                "/organization-login.html";
-
-                        },
-                        2500
-                    );
-
-                }
-
-
-                catch (error) {
-
-                    console.error(
-                        "Registration Error:",
-                        error
-                    );
-
-
-                    /* ================= ROLLBACK DATABASE ================= */
-
-                    await deletePath(
-                        organizationUserPath
-                    );
-
-
-                    await deletePath(
-                        userPath
-                    );
-
-
-                    await deletePath(
-                        organizationPath
-                    );
-
-
-                    /* ================= ROLLBACK AUTH ================= */
-
-                    if (
-                        createdUser
-                    ) {
-
-                        try {
-
-                            await deleteUser(
-                                createdUser
-                            );
-
-                        } catch (deleteError) {
-
-                            console.warn(
-                                "Firebase Auth rollback failed:",
-                                deleteError
-                            );
-                        }
-                    }
-
-
-                    /* ================= ERROR MESSAGE ================= */
-
-                    let errorMessage =
-                        "Registration failed. Please try again.";
-
-
-                    switch (
-                        error.code
-                    ) {
-
-                        case "auth/email-already-in-use":
-
-                            errorMessage =
-                                "This email is already registered. Please use another email or login with this account.";
-
-                            break;
-
-
-                        case "auth/invalid-email":
-
-                            errorMessage =
-                                "Please enter a valid email address.";
-
-                            break;
-
-
-                        case "auth/weak-password":
-
-                            errorMessage =
-                                "Password is too weak. Use at least 6 characters.";
-
-                            break;
-
-
-                        case "auth/network-request-failed":
-
-                            errorMessage =
-                                "Network error. Please check your internet connection.";
-
-                            break;
-
-
-                        case "PERMISSION_DENIED":
-
-                            errorMessage =
-                                "Firebase database permission denied. Check your Realtime Database Rules.";
-
-                            break;
-
-
-                        default:
-
-                            errorMessage =
-                                error.message ||
-                                errorMessage;
-                    }
-
-
-                    showMessage(
-                        errorMessage,
-                        "error"
-                    );
-
-
-                    submitButton.disabled =
-                        false;
-
-
-                    if (
-                        selectedRole ===
-                        "organization"
-                    ) {
-
-                        submitButton.textContent =
-                            "🏢 Create Organization Account";
-
-                    } else if (
-                        selectedRole ===
-                        "trainer"
-                    ) {
-
-                        submitButton.textContent =
-                            "👨‍🏫 Create Trainer Account";
-
-                    } else if (
-                        selectedRole ===
-                        "trainee"
-                    ) {
-
-                        submitButton.textContent =
-                            "👨‍🎓 Create Trainee Account";
-
-                    } else {
-
-                        submitButton.textContent =
-                            "📝 Create Account";
-                    }
-
-                }
-
+        form.addEventListener("submit", async function(event) {
+
+            event.preventDefault();
+
+            message.style.display = "none";
+
+            const selectedRole = normalize(roleSelect.value);
+
+            const fullName = clean(document.getElementById("fullName").value);
+            const designation = clean(document.getElementById("designation").value);
+            const email = clean(document.getElementById("email").value).toLowerCase();
+            const phone = clean(document.getElementById("phone").value);
+            const password = document.getElementById("password").value;
+            const confirmPassword = document.getElementById("confirmPassword").value;
+
+            const organizationName = clean(document.getElementById("organizationName").value);
+            const organizationType = document.getElementById("organizationType").value;
+            const website = clean(document.getElementById("website").value);
+            const city = clean(document.getElementById("city").value);
+            const address = clean(document.getElementById("address").value);
+            const organizationId = clean(document.getElementById("organizationId").value);
+            const qualification = clean(document.getElementById("qualification").value);
+            const experience = clean(document.getElementById("experience").value);
+            const traineeId = clean(document.getElementById("traineeId").value);
+            const branch = clean(document.getElementById("branch").value);
+            const section = clean(document.getElementById("section").value);
+            const studyYear = document.getElementById("studyYear").value;
+            const skills = clean(document.getElementById("skills").value);
+
+            if (!selectedRole) {
+                showMessage("Please select your role.", "warning");
+                roleSelect.focus();
+                return;
             }
-        );
 
+            if (!fullName || !email || !phone || !password || !confirmPassword) {
+                showMessage("Please fill all required fields.", "warning");
+                return;
+            }
 
-        /* ================= INITIAL STATE ================= */
+            if (!/^[0-9]{10}$/.test(phone)) {
+                showMessage("Please enter a valid 10-digit contact number.", "warning");
+                return;
+            }
+
+            if (password.length < 6) {
+                showMessage("Password must contain at least 6 characters.", "warning");
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showMessage("Passwords do not match.", "warning");
+                return;
+            }
+
+            if (selectedRole === "organization") {
+
+                if (organizationName.length < 3) {
+                    showMessage("Organization name must contain at least 3 characters.", "warning");
+                    return;
+                }
+
+                if (!organizationType) {
+                    showMessage("Please select organization type.", "warning");
+                    return;
+                }
+
+                if (!designation) {
+                    showMessage("Please enter contact person's designation.", "warning");
+                    return;
+                }
+
+                if (!city || !address) {
+                    showMessage("Please enter city and organization address.", "warning");
+                    return;
+                }
+
+                if (!validateOrganizationEmail(organizationName, email)) {
+                    showMessage(
+                        "Organization email must contain the organization name and at least one number. Example: hippocloud12@gmail.com",
+                        "warning"
+                    );
+                    return;
+                }
+
+                if (website && !/^https?:\/\/.+/i.test(website)) {
+                    showMessage("Website must start with http:// or https://", "warning");
+                    return;
+                }
+            }
+
+            if (selectedRole === "trainer") {
+
+                if (!organizationId) {
+                    showMessage("Please enter your Organization ID.", "warning");
+                    return;
+                }
+
+                if (!designation) {
+                    showMessage("Please enter your designation.", "warning");
+                    return;
+                }
+
+                if (!qualification) {
+                    showMessage("Please enter your qualification.", "warning");
+                    return;
+                }
+
+                if (!experience) {
+                    showMessage("Please enter your experience.", "warning");
+                    return;
+                }
+            }
+
+            if (selectedRole === "trainee") {
+
+                if (!organizationId) {
+                    showMessage("Please enter your Organization ID.", "warning");
+                    return;
+                }
+
+                if (!traineeId) {
+                    showMessage("Please enter your Roll Number / Employee ID.", "warning");
+                    return;
+                }
+            }
+
+            submitButton.disabled = true;
+            submitButton.textContent = "⏳ Creating Account...";
+
+            let createdUser = null;
+            let organizationPath = null;
+            let userPath = null;
+            let organizationUserPath = null;
+
+            try {
+
+                const userCredential =
+                    await createUserWithEmailAndPassword(auth, email, password);
+
+                createdUser = userCredential.user;
+
+                const timestamp = Date.now();
+
+                if (selectedRole === "organization") {
+
+                    const organizationRef =
+                        push(ref(db, "organizations"));
+
+                    const newOrganizationId =
+                        organizationRef.key;
+
+                    if (!newOrganizationId) {
+                        throw new Error("Could not generate Organization ID.");
+                    }
+
+                    organizationPath =
+                        "organizations/" + newOrganizationId;
+
+                    userPath =
+                        "users/" + createdUser.uid;
+
+                    organizationUserPath =
+                        "organizationUsers/" +
+                        newOrganizationId +
+                        "/" +
+                        createdUser.uid;
+
+                    const organizationData = {
+                        organizationId: newOrganizationId,
+                        name: organizationName,
+                        organizationName: organizationName,
+                        type: organizationType,
+                        organizationType: organizationType,
+                        contactPerson: fullName,
+                        designation: designation,
+                        officialEmail: email,
+                        phone: phone,
+                        website: website,
+                        city: city,
+                        address: address,
+                        ownerUid: createdUser.uid,
+                        role: "organization",
+                        accountType: "organization",
+                        status: "approved",
+                        createdOn: timestamp
+                    };
+
+                    const userData = {
+                        uid: createdUser.uid,
+                        name: fullName,
+                        email: email,
+                        role: "organization",
+                        accountType: "organization",
+                        organizationId: newOrganizationId,
+                        organizationName: organizationName,
+                        organizationType: organizationType,
+                        designation: designation,
+                        status: "approved",
+                        createdOn: timestamp
+                    };
+
+                    const organizationUserData = {
+                        uid: createdUser.uid,
+                        name: fullName,
+                        email: email,
+                        role: "organization",
+                        organizationId: newOrganizationId,
+                        organizationName: organizationName,
+                        status: "approved",
+                        createdOn: timestamp
+                    };
+
+                    await set(ref(db, organizationPath), organizationData);
+                    await set(ref(db, userPath), userData);
+                    await set(ref(db, organizationUserPath), organizationUserData);
+
+                    generatedOrganizationId.textContent = newOrganizationId;
+                    organizationIdBox.style.display = "block";
+
+                    successText.textContent =
+                        "Your organization account has been created and activated successfully. Save your Organization ID because trainers and trainees will use it to join your organization.";
+                }
+
+                else if (selectedRole === "trainer") {
+
+                    userPath = "users/" + createdUser.uid;
+                    organizationUserPath =
+                        "organizationUsers/" +
+                        organizationId +
+                        "/" +
+                        createdUser.uid;
+
+                    const organizationSnapshot =
+                        await get(ref(db, "organizations/" + organizationId));
+
+                    if (!organizationSnapshot.exists()) {
+                        throw new Error(
+                            "Organization ID not found. Please enter the correct Organization ID."
+                        );
+                    }
+
+                    const organizationData = organizationSnapshot.val();
+                    const organizationStatus = normalize(organizationData.status);
+
+                    if (organizationStatus && organizationStatus !== "approved") {
+                        throw new Error(
+                            "The organization is not approved for access."
+                        );
+                    }
+
+                    const userData = {
+                        uid: createdUser.uid,
+                        name: fullName,
+                        email: email,
+                        phone: phone,
+                        role: "trainer",
+                        accountType: "trainer",
+                        organizationId: organizationId,
+                        organizationName: organizationData.name || organizationData.organizationName || "",
+                        designation: designation,
+                        qualification: qualification,
+                        experience: experience,
+                        skills: skills,
+                        status: "approved",
+                        createdOn: timestamp
+                    };
+
+                    const organizationUserData = {
+                        uid: createdUser.uid,
+                        name: fullName,
+                        email: email,
+                        role: "trainer",
+                        organizationId: organizationId,
+                        organizationName: organizationData.name || organizationData.organizationName || "",
+                        status: "approved",
+                        createdOn: timestamp
+                    };
+
+                    await set(ref(db, userPath), userData);
+                    await set(ref(db, organizationUserPath), organizationUserData);
+
+                    successText.textContent =
+                        "Your trainer account has been created successfully. Use the Trainer role on the CAPACITY CONNECT Login page.";
+                }
+
+                else if (selectedRole === "trainee") {
+
+                    userPath = "users/" + createdUser.uid;
+                    organizationUserPath =
+                        "organizationUsers/" +
+                        organizationId +
+                        "/" +
+                        createdUser.uid;
+
+                    const organizationSnapshot =
+                        await get(ref(db, "organizations/" + organizationId));
+
+                    if (!organizationSnapshot.exists()) {
+                        throw new Error(
+                            "Organization ID not found. Please enter the correct Organization ID."
+                        );
+                    }
+
+                    const organizationData = organizationSnapshot.val();
+                    const organizationStatus = normalize(organizationData.status);
+
+                    if (organizationStatus && organizationStatus !== "approved") {
+                        throw new Error(
+                            "The organization is not approved for access."
+                        );
+                    }
+
+                    const userData = {
+                        uid: createdUser.uid,
+                        name: fullName,
+                        email: email,
+                        phone: phone,
+                        role: "trainee",
+                        accountType: "trainee",
+                        organizationId: organizationId,
+                        organizationName: organizationData.name || organizationData.organizationName || "",
+                        traineeId: traineeId,
+                        branch: branch,
+                        section: section,
+                        year: studyYear,
+                        skills: skills,
+                        status: "approved",
+                        createdOn: timestamp
+                    };
+
+                    const organizationUserData = {
+                        uid: createdUser.uid,
+                        name: fullName,
+                        email: email,
+                        role: "trainee",
+                        organizationId: organizationId,
+                        organizationName: organizationData.name || organizationData.organizationName || "",
+                        traineeId: traineeId,
+                        status: "approved",
+                        createdOn: timestamp
+                    };
+
+                    await set(ref(db, userPath), userData);
+                    await set(ref(db, organizationUserPath), organizationUserData);
+
+                    successText.textContent =
+                        "Your trainee account has been created successfully. Use the Trainee role on the CAPACITY CONNECT Login page.";
+                }
+
+                else {
+                    throw new Error("Please select a valid role.");
+                }
+
+                await auth.signOut();
+
+                form.style.display = "none";
+                successScreen.style.display = "block";
+
+                showMessage(
+                    "Account created successfully. Redirecting to login...",
+                    "success"
+                );
+
+                setTimeout(function() {
+                    window.location.href = "/organization-login.html";
+                }, 2500);
+
+            } catch (error) {
+
+                console.error("Registration Error:", error);
+
+                await deletePath(organizationUserPath);
+                await deletePath(userPath);
+                await deletePath(organizationPath);
+
+                if (createdUser) {
+                    try {
+                        await deleteUser(createdUser);
+                    } catch (deleteError) {
+                        console.warn(
+                            "Firebase Auth rollback failed:",
+                            deleteError
+                        );
+                    }
+                }
+
+                let errorMessage =
+                    "Registration failed. Please try again.";
+
+                switch (error.code) {
+
+                    case "auth/email-already-in-use":
+                        errorMessage =
+                            "This email is already registered. Please use another email or login with this account.";
+                        break;
+
+                    case "auth/invalid-email":
+                        errorMessage =
+                            "Please enter a valid email address.";
+                        break;
+
+                    case "auth/weak-password":
+                        errorMessage =
+                            "Password is too weak. Use at least 6 characters.";
+                        break;
+
+                    case "auth/network-request-failed":
+                        errorMessage =
+                            "Network error. Please check your internet connection.";
+                        break;
+
+                    case "PERMISSION_DENIED":
+                        errorMessage =
+                            "Firebase database permission denied. Check your Realtime Database Rules.";
+                        break;
+
+                    default:
+                        errorMessage =
+                            error.message || errorMessage;
+                }
+
+                showMessage(
+                    errorMessage,
+                    "error"
+                );
+
+                submitButton.disabled = false;
+
+                if (selectedRole === "organization") {
+                    submitButton.textContent =
+                        "🏢 Create Organization Account";
+                } else if (selectedRole === "trainer") {
+                    submitButton.textContent =
+                        "👨‍🏫 Create Trainer Account";
+                } else if (selectedRole === "trainee") {
+                    submitButton.textContent =
+                        "👨‍🎓 Create Trainee Account";
+                } else {
+                    submitButton.textContent =
+                        "📝 Create Account";
+                }
+            }
+        });
+
 
         updateRoleForm();
 
