@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Organization Registration | CAPACITY CONNECT</title>
+    <title>CAPACITY CONNECT Registration</title>
 
     <style>
+
         * {
             margin: 0;
             padding: 0;
@@ -30,457 +33,864 @@
         }
 
         body {
+
             min-height: 100vh;
+
             background:
-                radial-gradient(circle at top left, rgba(79,70,229,.18), transparent 35%),
-                radial-gradient(circle at bottom right, rgba(8,145,178,.16), transparent 35%),
+                radial-gradient(
+                    circle at top left,
+                    rgba(79,70,229,.18),
+                    transparent 35%
+                ),
+                radial-gradient(
+                    circle at bottom right,
+                    rgba(8,145,178,.16),
+                    transparent 35%
+                ),
                 var(--light);
+
             color: var(--text);
+
             display: flex;
+
             align-items: center;
+
             justify-content: center;
+
             padding: 30px 15px;
         }
 
         .background-orb {
+
             position: fixed;
+
             width: 260px;
+
             height: 260px;
+
             border-radius: 50%;
+
             filter: blur(90px);
+
             opacity: .22;
+
             pointer-events: none;
         }
 
         .orb-one {
+
             background: #6366f1;
+
             top: -100px;
+
             left: -80px;
         }
 
         .orb-two {
+
             background: #06b6d4;
+
             bottom: -100px;
+
             right: -80px;
         }
 
         .register-wrapper {
+
             width: 100%;
-            max-width: 980px;
-            background: rgba(255,255,255,.92);
-            border: 1px solid rgba(229,231,235,.95);
+
+            max-width: 1000px;
+
+            background:
+                rgba(255,255,255,.94);
+
+            border:
+                1px solid
+                rgba(229,231,235,.95);
+
             border-radius: 22px;
-            box-shadow: 0 25px 70px rgba(17,24,39,.12);
+
+            box-shadow:
+                0 25px 70px
+                rgba(17,24,39,.12);
+
             overflow: hidden;
+
             display: grid;
-            grid-template-columns: .9fr 1.4fr;
+
+            grid-template-columns:
+                .9fr 1.4fr;
+
             position: relative;
+
             z-index: 1;
         }
 
+        /* ================= LEFT PANEL ================= */
+
         .intro-panel {
-            background: linear-gradient(145deg,#312e81,#4f46e5,#0891b2);
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #312e81,
+                    #4f46e5,
+                    #0891b2
+                );
+
             color: white;
+
             padding: 40px 32px;
+
             position: relative;
+
             overflow: hidden;
         }
 
         .intro-panel::before {
+
             content: "";
+
             position: absolute;
+
             width: 280px;
+
             height: 280px;
+
             border-radius: 50%;
-            border: 35px solid rgba(255,255,255,.06);
+
+            border:
+                35px solid
+                rgba(255,255,255,.06);
+
             top: -120px;
+
             right: -120px;
         }
 
         .intro-panel::after {
+
             content: "";
+
             position: absolute;
+
             width: 220px;
+
             height: 220px;
+
             border-radius: 50%;
-            border: 25px solid rgba(255,255,255,.05);
+
+            border:
+                25px solid
+                rgba(255,255,255,.05);
+
             bottom: -110px;
+
             left: -100px;
         }
 
         .brand {
+
             display: flex;
+
             align-items: center;
+
             gap: 10px;
+
             position: relative;
+
             z-index: 1;
         }
 
         .brand-icon {
+
             width: 44px;
+
             height: 44px;
+
             border-radius: 12px;
-            background: rgba(255,255,255,.15);
-            border: 1px solid rgba(255,255,255,.2);
+
+            background:
+                rgba(255,255,255,.15);
+
+            border:
+                1px solid
+                rgba(255,255,255,.2);
+
             display: flex;
+
             align-items: center;
+
             justify-content: center;
+
             font-size: 22px;
         }
 
         .brand-text h2 {
+
             font-size: 17px;
+
             letter-spacing: .3px;
         }
 
         .brand-text span {
+
             display: block;
+
             font-size: 9px;
+
             opacity: .8;
+
             margin-top: 3px;
         }
 
         .intro-content {
+
             position: relative;
+
             z-index: 1;
+
             margin-top: 55px;
         }
 
         .intro-content h1 {
+
             font-size: 30px;
+
             line-height: 1.2;
+
             margin-bottom: 13px;
         }
 
         .intro-content p {
+
             font-size: 11px;
+
             line-height: 1.7;
+
             opacity: .86;
+
             margin-bottom: 23px;
         }
 
         .feature-list {
+
             display: flex;
+
             flex-direction: column;
+
             gap: 11px;
         }
 
         .feature {
+
             display: flex;
+
             align-items: center;
+
             gap: 9px;
+
             font-size: 9px;
         }
 
         .feature-icon {
+
             width: 29px;
+
             height: 29px;
+
             border-radius: 8px;
-            background: rgba(255,255,255,.12);
+
+            background:
+                rgba(255,255,255,.12);
+
             display: flex;
+
             align-items: center;
+
             justify-content: center;
+
             font-size: 13px;
         }
 
-        .approval-note {
+        .security-note {
+
             margin-top: 30px;
+
             padding: 11px;
+
             border-radius: 9px;
-            background: rgba(255,255,255,.1);
-            border: 1px solid rgba(255,255,255,.15);
+
+            background:
+                rgba(255,255,255,.1);
+
+            border:
+                1px solid
+                rgba(255,255,255,.15);
+
             font-size: 8px;
+
             line-height: 1.55;
         }
 
+        /* ================= FORM PANEL ================= */
+
         .form-panel {
+
             padding: 38px 40px;
+
             background: white;
+
+            max-height: 90vh;
+
+            overflow-y: auto;
         }
 
         .form-header {
-            margin-bottom: 22px;
+
+            margin-bottom: 20px;
         }
 
         .form-header h1 {
+
             color: var(--dark);
+
             font-size: 24px;
+
             margin-bottom: 5px;
         }
 
         .form-header p {
+
             color: var(--muted);
+
             font-size: 10px;
+
             line-height: 1.5;
         }
+
+        /* ================= MESSAGE ================= */
 
         #message {
+
             display: none;
+
             padding: 11px 12px;
+
             border-radius: 9px;
+
             font-size: 9px;
+
             line-height: 1.5;
+
             margin-bottom: 15px;
-            border: 1px solid transparent;
+
+            border:
+                1px solid
+                transparent;
         }
 
+        /* ================= ROLE SELECT ================= */
+
+        .role-box {
+
+            background: #f8fafc;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 11px;
+
+            padding: 13px;
+
+            margin-bottom: 18px;
+        }
+
+        .role-box label {
+
+            font-size: 10px;
+
+            margin-bottom: 6px;
+        }
+
+        .role-description {
+
+            margin-top: 6px;
+
+            color: var(--muted);
+
+            font-size: 8px;
+
+            line-height: 1.5;
+        }
+
+        /* ================= GRID ================= */
+
         .form-grid {
+
             display: grid;
-            grid-template-columns: 1fr 1fr;
+
+            grid-template-columns:
+                1fr 1fr;
+
             gap: 13px;
         }
 
         .form-group {
+
             margin-bottom: 14px;
         }
 
         .full {
+
             grid-column: 1 / -1;
         }
 
+        .hidden {
+
+            display: none !important;
+        }
+
         label {
+
             display: block;
+
             color: var(--dark);
+
             font-size: 9px;
+
             font-weight: 700;
+
             margin-bottom: 6px;
         }
 
         .required {
+
             color: var(--danger);
         }
 
         input,
         select,
         textarea {
+
             width: 100%;
+
             padding: 10px 11px;
-            border: 1px solid var(--border);
+
+            border:
+                1px solid
+                var(--border);
+
             border-radius: 8px;
+
             background: white;
+
             color: var(--text);
+
             font-size: 10px;
+
             outline: none;
+
             transition: .2s;
         }
 
         input:focus,
         select:focus,
         textarea:focus {
+
             border-color: #a5b4fc;
-            box-shadow: 0 0 0 3px rgba(79,70,229,.08);
+
+            box-shadow:
+                0 0 0 3px
+                rgba(79,70,229,.08);
         }
 
         textarea {
+
             min-height: 82px;
+
             resize: vertical;
         }
 
         .password-wrap {
+
             position: relative;
         }
 
         .password-wrap input {
+
             padding-right: 40px;
         }
 
         .toggle-password {
+
             position: absolute;
+
             right: 10px;
+
             top: 50%;
-            transform: translateY(-50%);
+
+            transform:
+                translateY(-50%);
+
             border: none;
+
             background: transparent;
+
             cursor: pointer;
+
             color: var(--muted);
+
             font-size: 14px;
         }
 
         .field-note {
+
             color: #9ca3af;
+
             font-size: 7px;
+
             margin-top: 4px;
+
             line-height: 1.5;
         }
 
+        /* ================= TERMS ================= */
+
         .terms-row {
+
             display: flex;
+
             align-items: flex-start;
+
             gap: 7px;
-            margin: 5px 0 16px;
+
+            margin:
+                5px 0 16px;
         }
 
         .terms-row input {
+
             width: auto;
+
             margin-top: 2px;
-            accent-color: var(--primary);
+
+            accent-color:
+                var(--primary);
         }
 
         .terms-row label {
+
             font-size: 8px;
+
             color: var(--muted);
+
             line-height: 1.5;
+
             font-weight: 400;
         }
 
+        /* ================= BUTTON ================= */
+
         .submit-btn {
+
             width: 100%;
+
             border: none;
+
             border-radius: 9px;
+
             padding: 12px;
-            background: linear-gradient(135deg,var(--primary),var(--cyan));
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--primary),
+                    var(--cyan)
+                );
+
             color: white;
+
             font-size: 10px;
+
             font-weight: 800;
+
             cursor: pointer;
+
             transition: .2s;
         }
 
         .submit-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 8px 20px rgba(79,70,229,.22);
+
+            transform:
+                translateY(-1px);
+
+            box-shadow:
+                0 8px 20px
+                rgba(79,70,229,.22);
         }
 
         .submit-btn:disabled {
+
             opacity: .65;
+
             cursor: not-allowed;
+
             transform: none;
         }
 
+        /* ================= LOGIN LINK ================= */
+
         .login-link {
+
             text-align: center;
+
             margin-top: 16px;
+
             color: var(--muted);
+
             font-size: 9px;
         }
 
         .login-link a {
+
             color: var(--primary);
+
             text-decoration: none;
+
             font-weight: 800;
         }
 
         .login-link a:hover {
+
             text-decoration: underline;
         }
 
         .back-link {
+
             text-align: center;
+
             margin-top: 9px;
         }
 
         .back-link a {
+
             color: #9ca3af;
+
             text-decoration: none;
+
             font-size: 8px;
         }
 
         .back-link a:hover {
+
             color: var(--primary);
         }
 
+        /* ================= SUCCESS ================= */
+
         .success-screen {
+
             display: none;
+
             text-align: center;
-            padding: 25px 10px;
+
+            padding: 30px 10px;
         }
 
         .success-icon {
-            width: 68px;
-            height: 68px;
-            margin: 0 auto 14px;
+
+            width: 70px;
+
+            height: 70px;
+
+            margin:
+                0 auto 14px;
+
             border-radius: 50%;
+
             background: #dcfce7;
+
             color: var(--success);
+
             display: flex;
+
             align-items: center;
+
             justify-content: center;
-            font-size: 29px;
+
+            font-size: 30px;
         }
 
         .success-screen h2 {
+
             color: var(--dark);
-            font-size: 20px;
-            margin-bottom: 7px;
+
+            font-size: 21px;
+
+            margin-bottom: 8px;
         }
 
         .success-screen p {
+
             color: var(--muted);
+
             font-size: 9px;
-            line-height: 1.6;
-            max-width: 370px;
+
+            line-height: 1.7;
+
+            max-width: 390px;
+
             margin: auto;
         }
 
+        .organization-id-box {
+
+            margin:
+                18px auto 0;
+
+            padding: 12px;
+
+            max-width: 330px;
+
+            background: #eef2ff;
+
+            border:
+                1px solid
+                #c7d2fe;
+
+            border-radius: 9px;
+        }
+
+        .organization-id-box span {
+
+            display: block;
+
+            color: var(--muted);
+
+            font-size: 8px;
+
+            margin-bottom: 5px;
+        }
+
+        .organization-id-box strong {
+
+            color: var(--primary-dark);
+
+            font-size: 13px;
+
+            word-break: break-all;
+        }
+
         .success-actions {
+
             margin-top: 18px;
         }
 
         .success-actions a {
+
             display: inline-block;
+
             text-decoration: none;
+
             padding: 10px 16px;
+
             border-radius: 8px;
-            background: var(--primary);
+
+            background:
+                var(--primary);
+
             color: white;
+
             font-size: 9px;
+
             font-weight: 800;
         }
+
+        /* ================= RESPONSIVE ================= */
 
         @media (max-width: 850px) {
 
             .register-wrapper {
-                grid-template-columns: 1fr;
-                max-width: 620px;
+
+                grid-template-columns:
+                    1fr;
+
+                max-width: 650px;
             }
 
             .intro-panel {
+
                 padding: 28px;
             }
 
             .intro-content {
+
                 margin-top: 30px;
             }
 
             .intro-content h1 {
+
                 font-size: 24px;
             }
 
             .feature-list {
+
                 display: grid;
-                grid-template-columns: 1fr 1fr;
+
+                grid-template-columns:
+                    1fr 1fr;
             }
 
             .approval-note {
+
                 margin-top: 20px;
+            }
+
+            .form-panel {
+
+                max-height: none;
             }
         }
 
         @media (max-width: 550px) {
 
             body {
+
                 padding: 15px;
             }
 
             .form-panel {
-                padding: 28px 20px;
+
+                padding:
+                    28px 20px;
             }
 
             .form-grid {
-                grid-template-columns: 1fr;
+
+                grid-template-columns:
+                    1fr;
+
                 gap: 0;
             }
 
             .full {
+
                 grid-column: auto;
             }
 
             .feature-list {
-                grid-template-columns: 1fr;
+
+                grid-template-columns:
+                    1fr;
             }
         }
+
     </style>
+
 </head>
+
 
 <body>
 
@@ -490,7 +900,8 @@
 
     <div class="register-wrapper">
 
-        <!-- ================= INTRO ================= -->
+
+        <!-- ================= LEFT PANEL ================= -->
 
         <section class="intro-panel">
 
@@ -507,7 +918,7 @@
                     </h2>
 
                     <span>
-                        Organization Capacity Building Portal
+                        Digital Capacity Building & Learning Portal
                     </span>
 
                 </div>
@@ -522,52 +933,101 @@
                 </h1>
 
                 <p>
-                    Register your organization to manage trainers,
-                    trainees, courses, assessments, learning resources,
-                    certifications, and performance from one centralized
-                    platform.
+                    Create your account according to your role and
+                    access the workspace designed for organizations,
+                    trainers, and trainees.
                 </p>
 
 
                 <div class="feature-list">
 
                     <div class="feature">
-                        <div class="feature-icon">👥</div>
-                        <span>Manage trainees and trainers</span>
+
+                        <div class="feature-icon">
+                            🏢
+                        </div>
+
+                        <span>
+                            Organization Management
+                        </span>
+
                     </div>
 
-                    <div class="feature">
-                        <div class="feature-icon">📚</div>
-                        <span>Create and manage training courses</span>
-                    </div>
 
                     <div class="feature">
-                        <div class="feature-icon">📝</div>
-                        <span>Conduct assessments</span>
+
+                        <div class="feature-icon">
+                            👨‍🏫
+                        </div>
+
+                        <span>
+                            Trainer Workspace
+                        </span>
+
                     </div>
 
-                    <div class="feature">
-                        <div class="feature-icon">🗂️</div>
-                        <span>Share learning resources</span>
-                    </div>
 
                     <div class="feature">
-                        <div class="feature-icon">🏆</div>
-                        <span>Track certifications</span>
+
+                        <div class="feature-icon">
+                            👨‍🎓
+                        </div>
+
+                        <span>
+                            Trainee Learning
+                        </span>
+
                     </div>
 
+
                     <div class="feature">
-                        <div class="feature-icon">📊</div>
-                        <span>Monitor performance</span>
+
+                        <div class="feature-icon">
+                            📚
+                        </div>
+
+                        <span>
+                            Courses & Resources
+                        </span>
+
+                    </div>
+
+
+                    <div class="feature">
+
+                        <div class="feature-icon">
+                            📝
+                        </div>
+
+                        <span>
+                            Assessments
+                        </span>
+
+                    </div>
+
+
+                    <div class="feature">
+
+                        <div class="feature-icon">
+                            🏆
+                        </div>
+
+                        <span>
+                            Certificates & Progress
+                        </span>
+
                     </div>
 
                 </div>
 
 
-                <div class="approval-note">
-                    🔐 Use an official organization email containing the
-                    organization name and at least one number.
-                    Valid organizations receive immediate access.
+                <div class="security-note">
+
+                    🔐 Select the correct role during registration.
+                    The same role must be selected during login.
+                    Firebase verifies the stored role before opening
+                    the corresponding dashboard.
+
                 </div>
 
             </div>
@@ -575,19 +1035,19 @@
         </section>
 
 
-        <!-- ================= FORM ================= -->
+        <!-- ================= RIGHT PANEL ================= -->
 
         <section class="form-panel">
+
 
             <div class="form-header">
 
                 <h1>
-                    Register Your Organization
+                    Create Your Account
                 </h1>
 
                 <p>
-                    Create an organization account to access
-                    CAPACITY CONNECT.
+                    Select your role and enter the required details.
                 </p>
 
             </div>
@@ -596,7 +1056,7 @@
             <div id="message"></div>
 
 
-            <!-- SUCCESS -->
+            <!-- ================= SUCCESS ================= -->
 
             <div
                 class="success-screen"
@@ -610,16 +1070,31 @@
                     Registration Successful
                 </h2>
 
-                <p>
-                    Your organization account has been created and
-                    activated successfully. You can now login and
-                    access the CAPACITY CONNECT organization workspace.
+                <p id="successText">
+                    Your account has been created successfully.
                 </p>
+
+
+                <div
+                    class="organization-id-box"
+                    id="organizationIdBox"
+                    style="display:none;">
+
+                    <span>
+                        Organization ID
+                    </span>
+
+                    <strong
+                        id="generatedOrganizationId">
+                    </strong>
+
+                </div>
+
 
                 <div class="success-actions">
 
-                    <a href="organization-login.html">
-                        Go to Organization Login
+                    <a href="/organization-login.html">
+                        Go to CAPACITY CONNECT Login
                     </a>
 
                 </div>
@@ -627,43 +1102,98 @@
             </div>
 
 
-            <!-- FORM -->
+            <!-- ================= REGISTRATION FORM ================= -->
 
-            <form id="organizationForm">
+            <form id="registrationForm">
+
+
+                <!-- ================= ROLE ================= -->
+
+                <div class="role-box">
+
+                    <label for="role">
+
+                        Select Role
+                        <span class="required">*</span>
+
+                    </label>
+
+
+                    <select
+                        id="role"
+                        required>
+
+                        <option value="">
+                            Choose your role
+                        </option>
+
+                        <option value="organization">
+                            Organization
+                        </option>
+
+                        <option value="trainer">
+                            Trainer
+                        </option>
+
+                        <option value="trainee">
+                            Trainee
+                        </option>
+
+                    </select>
+
+
+                    <div
+                        class="role-description"
+                        id="roleDescription">
+
+                        Select a role to display the appropriate
+                        registration fields.
+
+                    </div>
+
+                </div>
+
+
+                <!-- ================= FORM GRID ================= -->
 
                 <div class="form-grid">
 
-                    <!-- ORGANIZATION NAME -->
 
-                    <div class="form-group">
+                    <!-- ================= ORGANIZATION ================= -->
+
+                    <div
+                        class="form-group"
+                        id="organizationNameGroup">
 
                         <label for="organizationName">
+
                             Organization Name
                             <span class="required">*</span>
+
                         </label>
 
                         <input
                             type="text"
                             id="organizationName"
                             placeholder="Enter organization name"
-                            maxlength="100"
-                            required>
+                            maxlength="100">
 
                     </div>
 
 
-                    <!-- ORGANIZATION TYPE -->
-
-                    <div class="form-group">
+                    <div
+                        class="form-group"
+                        id="organizationTypeGroup">
 
                         <label for="organizationType">
+
                             Organization Type
                             <span class="required">*</span>
+
                         </label>
 
                         <select
-                            id="organizationType"
-                            required>
+                            id="organizationType">
 
                             <option value="">
                                 Select type
@@ -698,32 +1228,40 @@
                     </div>
 
 
-                    <!-- CONTACT PERSON -->
+                    <!-- ================= NAME ================= -->
 
                     <div class="form-group">
 
-                        <label for="contactPerson">
-                            Contact Person
+                        <label
+                            for="fullName"
+                            id="fullNameLabel">
+
+                            Full Name
                             <span class="required">*</span>
+
                         </label>
 
                         <input
                             type="text"
-                            id="contactPerson"
-                            placeholder="Full name"
+                            id="fullName"
+                            placeholder="Enter full name"
                             maxlength="80"
                             required>
 
                     </div>
 
 
-                    <!-- DESIGNATION -->
+                    <!-- ================= DESIGNATION ================= -->
 
-                    <div class="form-group">
+                    <div
+                        class="form-group"
+                        id="designationGroup">
 
                         <label for="designation">
+
                             Designation
                             <span class="required">*</span>
+
                         </label>
 
                         <input
@@ -736,36 +1274,44 @@
                     </div>
 
 
-                    <!-- EMAIL -->
+                    <!-- ================= EMAIL ================= -->
 
                     <div class="form-group">
 
                         <label for="email">
-                            Official Email
+
+                            Email
                             <span class="required">*</span>
+
                         </label>
 
                         <input
                             type="email"
                             id="email"
-                            placeholder="organizationname12@gmail.com"
+                            placeholder="Enter registered email"
                             autocomplete="email"
                             required>
 
-                        <div class="field-note">
-                            Email must contain the organization name and at least one number.
+                        <div
+                            class="field-note"
+                            id="emailNote">
+
+                            Enter your registered email.
+
                         </div>
 
                     </div>
 
 
-                    <!-- PHONE -->
+                    <!-- ================= PHONE ================= -->
 
                     <div class="form-group">
 
                         <label for="phone">
+
                             Contact Number
                             <span class="required">*</span>
+
                         </label>
 
                         <input
@@ -779,12 +1325,16 @@
                     </div>
 
 
-                    <!-- WEBSITE -->
+                    <!-- ================= WEBSITE ================= -->
 
-                    <div class="form-group">
+                    <div
+                        class="form-group"
+                        id="websiteGroup">
 
                         <label for="website">
+
                             Organization Website
+
                         </label>
 
                         <input
@@ -795,50 +1345,248 @@
                     </div>
 
 
-                    <!-- CITY -->
+                    <!-- ================= CITY ================= -->
 
-                    <div class="form-group">
+                    <div
+                        class="form-group"
+                        id="cityGroup">
 
                         <label for="city">
+
                             City
                             <span class="required">*</span>
+
                         </label>
 
                         <input
                             type="text"
                             id="city"
                             placeholder="Enter city"
-                            maxlength="80"
-                            required>
+                            maxlength="80">
 
                     </div>
 
 
-                    <!-- ADDRESS -->
+                    <!-- ================= ADDRESS ================= -->
 
-                    <div class="form-group full">
+                    <div
+                        class="form-group full"
+                        id="addressGroup">
 
                         <label for="address">
+
                             Organization Address
                             <span class="required">*</span>
+
                         </label>
 
                         <textarea
                             id="address"
                             placeholder="Enter complete organization address"
-                            maxlength="300"
-                            required></textarea>
+                            maxlength="300"></textarea>
 
                     </div>
 
 
-                    <!-- PASSWORD -->
+                    <!-- ================= ORGANIZATION ID ================= -->
+
+                    <div
+                        class="form-group"
+                        id="organizationIdGroup">
+
+                        <label for="organizationId">
+
+                            Organization ID / Code
+                            <span class="required">*</span>
+
+                        </label>
+
+                        <input
+                            type="text"
+                            id="organizationId"
+                            placeholder="Enter Organization ID">
+
+                        <div class="field-note">
+
+                            Trainers and trainees must use the
+                            Organization ID provided by their organization.
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ================= QUALIFICATION ================= -->
+
+                    <div
+                        class="form-group"
+                        id="qualificationGroup">
+
+                        <label for="qualification">
+
+                            Qualification
+                            <span class="required">*</span>
+
+                        </label>
+
+                        <input
+                            type="text"
+                            id="qualification"
+                            placeholder="Example: B.Tech, MBA">
+
+                    </div>
+
+
+                    <!-- ================= EXPERIENCE ================= -->
+
+                    <div
+                        class="form-group"
+                        id="experienceGroup">
+
+                        <label for="experience">
+
+                            Experience
+                            <span class="required">*</span>
+
+                        </label>
+
+                        <input
+                            type="text"
+                            id="experience"
+                            placeholder="Example: 3 years">
+
+                    </div>
+
+
+                    <!-- ================= TRAINEE ID ================= -->
+
+                    <div
+                        class="form-group"
+                        id="traineeIdGroup">
+
+                        <label for="traineeId">
+
+                            Roll Number / Employee ID
+                            <span class="required">*</span>
+
+                        </label>
+
+                        <input
+                            type="text"
+                            id="traineeId"
+                            placeholder="Enter Roll Number / Employee ID">
+
+                    </div>
+
+
+                    <!-- ================= BRANCH ================= -->
+
+                    <div
+                        class="form-group"
+                        id="branchGroup">
+
+                        <label for="branch">
+
+                            Branch
+
+                        </label>
+
+                        <input
+                            type="text"
+                            id="branch"
+                            placeholder="Example: CSE">
+
+                    </div>
+
+
+                    <!-- ================= SECTION ================= -->
+
+                    <div
+                        class="form-group"
+                        id="sectionGroup">
+
+                        <label for="section">
+
+                            Section
+
+                        </label>
+
+                        <input
+                            type="text"
+                            id="section"
+                            placeholder="Example: A">
+
+                    </div>
+
+
+                    <!-- ================= YEAR ================= -->
+
+                    <div
+                        class="form-group"
+                        id="yearGroup">
+
+                        <label for="studyYear">
+
+                            Year
+
+                        </label>
+
+                        <select id="studyYear">
+
+                            <option value="">
+                                Select year
+                            </option>
+
+                            <option value="1st Year">
+                                1st Year
+                            </option>
+
+                            <option value="2nd Year">
+                                2nd Year
+                            </option>
+
+                            <option value="3rd Year">
+                                3rd Year
+                            </option>
+
+                            <option value="4th Year">
+                                4th Year
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- ================= SKILLS ================= -->
+
+                    <div
+                        class="form-group full"
+                        id="skillsGroup">
+
+                        <label for="skills">
+
+                            Skills / Interests
+
+                        </label>
+
+                        <input
+                            type="text"
+                            id="skills"
+                            placeholder="Example: Java, Python, Communication">
+
+                    </div>
+
+
+                    <!-- ================= PASSWORD ================= -->
 
                     <div class="form-group">
 
                         <label for="password">
+
                             Password
                             <span class="required">*</span>
+
                         </label>
 
                         <div class="password-wrap">
@@ -854,25 +1602,25 @@
                                 type="button"
                                 class="toggle-password"
                                 onclick="togglePassword('password', this)">
+
                                 👁
+
                             </button>
 
-                        </div>
-
-                        <div class="field-note">
-                            Use at least 6 characters.
                         </div>
 
                     </div>
 
 
-                    <!-- CONFIRM PASSWORD -->
+                    <!-- ================= CONFIRM ================= -->
 
                     <div class="form-group">
 
                         <label for="confirmPassword">
+
                             Confirm Password
                             <span class="required">*</span>
+
                         </label>
 
                         <div class="password-wrap">
@@ -888,17 +1636,20 @@
                                 type="button"
                                 class="toggle-password"
                                 onclick="togglePassword('confirmPassword', this)">
+
                                 👁
+
                             </button>
 
                         </div>
 
                     </div>
 
+
                 </div>
 
 
-                <!-- TERMS -->
+                <!-- ================= TERMS ================= -->
 
                 <div class="terms-row">
 
@@ -909,45 +1660,54 @@
 
                     <label for="terms">
 
-                        I confirm that the information provided above is
+                        I confirm that the information provided is
                         accurate and I agree to the CAPACITY CONNECT
-                        organization registration and platform usage terms.
+                        registration and platform usage terms.
 
                     </label>
 
                 </div>
 
 
-                <!-- SUBMIT -->
+                <!-- ================= SUBMIT ================= -->
 
                 <button
                     type="submit"
                     class="submit-btn"
                     id="submitButton">
 
-                    🏢 Create Organization Account
+                    📝 Create Account
 
                 </button>
 
+
+                <!-- ================= LOGIN ================= -->
 
                 <div class="login-link">
 
                     Already registered?
 
-                    <a href="/Capacity-Connect-login.html">
-                        Main Login
+                    <a href="/organization-login.html">
+
+                        CAPACITY CONNECT Login
+
                     </a>
 
                 </div>
 
+
+                <!-- ================= BACK ================= -->
 
                 <div class="back-link">
 
-                    <a href="../index.html">
+                    <a href="/">
+
                         ← Back to JigsawConnect
+
                     </a>
 
                 </div>
+
 
             </form>
 
@@ -961,13 +1721,23 @@
     <script type="module">
 
         import {
+
             auth,
+
             db,
+
             ref,
+
             set,
+
             push,
+
+            get,
+
             createUserWithEmailAndPassword,
+
             deleteUser
+
         } from "../firebase.js";
 
 
@@ -975,7 +1745,12 @@
 
         const form =
             document.getElementById(
-                "organizationForm"
+                "registrationForm"
+            );
+
+        const roleSelect =
+            document.getElementById(
+                "role"
             );
 
         const message =
@@ -992,6 +1767,153 @@
             document.getElementById(
                 "successScreen"
             );
+
+        const successText =
+            document.getElementById(
+                "successText"
+            );
+
+        const roleDescription =
+            document.getElementById(
+                "roleDescription"
+            );
+
+        const organizationIdBox =
+            document.getElementById(
+                "organizationIdBox"
+            );
+
+        const generatedOrganizationId =
+            document.getElementById(
+                "generatedOrganizationId"
+            );
+
+
+        /* ================= GROUPS ================= */
+
+        const organizationNameGroup =
+            document.getElementById(
+                "organizationNameGroup"
+            );
+
+        const organizationTypeGroup =
+            document.getElementById(
+                "organizationTypeGroup"
+            );
+
+        const websiteGroup =
+            document.getElementById(
+                "websiteGroup"
+            );
+
+        const cityGroup =
+            document.getElementById(
+                "cityGroup"
+            );
+
+        const addressGroup =
+            document.getElementById(
+                "addressGroup"
+            );
+
+        const organizationIdGroup =
+            document.getElementById(
+                "organizationIdGroup"
+            );
+
+        const qualificationGroup =
+            document.getElementById(
+                "qualificationGroup"
+            );
+
+        const experienceGroup =
+            document.getElementById(
+                "experienceGroup"
+            );
+
+        const traineeIdGroup =
+            document.getElementById(
+                "traineeIdGroup"
+            );
+
+        const branchGroup =
+            document.getElementById(
+                "branchGroup"
+            );
+
+        const sectionGroup =
+            document.getElementById(
+                "sectionGroup"
+            );
+
+        const yearGroup =
+            document.getElementById(
+                "yearGroup"
+            );
+
+        const skillsGroup =
+            document.getElementById(
+                "skillsGroup"
+            );
+
+        const designationGroup =
+            document.getElementById(
+                "designationGroup"
+            );
+
+
+        /* ================= HELPERS ================= */
+
+        function showElement(element) {
+
+            element.classList.remove(
+                "hidden"
+            );
+        }
+
+
+        function hideElement(element) {
+
+            element.classList.add(
+                "hidden"
+            );
+        }
+
+
+        function setRequired(
+            id,
+            value
+        ) {
+
+            const element =
+                document.getElementById(
+                    id
+                );
+
+            if (element) {
+
+                element.required =
+                    value;
+            }
+        }
+
+
+        function clean(value) {
+
+            return String(
+                value || ""
+            ).trim();
+        }
+
+
+        function normalize(value) {
+
+            return String(
+                value || ""
+            )
+                .trim()
+                .toLowerCase();
+        }
 
 
         /* ================= MESSAGE ================= */
@@ -1044,10 +1966,348 @@
 
                 message.style.color =
                     "#b91c1c";
+            }
+        }
 
+
+        /* ================= ROLE FORM ================= */
+
+        function updateRoleForm() {
+
+            const role =
+                roleSelect.value;
+
+
+            /*
+             * Hide all role-specific fields first.
+             */
+
+            hideElement(
+                organizationNameGroup
+            );
+
+            hideElement(
+                organizationTypeGroup
+            );
+
+            hideElement(
+                websiteGroup
+            );
+
+            hideElement(
+                cityGroup
+            );
+
+            hideElement(
+                addressGroup
+            );
+
+            hideElement(
+                organizationIdGroup
+            );
+
+            hideElement(
+                qualificationGroup
+            );
+
+            hideElement(
+                experienceGroup
+            );
+
+            hideElement(
+                traineeIdGroup
+            );
+
+            hideElement(
+                branchGroup
+            );
+
+            hideElement(
+                sectionGroup
+            );
+
+            hideElement(
+                yearGroup
+            );
+
+            hideElement(
+                skillsGroup
+            );
+
+
+            /*
+             * Common fields.
+             */
+
+            showElement(
+                designationGroup
+            );
+
+
+            setRequired(
+                "organizationName",
+                false
+            );
+
+            setRequired(
+                "organizationType",
+                false
+            );
+
+            setRequired(
+                "city",
+                false
+            );
+
+            setRequired(
+                "address",
+                false
+            );
+
+            setRequired(
+                "organizationId",
+                false
+            );
+
+            setRequired(
+                "qualification",
+                false
+            );
+
+            setRequired(
+                "experience",
+                false
+            );
+
+            setRequired(
+                "traineeId",
+                false
+            );
+
+
+            const fullNameLabel =
+                document.getElementById(
+                    "fullNameLabel"
+                );
+
+            const emailNote =
+                document.getElementById(
+                    "emailNote"
+                );
+
+
+            /* ================= ORGANIZATION ================= */
+
+            if (
+                role === "organization"
+            ) {
+
+                roleDescription.textContent =
+                    "Organization accounts can manage trainers, trainees, courses, assessments, resources, certificates, and performance.";
+
+
+                fullNameLabel.innerHTML =
+                    'Contact Person <span class="required">*</span>';
+
+
+                emailNote.textContent =
+                    "Organization email must contain the organization name and at least one number.";
+
+
+                showElement(
+                    organizationNameGroup
+                );
+
+                showElement(
+                    organizationTypeGroup
+                );
+
+                showElement(
+                    websiteGroup
+                );
+
+                showElement(
+                    cityGroup
+                );
+
+                showElement(
+                    addressGroup
+                );
+
+
+                setRequired(
+                    "organizationName",
+                    true
+                );
+
+                setRequired(
+                    "organizationType",
+                    true
+                );
+
+                setRequired(
+                    "city",
+                    true
+                );
+
+                setRequired(
+                    "address",
+                    true
+                );
+
+
+                submitButton.textContent =
+                    "🏢 Create Organization Account";
+            }
+
+
+            /* ================= TRAINER ================= */
+
+            else if (
+                role === "trainer"
+            ) {
+
+                roleDescription.textContent =
+                    "Trainer accounts can manage learning content, courses, assessments, and work with trainees belonging to their organization.";
+
+
+                fullNameLabel.innerHTML =
+                    'Full Name <span class="required">*</span>';
+
+
+                emailNote.textContent =
+                    "Use the email that you want to use for trainer login.";
+
+
+                showElement(
+                    organizationIdGroup
+                );
+
+                showElement(
+                    qualificationGroup
+                );
+
+                showElement(
+                    experienceGroup
+                );
+
+                showElement(
+                    skillsGroup
+                );
+
+
+                setRequired(
+                    "organizationId",
+                    true
+                );
+
+                setRequired(
+                    "qualification",
+                    true
+                );
+
+                setRequired(
+                    "experience",
+                    true
+                );
+
+
+                submitButton.textContent =
+                    "👨‍🏫 Create Trainer Account";
+            }
+
+
+            /* ================= TRAINEE ================= */
+
+            else if (
+                role === "trainee"
+            ) {
+
+                roleDescription.textContent =
+                    "Trainee accounts can access courses, assessments, certificates, feedback, and their own learning workspace.";
+
+
+                fullNameLabel.innerHTML =
+                    'Full Name <span class="required">*</span>';
+
+
+                emailNote.textContent =
+                    "Use the email that you want to use for trainee login.";
+
+
+                hideElement(
+                    designationGroup
+                );
+
+
+                showElement(
+                    organizationIdGroup
+                );
+
+                showElement(
+                    traineeIdGroup
+                );
+
+                showElement(
+                    branchGroup
+                );
+
+                showElement(
+                    sectionGroup
+                );
+
+                showElement(
+                    yearGroup
+                );
+
+                showElement(
+                    skillsGroup
+                );
+
+
+                setRequired(
+                    "organizationId",
+                    true
+                );
+
+                setRequired(
+                    "traineeId",
+                    true
+                );
+
+
+                submitButton.textContent =
+                    "👨‍🎓 Create Trainee Account";
+            }
+
+
+            /* ================= NOTHING SELECTED ================= */
+
+            else {
+
+                roleDescription.textContent =
+                    "Select Organization, Trainer, or Trainee to display the appropriate registration fields.";
+
+
+                fullNameLabel.innerHTML =
+                    'Full Name <span class="required">*</span>';
+
+
+                emailNote.textContent =
+                    "Enter your registered email.";
+
+
+                submitButton.textContent =
+                    "📝 Create Account";
             }
 
         }
+
+
+        roleSelect.addEventListener(
+            "change",
+            updateRoleForm
+        );
 
 
         /* ================= PASSWORD ================= */
@@ -1082,52 +2342,29 @@
 
                     button.textContent =
                         "👁";
-
                 }
-
             };
 
 
-        /* ================= NORMALIZE ORGANIZATION ================= */
+        /* ================= ORGANIZATION EMAIL ================= */
 
         function normalizeOrganizationName(
             name
         ) {
 
-            return name
+            return clean(name)
                 .toLowerCase()
                 .replace(
                     /[^a-z0-9]/g,
                     ""
                 );
-
         }
 
-
-        /* ================= EMAIL VALIDATION ================= */
 
         function validateOrganizationEmail(
             organizationName,
             email
         ) {
-
-            const atIndex =
-                email.indexOf("@");
-
-
-            if (atIndex === -1) {
-                return false;
-            }
-
-
-            const localPart =
-                email
-                    .substring(
-                        0,
-                        atIndex
-                    )
-                    .toLowerCase();
-
 
             const normalizedName =
                 normalizeOrganizationName(
@@ -1135,189 +2372,57 @@
                 );
 
 
-            const hasOrganizationName =
+            const localPart =
+                email
+                    .split("@")[0]
+                    .toLowerCase();
+
+
+            return (
                 normalizedName.length >= 3 &&
                 localPart.includes(
                     normalizedName
-                );
-
-
-            const hasNumber =
+                ) &&
                 /\d/.test(
                     localPart
-                );
-
-
-            return (
-                hasOrganizationName &&
-                hasNumber
+                )
             );
-
         }
 
 
-        /* ================= SAFE EMAIL DISPLAY ================= */
+        /* ================= DELETE DATABASE PATH ================= */
 
-        function maskEmail(
-            email
+        async function deletePath(
+            path
         ) {
 
-            const parts =
-                email.split("@");
-
-
-            if (
-                parts.length !== 2
-            ) {
-                return email;
+            if (!path) {
+                return;
             }
 
 
-            const local =
-                parts[0];
+            try {
 
-
-            const domain =
-                parts[1];
-
-
-            if (
-                local.length <= 3
-            ) {
-
-                return (
-                    local[0] +
-                    "***@" +
-                    domain
+                await set(
+                    ref(
+                        db,
+                        path
+                    ),
+                    null
                 );
 
+            } catch (error) {
+
+                console.warn(
+                    "Rollback failed:",
+                    path,
+                    error
+                );
             }
-
-
-            return (
-                local.substring(
-                    0,
-                    2
-                ) +
-                "***@" +
-                domain
-            );
-
         }
 
 
-        /* ================= ROLLBACK ================= */
-
-        async function rollbackOrganization(
-            user,
-            organizationRefPath,
-            userRefPath,
-            organizationUserRefPath
-        ) {
-
-            try {
-
-                if (
-                    organizationRefPath
-                ) {
-
-                    await set(
-                        ref(
-                            db,
-                            organizationRefPath
-                        ),
-                        null
-                    );
-
-                }
-
-            } catch (error) {
-
-                console.warn(
-                    "Organization rollback failed:",
-                    error
-                );
-
-            }
-
-
-            try {
-
-                if (
-                    userRefPath
-                ) {
-
-                    await set(
-                        ref(
-                            db,
-                            userRefPath
-                        ),
-                        null
-                    );
-
-                }
-
-            } catch (error) {
-
-                console.warn(
-                    "User rollback failed:",
-                    error
-                );
-
-            }
-
-
-            try {
-
-                if (
-                    organizationUserRefPath
-                ) {
-
-                    await set(
-                        ref(
-                            db,
-                            organizationUserRefPath
-                        ),
-                        null
-                    );
-
-                }
-
-            } catch (error) {
-
-                console.warn(
-                    "Organization user rollback failed:",
-                    error
-                );
-
-            }
-
-
-            try {
-
-                if (
-                    user
-                ) {
-
-                    await deleteUser(
-                        user
-                    );
-
-                }
-
-            } catch (error) {
-
-                console.warn(
-                    "Firebase Auth rollback failed:",
-                    error
-                );
-
-            }
-
-        }
-
-
-        /* ================= FORM ================= */
+        /* ================= FORM SUBMIT ================= */
 
         form.addEventListener(
             "submit",
@@ -1330,85 +2435,51 @@
                     "none";
 
 
-                const organizationName =
-                    document
-                        .getElementById(
-                            "organizationName"
-                        )
-                        .value
-                        .trim();
+                const selectedRole =
+                    normalize(
+                        roleSelect.value
+                    );
 
 
-                const organizationType =
-                    document
-                        .getElementById(
-                            "organizationType"
-                        )
-                        .value;
-
-
-                const contactPerson =
-                    document
-                        .getElementById(
-                            "contactPerson"
-                        )
-                        .value
-                        .trim();
+                const fullName =
+                    clean(
+                        document
+                            .getElementById(
+                                "fullName"
+                            )
+                            .value
+                    );
 
 
                 const designation =
-                    document
-                        .getElementById(
-                            "designation"
-                        )
-                        .value
-                        .trim();
+                    clean(
+                        document
+                            .getElementById(
+                                "designation"
+                            )
+                            .value
+                    );
 
 
                 const email =
-                    document
-                        .getElementById(
-                            "email"
-                        )
-                        .value
-                        .trim()
+                    clean(
+                        document
+                            .getElementById(
+                                "email"
+                            )
+                            .value
+                    )
                         .toLowerCase();
 
 
                 const phone =
-                    document
-                        .getElementById(
-                            "phone"
-                        )
-                        .value
-                        .trim();
-
-
-                const website =
-                    document
-                        .getElementById(
-                            "website"
-                        )
-                        .value
-                        .trim();
-
-
-                const city =
-                    document
-                        .getElementById(
-                            "city"
-                        )
-                        .value
-                        .trim();
-
-
-                const address =
-                    document
-                        .getElementById(
-                            "address"
-                        )
-                        .value
-                        .trim();
+                    clean(
+                        document
+                            .getElementById(
+                                "phone"
+                            )
+                            .value
+                    );
 
 
                 const password =
@@ -1427,17 +2498,153 @@
                         .value;
 
 
-                /* ================= BASIC VALIDATION ================= */
+                const organizationName =
+                    clean(
+                        document
+                            .getElementById(
+                                "organizationName"
+                            )
+                            .value
+                    );
+
+
+                const organizationType =
+                    document
+                        .getElementById(
+                            "organizationType"
+                        )
+                        .value;
+
+
+                const website =
+                    clean(
+                        document
+                            .getElementById(
+                                "website"
+                            )
+                            .value
+                    );
+
+
+                const city =
+                    clean(
+                        document
+                            .getElementById(
+                                "city"
+                            )
+                            .value
+                    );
+
+
+                const address =
+                    clean(
+                        document
+                            .getElementById(
+                                "address"
+                            )
+                            .value
+                    );
+
+
+                const organizationId =
+                    clean(
+                        document
+                            .getElementById(
+                                "organizationId"
+                            )
+                            .value
+                    );
+
+
+                const qualification =
+                    clean(
+                        document
+                            .getElementById(
+                                "qualification"
+                            )
+                            .value
+                    );
+
+
+                const experience =
+                    clean(
+                        document
+                            .getElementById(
+                                "experience"
+                            )
+                            .value
+                    );
+
+
+                const traineeId =
+                    clean(
+                        document
+                            .getElementById(
+                                "traineeId"
+                            )
+                            .value
+                    );
+
+
+                const branch =
+                    clean(
+                        document
+                            .getElementById(
+                                "branch"
+                            )
+                            .value
+                    );
+
+
+                const section =
+                    clean(
+                        document
+                            .getElementById(
+                                "section"
+                            )
+                            .value
+                    );
+
+
+                const studyYear =
+                    document
+                        .getElementById(
+                            "studyYear"
+                        )
+                        .value;
+
+
+                const skills =
+                    clean(
+                        document
+                            .getElementById(
+                                "skills"
+                            )
+                            .value
+                    );
+
+
+                /* ================= COMMON VALIDATION ================= */
 
                 if (
-                    !organizationName ||
-                    !organizationType ||
-                    !contactPerson ||
-                    !designation ||
+                    !selectedRole
+                ) {
+
+                    showMessage(
+                        "Please select your role.",
+                        "warning"
+                    );
+
+                    roleSelect.focus();
+
+                    return;
+                }
+
+
+                if (
+                    !fullName ||
                     !email ||
                     !phone ||
-                    !city ||
-                    !address ||
                     !password ||
                     !confirmPassword
                 ) {
@@ -1448,27 +2655,8 @@
                     );
 
                     return;
-
                 }
 
-
-                /* ================= NAME VALIDATION ================= */
-
-                if (
-                    organizationName.length < 3
-                ) {
-
-                    showMessage(
-                        "Organization name must contain at least 3 characters.",
-                        "warning"
-                    );
-
-                    return;
-
-                }
-
-
-                /* ================= PHONE ================= */
 
                 if (
                     !/^[0-9]{10}$/.test(
@@ -1482,30 +2670,8 @@
                     );
 
                     return;
-
                 }
 
-
-                /* ================= EMAIL ================= */
-
-                if (
-                    !validateOrganizationEmail(
-                        organizationName,
-                        email
-                    )
-                ) {
-
-                    showMessage(
-                        "Invalid official email. The email must contain your organization name and at least one number. Example: organizationname12@gmail.com",
-                        "warning"
-                    );
-
-                    return;
-
-                }
-
-
-                /* ================= PASSWORD ================= */
 
                 if (
                     password.length < 6
@@ -1517,7 +2683,6 @@
                     );
 
                     return;
-
                 }
 
 
@@ -1532,30 +2697,197 @@
                     );
 
                     return;
-
                 }
 
 
-                /* ================= WEBSITE ================= */
+                /* ================= ORGANIZATION VALIDATION ================= */
 
                 if (
-                    website &&
-                    !/^https?:\/\/.+/i.test(
-                        website
-                    )
+                    selectedRole ===
+                    "organization"
                 ) {
 
-                    showMessage(
-                        "Website must start with http:// or https://",
-                        "warning"
-                    );
+                    if (
+                        organizationName.length < 3
+                    ) {
 
-                    return;
+                        showMessage(
+                            "Organization name must contain at least 3 characters.",
+                            "warning"
+                        );
 
+                        return;
+                    }
+
+
+                    if (
+                        !organizationType
+                    ) {
+
+                        showMessage(
+                            "Please select organization type.",
+                            "warning"
+                        );
+
+                        return;
+                    }
+
+
+                    if (
+                        !designation
+                    ) {
+
+                        showMessage(
+                            "Please enter contact person's designation.",
+                            "warning"
+                        );
+
+                        return;
+                    }
+
+
+                    if (
+                        !city ||
+                        !address
+                    ) {
+
+                        showMessage(
+                            "Please enter city and organization address.",
+                            "warning"
+                        );
+
+                        return;
+                    }
+
+
+                    if (
+                        !validateOrganizationEmail(
+                            organizationName,
+                            email
+                        )
+                    ) {
+
+                        showMessage(
+                            "Organization email must contain the organization name and at least one number. Example: hippocloud12@gmail.com",
+                            "warning"
+                        );
+
+                        return;
+                    }
+
+
+                    if (
+                        website &&
+                        !/^https?:\/\/.+/i.test(
+                            website
+                        )
+                    ) {
+
+                        showMessage(
+                            "Website must start with http:// or https://",
+                            "warning"
+                        );
+
+                        return;
+                    }
                 }
 
 
-                /* ================= BUTTON ================= */
+                /* ================= TRAINER VALIDATION ================= */
+
+                if (
+                    selectedRole ===
+                    "trainer"
+                ) {
+
+                    if (
+                        !organizationId
+                    ) {
+
+                        showMessage(
+                            "Please enter your Organization ID.",
+                            "warning"
+                        );
+
+                        return;
+                    }
+
+
+                    if (
+                        !designation
+                    ) {
+
+                        showMessage(
+                            "Please enter your designation.",
+                            "warning"
+                        );
+
+                        return;
+                    }
+
+
+                    if (
+                        !qualification
+                    ) {
+
+                        showMessage(
+                            "Please enter your qualification.",
+                            "warning"
+                        );
+
+                        return;
+                    }
+
+
+                    if (
+                        !experience
+                    ) {
+
+                        showMessage(
+                            "Please enter your experience.",
+                            "warning"
+                        );
+
+                        return;
+                    }
+                }
+
+
+                /* ================= TRAINEE VALIDATION ================= */
+
+                if (
+                    selectedRole ===
+                    "trainee"
+                ) {
+
+                    if (
+                        !organizationId
+                    ) {
+
+                        showMessage(
+                            "Please enter your Organization ID.",
+                            "warning"
+                        );
+
+                        return;
+                    }
+
+
+                    if (
+                        !traineeId
+                    ) {
+
+                        showMessage(
+                            "Please enter your Roll Number / Employee ID.",
+                            "warning"
+                        );
+
+                        return;
+                    }
+                }
+
+
+                /* ================= START ================= */
 
                 submitButton.disabled =
                     true;
@@ -1579,10 +2911,11 @@
 
                 try {
 
-                    /* ================= CREATE AUTH ================= */
+                    /* ================= FIREBASE AUTH ================= */
 
-                    const userCredential =
-                        await createUserWithEmailAndPassword(
+                    const credential =
+                        await
+                        createUserWithEmailAndPassword(
                             auth,
                             email,
                             password
@@ -1590,247 +2923,588 @@
 
 
                     createdUser =
-                        userCredential.user;
-
-
-                    /* ================= CREATE ORGANIZATION ID ================= */
-
-                    const organizationRef =
-                        push(
-                            ref(
-                                db,
-                                "organizations"
-                            )
-                        );
-
-
-                    const organizationId =
-                        organizationRef.key;
-
-
-                    if (
-                        !organizationId
-                    ) {
-
-                        throw new Error(
-                            "Could not generate organization ID."
-                        );
-
-                    }
-
-
-                    organizationPath =
-                        "organizations/" +
-                        organizationId;
-
-
-                    userPath =
-                        "users/" +
-                        createdUser.uid;
-
-
-                    organizationUserPath =
-                        "organizationUsers/" +
-                        organizationId +
-                        "/" +
-                        createdUser.uid;
+                        credential.user;
 
 
                     const timestamp =
                         Date.now();
 
 
-                    /* ================= ORGANIZATION DATA ================= */
+                    /* ==================================================
+                       ORGANIZATION REGISTRATION
+                       ================================================== */
 
-                    const organizationData = {
-
-                        organizationId:
-                            organizationId,
-
-                        name:
-                            organizationName,
-
-                        type:
-                            organizationType,
-
-                        contactPerson:
-                            contactPerson,
-
-                        designation:
-                            designation,
-
-                        officialEmail:
-                            email,
-
-                        phone:
-                            phone,
-
-                        website:
-                            website || "",
-
-                        city:
-                            city,
-
-                        address:
-                            address,
-
-                        ownerUid:
-                            createdUser.uid,
-
-                        role:
-                            "organization",
-
-                        accountType:
-                            "organization",
-
-                        status:
-                            "approved",
-
-                        createdOn:
-                            timestamp
-
-                    };
-
-
-                    /* ================= USER DATA ================= */
-
-                    const userData = {
-
-                        uid:
-                            createdUser.uid,
-
-                        name:
-                            contactPerson,
-
-                        email:
-                            email,
-
-                        role:
-                            "organization",
-
-                        accountType:
-                            "organization",
-
-                        organizationId:
-                            organizationId,
-
-                        organizationName:
-                            organizationName,
-
-                        organizationType:
-                            organizationType,
-
-                        designation:
-                            designation,
-
-                        status:
-                            "approved",
-
-                        createdOn:
-                            timestamp
-
-                    };
-
-
-                    /* ================= ORGANIZATION USER DATA ================= */
-
-                    const organizationUserData = {
-
-                        uid:
-                            createdUser.uid,
-
-                        name:
-                            contactPerson,
-
-                        email:
-                            email,
-
-                        role:
-                            "organization",
-
-                        organizationId:
-                            organizationId,
-
-                        organizationName:
-                            organizationName,
-
-                        status:
-                            "approved",
-
-                        createdOn:
-                            timestamp
-
-                    };
-
-
-                    /* ================= SAVE ORGANIZATION ================= */
-
-                    await set(
-                        ref(
-                            db,
-                            organizationPath
-                        ),
-                        organizationData
-                    );
-
-
-                    /* ================= SAVE USER ================= */
-
-                    await set(
-                        ref(
-                            db,
-                            userPath
-                        ),
-                        userData
-                    );
-
-
-                    /* ================= SAVE ORGANIZATION USER ================= */
-
-                    await set(
-                        ref(
-                            db,
-                            organizationUserPath
-                        ),
-                        organizationUserData
-                    );
-
-
-                    /* ================= SESSION ================= */
-
-                    sessionStorage.setItem(
-                        "organizationUid",
-                        createdUser.uid
-                    );
-
-                    sessionStorage.setItem(
-                        "organizationId",
-                        organizationId
-                    );
-
-                    sessionStorage.setItem(
-                        "organizationName",
-                        organizationName
-                    );
-
-                    sessionStorage.setItem(
-                        "organizationEmail",
-                        email
-                    );
-
-                    sessionStorage.setItem(
-                        "organizationRole",
+                    if (
+                        selectedRole ===
                         "organization"
-                    );
+                    ) {
+
+                        const organizationRef =
+                            push(
+                                ref(
+                                    db,
+                                    "organizations"
+                                )
+                            );
 
 
-                    /* ================= SUCCESS ================= */
+                        const newOrganizationId =
+                            organizationRef.key;
 
-                    showMessage(
-                        "Organization account created and activated successfully.",
-                        "success"
-                    );
 
+                        if (
+                            !newOrganizationId
+                        ) {
+
+                            throw new Error(
+                                "Could not generate Organization ID."
+                            );
+                        }
+
+
+                        organizationPath =
+                            "organizations/" +
+                            newOrganizationId;
+
+
+                        userPath =
+                            "users/" +
+                            createdUser.uid;
+
+
+                        organizationUserPath =
+                            "organizationUsers/" +
+                            newOrganizationId +
+                            "/" +
+                            createdUser.uid;
+
+
+                        const organizationData = {
+
+                            organizationId:
+                                newOrganizationId,
+
+                            name:
+                                organizationName,
+
+                            type:
+                                organizationType,
+
+                            contactPerson:
+                                fullName,
+
+                            designation:
+                                designation,
+
+                            officialEmail:
+                                email,
+
+                            phone:
+                                phone,
+
+                            website:
+                                website || "",
+
+                            city:
+                                city,
+
+                            address:
+                                address,
+
+                            ownerUid:
+                                createdUser.uid,
+
+                            role:
+                                "organization",
+
+                            accountType:
+                                "organization",
+
+                            status:
+                                "approved",
+
+                            createdOn:
+                                timestamp
+
+                        };
+
+
+                        const userData = {
+
+                            uid:
+                                createdUser.uid,
+
+                            name:
+                                fullName,
+
+                            email:
+                                email,
+
+                            role:
+                                "organization",
+
+                            accountType:
+                                "organization",
+
+                            organizationId:
+                                newOrganizationId,
+
+                            organizationName:
+                                organizationName,
+
+                            organizationType:
+                                organizationType,
+
+                            designation:
+                                designation,
+
+                            status:
+                                "approved",
+
+                            createdOn:
+                                timestamp
+
+                        };
+
+
+                        const organizationUserData = {
+
+                            uid:
+                                createdUser.uid,
+
+                            name:
+                                fullName,
+
+                            email:
+                                email,
+
+                            role:
+                                "organization",
+
+                            organizationId:
+                                newOrganizationId,
+
+                            organizationName:
+                                organizationName,
+
+                            status:
+                                "approved",
+
+                            createdOn:
+                                timestamp
+
+                        };
+
+
+                        await set(
+                            ref(
+                                db,
+                                organizationPath
+                            ),
+                            organizationData
+                        );
+
+
+                        await set(
+                            ref(
+                                db,
+                                userPath
+                            ),
+                            userData
+                        );
+
+
+                        await set(
+                            ref(
+                                db,
+                                organizationUserPath
+                            ),
+                            organizationUserData
+                        );
+
+
+                        generatedOrganizationId.textContent =
+                            newOrganizationId;
+
+
+                        organizationIdBox.style.display =
+                            "block";
+
+
+                        successText.textContent =
+                            "Your organization account has been created and activated successfully. Save your Organization ID because trainers and trainees will use it to join your organization.";
+
+                    }
+
+
+                    /* ==================================================
+                       TRAINER REGISTRATION
+                       ================================================== */
+
+                    else if (
+                        selectedRole ===
+                        "trainer"
+                    ) {
+
+                        userPath =
+                            "users/" +
+                            createdUser.uid;
+
+
+                        organizationUserPath =
+                            "organizationUsers/" +
+                            organizationId +
+                            "/" +
+                            createdUser.uid;
+
+
+                        const userData = {
+
+                            uid:
+                                createdUser.uid,
+
+                            name:
+                                fullName,
+
+                            email:
+                                email,
+
+                            phone:
+                                phone,
+
+                            role:
+                                "trainer",
+
+                            accountType:
+                                "trainer",
+
+                            organizationId:
+                                organizationId,
+
+                            designation:
+                                designation,
+
+                            qualification:
+                                qualification,
+
+                            experience:
+                                experience,
+
+                            skills:
+                                skills,
+
+                            status:
+                                "approved",
+
+                            createdOn:
+                                timestamp
+
+                        };
+
+
+                        /*
+                         * First create the user profile.
+                         * This allows the organization membership
+                         * to be validated by Firebase rules.
+                         */
+
+                        await set(
+                            ref(
+                                db,
+                                userPath
+                            ),
+                            userData
+                        );
+
+
+                        /*
+                         * Verify linked organization.
+                         */
+
+                        const organizationSnapshot =
+                            await get(
+                                ref(
+                                    db,
+                                    "organizations/" +
+                                    organizationId
+                                )
+                            );
+
+
+                        if (
+                            !organizationSnapshot.exists()
+                        ) {
+
+                            throw new Error(
+                                "Organization ID not found. Please enter the correct Organization ID."
+                            );
+                        }
+
+
+                        const organizationData =
+                            organizationSnapshot.val();
+
+
+                        const organizationStatus =
+                            normalize(
+                                organizationData.status
+                            );
+
+
+                        if (
+                            organizationStatus &&
+                            organizationStatus !==
+                            "approved"
+                        ) {
+
+                            throw new Error(
+                                "The organization is not approved for access."
+                            );
+                        }
+
+
+                        const organizationUserData = {
+
+                            uid:
+                                createdUser.uid,
+
+                            name:
+                                fullName,
+
+                            email:
+                                email,
+
+                            role:
+                                "trainer",
+
+                            organizationId:
+                                organizationId,
+
+                            organizationName:
+                                organizationData.name ||
+                                organizationData.organizationName ||
+                                "",
+
+                            status:
+                                "approved",
+
+                            createdOn:
+                                timestamp
+
+                        };
+
+
+                        await set(
+                            ref(
+                                db,
+                                organizationUserPath
+                            ),
+                            organizationUserData
+                        );
+
+
+                        successText.textContent =
+                            "Your trainer account has been created successfully. Use the Trainer role on the CAPACITY CONNECT Login page.";
+
+                    }
+
+
+                    /* ==================================================
+                       TRAINEE REGISTRATION
+                       ================================================== */
+
+                    else if (
+                        selectedRole ===
+                        "trainee"
+                    ) {
+
+                        userPath =
+                            "users/" +
+                            createdUser.uid;
+
+
+                        organizationUserPath =
+                            "organizationUsers/" +
+                            organizationId +
+                            "/" +
+                            createdUser.uid;
+
+
+                        const userData = {
+
+                            uid:
+                                createdUser.uid,
+
+                            name:
+                                fullName,
+
+                            email:
+                                email,
+
+                            phone:
+                                phone,
+
+                            role:
+                                "trainee",
+
+                            accountType:
+                                "trainee",
+
+                            organizationId:
+                                organizationId,
+
+                            traineeId:
+                                traineeId,
+
+                            branch:
+                                branch,
+
+                            section:
+                                section,
+
+                            year:
+                                studyYear,
+
+                            skills:
+                                skills,
+
+                            status:
+                                "approved",
+
+                            createdOn:
+                                timestamp
+
+                        };
+
+
+                        await set(
+                            ref(
+                                db,
+                                userPath
+                            ),
+                            userData
+                        );
+
+
+                        /*
+                         * Verify linked organization.
+                         */
+
+                        const organizationSnapshot =
+                            await get(
+                                ref(
+                                    db,
+                                    "organizations/" +
+                                    organizationId
+                                )
+                            );
+
+
+                        if (
+                            !organizationSnapshot.exists()
+                        ) {
+
+                            throw new Error(
+                                "Organization ID not found. Please enter the correct Organization ID."
+                            );
+                        }
+
+
+                        const organizationData =
+                            organizationSnapshot.val();
+
+
+                        const organizationStatus =
+                            normalize(
+                                organizationData.status
+                            );
+
+
+                        if (
+                            organizationStatus &&
+                            organizationStatus !==
+                            "approved"
+                        ) {
+
+                            throw new Error(
+                                "The organization is not approved for access."
+                            );
+                        }
+
+
+                        const organizationUserData = {
+
+                            uid:
+                                createdUser.uid,
+
+                            name:
+                                fullName,
+
+                            email:
+                                email,
+
+                            role:
+                                "trainee",
+
+                            organizationId:
+                                organizationId,
+
+                            organizationName:
+                                organizationData.name ||
+                                organizationData.organizationName ||
+                                "",
+
+                            traineeId:
+                                traineeId,
+
+                            status:
+                                "approved",
+
+                            createdOn:
+                                timestamp
+
+                        };
+
+
+                        await set(
+                            ref(
+                                db,
+                                organizationUserPath
+                            ),
+                            organizationUserData
+                        );
+
+
+                        successText.textContent =
+                            "Your trainee account has been created successfully. Use the Trainee role on the CAPACITY CONNECT Login page.";
+
+                    }
+
+
+                    else {
+
+                        throw new Error(
+                            "Please select a valid role."
+                        );
+                    }
+
+
+                    /* ================= SIGN OUT ================= */
+
+                    try {
+
+                        await auth.signOut();
+
+                    } catch (error) {
+
+                        console.warn(
+                            "Sign out after registration:",
+                            error
+                        );
+                    }
+
+
+                    /* ================= SUCCESS UI ================= */
 
                     form.style.display =
                         "none";
@@ -1840,64 +3514,77 @@
                         "block";
 
 
+                    showMessage(
+                        "Account created successfully.",
+                        "success"
+                    );
+
+
                     /*
-                     * Don't keep the newly created
-                     * organization logged in on the
-                     * registration page.
+                     * Always go to COMMON LOGIN page.
                      */
-
-                    try {
-
-                        await auth.signOut();
-
-                    } catch (signOutError) {
-
-                        console.warn(
-                            "Post-registration sign out:",
-                            signOutError
-                        );
-
-                    }
-
 
                     setTimeout(
                         function() {
 
                             window.location.href =
-                                "organization-login.html";
+                                "/organization-login.html";
 
                         },
-                        1800
+                        2500
                     );
 
+                }
 
-                } catch (error) {
+
+                catch (error) {
 
                     console.error(
-                        "Organization Registration Error:",
+                        "Registration Error:",
                         error
                     );
 
 
-                    /*
-                     * Rollback is important.
-                     * If Auth account was created but
-                     * database save failed, delete it.
-                     */
+                    /* ================= ROLLBACK DATABASE ================= */
+
+                    await deletePath(
+                        organizationUserPath
+                    );
+
+
+                    await deletePath(
+                        userPath
+                    );
+
+
+                    await deletePath(
+                        organizationPath
+                    );
+
+
+                    /* ================= ROLLBACK AUTH ================= */
 
                     if (
                         createdUser
                     ) {
 
-                        await rollbackOrganization(
-                            createdUser,
-                            organizationPath,
-                            userPath,
-                            organizationUserPath
-                        );
+                        try {
 
+                            await deleteUser(
+                                createdUser
+                            );
+
+                        } catch (deleteError) {
+
+                            console.warn(
+                                "Firebase Auth rollback failed:",
+                                deleteError
+                            );
+                        }
                     }
 
+
+                    /* ================= ERROR MESSAGE ================= */
 
                     let errorMessage =
                         "Registration failed. Please try again.";
@@ -1910,7 +3597,7 @@
                         case "auth/email-already-in-use":
 
                             errorMessage =
-                                "This email is already registered in Firebase Authentication. Please use another email or login with this email.";
+                                "This email is already registered. Please use another email or login with this account.";
 
                             break;
 
@@ -1918,7 +3605,7 @@
                         case "auth/invalid-email":
 
                             errorMessage =
-                                "Please enter a valid official email address.";
+                                "Please enter a valid email address.";
 
                             break;
 
@@ -1952,7 +3639,6 @@
                             errorMessage =
                                 error.message ||
                                 errorMessage;
-
                     }
 
 
@@ -1965,15 +3651,49 @@
                     submitButton.disabled =
                         false;
 
-                    submitButton.textContent =
-                        "🏢 Create Organization Account";
+
+                    if (
+                        selectedRole ===
+                        "organization"
+                    ) {
+
+                        submitButton.textContent =
+                            "🏢 Create Organization Account";
+
+                    } else if (
+                        selectedRole ===
+                        "trainer"
+                    ) {
+
+                        submitButton.textContent =
+                            "👨‍🏫 Create Trainer Account";
+
+                    } else if (
+                        selectedRole ===
+                        "trainee"
+                    ) {
+
+                        submitButton.textContent =
+                            "👨‍🎓 Create Trainee Account";
+
+                    } else {
+
+                        submitButton.textContent =
+                            "📝 Create Account";
+                    }
 
                 }
 
             }
         );
 
+
+        /* ================= INITIAL STATE ================= */
+
+        updateRoleForm();
+
     </script>
 
 </body>
+
 </html>
