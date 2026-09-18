@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Certificates | CAPACITY CONNECT</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <style>
         * {
@@ -20,7 +21,6 @@
             --primary-dark: #3730a3;
             --cyan: #0891b2;
             --success: #16a34a;
-            --warning: #d97706;
             --danger: #dc2626;
             --dark: #111827;
             --text: #374151;
@@ -31,12 +31,15 @@
         }
 
         body {
-            background: var(--light);
+            background:
+                radial-gradient(circle at top left, rgba(79,70,229,.08), transparent 30%),
+                radial-gradient(circle at bottom right, rgba(8,145,178,.08), transparent 30%),
+                var(--light);
             color: var(--text);
             min-height: 100vh;
         }
 
-        /* ================= HEADER ================= */
+        /* HEADER */
 
         header {
             height: 78px;
@@ -49,7 +52,7 @@
             position: sticky;
             top: 0;
             z-index: 1000;
-            box-shadow: 0 5px 20px rgba(0,0,0,.12);
+            box-shadow: 0 8px 30px rgba(31,41,55,.18);
         }
 
         .header-left {
@@ -63,27 +66,27 @@
             border: none;
             background: white;
             color: var(--primary);
-            border-radius: 7px;
-            padding: 7px 10px;
+            border-radius: 8px;
+            padding: 8px 11px;
             cursor: pointer;
             font-size: 17px;
         }
 
         .brand-icon {
-            width: 42px;
-            height: 42px;
-            border-radius: 11px;
-            background: rgba(255,255,255,.16);
-            border: 1px solid rgba(255,255,255,.24);
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: rgba(255,255,255,.17);
+            border: 1px solid rgba(255,255,255,.25);
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 21px;
+            font-size: 22px;
         }
 
         .brand h1 {
             font-size: 20px;
-            letter-spacing: .4px;
+            letter-spacing: .5px;
         }
 
         .brand small {
@@ -96,7 +99,7 @@
         .header-right {
             display: flex;
             align-items: center;
-            gap: 13px;
+            gap: 14px;
         }
 
         .header-btn {
@@ -108,10 +111,12 @@
             color: white;
             cursor: pointer;
             font-size: 17px;
+            transition: .2s;
         }
 
         .header-btn:hover {
-            background: rgba(255,255,255,.24);
+            background: rgba(255,255,255,.28);
+            transform: translateY(-2px);
         }
 
         .profile-mini {
@@ -132,6 +137,7 @@
             align-items: center;
             font-size: 13px;
             font-weight: 800;
+            box-shadow: 0 4px 12px rgba(0,0,0,.15);
         }
 
         .profile-text strong {
@@ -146,18 +152,18 @@
             margin-top: 2px;
         }
 
-        /* ================= LAYOUT ================= */
+        /* LAYOUT */
 
         .layout {
             display: flex;
             min-height: calc(100vh - 78px);
         }
 
-        /* ================= SIDEBAR ================= */
+        /* SIDEBAR */
 
         .sidebar {
             width: 255px;
-            background: white;
+            background: rgba(255,255,255,.96);
             border-right: 1px solid var(--border);
             padding: 22px 14px;
             position: sticky;
@@ -182,7 +188,7 @@
             gap: 12px;
             padding: 11px 12px;
             margin-bottom: 4px;
-            border-radius: 9px;
+            border-radius: 10px;
             text-decoration: none;
             color: var(--text);
             font-size: 13px;
@@ -192,12 +198,14 @@
         .nav-link:hover {
             background: #eef2ff;
             color: var(--primary);
+            transform: translateX(2px);
         }
 
         .nav-link.active {
             background: linear-gradient(90deg,#eef2ff,#e0e7ff);
             color: var(--primary);
             font-weight: 700;
+            box-shadow: inset 3px 0 0 var(--primary);
         }
 
         .nav-icon {
@@ -208,8 +216,8 @@
 
         .sidebar-card {
             margin: 25px 5px 0;
-            padding: 16px;
-            border-radius: 13px;
+            padding: 17px;
+            border-radius: 14px;
             background: linear-gradient(145deg,#eef2ff,#ecfeff);
             border: 1px solid #dbeafe;
         }
@@ -223,16 +231,16 @@
         .sidebar-card p {
             color: var(--muted);
             font-size: 10px;
-            line-height: 1.5;
+            line-height: 1.6;
         }
 
-        /* ================= MAIN ================= */
+        /* MAIN */
 
         .main {
             flex: 1;
             max-width: 1550px;
             margin: auto;
-            padding: 28px;
+            padding: 30px;
         }
 
         .page-heading {
@@ -240,70 +248,86 @@
             justify-content: space-between;
             align-items: flex-start;
             gap: 18px;
-            margin-bottom: 23px;
+            margin-bottom: 24px;
+        }
+
+        .heading-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            border-radius: 20px;
+            background: #eef2ff;
+            color: var(--primary);
+            font-size: 9px;
+            font-weight: 800;
+            margin-bottom: 9px;
         }
 
         .page-heading h2 {
             color: var(--dark);
-            font-size: 27px;
+            font-size: 29px;
             margin-bottom: 6px;
         }
 
         .page-heading p {
             color: var(--muted);
             font-size: 13px;
-            line-height: 1.5;
+            line-height: 1.6;
         }
 
         .verify-btn {
             border: none;
-            background: var(--primary);
+            background: linear-gradient(135deg,var(--primary),var(--cyan));
             color: white;
-            padding: 10px 14px;
-            border-radius: 8px;
+            padding: 11px 16px;
+            border-radius: 9px;
             font-size: 10px;
             font-weight: 700;
             cursor: pointer;
             white-space: nowrap;
+            box-shadow: 0 7px 18px rgba(79,70,229,.22);
+            transition: .2s;
         }
 
         .verify-btn:hover {
-            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 23px rgba(79,70,229,.3);
         }
 
-        /* ================= STATS ================= */
+        /* STATS */
 
         .stats {
             display: grid;
             grid-template-columns: repeat(4,1fr);
-            gap: 14px;
-            margin-bottom: 22px;
+            gap: 15px;
+            margin-bottom: 23px;
         }
 
         .stat {
-            background: white;
+            background: rgba(255,255,255,.94);
             border: 1px solid var(--border);
-            border-radius: 13px;
-            padding: 17px;
-            transition: .2s;
+            border-radius: 15px;
+            padding: 18px;
+            transition: .25s;
         }
 
         .stat:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 9px 22px rgba(0,0,0,.05);
+            transform: translateY(-4px);
+            box-shadow: 0 14px 30px rgba(0,0,0,.07);
         }
 
         .stat-icon {
-            width: 39px;
-            height: 39px;
-            border-radius: 10px;
-            background: #eef2ff;
+            width: 42px;
+            height: 42px;
+            border-radius: 11px;
+            background: linear-gradient(135deg,#eef2ff,#e0e7ff);
             color: var(--primary);
             display: flex;
             align-items: center;
             justify-content: center;
             margin-bottom: 11px;
-            font-size: 17px;
+            font-size: 18px;
         }
 
         .stat-label {
@@ -313,7 +337,7 @@
 
         .stat-value {
             color: var(--dark);
-            font-size: 24px;
+            font-size: 25px;
             font-weight: 800;
             margin-top: 4px;
         }
@@ -324,19 +348,20 @@
             margin-top: 3px;
         }
 
-        /* ================= TOOLBAR ================= */
+        /* TOOLBAR */
 
         .toolbar {
-            background: white;
+            background: rgba(255,255,255,.95);
             border: 1px solid var(--border);
-            border-radius: 14px;
+            border-radius: 15px;
             padding: 16px;
-            margin-bottom: 18px;
+            margin-bottom: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             gap: 12px;
             flex-wrap: wrap;
+            box-shadow: 0 5px 18px rgba(0,0,0,.03);
         }
 
         .search-box {
@@ -348,20 +373,21 @@
         .search-box input {
             width: 100%;
             border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 10px 12px 10px 35px;
+            border-radius: 9px;
+            padding: 11px 12px 11px 37px;
             font-size: 11px;
             outline: none;
+            transition: .2s;
         }
 
         .search-box input:focus {
             border-color: #a5b4fc;
-            box-shadow: 0 0 0 3px rgba(79,70,229,.08);
+            box-shadow: 0 0 0 4px rgba(79,70,229,.08);
         }
 
         .search-icon {
             position: absolute;
-            left: 12px;
+            left: 13px;
             top: 50%;
             transform: translateY(-50%);
             color: var(--muted);
@@ -370,82 +396,115 @@
 
         .filter-select {
             border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 9px 11px;
+            border-radius: 9px;
+            padding: 10px 12px;
             background: white;
             color: var(--text);
             font-size: 10px;
             outline: none;
+            cursor: pointer;
         }
 
-        /* ================= CERTIFICATE GRID ================= */
+        /* CERTIFICATE GRID */
 
         .certificate-grid {
             display: grid;
             grid-template-columns: repeat(3,1fr);
-            gap: 18px;
+            gap: 19px;
         }
 
         .certificate-card {
             background: white;
             border: 1px solid var(--border);
-            border-radius: 15px;
+            border-radius: 17px;
             overflow: hidden;
             transition: .25s;
+            box-shadow: 0 5px 20px rgba(0,0,0,.035);
         }
 
         .certificate-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 28px rgba(0,0,0,.07);
+            transform: translateY(-5px);
+            box-shadow: 0 18px 35px rgba(31,41,55,.1);
             border-color: #c7d2fe;
         }
 
         .certificate-top {
-            height: 145px;
+            height: 158px;
             background: linear-gradient(135deg,#312e81,#4f46e5,#0891b2);
             color: white;
             padding: 18px;
             text-align: center;
             position: relative;
+            overflow: hidden;
+        }
+
+        .certificate-top::before {
+            content: "";
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            border: 1px solid rgba(255,255,255,.14);
+            border-radius: 50%;
+            left: -70px;
+            top: -80px;
+        }
+
+        .certificate-top::after {
+            content: "";
+            position: absolute;
+            width: 130px;
+            height: 130px;
+            border: 1px solid rgba(255,255,255,.13);
+            border-radius: 50%;
+            right: -60px;
+            bottom: -70px;
         }
 
         .certificate-ribbon {
             position: absolute;
             top: 12px;
             right: 12px;
-            background: rgba(255,255,255,.15);
-            border: 1px solid rgba(255,255,255,.25);
-            padding: 5px 8px;
-            border-radius: 15px;
+            background: rgba(255,255,255,.16);
+            border: 1px solid rgba(255,255,255,.3);
+            padding: 5px 9px;
+            border-radius: 20px;
             font-size: 8px;
-            font-weight: 700;
+            font-weight: 800;
+            z-index: 2;
         }
 
         .certificate-medal {
-            width: 52px;
-            height: 52px;
+            width: 56px;
+            height: 56px;
             margin: 4px auto 9px;
             border-radius: 50%;
-            background: rgba(255,255,255,.15);
-            border: 2px solid rgba(255,255,255,.32);
+            background: rgba(255,255,255,.14);
+            border: 2px solid rgba(255,255,255,.35);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 25px;
+            font-size: 26px;
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 5px 18px rgba(0,0,0,.12);
         }
 
         .certificate-top h3 {
             font-size: 15px;
             margin-bottom: 5px;
+            position: relative;
+            z-index: 2;
         }
 
         .certificate-top p {
             font-size: 9px;
             opacity: .82;
+            position: relative;
+            z-index: 2;
         }
 
         .certificate-body {
-            padding: 17px;
+            padding: 18px;
         }
 
         .course-name {
@@ -471,7 +530,7 @@
         .info-box {
             background: #fafafa;
             border: 1px solid #f0f1f4;
-            border-radius: 8px;
+            border-radius: 9px;
             padding: 9px;
         }
 
@@ -491,15 +550,15 @@
             display: flex;
             align-items: center;
             gap: 7px;
-            padding: 9px;
-            border-radius: 8px;
+            padding: 10px;
+            border-radius: 9px;
             background: #f0fdf4;
             border: 1px solid #bbf7d0;
             margin-bottom: 13px;
         }
 
         .verification-icon {
-            font-size: 14px;
+            font-size: 15px;
         }
 
         .verification strong {
@@ -522,12 +581,16 @@
         .action-btn {
             flex: 1;
             border: none;
-            border-radius: 7px;
-            padding: 9px 8px;
+            border-radius: 8px;
+            padding: 10px 8px;
             cursor: pointer;
             font-size: 9px;
             font-weight: 700;
             transition: .2s;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-1px);
         }
 
         .preview-btn {
@@ -541,11 +604,11 @@
 
         .download-btn {
             color: white;
-            background: var(--primary);
+            background: linear-gradient(135deg,var(--primary),var(--cyan));
         }
 
         .download-btn:hover {
-            background: var(--primary-dark);
+            box-shadow: 0 6px 14px rgba(79,70,229,.2);
         }
 
         .print-btn {
@@ -554,20 +617,20 @@
             background: #f3f4f6;
         }
 
-        /* ================= EMPTY ================= */
+        /* EMPTY */
 
         .empty-state {
             display: none;
             background: white;
             border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 45px 20px;
+            border-radius: 15px;
+            padding: 50px 20px;
             text-align: center;
         }
 
         .empty-icon {
-            width: 55px;
-            height: 55px;
+            width: 58px;
+            height: 58px;
             border-radius: 50%;
             background: #eef2ff;
             color: var(--primary);
@@ -575,7 +638,7 @@
             align-items: center;
             justify-content: center;
             margin: 0 auto 12px;
-            font-size: 23px;
+            font-size: 24px;
         }
 
         .empty-state h3 {
@@ -589,14 +652,15 @@
             font-size: 10px;
         }
 
-        /* ================= VERIFY PANEL ================= */
+        /* VERIFY */
 
         .verify-panel {
             background: white;
             border: 1px solid var(--border);
-            border-radius: 14px;
-            margin-top: 22px;
-            padding: 20px;
+            border-radius: 15px;
+            margin-top: 23px;
+            padding: 21px;
+            box-shadow: 0 5px 20px rgba(0,0,0,.03);
         }
 
         .verify-panel h3 {
@@ -621,16 +685,20 @@
             flex: 1;
             border: 1px solid var(--border);
             border-radius: 8px;
-            padding: 10px 11px;
+            padding: 11px;
             outline: none;
             font-size: 10px;
+        }
+
+        .verify-form input:focus {
+            border-color: #a5b4fc;
         }
 
         .verify-form button {
             border: none;
             border-radius: 8px;
-            padding: 10px 16px;
-            background: var(--primary);
+            padding: 10px 18px;
+            background: linear-gradient(135deg,var(--primary),var(--cyan));
             color: white;
             font-size: 10px;
             font-weight: 700;
@@ -640,22 +708,20 @@
         .verify-result {
             display: none;
             margin-top: 13px;
-            padding: 11px;
+            padding: 12px;
             border-radius: 9px;
-            background: #f0fdf4;
-            border: 1px solid #bbf7d0;
-            color: #166534;
             font-size: 10px;
-            line-height: 1.6;
+            line-height: 1.7;
         }
 
-        /* ================= MODAL ================= */
+        /* MODAL */
 
         .modal {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(17,24,39,.62);
+            background: rgba(17,24,39,.68);
+            backdrop-filter: blur(5px);
             z-index: 3000;
             align-items: center;
             justify-content: center;
@@ -668,12 +734,12 @@
 
         .modal-box {
             width: 100%;
-            max-width: 760px;
-            max-height: 92vh;
+            max-width: 800px;
+            max-height: 94vh;
             overflow-y: auto;
             background: white;
-            border-radius: 15px;
-            box-shadow: 0 25px 70px rgba(0,0,0,.25);
+            border-radius: 17px;
+            box-shadow: 0 25px 70px rgba(0,0,0,.3);
         }
 
         .modal-header {
@@ -691,9 +757,12 @@
 
         .close-btn {
             border: none;
-            background: transparent;
+            background: #f3f4f6;
             color: var(--muted);
-            font-size: 23px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-size: 20px;
             cursor: pointer;
         }
 
@@ -701,43 +770,55 @@
             padding: 20px;
         }
 
-        /* ================= CERTIFICATE PREVIEW ================= */
+        /* CERTIFICATE PREVIEW */
 
         .certificate-preview {
-            border: 9px solid #e0e7ff;
-            padding: 38px 28px;
-            min-height: 480px;
-            text-align: center;
-            background:
-                linear-gradient(
-                    145deg,
-                    #ffffff,
-                    #f8faff
-                );
-            position: relative;
+            border: 10px solid #e0e7ff;
+            padding: 12px;
+            background: linear-gradient(145deg,#ffffff,#f8faff);
         }
 
         .preview-frame {
+            min-height: 480px;
             border: 2px solid #c7d2fe;
-            min-height: 390px;
-            padding: 35px 20px;
+            padding: 40px 28px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .preview-frame::before,
+        .preview-frame::after {
+            content: "✦";
+            position: absolute;
+            color: #a5b4fc;
+            font-size: 25px;
+        }
+
+        .preview-frame::before {
+            top: 16px;
+            left: 20px;
+        }
+
+        .preview-frame::after {
+            bottom: 16px;
+            right: 20px;
         }
 
         .preview-logo {
             font-size: 12px;
             color: var(--primary);
             font-weight: 800;
-            letter-spacing: 1px;
-            margin-bottom: 22px;
+            letter-spacing: 1.5px;
+            margin-bottom: 18px;
         }
 
         .preview-title {
             font-family: Georgia, serif;
-            font-size: 30px;
+            font-size: 31px;
             color: var(--dark);
             margin-bottom: 12px;
         }
@@ -745,25 +826,25 @@
         .preview-subtitle {
             color: var(--muted);
             font-size: 11px;
-            margin-bottom: 17px;
+            margin-bottom: 15px;
         }
 
         .preview-recipient {
             font-family: Georgia, serif;
-            font-size: 26px;
+            font-size: 28px;
             color: var(--primary);
             margin-bottom: 9px;
         }
 
         .preview-course {
-            font-size: 18px;
+            font-size: 19px;
             color: var(--dark);
             font-weight: 700;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
 
         .preview-message {
-            max-width: 570px;
+            max-width: 590px;
             color: var(--muted);
             font-size: 10px;
             line-height: 1.7;
@@ -775,7 +856,7 @@
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
             gap: 8px;
-            margin-bottom: 24px;
+            margin-bottom: 25px;
         }
 
         .preview-detail {
@@ -804,11 +885,11 @@
 
         .sign-box {
             text-align: center;
-            min-width: 130px;
+            min-width: 140px;
         }
 
         .sign-line {
-            width: 130px;
+            width: 140px;
             height: 1px;
             background: #9ca3af;
             margin: 15px auto 5px;
@@ -835,14 +916,14 @@
         .modal-action-btn {
             border: none;
             border-radius: 8px;
-            padding: 10px 14px;
+            padding: 10px 16px;
             font-size: 10px;
             font-weight: 700;
             cursor: pointer;
         }
 
         .modal-download {
-            background: var(--primary);
+            background: linear-gradient(135deg,var(--primary),var(--cyan));
             color: white;
         }
 
@@ -851,7 +932,7 @@
             color: var(--text);
         }
 
-        /* ================= FOOTER ================= */
+        /* FOOTER */
 
         footer {
             text-align: center;
@@ -864,7 +945,7 @@
             color: var(--primary);
         }
 
-        /* ================= PRINT ================= */
+        /* PRINT */
 
         @media print {
 
@@ -881,6 +962,7 @@
                 position: absolute;
                 inset: 0;
                 background: white;
+                display: block;
             }
 
             #previewModal .modal-header,
@@ -895,11 +977,11 @@
             }
 
             .certificate-preview {
-                border: none;
+                border: 8px solid #e0e7ff;
             }
         }
 
-        /* ================= RESPONSIVE ================= */
+        /* RESPONSIVE */
 
         @media (max-width: 1200px) {
 
@@ -973,7 +1055,7 @@
             }
 
             .certificate-preview {
-                padding: 20px 10px;
+                padding: 7px;
             }
 
             .preview-frame {
@@ -1006,1209 +1088,1023 @@
             }
         }
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 
 <body>
 
-    <!-- ================= HEADER ================= -->
+<header>
 
-    <header>
+    <div class="header-left">
 
-        <div class="header-left">
+        <button class="menu-btn" onclick="toggleSidebar()">
+            ☰
+        </button>
 
-            <button
-                class="menu-btn"
-                onclick="toggleSidebar()">
-                ☰
-            </button>
+        <div class="brand-icon">
+            🎓
+        </div>
 
-            <div class="brand-icon">
-                🎓
+        <div class="brand">
+            <h1>CAPACITY CONNECT</h1>
+            <small>Trainee Certification Portal</small>
+        </div>
+
+    </div>
+
+    <div class="header-right">
+
+        <button
+            class="header-btn"
+            onclick="goToPage('notifications.html')"
+            title="Notifications">
+            🔔
+        </button>
+
+        <div
+            class="profile-mini"
+            onclick="goToPage('trainee-dashboard.html')">
+
+            <div class="avatar">
+                YR
             </div>
 
-            <div class="brand">
-                <h1>CAPACITY CONNECT</h1>
-                <small>Trainee Certification Portal</small>
+            <div class="profile-text">
+                <strong>Yashodha Rani</strong>
+                <span>Trainee</span>
             </div>
 
         </div>
 
+    </div>
 
-        <div class="header-right">
+</header>
 
-            <button
-                class="header-btn"
-                onclick="goToPage('notifications.html')"
-                title="Notifications">
-                🔔
-            </button>
 
-            <div
-                class="profile-mini"
-                onclick="goToPage('trainee-dashboard.html')">
+<div class="layout">
 
-                <div class="avatar">
-                    YR
-                </div>
+    <aside class="sidebar" id="sidebar">
 
-                <div class="profile-text">
+        <div class="menu-title">
+            Trainee Menu
+        </div>
 
-                    <strong>
-                        Yashodha Rani
-                    </strong>
+        <a href="capacity-connect.html" class="nav-link">
+            <span class="nav-icon">🏠</span>
+            Home
+        </a>
 
-                    <span>
-                        Trainee
-                    </span>
+        <a href="trainee-dashboard.html" class="nav-link">
+            <span class="nav-icon">📊</span>
+            Dashboard
+        </a>
 
-                </div>
+        <a href="trainee-courses.html" class="nav-link">
+            <span class="nav-icon">📚</span>
+            My Courses
+        </a>
 
-            </div>
+        <a href="trainee-assessments.html" class="nav-link">
+            <span class="nav-icon">📝</span>
+            Assessments
+        </a>
+
+        <a href="certificates.html" class="nav-link active">
+            <span class="nav-icon">🏆</span>
+            Certificates
+        </a>
+
+        <div class="menu-title">
+            Learning
+        </div>
+
+        <a href="trainer-library.html" class="nav-link">
+            <span class="nav-icon">🗂️</span>
+            Learning Library
+        </a>
+
+        <a href="competency-mapping.html" class="nav-link">
+            <span class="nav-icon">🧠</span>
+            Find a Trainer
+        </a>
+
+        <a href="feedback.html" class="nav-link">
+            <span class="nav-icon">💬</span>
+            Feedback
+        </a>
+
+        <a href="notifications.html" class="nav-link">
+            <span class="nav-icon">🔔</span>
+            Notifications
+        </a>
+
+        <div class="sidebar-card">
+
+            <h4>
+                Your Achievements
+            </h4>
+
+            <p>
+                Certificates recognize your successful completion
+                of learning programs and assessments.
+            </p>
 
         </div>
 
-    </header>
+    </aside>
 
 
-    <!-- ================= LAYOUT ================= -->
+    <main class="main">
 
-    <div class="layout">
+        <section class="page-heading">
 
-        <!-- ================= SIDEBAR ================= -->
+            <div>
 
-        <aside
-            class="sidebar"
-            id="sidebar">
+                <div class="heading-badge">
+                    🏆 VERIFIED ACHIEVEMENTS
+                </div>
 
-            <div class="menu-title">
-                Trainee Menu
-            </div>
-
-
-            <a
-                href="capacity-connect.html"
-                class="nav-link">
-
-                <span class="nav-icon">🏠</span>
-                Home
-
-            </a>
-
-
-            <a
-                href="trainee-dashboard.html"
-                class="nav-link">
-
-                <span class="nav-icon">📊</span>
-                Dashboard
-
-            </a>
-
-
-            <a
-                href="trainee-courses.html"
-                class="nav-link">
-
-                <span class="nav-icon">📚</span>
-                My Courses
-
-            </a>
-
-
-            <a
-                href="trainee-assessments.html"
-                class="nav-link">
-
-                <span class="nav-icon">📝</span>
-                Assessments
-
-            </a>
-
-
-            <a
-                href="certificates.html"
-                class="nav-link active">
-
-                <span class="nav-icon">🏆</span>
-                Certificates
-
-            </a>
-
-
-            <div class="menu-title">
-                Learning
-            </div>
-
-
-            <a
-                href="trainer-library.html"
-                class="nav-link">
-
-                <span class="nav-icon">🗂️</span>
-                Learning Library
-
-            </a>
-
-
-            <a
-                href="competency-mapping.html"
-                class="nav-link">
-
-                <span class="nav-icon">🧠</span>
-                Find a Trainer
-
-            </a>
-
-
-            <a
-                href="feedback.html"
-                class="nav-link">
-
-                <span class="nav-icon">💬</span>
-                Feedback
-
-            </a>
-
-
-            <a
-                href="notifications.html"
-                class="nav-link">
-
-                <span class="nav-icon">🔔</span>
-                Notifications
-
-            </a>
-
-
-            <div class="sidebar-card">
-
-                <h4>
-                    Your Achievements
-                </h4>
+                <h2>
+                    My Certificates
+                </h2>
 
                 <p>
-                    Certificates recognize your successful
-                    completion of learning programs and assessments.
+                    View, verify, preview, print, and download certificates
+                    earned through CAPACITY CONNECT learning programs.
                 </p>
 
             </div>
 
-        </aside>
+            <button
+                class="verify-btn"
+                onclick="scrollToVerification()">
+                🔐 Verify Certificate
+            </button>
+
+        </section>
 
 
-        <!-- ================= MAIN ================= -->
+        <!-- STATS -->
 
-        <main class="main">
+        <section class="stats">
 
-            <!-- PAGE HEADING -->
+            <div class="stat">
 
-            <section class="page-heading">
+                <div class="stat-icon">
+                    🏆
+                </div>
 
-                <div>
+                <div class="stat-label">
+                    Total Certificates
+                </div>
 
-                    <h2>
-                        My Certificates 🏆
-                    </h2>
+                <div class="stat-value">
+                    4
+                </div>
+
+                <div class="stat-note">
+                    Successfully earned
+                </div>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div class="stat-icon">
+                    ✅
+                </div>
+
+                <div class="stat-label">
+                    Verified
+                </div>
+
+                <div class="stat-value">
+                    4
+                </div>
+
+                <div class="stat-note">
+                    All certificates verified
+                </div>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div class="stat-icon">
+                    📚
+                </div>
+
+                <div class="stat-label">
+                    Courses Completed
+                </div>
+
+                <div class="stat-value">
+                    4
+                </div>
+
+                <div class="stat-note">
+                    Training programs
+                </div>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div class="stat-icon">
+                    📈
+                </div>
+
+                <div class="stat-label">
+                    Best Assessment
+                </div>
+
+                <div class="stat-value">
+                    94%
+                </div>
+
+                <div class="stat-note">
+                    Highest score
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- TOOLBAR -->
+
+        <section class="toolbar">
+
+            <div class="search-box">
+
+                <span class="search-icon">
+                    🔍
+                </span>
+
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Search certificates..."
+                    oninput="filterCertificates()">
+
+            </div>
+
+
+            <select
+                class="filter-select"
+                id="yearFilter"
+                onchange="filterCertificates()">
+
+                <option value="all">
+                    All Years
+                </option>
+
+                <option value="2026">
+                    2026
+                </option>
+
+                <option value="2025">
+                    2025
+                </option>
+
+            </select>
+
+
+            <select
+                class="filter-select"
+                id="categoryFilter"
+                onchange="filterCertificates()">
+
+                <option value="all">
+                    All Categories
+                </option>
+
+                <option value="programming">
+                    Programming
+                </option>
+
+                <option value="data">
+                    Data Science
+                </option>
+
+                <option value="web">
+                    Web Development
+                </option>
+
+                <option value="analytics">
+                    Analytics
+                </option>
+
+            </select>
+
+        </section>
+
+
+        <!-- CERTIFICATES -->
+
+        <section
+            class="certificate-grid"
+            id="certificateGrid">
+
+
+            <!-- PYTHON -->
+
+            <article
+                class="certificate-card"
+                data-title="Python Programming"
+                data-year="2026"
+                data-category="programming">
+
+                <div class="certificate-top">
+
+                    <span class="certificate-ribbon">
+                        ✓ VERIFIED
+                    </span>
+
+                    <div class="certificate-medal">
+                        🏆
+                    </div>
+
+                    <h3>
+                        Certificate of Completion
+                    </h3>
 
                     <p>
-                        View, verify, preview, and download certificates
-                        earned through CAPACITY CONNECT training programs.
+                        CAPACITY CONNECT
                     </p>
 
                 </div>
 
 
-                <button
-                    class="verify-btn"
-                    onclick="scrollToVerification()">
+                <div class="certificate-body">
 
-                    🔐 Verify Certificate
+                    <h3 class="course-name">
+                        Python Programming
+                    </h3>
 
-                </button>
+                    <p class="issued">
+                        Issued on 28 August 2026
+                    </p>
 
-            </section>
+
+                    <div class="certificate-info">
+
+                        <div class="info-box">
+                            <div class="info-label">
+                                Score
+                            </div>
+                            <div class="info-value">
+                                94%
+                            </div>
+                        </div>
+
+                        <div class="info-box">
+                            <div class="info-label">
+                                Level
+                            </div>
+                            <div class="info-value">
+                                Intermediate
+                            </div>
+                        </div>
+
+                        <div class="info-box">
+                            <div class="info-label">
+                                Duration
+                            </div>
+                            <div class="info-value">
+                                6 Weeks
+                            </div>
+                        </div>
+
+                        <div class="info-box">
+                            <div class="info-label">
+                                Grade
+                            </div>
+                            <div class="info-value">
+                                Excellent
+                            </div>
+                        </div>
+
+                    </div>
 
 
-            <!-- STATS -->
+                    <div class="verification">
 
-            <section class="stats">
+                        <div class="verification-icon">
+                            ✅
+                        </div>
 
-                <div class="stat">
+                        <div>
+                            <strong>
+                                Verified Certificate
+                            </strong>
 
-                    <div class="stat-icon">
+                            <span>
+                                ID: CC-PY-2026-00124
+                            </span>
+                        </div>
+
+                    </div>
+
+
+                    <div class="certificate-actions">
+
+                        <button
+                            class="action-btn preview-btn"
+                            onclick="previewCertificate(this)">
+                            👁 Preview
+                        </button>
+
+                        <button
+                            class="action-btn download-btn"
+                            onclick="downloadCertificate(this)">
+                            ⬇ Download
+                        </button>
+
+                        <button
+                            class="action-btn print-btn"
+                            onclick="printCertificate(this)"
+                            title="Print">
+                            🖨
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+
+            <!-- DATA SCIENCE -->
+
+            <article
+                class="certificate-card"
+                data-title="Data Science Basics"
+                data-year="2026"
+                data-category="data">
+
+                <div class="certificate-top">
+
+                    <span class="certificate-ribbon">
+                        ✓ VERIFIED
+                    </span>
+
+                    <div class="certificate-medal">
                         🏆
                     </div>
 
-                    <div class="stat-label">
-                        Total Certificates
-                    </div>
+                    <h3>
+                        Certificate of Completion
+                    </h3>
 
-                    <div class="stat-value">
-                        4
-                    </div>
-
-                    <div class="stat-note">
-                        Successfully earned
-                    </div>
+                    <p>
+                        CAPACITY CONNECT
+                    </p>
 
                 </div>
 
 
-                <div class="stat">
+                <div class="certificate-body">
 
-                    <div class="stat-icon">
-                        ✅
+                    <h3 class="course-name">
+                        Data Science Basics
+                    </h3>
+
+                    <p class="issued">
+                        Issued on 16 August 2026
+                    </p>
+
+
+                    <div class="certificate-info">
+
+                        <div class="info-box">
+                            <div class="info-label">
+                                Score
+                            </div>
+                            <div class="info-value">
+                                91%
+                            </div>
+                        </div>
+
+                        <div class="info-box">
+                            <div class="info-label">
+                                Level
+                            </div>
+                            <div class="info-value">
+                                Beginner
+                            </div>
+                        </div>
+
+                        <div class="info-box">
+                            <div class="info-label">
+                                Duration
+                            </div>
+                            <div class="info-value">
+                                5 Weeks
+                            </div>
+                        </div>
+
+                        <div class="info-box">
+                            <div class="info-label">
+                                Grade
+                            </div>
+                            <div class="info-value">
+                                Excellent
+                            </div>
+                        </div>
+
                     </div>
 
-                    <div class="stat-label">
-                        Verified
+
+                    <div class="verification">
+
+                        <div class="verification-icon">
+                            ✅
+                        </div>
+
+                        <div>
+                            <strong>
+                                Verified Certificate
+                            </strong>
+
+                            <span>
+                                ID: CC-DS-2026-00108
+                            </span>
+                        </div>
+
                     </div>
 
-                    <div class="stat-value">
-                        4
-                    </div>
 
-                    <div class="stat-note">
-                        All certificates verified
+                    <div class="certificate-actions">
+
+                        <button
+                            class="action-btn preview-btn"
+                            onclick="previewCertificate(this)">
+                            👁 Preview
+                        </button>
+
+                        <button
+                            class="action-btn download-btn"
+                            onclick="downloadCertificate(this)">
+                            ⬇ Download
+                        </button>
+
+                        <button
+                            class="action-btn print-btn"
+                            onclick="printCertificate(this)">
+                            🖨
+                        </button>
+
                     </div>
 
                 </div>
 
-
-                <div class="stat">
-
-                    <div class="stat-icon">
-                        📚
-                    </div>
-
-                    <div class="stat-label">
-                        Courses Completed
-                    </div>
-
-                    <div class="stat-value">
-                        4
-                    </div>
-
-                    <div class="stat-note">
-                        Training programs
-                    </div>
-
-                </div>
+            </article>
 
 
-                <div class="stat">
+            <!-- WEB DEVELOPMENT -->
 
-                    <div class="stat-icon">
-                        📈
-                    </div>
+            <article
+                class="certificate-card"
+                data-title="Web Development Fundamentals"
+                data-year="2026"
+                data-category="web">
 
-                    <div class="stat-label">
-                        Best Assessment
-                    </div>
+                <div class="certificate-top">
 
-                    <div class="stat-value">
-                        94%
-                    </div>
-
-                    <div class="stat-note">
-                        Highest score
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            <!-- TOOLBAR -->
-
-            <section class="toolbar">
-
-                <div class="search-box">
-
-                    <span class="search-icon">
-                        🔍
+                    <span class="certificate-ribbon">
+                        ✓ VERIFIED
                     </span>
 
-                    <input
-                        type="text"
-                        id="searchInput"
-                        placeholder="Search certificates..."
-                        oninput="filterCertificates()">
+                    <div class="certificate-medal">
+                        🏆
+                    </div>
+
+                    <h3>
+                        Certificate of Completion
+                    </h3>
+
+                    <p>
+                        CAPACITY CONNECT
+                    </p>
 
                 </div>
 
 
-                <select
-                    class="filter-select"
-                    id="yearFilter"
-                    onchange="filterCertificates()">
+                <div class="certificate-body">
 
-                    <option value="all">
-                        All Years
-                    </option>
+                    <h3 class="course-name">
+                        Web Development Fundamentals
+                    </h3>
 
-                    <option value="2026">
-                        2026
-                    </option>
-
-                    <option value="2025">
-                        2025
-                    </option>
-
-                </select>
+                    <p class="issued">
+                        Issued on 30 July 2026
+                    </p>
 
 
-                <select
-                    class="filter-select"
-                    id="categoryFilter"
-                    onchange="filterCertificates()">
+                    <div class="certificate-info">
 
-                    <option value="all">
-                        All Categories
-                    </option>
-
-                    <option value="programming">
-                        Programming
-                    </option>
-
-                    <option value="data">
-                        Data Science
-                    </option>
-
-                    <option value="web">
-                        Web Development
-                    </option>
-
-                    <option value="analytics">
-                        Analytics
-                    </option>
-
-                </select>
-
-            </section>
-
-
-            <!-- CERTIFICATE GRID -->
-
-            <section
-                class="certificate-grid"
-                id="certificateGrid">
-
-
-                <!-- CERTIFICATE 1 -->
-
-                <article
-                    class="certificate-card"
-                    data-title="Python Programming"
-                    data-year="2026"
-                    data-category="programming">
-
-                    <div class="certificate-top">
-
-                        <span class="certificate-ribbon">
-                            VERIFIED
-                        </span>
-
-                        <div class="certificate-medal">
-                            🏆
+                        <div class="info-box">
+                            <div class="info-label">
+                                Score
+                            </div>
+                            <div class="info-value">
+                                88%
+                            </div>
                         </div>
 
-                        <h3>
-                            Certificate of Completion
-                        </h3>
-
-                        <p>
-                            CAPACITY CONNECT
-                        </p>
-
-                    </div>
-
-
-                    <div class="certificate-body">
-
-                        <h3 class="course-name">
-                            Python Programming
-                        </h3>
-
-                        <p class="issued">
-                            Issued on 28 August 2026
-                        </p>
-
-
-                        <div class="certificate-info">
-
-                            <div class="info-box">
-
-                                <div class="info-label">
-                                    Score
-                                </div>
-
-                                <div class="info-value">
-                                    94%
-                                </div>
-
+                        <div class="info-box">
+                            <div class="info-label">
+                                Level
                             </div>
-
-
-                            <div class="info-box">
-
-                                <div class="info-label">
-                                    Level
-                                </div>
-
-                                <div class="info-value">
-                                    Intermediate
-                                </div>
-
+                            <div class="info-value">
+                                Beginner
                             </div>
-
-
-                            <div class="info-box">
-
-                                <div class="info-label">
-                                    Duration
-                                </div>
-
-                                <div class="info-value">
-                                    6 Weeks
-                                </div>
-
-                            </div>
-
-
-                            <div class="info-box">
-
-                                <div class="info-label">
-                                    Grade
-                                </div>
-
-                                <div class="info-value">
-                                    Excellent
-                                </div>
-
-                            </div>
-
                         </div>
 
-
-                        <div class="verification">
-
-                            <div class="verification-icon">
-                                ✅
+                        <div class="info-box">
+                            <div class="info-label">
+                                Duration
                             </div>
-
-                            <div>
-
-                                <strong>
-                                    Verified Certificate
-                                </strong>
-
-                                <span>
-                                    ID: CC-PY-2026-00124
-                                </span>
-
+                            <div class="info-value">
+                                5 Weeks
                             </div>
-
                         </div>
 
-
-                        <div class="certificate-actions">
-
-                            <button
-                                class="action-btn preview-btn"
-                                onclick="previewCertificate(this)">
-                                👁 Preview
-                            </button>
-
-
-                            <button
-                                class="action-btn download-btn"
-                                onclick="downloadCertificate('Python Programming','CC-PY-2026-00124')">
-                                ⬇ Download
-                            </button>
-
-
-                            <button
-                                class="action-btn print-btn"
-                                onclick="printCertificate(this)"
-                                title="Print">
-                                🖨
-                            </button>
-
+                        <div class="info-box">
+                            <div class="info-label">
+                                Grade
+                            </div>
+                            <div class="info-value">
+                                Very Good
+                            </div>
                         </div>
 
                     </div>
 
-                </article>
 
+                    <div class="verification">
 
-                <!-- CERTIFICATE 2 -->
-
-                <article
-                    class="certificate-card"
-                    data-title="Data Science Basics"
-                    data-year="2026"
-                    data-category="data">
-
-                    <div class="certificate-top">
-
-                        <span class="certificate-ribbon">
-                            VERIFIED
-                        </span>
-
-                        <div class="certificate-medal">
-                            🏆
+                        <div class="verification-icon">
+                            ✅
                         </div>
 
-                        <h3>
-                            Certificate of Completion
-                        </h3>
+                        <div>
+                            <strong>
+                                Verified Certificate
+                            </strong>
 
-                        <p>
-                            CAPACITY CONNECT
-                        </p>
-
-                    </div>
-
-
-                    <div class="certificate-body">
-
-                        <h3 class="course-name">
-                            Data Science Basics
-                        </h3>
-
-                        <p class="issued">
-                            Issued on 16 August 2026
-                        </p>
-
-
-                        <div class="certificate-info">
-
-                            <div class="info-box">
-
-                                <div class="info-label">
-                                    Score
-                                </div>
-
-                                <div class="info-value">
-                                    91%
-                                </div>
-
-                            </div>
-
-
-                            <div class="info-box">
-
-                                <div class="info-label">
-                                    Level
-                                </div>
-
-                                <div class="info-value">
-                                    Beginner
-                                </div>
-
-                            </div>
-
-
-                            <div class="info-box">
-
-                                <div class="info-label">
-                                    Duration
-                                </div>
-
-                                <div class="info-value">
-                                    5 Weeks
-                                </div>
-
-                            </div>
-
-
-                            <div class="info-box">
-
-                                <div class="info-label">
-                                    Grade
-                                </div>
-
-                                <div class="info-value">
-                                    Excellent
-                                </div>
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="verification">
-
-                            <div class="verification-icon">
-                                ✅
-                            </div>
-
-                            <div>
-
-                                <strong>
-                                    Verified Certificate
-                                </strong>
-
-                                <span>
-                                    ID: CC-DS-2026-00108
-                                </span>
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="certificate-actions">
-
-                            <button
-                                class="action-btn preview-btn"
-                                onclick="previewCertificate(this)">
-                                👁 Preview
-                            </button>
-
-
-                            <button
-                                class="action-btn download-btn"
-                                onclick="downloadCertificate('Data Science Basics','CC-DS-2026-00108')">
-                                ⬇ Download
-                            </button>
-
-
-                            <button
-                                class="action-btn print-btn"
-                                onclick="printCertificate(this)"
-                                title="Print">
-                                🖨
-                            </button>
-
+                            <span>
+                                ID: CC-WD-2026-00087
+                            </span>
                         </div>
 
                     </div>
 
-                </article>
 
+                    <div class="certificate-actions">
 
-                <!-- CERTIFICATE 3 -->
+                        <button
+                            class="action-btn preview-btn"
+                            onclick="previewCertificate(this)">
+                            👁 Preview
+                        </button>
 
-                <article
-                    class="certificate-card"
-                    data-title="Web Development Fundamentals"
-                    data-year="2026"
-                    data-category="web">
+                        <button
+                            class="action-btn download-btn"
+                            onclick="downloadCertificate(this)">
+                            ⬇ Download
+                        </button>
 
-                    <div class="certificate-top">
-
-                        <span class="certificate-ribbon">
-                            VERIFIED
-                        </span>
-
-                        <div class="certificate-medal">
-                            🏆
-                        </div>
-
-                        <h3>
-                            Certificate of Completion
-                        </h3>
-
-                        <p>
-                            CAPACITY CONNECT
-                        </p>
+                        <button
+                            class="action-btn print-btn"
+                            onclick="printCertificate(this)">
+                            🖨
+                        </button>
 
                     </div>
 
-
-                    <div class="certificate-body">
-
-                        <h3 class="course-name">
-                            Web Development Fundamentals
-                        </h3>
-
-                        <p class="issued">
-                            Issued on 30 July 2026
-                        </p>
-
-
-                        <div class="certificate-info">
-
-                            <div class="info-box">
-
-                                <div class="info-label">
-                                    Score
-                                </div>
-
-                                <div class="info-value">
-                                    88%
-                                </div>
-
-                            </div>
-
-
-                            <div class="info-box">
-
-                                <div class="info-label">
-                                    Level
-                                </div>
-
-                                <div class="info-value">
-                                    Beginner
-                                </div>
-
-                            </div>
-
-
-                            <div class="info-box">
-
-                                <div class="info-label">
-                                    Duration
-                                </div>
-
-                                <div class="info-value">
-                                    5 Weeks
-                                </div>
-
-                            </div>
-
-
-                            <div class="info-box">
-
-                                <div class="info-label">
-                                    Grade
-                                </div>
-
-                                <div class="info-value">
-                                    Very Good
-                                </div>
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="verification">
-
-                            <div class="verification-icon">
-                                ✅
-                            </div>
-
-                            <div>
-
-                                <strong>
-                                    Verified Certificate
-                                </strong>
-
-                                <span>
-                                    ID: CC-WD-2026-00087
-                                </span>
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="certificate-actions">
-
-                            <button
-                                class="action-btn preview-btn"
-                                onclick="previewCertificate(this)">
-                                👁 Preview
-                            </button>
-
-
-                            <button
-                                class="action-btn download-btn"
-                                onclick="downloadCertificate('Web Development Fundamentals','CC-WD-2026-00087')">
-                                ⬇ Download
-                            </button>
-
-
-                            <button
-                                class="action-btn print-btn"
-                                onclick="printCertificate(this)"
-                                title="Print">
-                                🖨
-                            </button>
-
-                        </div>
-
-                    </div>
-
-                </article>
-
-
-                <!-- CERTIFICATE 4 -->
-
-                <article
-                    class="certificate-card"
-                    data-title="Data Visualization"
-                    data-year="2026"
-                    data-category="analytics">
-
-                    <div class="certificate-top">
-
-                        <span class="certificate-ribbon">
-                            VERIFIED
-                        </span>
-
-                        <div class="certificate-medal">
-                            🏆
-                        </div>
-
-                        <h3>
-                            Certificate of Completion
-                        </h3>
-
-                        <p>
-                            CAPACITY CONNECT
-                        </p>
-
-                    </div>
-
-
-                    <div class="certificate-body">
-
-                        <h3 class="course-name">
-                            Data Visualization
-                        </h3>
-
-                        <p class="issued">
-                            Issued on 18 July 2026
-                        </p>
-
-
-                        <div class="certificate-info">
-
-                            <div class="info-box">
-
-                                <div class="info-label">
-                                    Score
-                                </div>
-
-                                <div class="info-value">
-                                    90%
-                                </div>
-
-                            </div>
-
-
-                            <div class="info-box">
-
-                                <div class="info-label">
-                                    Level
-                                </div>
-
-                                <div class="info-value">
-                                    Beginner
-                                </div>
-
-                            </div>
-
-
-                            <div class="info-box">
-
-                                <div class="info-label">
-                                    Duration
-                                </div>
-
-                                <div class="info-value">
-                                    4 Weeks
-                                </div>
-
-                            </div>
-
-
-                            <div class="info-box">
-
-                                <div class="info-label">
-                                    Grade
-                                </div>
-
-                                <div class="info-value">
-                                    Excellent
-                                </div>
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="verification">
-
-                            <div class="verification-icon">
-                                ✅
-                            </div>
-
-                            <div>
-
-                                <strong>
-                                    Verified Certificate
-                                </strong>
-
-                                <span>
-                                    ID: CC-DV-2026-00061
-                                </span>
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="certificate-actions">
-
-                            <button
-                                class="action-btn preview-btn"
-                                onclick="previewCertificate(this)">
-                                👁 Preview
-                            </button>
-
-
-                          <button
-    onclick="
-        downloadCertificate(
-            'Data Visualization',
-            'CC-DV-2026-00061',
-            '18 July 2026',
-            '90%',
-            'Beginner',
-            '4 Weeks',
-            'Excellent'
-        )
-    "
->
-    ⬇ Download
-</button>
-
-
-                            <button
-                                class="action-btn print-btn"
-                                onclick="printCertificate(this)"
-                                title="Print">
-                                🖨
-                            </button>
-
-                        </div>
-
-                    </div>
-
-                </article>
-
-
-            </section>
-
-
-            <!-- EMPTY STATE -->
-
-            <section
-                class="empty-state"
-                id="emptyState">
-
-                <div class="empty-icon">
-                    🔍
                 </div>
 
-                <h3>
-                    No certificates found
-                </h3>
-
-                <p>
-                    Try changing your search or filter options.
-                </p>
-
-            </section>
+            </article>
 
 
-            <!-- VERIFICATION -->
+            <!-- DATA VISUALIZATION -->
 
-            <section
-                class="verify-panel"
-                id="verificationPanel">
+            <article
+                class="certificate-card"
+                data-title="Data Visualization"
+                data-year="2026"
+                data-category="analytics">
 
-                <h3>
-                    Verify a Certificate 🔐
-                </h3>
+                <div class="certificate-top">
 
-                <p>
-                    Enter a certificate ID to verify whether the
-                    certificate was issued by CAPACITY CONNECT.
-                </p>
+                    <span class="certificate-ribbon">
+                        ✓ VERIFIED
+                    </span>
 
+                    <div class="certificate-medal">
+                        🏆
+                    </div>
 
-                <div class="verify-form">
+                    <h3>
+                        Certificate of Completion
+                    </h3>
 
-                    <input
-                        type="text"
-                        id="verifyInput"
-                        placeholder="Example: CC-PY-2026-00124">
-
-                    <button
-                        onclick="verifyCertificate()">
-                        Verify
-                    </button>
+                    <p>
+                        CAPACITY CONNECT
+                    </p>
 
                 </div>
 
 
-                <div
-                    class="verify-result"
-                    id="verifyResult">
+                <div class="certificate-body">
+
+                    <h3 class="course-name">
+                        Data Visualization
+                    </h3>
+
+                    <p class="issued">
+                        Issued on 18 July 2026
+                    </p>
+
+
+                    <div class="certificate-info">
+
+                        <div class="info-box">
+                            <div class="info-label">
+                                Score
+                            </div>
+                            <div class="info-value">
+                                90%
+                            </div>
+                        </div>
+
+                        <div class="info-box">
+                            <div class="info-label">
+                                Level
+                            </div>
+                            <div class="info-value">
+                                Beginner
+                            </div>
+                        </div>
+
+                        <div class="info-box">
+                            <div class="info-label">
+                                Duration
+                            </div>
+                            <div class="info-value">
+                                4 Weeks
+                            </div>
+                        </div>
+
+                        <div class="info-box">
+                            <div class="info-label">
+                                Grade
+                            </div>
+                            <div class="info-value">
+                                Excellent
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="verification">
+
+                        <div class="verification-icon">
+                            ✅
+                        </div>
+
+                        <div>
+                            <strong>
+                                Verified Certificate
+                            </strong>
+
+                            <span>
+                                ID: CC-DV-2026-00061
+                            </span>
+                        </div>
+
+                    </div>
+
+
+                    <div class="certificate-actions">
+
+                        <button
+                            class="action-btn preview-btn"
+                            onclick="previewCertificate(this)">
+                            👁 Preview
+                        </button>
+
+                        <button
+                            class="action-btn download-btn"
+                            onclick="downloadCertificate(this)">
+                            ⬇ Download
+                        </button>
+
+                        <button
+                            class="action-btn print-btn"
+                            onclick="printCertificate(this)">
+                            🖨
+                        </button>
+
+                    </div>
+
                 </div>
 
-            </section>
+            </article>
+
+        </section>
 
 
-            <footer>
+        <section
+            class="empty-state"
+            id="emptyState">
 
-                © <span id="year"></span>
-                <strong>CAPACITY CONNECT</strong>.
-                Digital Certification Portal.
+            <div class="empty-icon">
+                🔍
+            </div>
 
-            </footer>
+            <h3>
+                No certificates found
+            </h3>
 
-        </main>
+            <p>
+                Try changing your search or filter options.
+            </p>
 
-    </div>
+        </section>
 
 
-    <!-- ================= PREVIEW MODAL ================= -->
+        <!-- VERIFICATION -->
 
-    <div
-        class="modal"
-        id="previewModal">
+        <section
+            class="verify-panel"
+            id="verificationPanel">
 
-        <div class="modal-box">
+            <h3>
+                Verify a Certificate 🔐
+            </h3>
 
-            <div class="modal-header">
+            <p>
+                Enter a certificate ID to verify whether the certificate
+                was issued by CAPACITY CONNECT.
+            </p>
 
-                <h3>
-                    Certificate Preview
-                </h3>
+            <div class="verify-form">
 
-                <button
-                    class="close-btn"
-                    onclick="closePreview()">
-                    ×
+                <input
+                    type="text"
+                    id="verifyInput"
+                    placeholder="Example: CC-PY-2026-00124">
+
+                <button onclick="verifyCertificate()">
+                    Verify
                 </button>
 
             </div>
 
+            <div
+                class="verify-result"
+                id="verifyResult">
+            </div>
 
-            <div class="modal-body">
+        </section>
 
-                <div class="certificate-preview">
 
-                    <div class="preview-frame">
+        <footer>
 
-                        <div class="preview-logo">
-                            🎓 CAPACITY CONNECT
+            © <span id="year"></span>
+            <strong>CAPACITY CONNECT</strong>.
+            Digital Certification Portal.
+
+        </footer>
+
+    </main>
+
+</div>
+
+
+<!-- PREVIEW MODAL -->
+
+<div
+    class="modal"
+    id="previewModal">
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+
+            <h3>
+                Certificate Preview
+            </h3>
+
+            <button
+                class="close-btn"
+                onclick="closePreview()">
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="modal-body">
+
+            <div class="certificate-preview">
+
+                <div class="preview-frame">
+
+                    <div class="preview-logo">
+                        🎓 CAPACITY CONNECT
+                    </div>
+
+                    <div class="preview-title">
+                        Certificate of Completion
+                    </div>
+
+                    <div class="preview-subtitle">
+                        This certificate is proudly presented to
+                    </div>
+
+                    <div
+                        class="preview-recipient"
+                        id="previewRecipient">
+                        Yashodha Rani
+                    </div>
+
+                    <div class="preview-subtitle">
+                        for successfully completing
+                    </div>
+
+                    <div
+                        class="preview-course"
+                        id="previewCourse">
+                        Python Programming
+                    </div>
+
+                    <div class="preview-message">
+                        This certificate recognizes successful completion
+                        of the prescribed training program and assessment
+                        requirements under the CAPACITY CONNECT
+                        Digital Capacity Building and Learning Portal.
+                    </div>
+
+
+                    <div class="preview-details">
+
+                        <div class="preview-detail">
+                            <strong>Score</strong>
+                            <span id="previewScore">94%</span>
                         </div>
 
-                        <div class="preview-title">
-                            Certificate of Completion
+                        <div class="preview-detail">
+                            <strong>Issue Date</strong>
+                            <span id="previewDate">
+                                28 August 2026
+                            </span>
                         </div>
 
-                        <div class="preview-subtitle">
-                            This certificate is proudly presented to
+                        <div class="preview-detail">
+                            <strong>Certificate ID</strong>
+                            <span id="previewId">
+                                CC-PY-2026-00124
+                            </span>
                         </div>
 
-                        <div
-                            class="preview-recipient"
-                            id="previewRecipient">
-                            Yashodha Rani
-                        </div>
-
-                        <div class="preview-subtitle">
-                            for successfully completing
-                        </div>
-
-                        <div
-                            class="preview-course"
-                            id="previewCourse">
-                            Python Programming
-                        </div>
-
-                        <div
-                            class="preview-message">
-                            This certificate recognizes successful completion
-                            of the prescribed training program and assessment
-                            requirements under the CAPACITY CONNECT
-                            Digital Capacity Building and Learning Portal.
-                        </div>
+                    </div>
 
 
-                        <div class="preview-details">
+                    <div class="preview-sign">
 
-                            <div class="preview-detail">
+                        <div class="sign-box">
 
-                                <strong>
-                                    Score
-                                </strong>
+                            <div class="sign-line"></div>
 
-                                <span id="previewScore">
-                                    94%
-                                </span>
+                            <strong>
+                                Authorized Trainer
+                            </strong>
 
-                            </div>
-
-
-                            <div class="preview-detail">
-
-                                <strong>
-                                    Issue Date
-                                </strong>
-
-                                <span id="previewDate">
-                                    28 August 2026
-                                </span>
-
-                            </div>
-
-
-                            <div class="preview-detail">
-
-                                <strong>
-                                    Certificate ID
-                                </strong>
-
-                                <span id="previewId">
-                                    CC-PY-2026-00124
-                                </span>
-
-                            </div>
+                            <span>
+                                CAPACITY CONNECT
+                            </span>
 
                         </div>
 
 
-                        <div class="preview-sign">
+                        <div class="sign-box">
 
-                            <div class="sign-box">
+                            <div class="sign-line"></div>
 
-                                <div class="sign-line"></div>
+                            <strong>
+                                Program Administrator
+                            </strong>
 
-                                <strong>
-                                    Authorized Trainer
-                                </strong>
-
-                                <span>
-                                    CAPACITY CONNECT
-                                </span>
-
-                            </div>
-
-
-                            <div class="sign-box">
-
-                                <div class="sign-line"></div>
-
-                                <strong>
-                                    Program Administrator
-                                </strong>
-
-                                <span>
-                                    CAPACITY CONNECT
-                                </span>
-
-                            </div>
+                            <span>
+                                CAPACITY CONNECT
+                            </span>
 
                         </div>
 
@@ -2216,28 +2112,28 @@
 
                 </div>
 
+            </div>
 
-                <div class="modal-actions">
 
-                    <button
-                        class="modal-action-btn modal-close"
-                        onclick="closePreview()">
-                        Close
-                    </button>
+            <div class="modal-actions">
 
-                    <button
-                        class="modal-action-btn modal-download"
-                        onclick="downloadPreview()">
-                        ⬇ Download
-                    </button>
+                <button
+                    class="modal-action-btn modal-close"
+                    onclick="closePreview()">
+                    Close
+                </button>
 
-                    <button
-                        class="modal-action-btn modal-download"
-                        onclick="window.print()">
-                        🖨 Print
-                    </button>
+                <button
+                    class="modal-action-btn modal-download"
+                    onclick="downloadPreview()">
+                    ⬇ Download PDF
+                </button>
 
-                </div>
+                <button
+                    class="modal-action-btn modal-download"
+                    onclick="window.print()">
+                    🖨 Print
+                </button>
 
             </div>
 
@@ -2245,501 +2141,915 @@
 
     </div>
 
-
-    <!-- ================= JAVASCRIPT ================= -->
-
-    <script>
-
-        let selectedCertificate = null;
+</div>
 
 
-        /* ================= NAVIGATION ================= */
+<script>
 
-        function goToPage(page) {
-            window.location.href = page;
-        }
+    let selectedCertificate = null;
 
 
-        /* ================= SIDEBAR ================= */
+    /* NAVIGATION */
 
-        function toggleSidebar() {
+    function goToPage(page) {
+        window.location.href = page;
+    }
 
+
+    /* SIDEBAR */
+
+    function toggleSidebar() {
+
+        document
+            .getElementById("sidebar")
+            .classList
+            .toggle("open");
+
+    }
+
+
+    /* FILTER */
+
+    function filterCertificates() {
+
+        const search =
             document
-                .getElementById("sidebar")
-                .classList
-                .toggle("open");
+            .getElementById("searchInput")
+            .value
+            .toLowerCase()
+            .trim();
 
-        }
-
-
-        /* ================= FILTER ================= */
-
-        function filterCertificates() {
-
-            const search =
-                document
-                .getElementById("searchInput")
-                .value
-                .toLowerCase()
-                .trim();
-
-            const year =
-                document
-                .getElementById("yearFilter")
-                .value;
-
-            const category =
-                document
-                .getElementById("categoryFilter")
-                .value;
-
-
-            const cards =
-                Array.from(
-                    document.querySelectorAll(
-                        ".certificate-card"
-                    )
-                );
-
-
-            let visible = 0;
-
-
-            cards.forEach(card => {
-
-                const title =
-                    card.dataset.title
-                    .toLowerCase();
-
-                const cardYear =
-                    card.dataset.year;
-
-                const cardCategory =
-                    card.dataset.category;
-
-
-                const searchMatch =
-                    title.includes(search);
-
-                const yearMatch =
-                    year === "all" ||
-                    cardYear === year;
-
-                const categoryMatch =
-                    category === "all" ||
-                    cardCategory === category;
-
-
-                if (
-                    searchMatch &&
-                    yearMatch &&
-                    categoryMatch
-                ) {
-
-                    card.style.display = "block";
-                    visible++;
-
-                } else {
-
-                    card.style.display = "none";
-
-                }
-
-            });
-
-
+        const year =
             document
-                .getElementById("emptyState")
-                .style.display =
-                visible === 0
-                ? "block"
-                : "none";
+            .getElementById("yearFilter")
+            .value;
 
-        }
+        const category =
+            document
+            .getElementById("categoryFilter")
+            .value;
 
+        const cards =
+            document.querySelectorAll(".certificate-card");
 
-        /* ================= PREVIEW CERTIFICATE ================= */
+        let visible = 0;
 
-        function previewCertificate(button) {
-
-            const card =
-                button.closest(".certificate-card");
-
-
-            selectedCertificate = card;
-
+        cards.forEach(card => {
 
             const title =
-                card.dataset.title;
+                card.dataset.title.toLowerCase();
 
+            const cardYear =
+                card.dataset.year;
 
-            const score =
-                card
-                .querySelectorAll(".info-value")[0]
-                .textContent
-                .trim();
+            const cardCategory =
+                card.dataset.category;
 
+            const searchMatch =
+                title.includes(search);
 
-            const issued =
-                card
-                .querySelector(".issued")
-                .textContent
-                .replace("Issued on ", "")
-                .trim();
+            const yearMatch =
+                year === "all" ||
+                cardYear === year;
 
+            const categoryMatch =
+                category === "all" ||
+                cardCategory === category;
 
-            const id =
-                card
-                .querySelector(".verification span")
-                .textContent
-                .replace("ID: ", "")
-                .trim();
+            if (
+                searchMatch &&
+                yearMatch &&
+                categoryMatch
+            ) {
 
-
-            document
-                .getElementById("previewRecipient")
-                .textContent =
-                "Yashodha Rani";
-
-
-            document
-                .getElementById("previewCourse")
-                .textContent =
-                title;
-
-
-            document
-                .getElementById("previewScore")
-                .textContent =
-                score;
-
-
-            document
-                .getElementById("previewDate")
-                .textContent =
-                issued;
-
-
-            document
-                .getElementById("previewId")
-                .textContent =
-                id;
-
-
-            document
-                .getElementById("previewModal")
-                .classList
-                .add("show");
-
-        }
-
-
-        /* ================= CLOSE PREVIEW ================= */
-
-        function closePreview() {
-
-            document
-                .getElementById("previewModal")
-                .classList
-                .remove("show");
-
-        }
-
-
-        /* ================= DOWNLOAD ================= */
-
-        function downloadCertificate(
-            course,
-            certificateId
-        ) {
-
-            alert(
-                "Certificate download requested.\n\n" +
-                "Course: " +
-                course +
-                "\nCertificate ID: " +
-                certificateId +
-                "\n\nActual PDF generation can be connected later."
-            );
-
-        }
-
-
-        function downloadPreview() {
-
-            const course =
-                document
-                .getElementById("previewCourse")
-                .textContent;
-
-            const id =
-                document
-                .getElementById("previewId")
-                .textContent;
-
-
-            downloadCertificate(
-                course,
-                id
-            );
-
-        }
-
-
-        /* ================= PRINT ================= */
-
-        function printCertificate(button) {
-
-            selectedCertificate = button
-                .closest(".certificate-card");
-
-            previewCertificate(
-                selectedCertificate
-                .querySelector(".preview-btn")
-            );
-
-            setTimeout(
-                function() {
-                    window.print();
-                },
-                300
-            );
-
-        }
-
-
-        /* ================= VERIFY ================= */
-
-        function verifyCertificate() {
-
-            const input =
-                document
-                .getElementById("verifyInput")
-                .value
-                .trim()
-                .toUpperCase();
-
-
-            const result =
-                document
-                .getElementById("verifyResult");
-
-
-            if (!input) {
-
-                result.style.display = "block";
-
-                result.style.background =
-                    "#fef2f2";
-
-                result.style.borderColor =
-                    "#fecaca";
-
-                result.style.color =
-                    "#b91c1c";
-
-                result.textContent =
-                    "Please enter a certificate ID.";
-
-                return;
-
-            }
-
-
-            const certificates = {
-
-                "CC-PY-2026-00124": {
-                    course: "Python Programming",
-                    score: "94%",
-                    date: "28 August 2026",
-                    status: "Verified"
-                },
-
-                "CC-DS-2026-00108": {
-                    course: "Data Science Basics",
-                    score: "91%",
-                    date: "16 August 2026",
-                    status: "Verified"
-                },
-
-                "CC-WD-2026-00087": {
-                    course: "Web Development Fundamentals",
-                    score: "88%",
-                    date: "30 July 2026",
-                    status: "Verified"
-                },
-
-                "CC-DV-2026-00061": {
-                    course: "Data Visualization",
-                    score: "90%",
-                    date: "18 July 2026",
-                    status: "Verified"
-                }
-
-            };
-
-
-            const certificate =
-                certificates[input];
-
-
-            result.style.display = "block";
-
-
-            if (certificate) {
-
-                result.style.background =
-                    "#f0fdf4";
-
-                result.style.borderColor =
-                    "#bbf7d0";
-
-                result.style.color =
-                    "#166534";
-
-
-                result.innerHTML = `
-                    ✅ <strong>Certificate Verified</strong><br>
-                    Course: ${escapeHTML(certificate.course)}<br>
-                    Trainee: Yashodha Rani<br>
-                    Score: ${escapeHTML(certificate.score)}<br>
-                    Issue Date: ${escapeHTML(certificate.date)}<br>
-                    Certificate ID: ${escapeHTML(input)}
-                `;
+                card.style.display = "block";
+                visible++;
 
             } else {
 
-                result.style.background =
-                    "#fef2f2";
+                card.style.display = "none";
 
-                result.style.borderColor =
-                    "#fecaca";
+            }
 
-                result.style.color =
-                    "#b91c1c";
+        });
 
 
-                result.innerHTML =
-                    "❌ Certificate not found. Please check the certificate ID.";
+        document
+            .getElementById("emptyState")
+            .style.display =
+            visible === 0
+            ? "block"
+            : "none";
+
+    }
+
+
+    /* PREVIEW */
+
+    function previewCertificate(button) {
+
+        const card =
+            button.closest(".certificate-card");
+
+        selectedCertificate = card;
+
+        const title =
+            card.dataset.title;
+
+        const score =
+            card
+            .querySelector(".info-value")
+            .textContent
+            .trim();
+
+        const issued =
+            card
+            .querySelector(".issued")
+            .textContent
+            .replace("Issued on ", "")
+            .trim();
+
+        const id =
+            card
+            .querySelector(".verification span")
+            .textContent
+            .replace("ID: ", "")
+            .trim();
+
+
+        document
+            .getElementById("previewRecipient")
+            .textContent =
+            "Yashodha Rani";
+
+        document
+            .getElementById("previewCourse")
+            .textContent =
+            title;
+
+        document
+            .getElementById("previewScore")
+            .textContent =
+            score;
+
+        document
+            .getElementById("previewDate")
+            .textContent =
+            issued;
+
+        document
+            .getElementById("previewId")
+            .textContent =
+            id;
+
+
+        document
+            .getElementById("previewModal")
+            .classList
+            .add("show");
+
+    }
+
+
+    /* CLOSE */
+
+    function closePreview() {
+
+        document
+            .getElementById("previewModal")
+            .classList
+            .remove("show");
+
+    }
+
+
+    /* DOWNLOAD PDF */
+
+    function downloadCertificate(button) {
+
+        const card =
+            button.closest(".certificate-card");
+
+        const course =
+            card.dataset.title;
+
+        const score =
+            card
+            .querySelector(".info-value")
+            .textContent
+            .trim();
+
+        const date =
+            card
+            .querySelector(".issued")
+            .textContent
+            .replace("Issued on ", "")
+            .trim();
+
+        const id =
+            card
+            .querySelector(".verification span")
+            .textContent
+            .replace("ID: ", "")
+            .trim();
+
+        generatePDF(
+            course,
+            score,
+            date,
+            id
+        );
+
+    }
+
+
+    function downloadPreview() {
+
+        const course =
+            document
+            .getElementById("previewCourse")
+            .textContent;
+
+        const score =
+            document
+            .getElementById("previewScore")
+            .textContent;
+
+        const date =
+            document
+            .getElementById("previewDate")
+            .textContent;
+
+        const id =
+            document
+            .getElementById("previewId")
+            .textContent;
+
+        generatePDF(
+            course,
+            score,
+            date,
+            id
+        );
+
+    }
+
+
+    /* ACTUAL PDF GENERATION */
+
+    function generatePDF(
+        course,
+        score,
+        date,
+        certificateId
+    ) {
+
+        const {
+            jsPDF
+        } = window.jspdf;
+
+        const pdf =
+            new jsPDF({
+                orientation: "landscape",
+                unit: "mm",
+                format: "a4"
+            });
+
+
+        const width = 297;
+        const height = 210;
+
+
+        /* BACKGROUND */
+
+        pdf.setFillColor(
+            248,
+            250,
+            255
+        );
+
+        pdf.rect(
+            0,
+            0,
+            width,
+            height,
+            "F"
+        );
+
+
+        /* OUTER BORDER */
+
+        pdf.setDrawColor(
+            79,
+            70,
+            229
+        );
+
+        pdf.setLineWidth(3);
+
+        pdf.rect(
+            8,
+            8,
+            width - 16,
+            height - 16
+        );
+
+
+        /* INNER BORDER */
+
+        pdf.setDrawColor(
+            165,
+            180,
+            252
+        );
+
+        pdf.setLineWidth(1);
+
+        pdf.rect(
+            14,
+            14,
+            width - 28,
+            height - 28
+        );
+
+
+        /* BRAND */
+
+        pdf.setTextColor(
+            79,
+            70,
+            229
+        );
+
+        pdf.setFont(
+            "helvetica",
+            "bold"
+        );
+
+        pdf.setFontSize(15);
+
+        pdf.text(
+            "CAPACITY CONNECT",
+            width / 2,
+            31,
+            {
+                align: "center"
+            }
+        );
+
+
+        /* TITLE */
+
+        pdf.setTextColor(
+            17,
+            24,
+            39
+        );
+
+        pdf.setFont(
+            "times",
+            "bold"
+        );
+
+        pdf.setFontSize(28);
+
+        pdf.text(
+            "Certificate of Completion",
+            width / 2,
+            53,
+            {
+                align: "center"
+            }
+        );
+
+
+        /* SUBTITLE */
+
+        pdf.setFont(
+            "helvetica",
+            "normal"
+        );
+
+        pdf.setFontSize(11);
+
+        pdf.setTextColor(
+            107,
+            114,
+            128
+        );
+
+        pdf.text(
+            "This certificate is proudly presented to",
+            width / 2,
+            68,
+            {
+                align: "center"
+            }
+        );
+
+
+        /* NAME */
+
+        pdf.setFont(
+            "times",
+            "italic"
+        );
+
+        pdf.setFontSize(25);
+
+        pdf.setTextColor(
+            79,
+            70,
+            229
+        );
+
+        pdf.text(
+            "Yashodha Rani",
+            width / 2,
+            83,
+            {
+                align: "center"
+            }
+        );
+
+
+        /* COURSE */
+
+        pdf.setFont(
+            "helvetica",
+            "bold"
+        );
+
+        pdf.setFontSize(17);
+
+        pdf.setTextColor(
+            17,
+            24,
+            39
+        );
+
+        pdf.text(
+            course,
+            width / 2,
+            101,
+            {
+                align: "center"
+            }
+        );
+
+
+        /* MESSAGE */
+
+        pdf.setFont(
+            "helvetica",
+            "normal"
+        );
+
+        pdf.setFontSize(9);
+
+        pdf.setTextColor(
+            107,
+            114,
+            128
+        );
+
+        const message =
+            "For successfully completing the prescribed training program and assessment requirements under the CAPACITY CONNECT Digital Capacity Building and Learning Portal.";
+
+        const lines =
+            pdf.splitTextToSize(
+                message,
+                190
+            );
+
+        pdf.text(
+            lines,
+            width / 2,
+            115,
+            {
+                align: "center"
+            }
+        );
+
+
+        /* DETAILS */
+
+        pdf.setDrawColor(
+            219,
+            234,
+            254
+        );
+
+        pdf.line(
+            45,
+            136,
+            252,
+            136
+        );
+
+
+        pdf.setFontSize(8);
+
+        pdf.setFont(
+            "helvetica",
+            "bold"
+        );
+
+        pdf.setTextColor(
+            17,
+            24,
+            39
+        );
+
+        pdf.text(
+            "SCORE",
+            72,
+            148,
+            {
+                align: "center"
+            }
+        );
+
+        pdf.text(
+            "ISSUE DATE",
+            148,
+            148,
+            {
+                align: "center"
+            }
+        );
+
+        pdf.text(
+            "CERTIFICATE ID",
+            225,
+            148,
+            {
+                align: "center"
+            }
+        );
+
+
+        pdf.setFont(
+            "helvetica",
+            "normal"
+        );
+
+        pdf.setTextColor(
+            107,
+            114,
+            128
+        );
+
+        pdf.text(
+            score,
+            72,
+            156,
+            {
+                align: "center"
+            }
+        );
+
+        pdf.text(
+            date,
+            148,
+            156,
+            {
+                align: "center"
+            }
+        );
+
+        pdf.text(
+            certificateId,
+            225,
+            156,
+            {
+                align: "center"
+            }
+        );
+
+
+        /* SIGNATURES */
+
+        pdf.setDrawColor(
+            156,
+            163,
+            175
+        );
+
+        pdf.line(
+            55,
+            178,
+            115,
+            178
+        );
+
+        pdf.line(
+            182,
+            178,
+            242,
+            178
+        );
+
+
+        pdf.setFont(
+            "helvetica",
+            "bold"
+        );
+
+        pdf.setFontSize(8);
+
+        pdf.setTextColor(
+            17,
+            24,
+            39
+        );
+
+        pdf.text(
+            "Authorized Trainer",
+            85,
+            185,
+            {
+                align: "center"
+            }
+        );
+
+        pdf.text(
+            "Program Administrator",
+            212,
+            185,
+            {
+                align: "center"
+            }
+        );
+
+
+        pdf.setFont(
+            "helvetica",
+            "normal"
+        );
+
+        pdf.setTextColor(
+            107,
+            114,
+            128
+        );
+
+        pdf.text(
+            "CAPACITY CONNECT",
+            85,
+            191,
+            {
+                align: "center"
+            }
+        );
+
+        pdf.text(
+            "CAPACITY CONNECT",
+            212,
+            191,
+            {
+                align: "center"
+            }
+        );
+
+
+        /* SAVE */
+
+        const fileName =
+            "CAPACITY_CONNECT_" +
+            course
+            .replace(/[^a-z0-9]/gi, "_") +
+            "_Certificate.pdf";
+
+        pdf.save(fileName);
+
+    }
+
+
+    /* PRINT */
+
+    function printCertificate(button) {
+
+        previewCertificate(button);
+
+        setTimeout(
+            function() {
+                window.print();
+            },
+            300
+        );
+
+    }
+
+
+    /* VERIFY */
+
+    function verifyCertificate() {
+
+        const input =
+            document
+            .getElementById("verifyInput")
+            .value
+            .trim()
+            .toUpperCase();
+
+        const result =
+            document
+            .getElementById("verifyResult");
+
+
+        const certificates = {
+
+            "CC-PY-2026-00124": {
+                course: "Python Programming",
+                score: "94%",
+                date: "28 August 2026"
+            },
+
+            "CC-DS-2026-00108": {
+                course: "Data Science Basics",
+                score: "91%",
+                date: "16 August 2026"
+            },
+
+            "CC-WD-2026-00087": {
+                course: "Web Development Fundamentals",
+                score: "88%",
+                date: "30 July 2026"
+            },
+
+            "CC-DV-2026-00061": {
+                course: "Data Visualization",
+                score: "90%",
+                date: "18 July 2026"
+            }
+
+        };
+
+
+        result.style.display = "block";
+
+
+        if (!input) {
+
+            result.style.background = "#fef2f2";
+            result.style.border = "1px solid #fecaca";
+            result.style.color = "#b91c1c";
+
+            result.textContent =
+                "Please enter a certificate ID.";
+
+            return;
+
+        }
+
+
+        const certificate =
+            certificates[input];
+
+
+        if (certificate) {
+
+            result.style.background = "#f0fdf4";
+            result.style.border = "1px solid #bbf7d0";
+            result.style.color = "#166534";
+
+            result.innerHTML =
+                "✅ <strong>Certificate Verified</strong><br>" +
+                "Course: " +
+                escapeHTML(certificate.course) +
+                "<br>" +
+                "Trainee: Yashodha Rani<br>" +
+                "Score: " +
+                escapeHTML(certificate.score) +
+                "<br>" +
+                "Issue Date: " +
+                escapeHTML(certificate.date) +
+                "<br>" +
+                "Certificate ID: " +
+                escapeHTML(input);
+
+        } else {
+
+            result.style.background = "#fef2f2";
+            result.style.border = "1px solid #fecaca";
+            result.style.color = "#b91c1c";
+
+            result.textContent =
+                "❌ Certificate not found. Please check the certificate ID.";
+
+        }
+
+    }
+
+
+    /* SCROLL */
+
+    function scrollToVerification() {
+
+        document
+            .getElementById("verificationPanel")
+            .scrollIntoView({
+                behavior: "smooth",
+                block: "center"
+            });
+
+        setTimeout(
+            function() {
+
+                document
+                    .getElementById("verifyInput")
+                    .focus();
+
+            },
+            500
+        );
+
+    }
+
+
+    /* SAFE HTML */
+
+    function escapeHTML(value) {
+
+        return String(value)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+
+    }
+
+
+    /* MODAL OUTSIDE CLICK */
+
+    window.addEventListener(
+        "click",
+        function(event) {
+
+            const modal =
+                document.getElementById("previewModal");
+
+            if (event.target === modal) {
+
+                closePreview();
 
             }
 
         }
+    );
 
 
-        /* ================= SCROLL TO VERIFICATION ================= */
+    /* ENTER TO VERIFY */
 
-        function scrollToVerification() {
-
-            document
-                .getElementById("verificationPanel")
-                .scrollIntoView({
-                    behavior: "smooth",
-                    block: "center"
-                });
-
-            setTimeout(
-                function() {
-
-                    document
-                        .getElementById("verifyInput")
-                        .focus();
-
-                },
-                400
-            );
-
-        }
-
-
-        /* ================= SAFE HTML ================= */
-
-        function escapeHTML(value) {
-
-            return String(value)
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
-
-        }
-
-
-        /* ================= MODAL OUTSIDE CLICK ================= */
-
-        window.addEventListener(
-            "click",
+    document
+        .getElementById("verifyInput")
+        .addEventListener(
+            "keydown",
             function(event) {
 
-                const modal =
-                    document
-                    .getElementById("previewModal");
-
-
-                if (event.target === modal) {
-
-                    closePreview();
-
+                if (event.key === "Enter") {
+                    verifyCertificate();
                 }
 
             }
         );
 
 
-        /* ================= MOBILE NAV ================= */
+    /* MOBILE NAV */
 
-        document
-            .querySelectorAll(".nav-link")
-            .forEach(link => {
+    document
+        .querySelectorAll(".nav-link")
+        .forEach(link => {
 
-                link.addEventListener(
-                    "click",
-                    function() {
+            link.addEventListener(
+                "click",
+                function() {
 
-                        if (window.innerWidth <= 820) {
+                    if (window.innerWidth <= 820) {
 
-                            document
-                                .getElementById("sidebar")
-                                .classList
-                                .remove("open");
-
-                        }
-
-                    }
-                );
-
-            });
-
-
-        /* ================= ENTER TO VERIFY ================= */
-
-        document
-            .getElementById("verifyInput")
-            .addEventListener(
-                "keydown",
-                function(event) {
-
-                    if (event.key === "Enter") {
-
-                        verifyCertificate();
+                        document
+                            .getElementById("sidebar")
+                            .classList
+                            .remove("open");
 
                     }
 
                 }
             );
 
+        });
 
-        /* ================= YEAR ================= */
 
-        document
-            .getElementById("year")
-            .textContent =
-            new Date().getFullYear();
+    /* YEAR */
 
-    </script>
+    document
+        .getElementById("year")
+        .textContent =
+        new Date().getFullYear();
+
+</script>
 
 </body>
 </html>
-```
-
