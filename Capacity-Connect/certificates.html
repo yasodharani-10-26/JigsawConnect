@@ -1431,8 +1431,8 @@
                         Certificate of Completion
                     </h3>
 
-                    <p>
-                        CAPACITY CONNECT
+                    <p class="certificate-company">
+                        Organization
                     </p>
 
                 </div>
@@ -1559,8 +1559,8 @@
                         Certificate of Completion
                     </h3>
 
-                    <p>
-                        CAPACITY CONNECT
+                    <p class="certificate-company">
+                        Organization
                     </p>
 
                 </div>
@@ -1686,8 +1686,8 @@
                         Certificate of Completion
                     </h3>
 
-                    <p>
-                        CAPACITY CONNECT
+                    <p class="certificate-company">
+                        Organization
                     </p>
 
                 </div>
@@ -1813,8 +1813,8 @@
                         Certificate of Completion
                     </h3>
 
-                    <p>
-                        CAPACITY CONNECT
+                    <p class="certificate-company">
+                        Organization
                     </p>
 
                 </div>
@@ -1951,7 +1951,7 @@
 
             <p>
                 Enter a certificate ID to verify whether the certificate
-                was issued by CAPACITY CONNECT.
+                was issued by <strong id="verifyIssuer">the organization</strong>.
             </p>
 
             <div class="verify-form">
@@ -1978,7 +1978,7 @@
         <footer>
 
             © <span id="year"></span>
-            <strong>CAPACITY CONNECT</strong>.
+            <strong id="footerCompany">Organization</strong>.
             Digital Certification Portal.
 
         </footer>
@@ -2018,7 +2018,7 @@
                 <div class="preview-frame">
 
                     <div class="preview-logo">
-                        🎓 CAPACITY CONNECT
+                        🎓 <span id="previewCompany">Organization</span>
                     </div>
 
                     <div class="preview-title">
@@ -2048,8 +2048,8 @@
                     <div class="preview-message">
                         This certificate recognizes successful completion
                         of the prescribed training program and assessment
-                        requirements under the CAPACITY CONNECT
-                        Digital Capacity Building and Learning Portal.
+                        requirements under the organization's
+                        Digital Capacity Building and Learning Program.
                     </div>
 
 
@@ -2087,8 +2087,8 @@
                                 Authorized Trainer
                             </strong>
 
-                            <span>
-                                CAPACITY CONNECT
+                            <span class="preview-company">
+                                Organization
                             </span>
 
                         </div>
@@ -2102,8 +2102,8 @@
                                 Program Administrator
                             </strong>
 
-                            <span>
-                                CAPACITY CONNECT
+                            <span class="preview-company">
+                                Organization
                             </span>
 
                         </div>
@@ -2147,6 +2147,110 @@
 <script>
 
     let selectedCertificate = null;
+
+    let firebaseAuth = null;
+    let firebaseDb = null;
+    let firebaseRef = null;
+    let firebaseGet = null;
+
+    async function initializeOrganizationLookup() {
+        try {
+            const firebase = await import("../firebase.js");
+
+            firebaseAuth = firebase.auth;
+            firebaseDb = firebase.db;
+            firebaseRef = firebase.ref;
+            firebaseGet = firebase.get;
+
+            firebase.onAuthStateChanged(firebaseAuth, function(user) {
+                if (user) {
+                    loadLoggedInOrganization(user);
+                } else {
+                    setOrganizationName(currentOrganizationName);
+                }
+            });
+        } catch (error) {
+            console.warn("Firebase organization lookup could not be initialized:", error);
+            setOrganizationName(currentOrganizationName);
+        }
+    }
+    let currentOrganizationName =
+        sessionStorage.getItem("organizationName") ||
+        localStorage.getItem("organizationName") ||
+        "Organization";
+
+    function setOrganizationName(name) {
+
+        const cleanName =
+            (name || "Organization").toString().trim() || "Organization";
+
+        currentOrganizationName = cleanName;
+
+        sessionStorage.setItem("organizationName", cleanName);
+
+        document.querySelectorAll(".certificate-company").forEach(function(el) {
+            el.textContent = cleanName;
+        });
+
+        document.querySelectorAll(".preview-company").forEach(function(el) {
+            el.textContent = cleanName;
+        });
+
+        const previewCompany = document.getElementById("previewCompany");
+        if (previewCompany) previewCompany.textContent = cleanName;
+
+        const verifyIssuer = document.getElementById("verifyIssuer");
+        if (verifyIssuer) verifyIssuer.textContent = cleanName;
+
+        const footerCompany = document.getElementById("footerCompany");
+        if (footerCompany) footerCompany.textContent = cleanName;
+    }
+
+    async function loadLoggedInOrganization(user) {
+
+        setOrganizationName(currentOrganizationName);
+
+        try {
+            if (!user || !firebaseDb || !firebaseRef || !firebaseGet) return;
+
+            const userSnapshot = await firebaseGet(
+                firebaseRef(firebaseDb, "users/" + user.uid)
+            );
+
+            if (!userSnapshot.exists()) return;
+
+            const userData = userSnapshot.val() || {};
+
+            let organizationData = null;
+
+            if (userData.organizationId) {
+                const organizationSnapshot = await firebaseGet(
+                    firebaseRef(
+                        firebaseDb,
+                        "organizations/" + userData.organizationId
+                    )
+                );
+
+                if (organizationSnapshot.exists()) {
+                    organizationData = organizationSnapshot.val() || {};
+                }
+            }
+
+            const organizationName =
+                organizationData?.name ||
+                userData.organizationName ||
+                sessionStorage.getItem("organizationName") ||
+                localStorage.getItem("organizationName") ||
+                "Organization";
+
+            setOrganizationName(organizationName);
+
+        } catch (error) {
+            console.warn("Organization name could not be loaded:", error);
+        }
+    }
+
+    initializeOrganizationLookup();
 
 
     /* NAVIGATION */
@@ -2404,6 +2508,12 @@
         certificateId
     ) {
 
+        const organizationName =
+            currentOrganizationName ||
+            sessionStorage.getItem("organizationName") ||
+            localStorage.getItem("organizationName") ||
+            "Organization";
+
         const {
             jsPDF
         } = window.jspdf;
@@ -2489,7 +2599,7 @@
         pdf.setFontSize(15);
 
         pdf.text(
-            "CAPACITY CONNECT",
+            organizationName,
             width / 2,
             31,
             {
@@ -2614,7 +2724,7 @@
         );
 
         const message =
-            "For successfully completing the prescribed training program and assessment requirements under the CAPACITY CONNECT Digital Capacity Building and Learning Portal.";
+            "For successfully completing the prescribed training program and assessment requirements under the organization's Digital Capacity Building and Learning Program.";
 
         const lines =
             pdf.splitTextToSize(
@@ -2795,7 +2905,7 @@
         );
 
         pdf.text(
-            "CAPACITY CONNECT",
+            organizationName,
             85,
             191,
             {
@@ -2804,7 +2914,7 @@
         );
 
         pdf.text(
-            "CAPACITY CONNECT",
+            organizationName,
             212,
             191,
             {
@@ -2816,7 +2926,9 @@
         /* SAVE */
 
         const fileName =
-            "CAPACITY_CONNECT_" +
+            organizationName
+            .replace(/[^a-z0-9]/gi, "_") +
+            "_" +
             course
             .replace(/[^a-z0-9]/gi, "_") +
             "_Certificate.pdf";
@@ -2927,7 +3039,9 @@
                 escapeHTML(certificate.date) +
                 "<br>" +
                 "Certificate ID: " +
-                escapeHTML(input);
+                escapeHTML(input) +
+                "<br>Issued by: " +
+                escapeHTML(currentOrganizationName);
 
         } else {
 
